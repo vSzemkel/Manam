@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="AtexKrat.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DRAWADD.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DRAWDOC.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DRAWDOC2.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DRAWOBJ.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DRAWOPIS.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DRAWPAGE.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DRAWTOOL.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="DRAWVW.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="FLAG.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="GenEpsInfoDlg.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="GRIDFRM.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="KOLDLG.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="MANAM.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SPLITFRM.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="QUEVIEW.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ManPDF.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="CNTRITEM.CPP">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Spacer.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ManODPNET.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ManSock.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="AddListCtrl.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AtexKrat.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CNTRITEM.H">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DRAWADD.H">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DRAWDOC.H">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DRAWOBJ.H">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DRAWOPIS.H">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DRAWPAGE.H">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DRAWTOOL.H">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DRAWVW.H">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="FLAG.H">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GenEpsInfoDlg.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GridFrm.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="KOLDLG.H">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="MANAM.H">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ManPDF.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ManSock.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="QUEVIEW.H">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="spacer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SPLITFRM.H">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ManODPNET.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="AddListCtrl.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Res\CAPTION.CUR">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\DEADLINE.CUR">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\DRAWDOC.ICO">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\Flag.cur">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\gridform.bmp">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\IDR_CZOB.BMP">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\IDR_MAIN.BMP">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\IDR_STUD.BMP">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\insert.ico">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\KOLOR.CUR">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\LOCK.CUR">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\stateico.bmp">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\smallico.bmp">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\RED.CUR">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\PENCIL.CUR">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="res\toolbar_main.bmp">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\SPA.CUR">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Res\MANAM.ICO">
+      <Filter>Resources</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{bb74f10a-ac62-4c26-a337-af355b043d23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{bd4858d6-c3bc-4ba6-aa34-1ac049738e24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{4a42d4b5-ece8-435a-80ae-fdaf8789be6c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Manam.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Manam.natvis">
+      <Filter>Resources</Filter>
+    </Natvis>
+  </ItemGroup>
+</Project>

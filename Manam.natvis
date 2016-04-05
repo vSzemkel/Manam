@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+    <Type Name="CDrawDoc">
+        <DisplayString>{gazeta} {data} idm={m_mak_xx} id_drw={id_drw}</DisplayString>
+    </Type>
+    <Type Name="CDrawPage">
+        <DisplayString Condition="m_kraty_niebazowe._Mypair._Myval2._Mylast == m_kraty_niebazowe._Mypair._Myval2._Myfirst">Strona {nr >> 3} [{szpalt_x}x{szpalt_y}] {caption} {{adds={m_adds._Mypair._Myval2._Mylast - m_adds._Mypair._Myval2._Myfirst}}}</DisplayString>
+        <DisplayString>Strona {nr >> 3} [{szpalt_x}x{szpalt_y}] {caption} {{adds={m_adds._Mypair._Myval2._Mylast - m_adds._Mypair._Myval2._Myfirst}}} {{krat={1 + m_kraty_niebazowe._Mypair._Myval2._Mylast - m_kraty_niebazowe._Mypair._Myval2._Myfirst}}}</DisplayString>
+    </Type>
+    <Type Name="CDrawAdd">
+        <DisplayString>[{kodModulu}] idp={m_pub_xx} {nazwa}</DisplayString>
+    </Type>
+</AutoVisualizer>

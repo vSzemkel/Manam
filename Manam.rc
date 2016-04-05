@@ -1,0 +1,2309 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Polish (Poland) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_PLK)
+LANGUAGE LANG_POLISH, SUBLANG_DEFAULT
+#pragma code_page(1250)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.rc""  // Standard components\r\n"
+    "#include ""afxprint.rc""  // printing/print preview resources\r\n"
+    "#include ""afxolecl.rc""  // OLE container resources\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "Res\\MANAM.ICO"
+
+IDR_DRAWCLTYPE          ICON                    "Res\\DRAWDOC.ICO"
+
+IDI_INSERT              ICON                    "Res\\insert.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_SMALLICONS          BITMAP                  "Res\\smallico.bmp"
+
+IDB_STATEICONS          BITMAP                  "Res\\stateico.bmp"
+
+IDB_ZNACZKI             BITMAP                  "Res\\gridform.bmp"
+
+IDR_TOOL_MAIN           BITMAP                  "Res\\toolbar_main.bmp"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU
+BEGIN
+    POPUP "&Makieta"
+    BEGIN
+        POPUP "&Nowa makieta"
+        BEGIN
+            MENUITEM "&Nowa\tCtrl+N",               ID_FILE_NEW
+            MENUITEM "Nowe z &pliku",               ID_FILE_NEW_BATH
+        END
+        MENUITEM "&OtwÛrz\tCtrl+O",             ID_FILE_OPEN
+        MENUITEM SEPARATOR
+        MENUITEM "DB OtwÛrz\tCtrl+X",           ID_FILE_DBOPEN
+        MENUITEM "DB Obejrzyj",                 ID_FILE_DBOPENRO
+        MENUITEM SEPARATOR
+        MENUITEM "Ustawienia drukarki",         ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "Wyslij wiadomoúÊ\tF10",       IDM_SENDMSG
+        MENUITEM "&Logowanie\tCtrl+L",          ID_LOGIN
+        POPUP "Administracja"
+        BEGIN
+            MENUITEM "Nowy uøytkownik",             IDM_NEWUSER
+            MENUITEM "Nowy tytu≥",                  IDM_NEWTITLE
+            MENUITEM "Nadawanie uprawnieÒ",         IDM_ACCESS
+            MENUITEM "Katalogi dniowe",             IDM_DAYDIRS
+            MENUITEM SEPARATOR
+            MENUITEM "Konfiguracja redakcyjna",     IDM_CAPTIONS
+            MENUITEM "Zmiana has≥a",                IDM_PASSWD
+        END
+        MENUITEM "&Koniec",                     ID_APP_EXIT
+    END
+    POPUP "&Widok"
+    BEGIN
+        MENUITEM "&Pasek narzÍdzi",             ID_VIEW_TOOLBAR
+        MENUITEM "Pasek &stanu",                ID_VIEW_STATUS_BAR
+    END
+    MENUITEM "&Informacje",                 ID_APP_ABOUT
+END
+
+IDR_DRAWCLTYPE MENU
+BEGIN
+    POPUP "&Makieta"
+    BEGIN
+        POPUP "&Nowa makieta"
+        BEGIN
+            MENUITEM "&Nowa\tCtrl+N",               ID_FILE_NEW
+            MENUITEM "Nowe z &pliku",               ID_FILE_NEW_BATH
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&OtwÛrz\tCtrl+O",             ID_FILE_OPEN
+        MENUITEM "&Zachowaj\tCtrl+D",           ID_FILE_SAVE
+        MENUITEM "Zachowaj &jako",              ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "DB OtwÛrz\tCtrl+X",           ID_FILE_DBOPEN
+        MENUITEM "DB Obejrzyj",                 ID_FILE_DBOPENRO
+        MENUITEM "DB Zachowaj\tCtrl+S",         ID_FILE_DBSAVE
+        MENUITEM "DB Zachowaj jako\tCtrl_Shift+S", ID_FILE_DBSAVE_AS
+        MENUITEM "DB UsuÒ makietÍ",             ID_FILE_DBDELETE, INACTIVE
+        MENUITEM SEPARATOR
+        MENUITEM "Odúwieø\tCtrl+R",             ID_FILE_REFRESH
+        MENUITEM SEPARATOR
+        MENUITEM "Metryka makiety",             ID_FILE_INFO
+        MENUITEM "Drzewo makiety",              ID_FILE_DRZEWO
+        MENUITEM SEPARATOR
+        MENUITEM "&Zamknij\tCtrl+W",            ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        POPUP "&Drukuj"
+        BEGIN
+            MENUITEM "Pojedynczπ &stronÍ",          ID_FILE_PRINT_1P
+            MENUITEM "&MakietÍ ",                   ID_FILE_PRINT
+            MENUITEM "MakietÍ na jednej kartce",    ID_FILE_PRINT_ALL
+            MENUITEM "Generowanie postscriptu\tF6", ID_FILE_PRINT_EPS
+        END
+        POPUP "Podglπd Wydruku"
+        BEGIN
+            MENUITEM "Jedna strona",                ID_FILE_PRINT_PREVIEW_1P
+            MENUITEM "Ca≥a makieta",                ID_FILE_PRINT_PREVIEW
+            MENUITEM "Makieta na jednej kartce",    ID_FILE_PRINT_PREVIEW_ALL
+        END
+        MENUITEM "Ustawienia drukarki",         ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Logowanie\tCtrl+L",          ID_LOGIN
+        MENUITEM "&Koniec",                     ID_APP_EXIT
+    END
+    POPUP "&Og≥oszenie"
+    BEGIN
+        MENUITEM "Import +-",                   ID_ADD_IMPORTMINUS
+        MENUITEM SEPARATOR
+        MENUITEM "Import z Systemu Sprzedaøy",  ID_ADD_DBIMPORTMINUS
+        MENUITEM "Synchronizacja z Systemem Sprzedaøy", ID_ADD_SYNCHRONIZE
+        MENUITEM SEPARATOR
+        MENUITEM "Export",                      ID_ADD_EXPORT
+        MENUITEM "Krata og≥oszenia",            ID_ADD_OPCJE
+        MENUITEM "&Sprawdü EPSy\tF5",           ID_CHECK_EPS
+        MENUITEM "&Daty EPSÛw\tF4",             IDM_EPSDATA
+        MENUITEM "Synchronizacja z krajem",     IDM_SYNCPOW
+        MENUITEM "Synchronizacja dziedziczenia", IDM_SYNCDRV
+    END
+    POPUP "&Edycja"
+    BEGIN
+        MENUITEM "Wyszukiwanie og≥oszenia\tCtrl+F", ID_ADD_FIND
+        MENUITEM "Znajdü nastÍpne\tF3",         IDM_EDIT_FIND_NEXT
+        MENUITEM SEPARATOR
+        MENUITEM "Wytnij\tCtrl+X",              ID_EDIT_CUT
+        MENUITEM "Kopiuj\tCtrl+C",              ID_EDIT_COPY
+        MENUITEM "Wklej\tCtrl+V",               ID_EDIT_PASTE
+        MENUITEM "UsuÒ\tDel",                   ID_EDIT_CLEAR
+        MENUITEM "Wybierz wszystko\tCtrl+A",    ID_EDIT_SELECT_ALL
+        MENUITEM "W≥asnoúci\tAlt+Enter",        ID_EDIT_PROPERTIES
+    END
+    POPUP "&NarzÍdzia"
+    BEGIN
+        MENUITEM "&Wybierz",                    ID_DRAW_SELECT
+        MENUITEM "Og≥oszenie",                  ID_DRAW_ADD
+        MENUITEM "Opis",                        ID_DRAW_OPIS
+        MENUITEM "Kolor",                       ID_DRAW_KOLOR
+        MENUITEM "Blokada",                     ID_DRAW_LOCK
+        MENUITEM SEPARATOR
+        MENUITEM "Nowe strony",                 ID_DRAW_PAGE
+        MENUITEM "Dziedziczenie stron",         IDM_PAGEDERV
+        MENUITEM "Numerowanie stron",           ID_DRAW_NUMEROWANIE
+        MENUITEM "Zmiana paginacji\tF2",        IDM_SETPAGINA
+        MENUITEM SEPARATOR
+        MENUITEM "Powierzchnia redakcyjna",     ID_DRAW_RED
+        MENUITEM "Blokada powierzchni",         ID_DRAW_SPACELOCKED
+        MENUITEM "Nag≥Ûwek strony",             ID_DRAW_CAPTION
+        MENUITEM "Deadline",                    ID_DRAW_DEADLINE
+        MENUITEM SEPARATOR
+        MENUITEM "Makietowanie gazety",         ID_VU_MAKIETOWANIE
+        MENUITEM "Makietowanie strony",         ID_VU_MAK_STRONY
+        MENUITEM "Og≥oszenia na bok\tCtrl+B",   IDM_ASIDE_ADDS
+        MENUITEM "UsuÒ uwagi",                  IDM_DELREMARKS
+        MENUITEM SEPARATOR
+        MENUITEM "Sprawdzenie powtÛrek\tF8",    IDM_CHECKREP
+        MENUITEM "Konfiguracja\tF9",            ID_DRAW_OPCJE
+        MENUITEM SEPARATOR
+        MENUITEM "Wyslij wiadomoúÊ\tF10",       IDM_SENDMSG
+        MENUITEM "Uprawnienia sprzedawcy\tF12", IDM_SETDEA
+        MENUITEM "Kalkulator krat",             ID_NARZ_KALKULATORKRAT
+    END
+    POPUP "O&biekt"
+    BEGIN
+        MENUITEM "Move To Front\tCtrl+Plus",    ID_OBJECT_MOVETOFRONT
+        MENUITEM "Move To Back\tCtrl+Minus",    ID_OBJECT_MOVETOBACK
+        MENUITEM "Move Forward\tPlus",          ID_OBJECT_MOVEFORWARD
+        MENUITEM "Move Back\tMinus",            ID_OBJECT_MOVEBACK
+        MENUITEM SEPARATOR
+        MENUITEM "Pokaø szczegÛ≥y",             IDM_SHOWDTLS
+    END
+    POPUP "&Widok"
+    BEGIN
+        MENUITEM "Czcionka strony",             ID_VIEW_PAGEFONT
+        MENUITEM "Zablok.powierzchnia",         ID_VIEW_SPACELOCKS
+        MENUITEM "ZmieÒ nag≥Ûwki stron",        ID_WIDOK_CHCAP
+        MENUITEM "ZmieÒ iloúÊ kolumn w wierszu\tAlt_I", ID_WIDOK_COLPERROW
+        MENUITEM SEPARATOR
+        MENUITEM "Czcionka og≥oszenia",         ID_VIEW_ADDFONT
+        MENUITEM "Opis og≥oszenia",             ID_VIEW_ADDDESC
+        MENUITEM "Pokaø deadline'y",            IDM_SHOWTIME
+        MENUITEM "Pokaø deadline'y dniowe",     IDM_ACDEAD
+        MENUITEM "Pokaø preview\tF11",          IDM_IRFAN
+        MENUITEM "Podglπd korekty w .pdf\tCtrl_K", IDM_PREV_KOR
+        MENUITEM "Podglπd pliku .pdf\tCtrl_F11", IDM_PREVPDF
+        MENUITEM "Podglπd treúci cyfrowej\tShift_F11", IDM_PREVDIG
+        MENUITEM "Sygnatura ATEX\tAlt_Q",       IDM_ATEXSYG
+        MENUITEM SEPARATOR
+        MENUITEM "Czas obowiπzywania",          ID_VIEW_CZASOBOW
+        MENUITEM "Tryb studia",                 IDM_VIEW_STUDIO
+        MENUITEM SEPARATOR
+        MENUITEM "Kontrola makietowania",       ID_VU_CK_MAKIETOWANIE
+        MENUITEM SEPARATOR
+        MENUITEM "Pe≥ny ekran\tCtrl_F12",       ID_FULLSCREEN
+        POPUP "Zoom"
+        BEGIN
+            MENUITEM "100%",                        ID_VIEW_ZOOM100
+            MENUITEM "125%",                        ID_VIEW_ZOOM125
+            MENUITEM "150%",                        ID_VIEW_ZOOM150
+            MENUITEM "200%",                        ID_VIEW_ZOOM200
+            MENUITEM "250%",                        ID_VIEW_ZOOM250
+            MENUITEM "300%",                        ID_VIEW_ZOOM300
+            MENUITEM "400%",                        ID_VIEW_ZOOM400
+            MENUITEM "500%",                        ID_VIEW_ZOOM500
+            MENUITEM "750%",                        ID_VIEW_ZOOM750
+            MENUITEM "Dostosuj",                    ID_VIEW_ZOOMCUSTOM
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Daty powtÛrek numerÛw\tF7",   IDM_SHOWREPT
+        POPUP "Sortuj wg"
+        BEGIN
+            MENUITEM "lp.",                         ID_SORT_LP
+            MENUITEM "warunki log.",                ID_SORT_WARLOG
+            MENUITEM "zamowienia",                  ID_SORT_NREPS
+            MENUITEM "rozmiaru",                    ID_SORT_ROZMIAR
+            MENUITEM "nazwy",                       ID_SORT_NAZWA
+            MENUITEM "strony",                      ID_SORT_STR
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&Pasek narzÍdzi",             ID_VIEW_TOOLBAR
+        MENUITEM "&Pasek stanu",                ID_VIEW_STATUS_BAR
+    END
+    POPUP "O&kno"
+    BEGIN
+        MENUITEM "&Nowe okno",                  ID_WINDOW_NEW
+        MENUITEM "&Kaskada",                    ID_WINDOW_CASCADE
+        MENUITEM "&Sπsiadujπco",                ID_WINDOW_TILE_HORZ
+        MENUITEM "&Uporzπdkuj ikony",           ID_WINDOW_ARRANGE
+    END
+    MENUITEM "In&formacje",                 ID_APP_ABOUT
+END
+
+IDR_MENUGRZBIET MENU
+BEGIN
+    POPUP "&Grzbiet"
+    BEGIN
+        MENUITEM "&OtwÛrz\tCtrl+O",             ID_FILE_OPEN
+        MENUITEM "&Zachowaj\tCtrl+S",           ID_FILE_SAVE
+        MENUITEM "Zachowaj &jako",              ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "DB OtwÛrz\tCtrl+X",           ID_FILE_DBOPEN
+        MENUITEM "DB Obejrzyj",                 ID_FILE_DBOPENRO
+        MENUITEM "DB Zachowaj",                 ID_FILE_DBSAVE
+        MENUITEM "DB UsuÒ grzbiet",             ID_FILE_DBDELETE, INACTIVE
+        MENUITEM SEPARATOR
+        MENUITEM "Odúwieø\tCtrl+R",             ID_FILE_REFRESH
+        MENUITEM SEPARATOR
+        MENUITEM "Metryka ok≥adki grzbietu",    ID_FILE_INFO
+        MENUITEM SEPARATOR
+        MENUITEM "&Zamknij",                    ID_FILE_CLOSE
+        MENUITEM SEPARATOR
+        POPUP "&Drukuj"
+        BEGIN
+            MENUITEM "Drukowanie &strony",          ID_FILE_PRINT_1P
+            MENUITEM "Drukowanie &makiety",         ID_FILE_PRINT
+            MENUITEM "Drukowanie &EPSÛw\tF6",       ID_FILE_PRINT_EPS
+        END
+        POPUP "Podglπd Wydruku"
+        BEGIN
+            MENUITEM "Jedna strona",                ID_FILE_PRINT_PREVIEW_1P
+            MENUITEM "Ca≥a makieta",                ID_FILE_PRINT_PREVIEW
+        END
+        MENUITEM "Ustawienia drukarki",         ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Logowanie",                  ID_LOGIN
+        MENUITEM "&Koniec",                     ID_APP_EXIT
+    END
+    POPUP "&Edycja"
+    BEGIN
+        MENUITEM "Wyszukiwanie og≥oszenia\tCtrl+F", ID_ADD_FIND
+        MENUITEM "Znajdü nastÍpne\tF3",         IDM_EDIT_FIND_NEXT
+        MENUITEM SEPARATOR
+        MENUITEM "Zmiana objÍtoúci grzbietu",   IDM_INSERTGRZBIET
+        MENUITEM "Zatwierdzanie grzbietu",      IDM_ACCGRB
+    END
+    POPUP "&Widok"
+    BEGIN
+        MENUITEM "Czcionka strony",             ID_VIEW_PAGEFONT
+        MENUITEM "Zablok.powierzchnia",         ID_VIEW_SPACELOCKS
+        MENUITEM SEPARATOR
+        MENUITEM "Czcionka og≥oszenia",         ID_VIEW_ADDFONT
+        MENUITEM "Opis og≥oszenia",             ID_VIEW_ADDDESC
+        MENUITEM "Pokaø deadline'y",            IDM_SHOWTIME
+        MENUITEM SEPARATOR
+        POPUP "Zoom"
+        BEGIN
+            MENUITEM "100%",                        ID_VIEW_ZOOM100
+            MENUITEM "125%",                        ID_VIEW_ZOOM125
+            MENUITEM "150%",                        ID_VIEW_ZOOM150
+            MENUITEM "200%",                        ID_VIEW_ZOOM200
+            MENUITEM "250%",                        ID_VIEW_ZOOM250
+            MENUITEM "300%",                        ID_VIEW_ZOOM300
+            MENUITEM "400%",                        ID_VIEW_ZOOM400
+            MENUITEM "500%",                        ID_VIEW_ZOOM500
+            MENUITEM "Dostosuj",                    ID_VIEW_ZOOMCUSTOM
+        END
+        MENUITEM SEPARATOR
+        POPUP "Sortuj wg"
+        BEGIN
+            MENUITEM "lp.",                         ID_SORT_LP
+            MENUITEM "numeru",                      ID_SORT_NREPS
+            MENUITEM "nazwy",                       ID_SORT_NAZWA
+            MENUITEM "strony",                      ID_SORT_STR
+            MENUITEM "warunki log.",                ID_SORT_WARLOG
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&Pasek narzÍdzi",             ID_VIEW_TOOLBAR
+        MENUITEM "&Pasek stanu",                ID_VIEW_STATUS_BAR
+    END
+    POPUP "O&kno"
+    BEGIN
+        MENUITEM "&Nowe okno",                  ID_WINDOW_NEW
+        MENUITEM "&Kaskada",                    ID_WINDOW_CASCADE
+        MENUITEM "&Sπsiadujπco",                ID_WINDOW_TILE_HORZ
+        MENUITEM "&Uporzπdkuj ikony",           ID_WINDOW_ARRANGE
+    END
+    MENUITEM "&Informacje",                 ID_APP_ABOUT
+END
+
+IDR_MENUMUTCZAS MENU
+BEGIN
+    POPUP " "
+    BEGIN
+        MENUITEM "+ ZwiÍksz numer mutacji czasowej", IDM_INCMUTCZAS
+        MENUITEM "ó Zmniejsz numer mutacji czasowej", IDM_DECMUTCZAS
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS
+BEGIN
+    VK_ESCAPE,      ID_CANCEL_EDIT,         VIRTKEY, NOINVERT
+    VK_DELETE,      ID_EDIT_CLEAR,          VIRTKEY, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    VK_RETURN,      ID_EDIT_PROPERTIES,     VIRTKEY, ALT, NOINVERT
+    "A",            ID_EDIT_SELECT_ALL,     VIRTKEY, CONTROL, NOINVERT
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "L",            ID_LOGIN,               VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    "X",            ID_FILE_DBOPEN,         VIRTKEY, CONTROL, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+    "-",            ID_OBJECT_MOVEBACK,     ASCII,  NOINVERT
+    "+",            ID_OBJECT_MOVETOFRONT,  ASCII,  NOINVERT
+    "=",            ID_OBJECT_MOVEFORWARD,  ASCII,  NOINVERT
+    "_",            ID_OBJECT_MOVETOBACK,   ASCII,  NOINVERT
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
+    VK_SUBTRACT,    ID_OBJECT_MOVEBACK,     VIRTKEY, NOINVERT
+    VK_SUBTRACT,    ID_OBJECT_MOVETOBACK,   VIRTKEY, CONTROL, NOINVERT
+    VK_ADD,         ID_OBJECT_MOVEFORWARD,  VIRTKEY, NOINVERT
+    VK_ADD,         ID_OBJECT_MOVETOFRONT,  VIRTKEY, CONTROL, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+    VK_F10,         IDM_SENDMSG,            VIRTKEY, NOINVERT
+END
+
+IDR_DRAWCLTYPE ACCELERATORS
+BEGIN
+    "F",            ID_ADD_FIND,            VIRTKEY, CONTROL, NOINVERT
+    VK_F5,          ID_CHECK_EPS,           VIRTKEY, NOINVERT
+    VK_F9,          ID_DRAW_OPCJE,          VIRTKEY, NOINVERT
+    "W",            ID_FILE_CLOSE,          VIRTKEY, CONTROL, NOINVERT
+    "X",            ID_FILE_DBOPEN,         VIRTKEY, CONTROL, NOINVERT
+    "S",            ID_FILE_DBSAVE,         VIRTKEY, CONTROL, NOINVERT
+    "S",            ID_FILE_DBSAVE_AS,      VIRTKEY, SHIFT, CONTROL, NOINVERT
+    VK_F6,          ID_FILE_PRINT_EPS,      VIRTKEY, NOINVERT
+    "R",            ID_FILE_REFRESH,        VIRTKEY, CONTROL, NOINVERT
+    "D",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    VK_F12,         ID_FULLSCREEN,          VIRTKEY, CONTROL, NOINVERT
+    "L",            ID_LOGIN,               VIRTKEY, CONTROL, NOINVERT
+    VK_SUBTRACT,    ID_VIEW_LUPKA_MINUS,    VIRTKEY, NOINVERT
+    VK_ADD,         ID_VIEW_LUPKA_PLUS,     VIRTKEY, NOINVERT
+    "I",            ID_WIDOK_COLPERROW,     VIRTKEY, ALT, NOINVERT
+    "B",            IDM_ASIDE_ADDS,         VIRTKEY, CONTROL, NOINVERT
+    "Q",            IDM_ATEXSYG,            VIRTKEY, ALT, NOINVERT
+    "E",            IDM_CHANGEVIEW,         VIRTKEY, CONTROL, NOINVERT
+    VK_F8,          IDM_CHECKREP,           VIRTKEY, NOINVERT
+    VK_F3,          IDM_EDIT_FIND_NEXT,     VIRTKEY, NOINVERT
+    VK_F4,          IDM_EPSDATA,            VIRTKEY, NOINVERT
+    VK_F11,         IDM_IRFAN,              VIRTKEY, NOINVERT
+    "K",            IDM_PREV_KOR,           VIRTKEY, CONTROL, NOINVERT
+    VK_F11,         IDM_PREVDIG,            VIRTKEY, SHIFT, NOINVERT
+    VK_F11,         IDM_PREVPDF,            VIRTKEY, CONTROL, NOINVERT
+    VK_F10,         IDM_SENDMSG,            VIRTKEY, NOINVERT
+    VK_F12,         IDM_SETDEA,             VIRTKEY, NOINVERT
+    VK_F2,          IDM_SETPAGINA,          VIRTKEY, NOINVERT
+    VK_RIGHT,       IDM_SHOWDTLS,           VIRTKEY, NOINVERT
+    VK_F7,          IDM_SHOWREPT,           VIRTKEY, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 34, 22, 171, 177
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Manam - sierpieÒ 2015"
+FONT 8, "Verdana", 0, 0, 0x0
+BEGIN
+    LTEXT           "*",IDC_CLIENT,9,133,158,42
+    GROUPBOX        "Uøytkownik",IDC_STATIC,4,121,165,40
+    ICON            IDR_MAINFRAME,IDC_STATIC,7,7,20,20
+    LTEXT           "",IDC_SIGN_TEXT,45,7,124,33
+    LTEXT           "ver 7.0",IDC_STATIC,5,28,25,8
+    LTEXT           "M\nM",IDC_MEMSTAT,4,101,166,19
+    LTEXT           "Program napisany dla Agora SA \nprzez Marcina Buchwalda w latach 1999-2015.\n\n  email: velvet@agora.pl\n  www: http://gwspacer.agora.pl\n  telefon dyøurny: 55558",IDC_STATIC,4,48,166,49,NOT WS_GROUP
+    DEFPUSHBUTTON   "Zamknij",IDOK,133,73,35,14
+END
+
+IDD_KOLUMNY DIALOGEX 20, 20, 134, 44
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "IloúÊ kolumn gazety"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    LTEXT           "IloúÊ kolumn:",IDC_STATIC,3,7,45,13
+    COMBOBOX        IDC_ILEKOLUMN,51,7,33,197,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,96,5,36,14
+    PUSHBUTTON      "Cancel",IDCANCEL,96,26,36,14
+END
+
+IDD_PAGE DIALOGEX 20, 20, 341, 254
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Opis Kolumny"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    LTEXT           "Nr",IDC_STATIC,6,9,10,10
+    EDITTEXT        IDC_NR,16,7,20,12,0,WS_EX_RIGHT
+    LTEXT           "Kratka",IDC_STATIC,38,9,22,10
+    COMBOBOX        IDC_KRATKA,61,7,36,149,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Dziedziczona",IDC_STATIC,99,10,42,10
+    EDITTEXT        IDC_DERVINFO,143,8,88,13,ES_AUTOHSCROLL | WS_DISABLED
+    GROUPBOX        "Mutacje",IDC_STATIC,236,5,39,96
+    GROUPBOX        "Drukarnie",IDC_STATIC,278,6,58,95
+    LTEXT           "Nag≥Ûwek",IDC_STATIC,6,29,37,9
+    COMBOBOX        IDC_CAPTIONCOMBO,46,26,58,121,CBS_DROPDOWN | CBS_AUTOHSCROLL | CBS_SORT | NOT WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "cap",IDC_CAPTION,"Static",SS_LEFTNOWORDWRAP | WS_GROUP,46,29,58,10
+    LTEXT           "Kolor",IDC_STATIC,112,28,16,9
+    COMBOBOX        IDC_KOLOR,131,26,40,48,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Nie makietuj",IDC_NIEMAKIETUJ,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,179,26,52,10
+    LISTBOX         IDC_MUTRED,239,17,32,82,LBS_SORT | LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_PRINTHOUSE,281,17,52,82,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Sekcja strony",IDC_STATIC,6,53,45,10
+    COMBOBOX        IDC_NAMECOMBO,50,51,92,189,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Static",IDC_NAME,58,53,83,9,NOT WS_VISIBLE
+    LTEXT           "Para",IDC_STATIC,145,54,15,8
+    COMBOBOX        IDC_ROZKLAD,162,51,69,73,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Rzymska pagina",IDC_RZYMSKA,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,167,39,64,10
+    LTEXT           "Deadline",IDC_STATIC,6,72,29,9
+    CONTROL         "DateTimePicker2",IDC_DEADLINEDAY,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,38,68,55,14
+    CONTROL         "DateTimePicker1",IDC_DEADLINE,"SysDateTimePick32",DTS_RIGHTALIGN | DTS_UPDOWN | WS_TABSTOP | 0x8,93,68,34,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,152,68,38,14
+    DEFPUSHBUTTON   "&Zatwierdü",IDOK,194,68,37,14
+    GROUPBOX        "Ustala studio graficzne",IDC_STATIC,5,106,223,145
+    LTEXT           "Taka sama pagina dla",IDC_UWAGI,6,90,72,9
+    EDITTEXT        IDC_TOPAGE,90,88,19,12,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "str.",IDC_STATIC,112,90,9,9
+    LTEXT           "Makieta opisÛw:",IDC_STATIC,12,119,53,9
+    COMBOBOX        IDC_PRN_MAK,77,117,144,99,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Wybrane opisy:",IDC_STATIC,12,140,53,9
+    LISTBOX         IDC_PRN_FUN,76,138,143,110,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Wydawca:",IDC_STATIC,127,90,36,10
+    COMBOBOX        IDC_WYDAWCA,163,88,67,124,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "...",IDC_ACDEAD,129,71,12,11
+END
+
+IDD_ADD DIALOGEX 20, 20, 323, 267
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Opis Og≥oszenia"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    LTEXT           "Nazwa",IDC_STATIC,3,6,28,9
+    COMBOBOX        IDC_ZAJAWKA,29,4,95,152,CBS_DROPDOWN | NOT WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_NAZWA,34,4,87,13,ES_AUTOHSCROLL
+    LTEXT           "Rozmiar",IDC_STATIC,127,7,26,11
+    EDITTEXT        IDC_SIZEX,158,4,14,13,ES_UPPERCASE | ES_AUTOHSCROLL
+    LTEXT           "X",IDC_STATIC,179,7,8,10
+    EDITTEXT        IDC_SIZEY,191,4,16,13,ES_UPPERCASE | ES_AUTOHSCROLL
+    LTEXT           "Nr ATEX",IDC_STATIC,2,25,29,8
+    EDITTEXT        ID_NREPS,34,22,60,12,ES_NUMBER
+    LTEXT           "ver.",IDC_STATIC,97,24,12,10
+    EDITTEXT        IDC_WERSJA,110,22,25,12,ES_LOWERCASE | ES_AUTOHSCROLL
+    CONTROL         "Niestandardowe",IDC_KRATOWE,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,140,24,67,10
+    LTEXT           "Kolor",IDC_STATIC,2,41,22,10
+    COMBOBOX        IDC_KOLOR,34,39,60,114,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Pozycja napisÛw",IDC_STATIC,112,40,54,9
+    EDITTEXT        IDC_TXTPOSX,171,39,15,13,ES_UPPERCASE | ES_AUTOHSCROLL
+    EDITTEXT        IDC_TXTPOSY,192,39,15,13,ES_UPPERCASE | ES_AUTOHSCROLL
+    LTEXT           "Strona",IDC_STATIC,2,61,22,9
+    EDITTEXT        IDC_FIZPAGE,34,59,18,13,ES_AUTOHSCROLL
+    CONTROL         "rzymska",IDC_RZYMSKA,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,63,56,41,10
+    CONTROL         "powtÛrka",IDC_CBPOWT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,63,68,43,10
+    LTEXT           "Pozycja",IDC_STATIC,123,62,26,11
+    EDITTEXT        IDC_POSX,158,59,14,13,ES_AUTOHSCROLL
+    LTEXT           "X",IDC_STATIC,180,61,8,10
+    EDITTEXT        IDC_POSY,192,59,15,13,ES_AUTOHSCROLL
+    LTEXT           "Z dnia",IDC_STATIC,3,84,21,9
+    CONTROL         "DateTimePicker1",IDC_POWT,"SysDateTimePick32",DTS_RIGHTALIGN | WS_DISABLED | WS_TABSTOP,25,82,55,13
+    LTEXT           "nr",IDC_STATIC,83,84,8,9
+    EDITTEXT        ID_OLDADNO,91,82,54,12,ES_NUMBER | WS_DISABLED
+    LTEXT           "Kratka",IDC_STATIC,150,84,22,9
+    COMBOBOX        IDC_KRATKA,172,82,35,74,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Miejsce",IDC_STATIC,4,105,26,10
+    EDITTEXT        IDC_LOGPAGE,29,102,41,13,ES_UPPERCASE | ES_AUTOHSCROLL
+    LTEXT           "Uwagi",IDC_STATIC,72,104,21,11
+    EDITTEXT        IDC_REMARKS,94,102,113,13,ES_AUTOHSCROLL
+    LTEXT           "Uwagi ATEX",IDC_STATIC,4,121,42,10
+    EDITTEXT        IDC_ALIKE,50,119,157,13,ES_AUTOHSCROLL | ES_READONLY
+    GROUPBOX        "KrawÍdzie na spad",IDC_STATIC,7,136,72,65
+    GROUPBOX        "",IDC_STATIC,21,151,43,40
+    CONTROL         "GÛra",IDC_TOP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,29,151,29,10
+    CONTROL         "Lewo",IDC_LEFT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,161,32,10
+    CONTROL         "Prawo",IDC_RIGHT,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,35,173,32,10
+    CONTROL         "DÛ≥",IDC_BOTTOM,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,31,186,26,10,WS_EX_RIGHT
+    GROUPBOX        "Spacer - czas obowiπzywania",IDC_STATIC,88,136,120,65
+    LTEXT           "Spacer#",IDC_STATIC,92,149,27,9
+    EDITTEXT        ID_SPACER_IDA,123,147,35,13,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER
+    CONTROL         "Zawsze",IDC_ALWAYS,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,162,150,40,8
+    CONTROL         "DateTimePicker1",IDC_DATA_CZOB,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,98,166,55,13
+    CONTROL         "DateTimePicker1",IDC_GODZ_CZOB,"SysDateTimePick32",DTS_RIGHTALIGN | DTS_UPDOWN | WS_TABSTOP | 0x8,164,166,34,13
+    LTEXT           "Od:",IDC_STATIC,92,187,12,9
+    EDITTEXT        IDC_SPRZEDAL,104,185,100,12,ES_AUTOHSCROLL | ES_READONLY
+    CONTROL         "Zablokowane",IDC_LOCKED,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,9,204,66,10
+    CONTROL         "Flaga rezerwacji",IDC_FLAGA_REZERW,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,9,217,66,10
+    CONTROL         "Akcept. sprzedaøy",IDC_EPSOK,"Button",BS_AUTO3STATE | BS_LEFTTEXT | WS_TABSTOP,89,205,73,10
+    CONTROL         "Zagroøone",IDC_ZAGROZONE,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_DISABLED | WS_TABSTOP,89,218,73,10
+    CONTROL         "Cyfrowe",IDC_GBRAK,"Button",BS_AUTO3STATE | BS_LEFTTEXT | WS_DISABLED | WS_TABSTOP,171,205,37,10
+    LTEXT           "&Studio",IDC_STATIC,9,233,20,9
+    COMBOBOX        IDC_STUDIO,31,230,51,142,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_EMISJE,219,4,100,219,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    PUSHBUTTON      "&Odblokuj",IDC_ODBLOKUJ,5,247,36,14
+    PUSHBUTTON      "A&TEX",IDATEX,47,247,36,14
+    PUSHBUTTON      "&Emisje",IDEMISJE,89,247,36,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,131,247,36,14
+    DEFPUSHBUTTON   "&Zatwierdü",IDOK,173,247,36,14
+    PUSHBUTTON      "UsuÒ zaz&naczone",IDDELSEL,219,229,99,14
+    PUSHBUTTON      "UsuÒ &wszystkie",IDDELALL,219,247,99,14
+    COMBOBOX        IDC_TYP_OGL,157,4,50,70,CBS_DROPDOWNLIST | NOT WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "&Opis red.",IDC_STATIC,92,233,28,9
+    COMBOBOX        IDC_NAGL_RED,122,230,86,129,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_INFO DIALOGEX 20, 20, 460, 276
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Dane edycji"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    LTEXT           "Tytu≥:",IDC_STATIC,11,6,20,8
+    EDITTEXT        ID_GAZETA,37,4,36,12,ES_UPPERCASE | ES_READONLY
+    LTEXT           "Typ:",IDC_STATIC,77,6,15,8
+    EDITTEXT        ID_POMOC,92,4,103,12,ES_READONLY
+    LTEXT           "Nak≥ad:",IDC_STATIC,9,24,26,8,NOT WS_GROUP
+    EDITTEXT        IDC_NAKLAD,37,21,36,12,ES_RIGHT | ES_AUTOHSCROLL
+    LTEXT           "ObjÍtoúÊ:",IDC_STATIC,77,24,30,10,NOT WS_GROUP
+    EDITTEXT        IDC_OBJETOSC,109,21,15,12,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER
+    LTEXT           "Cena:",IDC_STATIC,128,24,20,8,NOT WS_GROUP
+    EDITTEXT        IDC_CENA,148,21,19,12,ES_AUTOHSCROLL
+    CTEXT           "/",IDC_STATIC,167,24,8,8,NOT WS_GROUP
+    EDITTEXT        IDC_CENA2,175,21,19,12,ES_AUTOHSCROLL
+    LTEXT           "Numer:",IDC_STATIC,9,42,23,10,NOT WS_GROUP
+    EDITTEXT        IDC_NUMERROK,34,40,31,12,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER
+    CTEXT           "/",IDC_STATIC,65,43,8,8,NOT WS_GROUP
+    EDITTEXT        IDC_NUMER,73,40,36,12,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Data edycji:",IDC_STATIC,111,42,40,11,NOT WS_GROUP
+    EDITTEXT        ID_DATA,151,40,43,12,ES_UPPERCASE | WS_DISABLED
+    RTEXT           "Makieta do red.:",IDC_STATIC,3,59,61,11,NOT WS_GROUP
+    CONTROL         "DateTimePicker2",ID_DATA_WYKUPU,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,67,58,55,13
+    LTEXT           "Godzina:",IDC_STATIC,128,59,30,9,NOT WS_GROUP
+    CONTROL         "DateTimePicker2",ID_GODZ_WYKUPU,"SysDateTimePick32",DTS_RIGHTALIGN | DTS_UPDOWN | WS_TABSTOP | 0x8,160,58,34,13
+    LTEXT           "Materia≥y do stud.:",IDC_STATIC,1,76,63,10,NOT WS_GROUP,WS_EX_RIGHT
+    CONTROL         "",ID_DATA_STUDIO,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,67,74,55,13
+    LTEXT           "Godzina:",IDC_STATIC,128,76,30,9,NOT WS_GROUP
+    CONTROL         "",ID_GODZ_STUDIO,"SysDateTimePick32",DTS_RIGHTALIGN | DTS_UPDOWN | WS_TABSTOP | 0x8,160,74,34,13
+    LTEXT           "Data zamkniÍcia:",IDC_STATIC,9,93,55,10,NOT WS_GROUP
+    CONTROL         "DateTimePicker2",ID_DATA_ZAMKNIECIA,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,67,90,55,13
+    LTEXT           "Godzina:",IDC_STATIC,128,93,30,9,NOT WS_GROUP
+    CONTROL         "DateTimePicker2",ID_GODZ_ZAMKNIECIA,"SysDateTimePick32",DTS_RIGHTALIGN | DTS_UPDOWN | WS_TABSTOP | 0x8,160,90,34,13
+    RTEXT           "Prowadzπcy:",IDC_STATIC,21,112,42,10,NOT WS_GROUP
+    EDITTEXT        ID_PROWADZ1,67,110,127,12,ES_UPPERCASE
+    RTEXT           "Prowadzπcy2:",IDC_STATIC,12,130,51,9,NOT WS_GROUP
+    EDITTEXT        ID_PROWADZ2,67,127,127,12,ES_UPPERCASE
+    RTEXT           "Red. odpowiedz.",IDC_STATIC,10,147,55,10,NOT WS_GROUP
+    EDITTEXT        ID_SEKRETARZ,67,144,127,12,ES_UPPERCASE
+    RTEXT           "Odp. za makietÍ:",IDC_STATIC,6,164,59,10,NOT WS_GROUP
+    EDITTEXT        ID_KTO_MAKIETUJE,67,162,127,12,ES_UPPERCASE
+    RTEXT           "Uwagi:",IDC_STATIC,8,183,25,10,NOT WS_GROUP
+    EDITTEXT        IDC_UWAGI,39,181,349,29,ES_MULTILINE
+    RTEXT           "Format:",IDC_STATIC,12,218,24,10,NOT WS_GROUP
+    COMBOBOX        IDC_TYP_PAPIERU,39,216,349,99,CBS_DROPDOWN | NOT WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Wydawca:",IDC_STATIC,2,237,34,10,NOT WS_GROUP
+    EDITTEXT        IDC_WYDAWCA,39,234,349,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Zsy≥a og≥.:",IDC_STATIC,2,258,35,8,NOT WS_GROUP,WS_EX_RIGHT
+    COMBOBOX        IDC_ISSN,41,255,86,171,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Zsy≥a red.:",IDC_STATIC,136,258,34,8,NOT WS_GROUP
+    COMBOBOX        IDC_INSERT,170,255,86,171,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Wykorzystanie modu≥Ûw",IDC_MODSTATISTICS,202,1,187,91
+    LTEXT           "Og≥oszeniowe:",IDC_STATIC,213,14,52,9,NOT WS_GROUP
+    EDITTEXT        IDC_MODOGL,265,12,46,12,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
+    LTEXT           "Stron:",IDC_STATIC,314,14,19,9,NOT WS_GROUP
+    EDITTEXT        IDC_MODOGLP,336,12,32,12,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
+    LTEXT           "Redakcyjne:",IDC_STATIC,220,30,41,10,NOT WS_GROUP
+    EDITTEXT        IDC_MODRED,265,28,46,12,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
+    LTEXT           "Stron:",IDC_STATIC,314,30,19,9,NOT WS_GROUP
+    EDITTEXT        IDC_MODREDP,336,28,32,12,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
+    LTEXT           "Wolne:",IDC_STATIC,237,46,24,9,NOT WS_GROUP
+    EDITTEXT        IDC_MODWOL,265,44,46,12,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
+    LTEXT           "Stron:",IDC_STATIC,314,46,19,9,NOT WS_GROUP
+    EDITTEXT        IDC_MODWOLP,336,44,32,12,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
+    RTEXT           "Zablokowane:",IDC_STATIC,210,62,49,9,NOT WS_GROUP
+    EDITTEXT        IDC_MODREZ,265,60,46,12,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
+    LTEXT           "Stron:",IDC_STATIC,314,62,19,9,NOT WS_GROUP
+    EDITTEXT        IDC_MODREZ2,336,60,32,12,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
+    RTEXT           "Og≥oszeÒ [mod]",IDC_STATIC,211,78,50,9,NOT WS_GROUP
+    EDITTEXT        IDC_MODCNT,265,77,28,12,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
+    GROUPBOX        "Dla ca≥ej makiety jak na jedynce",IDC_STATIC,202,99,187,27
+    CONTROL         "Deadline i drukarnie",IDC_DEADLINE,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,305,111,76,10
+    CONTROL         "Kraty",IDC_KRATKA,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,214,111,31,10
+    RTEXT           "Grzbiet:",IDC_GNAZWA,200,137,25,10,NOT WS_GROUP
+    EDITTEXT        IDC_SUBDIR,228,135,36,12,ES_UPPERCASE | ES_AUTOHSCROLL | ES_READONLY
+    CONTROL         "Szycie",IDC_SZYJ,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,267,137,38,10,WS_EX_RIGHT
+    LTEXT           "Podpis:",IDC_GUWAGI,308,137,28,10,NOT WS_GROUP,WS_EX_RIGHT
+    EDITTEXT        IDC_SIGN_TEXT,338,135,50,12,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER,WS_EX_RIGHT
+    PUSHBUTTON      "&Podpisz",IDB_SIGN,268,254,37,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,309,254,39,14
+    DEFPUSHBUTTON   "&Zatwierdü",IDOK,351,254,40,14
+    GROUPBOX        "Drukarnie",IDC_STATIC,395,1,60,91
+    LISTBOX         IDC_PRINTHOUSE,399,12,52,76,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Deadline grzbietu",IDC_STATIC,204,156,184,20
+    CONTROL         "",ID_DATA_DEADLINE,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,287,162,55,13
+    CONTROL         "",ID_GODZ_DEADLINE,"SysDateTimePick32",DTS_RIGHTALIGN | DTS_UPDOWN | WS_TABSTOP | 0x8,348,162,34,13
+    CONTROL         "Papier",IDC_PAPIER,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,261,111,31,10
+    EDITTEXT        IDC_PAP,39,215,349,14,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_QUECNT,339,76,29,12,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
+    RTEXT           "Kolejka [mod]",IDC_STATIC,294,79,43,9,NOT WS_GROUP
+    LTEXT           "Strony:",IDC_STATIC,246,165,21,8
+    PUSHBUTTON      "...",IDC_DEADLINEDAY,271,164,10,9
+END
+
+IDD_OPIS DIALOGEX 20, 20, 312, 201
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Tekst dodatkowy"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    EDITTEXT        IDC_OPIS,5,15,300,163,ES_MULTILINE | ES_AUTOVSCROLL
+    DEFPUSHBUTTON   "&Zatwierdü",IDOK,267,182,39,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,225,182,39,14
+    LTEXT           "Wprowadü opis (nowa linia Ctrl + Ent)",IDC_STATIC,7,3,121,8
+    CONTROL         "Centruj",IDC_CAPTION,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,185,38,10
+END
+
+IDD_CUSTZOOM DIALOG 0, 0, 186, 66
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Dostosuj Zoom"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Nowa wartoúÊ",IDC_STATIC,0,0,120,56
+    LTEXT           "Zoom %",IDC_STATIC,10,16,42,8
+    EDITTEXT        IDC_OPIS,10,30,71,13,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,129,6,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,23,50,14
+END
+
+IDD_DB_ADD DIALOGEX 20, 20, 168, 140
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Import og≥oszeÒ z systemu sprzedaøy"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    EDITTEXT        ID_PAP,57,9,26,12,ES_UPPERCASE
+    EDITTEXT        ID_MUTACJA,57,25,35,12,ES_UPPERCASE
+    CONTROL         "Strefa",IDC_ZAKRES,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,11,43,35,10
+    EDITTEXT        ID_STREFA,57,41,35,12,ES_UPPERCASE | WS_DISABLED
+    CONTROL         "DateTimePicker1",IDC_DT,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,57,57,56,12
+    EDITTEXT        ID_STRLOG,57,74,35,12,ES_UPPERCASE
+    CONTROL         "Klient w nazwie:",IDC_CLIENT,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,12,90,80,10
+    EDITTEXT        ID_TYTUL,30,119,26,12,ES_UPPERCASE
+    EDITTEXT        ID_MUTACJA2,88,119,28,12,ES_UPPERCASE
+    DEFPUSHBUTTON   "&Importuj",IDOK,125,6,37,13
+    PUSHBUTTON      "&Anuluj",IDCANCEL,125,22,37,12
+    LTEXT           "Tytu≥:",IDC_STATIC,12,12,35,9
+    LTEXT           "Mutacja:",IDC_STATIC,12,27,29,9
+    LTEXT           "Data emisji:",IDC_STATIC,12,59,38,9
+    LTEXT           "Strona:",IDC_STATIC,13,75,35,9
+    GROUPBOX        "Podstawa",IDC_STATIC,5,1,113,106
+    GROUPBOX        "Dodatkowe ürÛd≥o",IDC_STATIC,5,109,114,27
+    LTEXT           "Tytu≥:",IDC_STATIC,7,120,22,9
+    LTEXT           "Mutacja:",IDC_STATIC,58,121,29,9
+END
+
+IDD_DBKOLUMNY DIALOGEX 20, 20, 212, 67
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "IloúÊ kolumn i drzewo stron logicznych makiety "
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    LTEXT           "IloúÊ kolumn:",IDC_STATIC,9,10,44,11
+    COMBOBOX        IDC_ILEKOLUMN,55,8,33,154,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Data edycji:",IDC_STATIC,6,30,43,11
+    CONTROL         "",IDC_LASTEMISION,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,55,27,58,14
+    RTEXT           "Produkt:",IDC_STATIC,18,50,31,10
+    COMBOBOX        IDC_DRZEWO,55,48,151,155,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Anuluj",IDCANCEL,125,7,36,14
+    DEFPUSHBUTTON   "UtwÛrz",IDOK,169,7,36,14
+END
+
+IDD_DRZEWO DIALOGEX 20, 20, 163, 47
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Drzewo stron logicznych makiety "
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "&Zatwierdü",IDOK,116,26,41,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,70,26,41,14
+    COMBOBOX        IDC_DRZEWO,6,5,150,151,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_DB_OPEN DIALOGEX 20, 20, 276, 156
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Otwieranie makiety z bazy danych"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    LTEXT           "Tytu≥",IDC_STATIC,5,6,18,8,NOT WS_GROUP
+    EDITTEXT        ID_TYTUL,50,4,27,12,ES_UPPERCASE
+    LTEXT           "Mutacja",IDC_STATIC,5,22,35,10,NOT WS_GROUP
+    EDITTEXT        ID_MUTACJA,50,21,21,12,ES_UPPERCASE
+    LTEXT           "Data emisji:",ID_DATA_TEXT,5,40,40,9,NOT WS_GROUP
+    CONTROL         "DateTimePicker1",IDC_DT,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,49,38,55,13
+    LTEXT           "Okres:",ID_DATA_TEXT2,5,59,26,9
+    COMBOBOX        IDC_OKRES,49,57,54,73,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "RÛøne mutacje",IDC_MEMSTAT,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,6,77,61,10
+    GROUPBOX        "Typ dokumentu",IDC_STATIC,5,90,99,64
+    CONTROL         "Makieta",IDC_MAKIETA,"Button",BS_AUTORADIOBUTTON | WS_GROUP,12,104,41,10
+    CONTROL         "Makieta biblioteczna",IDC_LIB,"Button",BS_AUTORADIOBUTTON,12,119,81,10
+    CONTROL         "Grzbiet drukowany",IDC_GRZBIET,"Button",BS_AUTORADIOBUTTON,12,134,75,10
+    COMBOBOX        IDC_WERSJE_LIB,50,38,47,54,CBS_DROPDOWNLIST | CBS_SORT | NOT WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
+    DEFPUSHBUTTON   "&OtwÛrz",IDOK,226,6,43,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,226,25,43,14
+    LTEXT           "Wersja",ID_WERSJA_TEXT,6,40,34,11,NOT WS_VISIBLE
+    GROUPBOX        "Daty edycji",IDC_STATIC,108,3,72,151
+    LISTBOX         IDC_DATY,113,15,62,136,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Mutacje",IDC_STATIC,182,3,40,151
+    LISTBOX         IDC_MUTACJA,187,15,30,136,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_DB_SAVEAS DIALOG 20, 20, 143, 65
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Zachowaj makietÍ w bazie danych"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         " Makieta biblioteczna",IDC_LIB,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,51,82,10
+    DEFPUSHBUTTON   "&Zachowaj",IDOK,101,10,38,13
+    PUSHBUTTON      "&Anuluj",IDCANCEL,102,29,38,12
+    LTEXT           "Data emisji:",ID_DATA_TEXT,3,31,36,9
+    LTEXT           "Tytul mutacja",IDC_TYTMUT,44,9,50,15
+    LTEXT           "Tytu≥, mutacja",IDC_TYTMUT2,3,6,37,19
+    CTEXT           "Wersja",ID_WERSJA_TEXT,3,32,33,8,NOT WS_VISIBLE
+    CONTROL         "DateTimePicker1",IDC_DT,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,42,28,55,13
+    EDITTEXT        IDC_WERSJA,44,29,47,12,ES_UPPERCASE | ES_AUTOHSCROLL | NOT WS_VISIBLE
+END
+
+IDD_ADDDESC DIALOGEX 0, 0, 206, 126
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Opis og≥oszenia"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "&Zatwierdü",IDOK,150,8,50,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,150,25,50,14
+    GROUPBOX        "Na gÛrze",IDC_STATIC,5,4,66,116
+    CONTROL         "Nazwa",IDC_GNAZWA,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,11,18,51,10
+    CONTROL         "Kod modu≥u",IDC_GPLIK,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,11,31,51,10
+    CONTROL         "Warunek log.",IDC_GWARLOG,"Button",BS_AUTORADIOBUTTON,11,44,55,10
+    CONTROL         "Czas obowiπz.",IDC_GCZASKTO,"Button",BS_AUTORADIOBUTTON,11,57,58,10
+    CONTROL         "Uwagi",IDC_GUWAGI,"Button",BS_AUTORADIOBUTTON,11,70,51,10
+    CONTROL         "Studio",IDC_GSTUDIO,"Button",BS_AUTORADIOBUTTON,11,83,51,10
+    CONTROL         "ZamÛwienie",IDC_GEPS,"Button",BS_AUTORADIOBUTTON,11,96,52,10
+    CONTROL         "Brak",IDC_GBRAK,"Button",BS_AUTORADIOBUTTON,11,109,49,8
+    GROUPBOX        "Na dole",IDC_STATIC,77,4,67,116
+    CONTROL         "Nazwa",IDC_DNAZWA,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,82,18,51,10
+    CONTROL         "Kod modu≥u",IDC_DPLIK,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,82,31,51,10
+    CONTROL         "Warunek log.",IDC_DWARLOG,"Button",BS_AUTORADIOBUTTON,82,44,56,10
+    CONTROL         "Czas obowiπz.",IDC_DCZASKTO,"Button",BS_AUTORADIOBUTTON,82,57,57,10
+    CONTROL         "Uwagi",IDC_DUWAGI,"Button",BS_AUTORADIOBUTTON,82,70,34,10
+    CONTROL         "Studio",IDC_DSTUDIO,"Button",BS_AUTORADIOBUTTON,82,83,34,10
+    CONTROL         "ZamÛwienie",IDC_DEPS,"Button",BS_AUTORADIOBUTTON,82,96,51,10
+    CONTROL         "Brak",IDC_DBRAK,"Button",BS_AUTORADIOBUTTON,82,108,34,10
+END
+
+IDD_ADD_FIND DIALOG 0, 0, 138, 93
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Wyszukiwanie og≥oszenia"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_NR,44,17,48,13,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SPACER,44,34,48,13,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_NAZWA,38,51,91,13,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Szukaj",IDOK,90,74,44,14
+    PUSHBUTTON      "Anuluj",IDCANCEL,41,74,44,14
+    GROUPBOX        "Podaj numer ATEX lub nazwÍ",IDC_STATIC,4,4,130,65
+    LTEXT           "Nr ATEX:",IDC_STATIC,11,19,32,10
+    LTEXT           "Spacer#:",IDC_STATIC,11,37,29,10
+    LTEXT           "Nazwa:",IDC_STATIC,11,53,25,10
+END
+
+IDD_INFOLIB DIALOGEX 0, 0, 187, 123
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Makieta biblioteczna"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    EDITTEXT        IDC_OPIS_LIB,26,64,96,54,ES_MULTILINE
+    DEFPUSHBUTTON   "&Zatwierdü",IDOK,131,6,50,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,131,23,50,14
+    LTEXT           "Tytu≥",IDC_STATIC,5,8,19,10
+    LTEXT           "Wersja",IDC_STATIC,65,8,23,10
+    LTEXT           "Opis",IDC_STATIC,6,64,17,9
+    EDITTEXT        IDC_TYTMUT,26,6,34,12,ES_AUTOHSCROLL | WS_DISABLED
+    EDITTEXT        IDC_WERSJA,90,6,32,12,ES_AUTOHSCROLL | WS_DISABLED
+    CONTROL         "Ustaw papier jak na jedynce",IDC_PAPIER,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,6,24,116,10
+    EDITTEXT        IDC_PAP,26,41,156,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Papier",IDC_STATIC,3,43,21,9
+    CONTROL         "Szycie",IDC_SZYCIE,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,135,65,37,10
+END
+
+IDD_CONFIG DIALOGEX 0, 0, 346, 228
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Konfiguracja"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    GROUPBOX        "Wartoúci domyúlne",IDC_STATIC,7,3,124,68
+    LTEXT           "ObjÍtoúÊ nowej makiety:",IDC_STATIC,15,14,79,10,NOT WS_GROUP
+    EDITTEXT        IDC_STRCNT,99,13,17,12,ES_AUTOHSCROLL
+    LTEXT           "Godzina deadline:",IDC_STATIC,15,29,57,9,NOT WS_GROUP
+    EDITTEXT        IDC_DEADLINE,99,27,23,12,ES_AUTOHSCROLL
+    LTEXT           "IloúÊ kolumn w wierszu:",IDC_STATIC,15,43,75,8,NOT WS_GROUP
+    COMBOBOX        IDC_PAGESPERROW,99,41,26,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Ciπg≥a numeracja stron",IDC_SETDEA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,58,89,10
+    GROUPBOX        "Format wydruku",IDC_STATIC,7,74,124,39
+    CONTROL         "50 kolumn (wybierz portrait)",IDC_A4_PAGE,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,13,87,102,8
+    CONTROL         "100 kolumn (wybierz landscape)",IDC_A3_PAGE,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,13,100,113,8
+    GROUPBOX        "Automatyczne makietowanie",IDC_STATIC,7,115,124,67,WS_GROUP
+    CONTROL         "Makietowanie skomasowane",IDC_MAKDOKUPY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,128,106,10
+    GROUPBOX        "Przestawianie og≥oszeÒ",IDC_STATIC,9,141,120,39
+    CONTROL         "Tylko og≥oszenia poza makietπ",IDC_MAKOUTER,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,13,153,110,10
+    CONTROL         "Wszystkie og≥oszenia",IDC_MAKALL,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,13,166,110,10
+    GROUPBOX        "Podwa≥y",IDC_STATIC,8,184,123,38,WS_GROUP
+    CONTROL         "Kopiuj",IDC_COPYOLDEPS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,194,37,10
+    CONTROL         "Do podkatalogÛw",IDC_PODSUBDIR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,56,194,69,10
+    CONTROL         "UtwÛrz EPS z podwa≥Ûw",IDC_PODWALY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,206,93,10
+    GROUPBOX        "Lokalizacja materia≥u graficznego",IDC_STATIC,138,4,201,200
+    CONTROL         "Tryb OPI",IDC_OPIMODE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,146,16,43,10
+    CONTROL         "Katalogi dniowe",IDC_DAYDIRS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,193,16,66,10
+    CONTROL         "ZapamiÍtaj katalogi",IDC_INSERT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,259,16,74,10,WS_EX_RIGHT
+    CONTROL         "Szukanie w podkatalogach",IDC_SUBDIR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,145,29,103,10
+    LTEXT           "Haszowanie:",IDC_STATIC,267,30,42,9,NOT WS_GROUP
+    EDITTEXT        IDC_HASHING,311,30,22,12,ES_AUTOHSCROLL | WS_DISABLED
+    RTEXT           "èrÛd≥o:",IDC_STATIC,141,47,27,8,NOT WS_GROUP
+    CONTROL         "",IDC_EPS_SRC,"MfcEditBrowse",WS_BORDER | WS_TABSTOP | 0x80,171,44,161,12
+    RTEXT           "Stare:",IDC_STATIC,145,61,23,8,NOT WS_GROUP
+    CONTROL         "",IDC_EPS_OLD,"MfcEditBrowse",WS_BORDER | WS_TABSTOP | 0x80,171,59,161,12
+    RTEXT           "Eps do:",IDC_STATIC,142,76,26,8,NOT WS_GROUP
+    CONTROL         "",IDC_EPS_DST,"MfcEditBrowse",WS_BORDER | WS_TABSTOP | 0x80,171,74,161,12
+    RTEXT           "Ps do:",IDC_STATIC,142,90,26,8,NOT WS_GROUP
+    CONTROL         "",IDC_PS_DST,"MfcEditBrowse",WS_BORDER | WS_TABSTOP | 0x80,171,89,161,12
+    RTEXT           "Zajawki:",IDC_STATIC,142,106,28,8,NOT WS_GROUP
+    CONTROL         "",IDC_EPS_ZAJ,"MfcEditBrowse",WS_BORDER | WS_TABSTOP | 0x80,171,104,161,12
+    RTEXT           "Podwa≥y:",IDC_STATIC,140,121,30,8,NOT WS_GROUP
+    CONTROL         "",IDC_EPS_POD,"MfcEditBrowse",WS_BORDER | WS_TABSTOP | 0x80,171,119,161,12
+    RTEXT           "Drobne:",IDC_STATIC,144,136,26,8,NOT WS_GROUP
+    CONTROL         "",IDC_EPS_DRO,"MfcEditBrowse",WS_BORDER | WS_TABSTOP | 0x80,171,134,161,12
+    RTEXT           "IrfanView",IDC_STATIC,140,166,30,8,NOT WS_GROUP
+    CONTROL         "",IDC_EPS_IRF,"MfcEditBrowse",WS_BORDER | WS_TABSTOP | 0x80,171,164,161,12
+    RTEXT           "Uzupe≥.",IDC_STATIC,143,152,26,8,NOT WS_GROUP
+    CONTROL         "",IDC_EPS_UZU,"MfcEditBrowse",WS_BORDER | WS_TABSTOP | 0x80,171,149,161,12
+    RTEXT           "Korekta",IDC_STATIC,142,181,26,8,NOT WS_GROUP
+    CONTROL         "",IDC_EPS_KOK,"MfcEditBrowse",WS_BORDER | WS_TABSTOP | 0x80,171,179,161,12
+    PUSHBUTTON      "&Anuluj",IDCANCEL,235,210,50,14
+    DEFPUSHBUTTON   "&Zatwierdü",IDOK,290,210,50,14
+END
+
+IDD_WAIT DIALOGEX 100, 100, 235, 95
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "Manam - przetwarzanie materia≥Ûw graficznych"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "Przerwij pracÍ",IDCANCEL,91,72,52,16,NOT WS_TABSTOP
+    LTEXT           "Strona\nplik",IDC_EPSSTR,15,16,213,16,NOT WS_GROUP
+    LTEXT           "",IDC_OGLSTR,15,39,214,16,NOT WS_GROUP
+    GROUPBOX        "Potok 1",IDC_STATIC,3,5,228,61
+    GROUPBOX        "Potok 2",IDC_SPA,3,99,228,61
+    LTEXT           "nieaktywny",IDC_A3_PAGE,15,108,213,16,NOT WS_GROUP
+    LTEXT           "",IDC_OBJETOSC,15,135,213,16,NOT WS_GROUP
+END
+
+IDD_PASSWD DIALOG 100, 100, 187, 133
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Zmiana has≥a"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_OLDPASS,11,22,165,12,ES_PASSWORD | ES_AUTOHSCROLL
+    EDITTEXT        IDC_NEWPASS,11,52,165,12,ES_PASSWORD | ES_AUTOHSCROLL
+    EDITTEXT        IDC_NEWPASS2,11,86,165,12,ES_PASSWORD | ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Zatwierdü",IDOK,125,110,50,14
+    PUSHBUTTON      "Anuluj",IDCANCEL,67,110,50,14
+    LTEXT           "Dotychczasowe has≥o:",IDC_STATIC,10,9,87,9
+    LTEXT           "Nowe has≥o:",IDC_STATIC,10,42,63,8
+    LTEXT           "PowtÛrz nowe has≥o:",IDC_STATIC,11,75,90,7
+END
+
+IDD_PRNEPS DIALOGEX 100, 100, 159, 187
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Generowanie postscriptu"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Zakres",IDC_STATIC,4,1,151,57
+    CONTROL         "Wszystkie strony",IDC_ALLPAGES,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,8,11,75,10
+    CONTROL         "Strona od",IDC_ZAKRES,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,8,27,44,10
+    CONTROL         "Strony",IDC_SUBSET,"Button",BS_AUTORADIOBUTTON,8,43,34,10
+    EDITTEXT        IDC_FROMPAGE,52,24,18,12,ES_AUTOHSCROLL
+    LTEXT           "do",IDC_STATIC,73,27,9,8,NOT WS_GROUP
+    EDITTEXT        IDC_TOPAGE,83,24,18,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DWARLOG,44,42,107,13,ES_RIGHT | ES_AUTOHSCROLL
+    GROUPBOX        "Format wynikowy",IDC_STATIC,4,62,151,39
+    CONTROL         "EPS",IDC_FMTEPS,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,8,74,29,10
+    CONTROL         "PRN",IDC_FMTPS,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,8,87,31,10
+    CONTROL         "PDF",IDC_FMTPDF,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,55,74,30,10
+    CONTROL         "Do korekty",IDC_WHERE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,55,87,48,10
+    CONTROL         "Preview",IDC_PREV,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,108,73,40,10
+    CONTROL         "Potokowe",IDC_SEND,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,108,87,44,10
+    GROUPBOX        "Wyúlij do produkcji",IDC_STATIC,4,105,151,47
+    LTEXT           "Drukarka:",IDC_STATIC,18,118,32,9,0,WS_EX_RIGHT
+    LTEXT           "Rip:",IDC_STATIC,18,135,32,9,0,WS_EX_RIGHT
+    COMBOBOX        IDC_CBDRUK,53,116,89,65,CBS_DROPDOWN | CBS_SORT | WS_DISABLED | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_CBRIP,53,133,89,50,CBS_DROPDOWN | CBS_SORT | WS_DISABLED | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Podpisz wszystkie",IDC_SIGNALL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,157,70,9
+    CONTROL         "PomiÒ strony bez og≥oszeÒ",IDC_STRCNT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,6,170,99,9
+    CONTROL         "Zaznacz znalezione",IDC_MARKFOUND,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,80,157,76,9
+    DEFPUSHBUTTON   "Zatwierdü",IDOK,105,8,45,14
+    PUSHBUTTON      "Anuluj",IDCANCEL,105,24,45,14
+END
+
+IDD_NOWY_USER DIALOGEX 100, 100, 206, 139
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Zak≥adanie konta"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    GROUPBOX        "Dane uøytkownika",IDC_STATIC,5,8,196,109
+    RTEXT           "ImiÍ:",IDC_STATIC,10,24,17,9
+    EDITTEXT        IDC_IMIE,30,22,50,12,ES_AUTOHSCROLL
+    RTEXT           "Nazwisko:",IDC_STATIC,84,24,34,9
+    EDITTEXT        IDC_NAZWISKO,122,22,74,12,ES_AUTOHSCROLL
+    RTEXT           "Login name:",IDC_STATIC,11,43,40,9
+    EDITTEXT        IDC_LOGINNAME,54,41,41,12,ES_AUTOHSCROLL
+    RTEXT           "Login NDS:",IDC_STATIC,111,43,39,9
+    EDITTEXT        IDC_ISSN,153,41,41,12,ES_AUTOHSCROLL
+    RTEXT           "Has≥o:",IDC_STATIC,11,62,23,9
+    EDITTEXT        IDC_PASS,42,60,152,12,ES_PASSWORD | ES_AUTOHSCROLL
+    RTEXT           "Grupa:",IDC_STATIC,9,81,22,9
+    COMBOBOX        IDC_GRUPA,34,79,48,53,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Telefon:",IDC_STATIC,108,80,29,9
+    EDITTEXT        IDC_TELEFON,140,78,54,12,ES_AUTOHSCROLL
+    LTEXT           "Uwagi:",IDC_STATIC,9,100,22,9
+    EDITTEXT        IDC_UWAGI,34,99,161,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "&Anuluj",IDCANCEL,38,121,50,14
+    PUSHBUTTON      "&NastÍpny",IDC_YESNNEXT,94,121,50,14
+    DEFPUSHBUTTON   "&Za≥Ûø",IDOK,150,121,50,14
+END
+
+IDD_CONNDLG DIALOG 0, 0, 187, 93
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Po≥πczenie z Oracle"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_PASSWD,74,35,91,13,ES_PASSWORD | ES_AUTOHSCROLL
+    EDITTEXT        IDC_LOGINNAME,74,17,91,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "Cancel",IDCANCEL,39,70,50,14
+    DEFPUSHBUTTON   "Connect",IDOK,99,70,50,14,WS_DISABLED
+    RTEXT           "Uøytkownik",IDC_STATIC,19,21,49,10
+    RTEXT           "Has≥o",IDC_STATIC,18,38,49,10
+    CONTROL         "Do bazy testowej",IDC_DBTEST,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,74,53,70,10
+END
+
+IDD_ACCESS DIALOG 180, 100, 187, 146
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Ustalanie uprawnieÒ uøytkownika"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Modyfikowany loginname:",IDC_STATIC,7,9,84,10
+    EDITTEXT        IDC_LOGINNAME,96,8,45,12,ES_AUTOHSCROLL
+    CONTROL         "Nadaj uprawnienia z&godne z:",IDC_ALIKE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,26,107,10
+    EDITTEXT        IDC_SENIOR,127,25,45,12,ES_AUTOHSCROLL | WS_DISABLED
+    GROUPBOX        "Zakres uprawnieÒ",IDC_STATIC,7,40,174,47
+    LTEXT           "Uprawnienie do tytu≥u:",IDC_STATIC,14,53,75,10
+    EDITTEXT        IDC_TYTUL,91,51,27,12,ES_UPPERCASE | ES_AUTOHSCROLL
+    LTEXT           "mutacji:",IDC_STATIC,122,53,25,10
+    EDITTEXT        IDC_MUTACJA,152,51,21,12,ES_UPPERCASE | ES_AUTOHSCROLL
+    CONTROL         "Na&daj uprawnienia do wszystkich tytu≥Ûw",IDC_ALLTYT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,68,154,9
+    GROUPBOX        "Poziom uprawnieÒ",IDC_STATIC,7,88,114,54
+    CONTROL         "&Odczyt",IDC_RACC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,99,34,10
+    CONTROL         "&Sprzedaø",IDC_SACC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,70,99,44,10
+    CONTROL         "Za&pis",IDC_WACC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,113,35,10
+    CONTROL         "&UsuniÍcie",IDC_DACC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,70,113,46,10
+    CONTROL         "&Weryfikacja",IDC_PACC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,127,50,10
+    CONTROL         "&Grzbiet",IDC_GACC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,70,127,40,10
+    PUSHBUTTON      "&Anuluj",IDCANCEL,131,92,50,14
+    PUSHBUTTON      "&NastÍpny",IDC_YESNNEXT,131,108,50,14
+    DEFPUSHBUTTON   "&Zatwierdü",IDOK,131,124,50,14
+END
+
+IDD_GRIDFORM DIALOGEX 0, 0, 687, 6100
+STYLE DS_SETFONT | WS_CHILD
+FONT 9, "Arial", 700, 0, 0xEE
+BEGIN
+    LTEXT           "KGW 30/06/2000",IDC_GAZETA,16,5,208,8
+    CONTROL         "",IDC_PUBLIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,15,674,6000
+END
+
+IDD_NOWY_TYTUL DIALOGEX 0, 0, 192, 163
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Tytu≥"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    LTEXT           "Tytu≥:",IDC_STATIC,7,9,20,8
+    EDITTEXT        IDC_TYTUL,30,7,24,12,ES_UPPERCASE | ES_AUTOHSCROLL
+    LTEXT           "Mutacja:",IDC_STATIC,68,9,28,8
+    EDITTEXT        IDC_MUTACJA,101,7,24,12,ES_UPPERCASE | ES_AUTOHSCROLL
+    LTEXT           "Opis:",IDC_STATIC,7,27,17,8
+    EDITTEXT        IDC_OPIS,30,25,95,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "&Zatwierdü",IDOK,135,6,50,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,135,23,50,14
+    GROUPBOX        "Krata niestandardowa",IDC_STATIC,3,61,121,66
+    LTEXT           "Kolumn:",IDC_STATIC,9,75,26,8
+    LTEXT           "Szerok:",IDC_STATIC,10,94,25,8
+    LTEXT           "Wierszy:",IDC_STATIC,65,75,28,8
+    EDITTEXT        IDC_SIZEX,37,73,24,12,ES_RIGHT | ES_UPPERCASE | ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SIZEY,94,73,24,12,ES_RIGHT | ES_UPPERCASE | ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Wysok:",IDC_STATIC,66,94,25,8
+    EDITTEXT        IDC_TXTPOSX,37,92,24,12,ES_RIGHT | ES_UPPERCASE | ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_TXTPOSY,94,92,24,12,ES_RIGHT | ES_UPPERCASE | ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "SW W:",IDC_STATIC,10,112,24,8
+    LTEXT           "SW H:",IDC_STATIC,66,112,22,8
+    EDITTEXT        IDC_DEPS,37,109,24,12,ES_RIGHT | ES_UPPERCASE | ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_GEPS,94,109,24,12,ES_RIGHT | ES_UPPERCASE | ES_AUTOHSCROLL | ES_NUMBER
+    GROUPBOX        "Uprawnienia takie jak dla tytu≥u",IDC_STATIC,3,131,121,27
+    LTEXT           "Tytu≥:",IDC_STATIC,7,144,20,8
+    LTEXT           "Mutacja:",IDC_STATIC,67,144,28,8
+    EDITTEXT        IDC_ALIKE,28,142,24,12,ES_UPPERCASE | ES_AUTOHSCROLL
+    EDITTEXT        IDC_ZAKRES,96,142,24,12,ES_UPPERCASE | ES_AUTOHSCROLL
+    LTEXT           "Data waønoúci:",IDC_STATIC,7,47,50,8
+    CONTROL         "",IDC_DATA_CZOB,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,67,44,58,14
+END
+
+IDD_SPACER DIALOGEX 0, 0, 343, 214
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Rezerwacja powierzchni"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    LTEXT           "Nazwa",IDC_STATIC,3,6,28,13
+    EDITTEXT        IDC_NAZWA,34,4,87,13,ES_AUTOHSCROLL
+    LTEXT           "Rozmiar",IDC_STATIC,127,7,26,11
+    LTEXT           "X",IDC_STATIC,179,7,8,10
+    EDITTEXT        IDC_SIZEY,191,4,16,13,ES_UPPERCASE | ES_AUTOHSCROLL
+    EDITTEXT        IDC_SIZEX,158,4,14,13,ES_UPPERCASE | ES_AUTOHSCROLL
+    LTEXT           "Kolor",IDC_STATIC,9,24,19,10
+    COMBOBOX        IDC_KOLOR,34,22,60,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "ver.",IDC_STATIC,97,24,12,10
+    EDITTEXT        IDC_WERSJA,110,22,25,12,ES_LOWERCASE | ES_AUTOHSCROLL
+    CONTROL         "Niestandardowe",IDC_KRATOWE,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,140,24,67,10
+    LTEXT           "Strona fizyczna:",IDC_FIZPAGE,5,43,68,10
+    LTEXT           "Kratka:",IDC_KRATKA,81,43,43,10
+    LTEXT           "Pozycja",IDC_STATIC,129,43,26,10
+    EDITTEXT        IDC_POSX,158,41,15,13,ES_AUTOHSCROLL
+    LTEXT           "X",IDC_STATIC,180,43,8,10
+    EDITTEXT        IDC_POSY,192,41,15,13,ES_AUTOHSCROLL
+    CONTROL         "Zablokowane",IDC_LOCKED,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,3,63,56,10
+    LTEXT           "Uwagi",IDC_STATIC,65,63,21,11
+    EDITTEXT        IDC_REMARKS,92,61,115,13,ES_AUTOHSCROLL
+    GROUPBOX        "Kolejne emisje",IDC_STATIC,2,80,206,110
+    LTEXT           "Ostatnia emisja:",IDC_STATIC,7,92,50,10
+    CONTROL         "DateTimePicker1",IDC_LASTEMISION,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,60,91,58,13
+    LTEXT           "Krok:",IDC_STATIC,119,93,18,10
+    COMBOBOX        IDC_KROK,138,91,43,77,CBS_DROPDOWN | WS_DISABLED | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "OL",IDC_OL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,183,93,21,10,WS_EX_RIGHT
+    GROUPBOX        "Zachowaj w kolejnych emisjach",IDC_STATIC,7,109,194,76
+    CONTROL         "SekcjÍ logicznπ",IDC_SEKCJA,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_DISABLED | WS_TABSTOP,13,123,83,10
+    CONTROL         "ParzystoúÊ strony",IDC_PAGEPARITY,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_DISABLED | WS_TABSTOP,13,138,83,10
+    CONTROL         "W tym samym miejscu",IDC_EXACTPLACE,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_DISABLED | WS_TABSTOP,13,152,83,10
+    CONTROL         "Po≥oøenie w sekcji",IDC_WSEKCJI,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_DISABLED | WS_TABSTOP,109,123,83,10
+    CONTROL         "Po≥oøenie na stronie",IDC_PAGELAYOUT,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_DISABLED | WS_TABSTOP,109,138,83,10
+    CONTROL         "Dodaj do istniejπcego",IDC_DEALAPPEND,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,109,152,83,10
+    LTEXT           "Nr. SPACER:",IDC_STATIC,55,169,43,8
+    EDITTEXT        IDC_SPACER,109,167,83,13,ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
+    LISTBOX         IDC_EMISJE,219,4,86,168,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Z &dnia",IDZDNIA,3,194,36,14,WS_DISABLED
+    PUSHBUTTON      "&Emisje",IDEMISJE,45,194,36,14,WS_DISABLED
+    PUSHBUTTON      "&Kolejkuj",IDQUE,88,194,36,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,130,194,36,14
+    DEFPUSHBUTTON   "&Zatwierdü",IDOK,172,194,36,14
+    PUSHBUTTON      "UsuÒ zaz&naczone",IDDELSEL,219,176,86,14
+    PUSHBUTTON      "UsuÒ &wszystkie",IDDELALL,219,194,86,14
+    COMBOBOX        IDC_TYP_OGL,157,4,50,201,CBS_DROPDOWNLIST | NOT WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_MUTACJA,315,4,26,168,LBS_SORT | LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "<<",IDC_ADDLIST,315,176,27,14
+    PUSHBUTTON      "10ol",IDC_BASE_NR,315,194,27,14
+END
+
+IDD_EPSDATE DIALOGEX 0, 0, 424, 302
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Daty modyfikacji EPSÛw"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "&Zamknij",IDOK,368,7,50,14
+    CONTROL         "List1",IDC_EPSDATE,"SysListView32",LVS_REPORT | WS_BORDER | WS_TABSTOP,7,7,353,288
+    PUSHBUTTON      "&Uznaj",ID_FILE_UPDATE,368,26,50,14
+END
+
+IDD_DIRDAYS DIALOGEX 0, 0, 176, 77
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Katalogi dzienne"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    CONTROL         "DateTimePicker1",IDC_POSX,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,47,12,56,13
+    CONTROL         "DateTimePicker2",IDC_POSY,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,47,33,56,13
+    EDITTEXT        IDC_NAME,47,54,96,13,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "&UtwÛrz",IDOK,112,8,50,12
+    PUSHBUTTON      "&Pakuj",IDC_CAB,112,23,50,12
+    PUSHBUTTON      "&Anuluj",IDCANCEL,112,37,50,12
+    PUSHBUTTON      "...",IDC_DAYDIRS,148,54,14,13
+    LTEXT           "Od kiedy",IDC_STATIC,11,14,29,8
+    LTEXT           "Do kiedy",IDC_STATIC,11,36,29,8
+    LTEXT           "Katalog ",IDC_STATIC,12,57,29,8
+END
+
+IDD_MANCHAT DIALOGEX 0, 0, 216, 213
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Wysy≥anie wiadomoúci"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    EDITTEXT        IDC_LOGINNAME,148,7,61,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_NAZWA,8,112,201,78,ES_MULTILINE
+    CONTROL         "Do wszystkich",IDC_ALLTYT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,8,61,10
+    PUSHBUTTON      "&Zamknij",IDCANCEL,104,195,50,14
+    DEFPUSHBUTTON   "&Wyúlij",IDOK,160,195,50,14
+    EDITTEXT        IDC_SEKCJA,8,28,201,78,ES_MULTILINE | ES_READONLY
+    LTEXT           "Do uøytkownika:",IDC_STATIC,92,9,54,8
+END
+
+IDD_GRZBIET DIALOGEX 0, 0, 208, 161
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Grzbiet drukowany"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    GROUPBOX        "Rodzaj zmiany",IDC_STATIC,6,4,196,41
+    CONTROL         "PowiÍkszenie",IDC_DODAJ,"Button",BS_AUTORADIOBUTTON | WS_GROUP,9,14,58,10
+    CONTROL         "Zmniejszenie objÍtoúci / Wydzielenie",IDC_USUN,"Button",BS_AUTORADIOBUTTON,70,14,128,10
+    LTEXT           "Makieta",IDC_STATIC,19,31,32,9
+    COMBOBOX        IDC_TYTMUT,49,28,145,110,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "PowiÍkszenie",IDC_STATIC,6,47,195,40,WS_GROUP
+    CONTROL         "Wstaw ca≥π makietÍ do úrodka grzbietu",IDC_PODWALY,
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP,48,58,138,10
+    CONTROL         "Wstaw",IDC_SEKCJA,"Button",BS_AUTORADIOBUTTON,48,72,34,10
+    CONTROL         "UsuÒ pojedynczy tytu≥ ze úrodka",IDC_DELETEINSERT,
+                    "Button",BS_AUTORADIOBUTTON | WS_DISABLED | WS_GROUP,48,97,146,10
+    CONTROL         "UsuÒ wskazanπ makietÍ",IDC_ALIKE,"Button",BS_AUTORADIOBUTTON | WS_DISABLED,48,110,98,10
+    CONTROL         "Wydziel",IDC_GAZETA,"Button",BS_AUTORADIOBUTTON | WS_DISABLED,48,124,38,10
+    CONTROL         "UsuÒ",ID_STRLOG,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_DISABLED,50,141,30,10
+    EDITTEXT        IDC_NUMER,87,71,21,12,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER | WS_GROUP
+    LTEXT           "stron do úrodka grzbietu",IDC_STATIC,110,72,76,8
+    EDITTEXT        IDC_SPLIT_CNT,88,122,21,12,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED | WS_GROUP
+    LTEXT           "stron ze úrodka grzbietu",IDC_STATIC,110,124,76,8,NOT WS_GROUP
+    GROUPBOX        "Zmniejszenie / Wydzielenie",IDC_STATIC,6,88,196,50
+    EDITTEXT        IDC_NR,86,140,21,12,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE | WS_DISABLED | WS_GROUP
+    LTEXT           "stron z zewnπtrz grzbietu",IDC_STATIC,108,141,78,8,NOT WS_VISIBLE
+    PUSHBUTTON      "&Anuluj",IDCANCEL,98,142,50,14
+    PUSHBUTTON      "&4x4",IDC_ILEKOLUMN,5,142,50,14,WS_DISABLED
+    PUSHBUTTON      "&Zatwierdü",IDOK,153,142,50,14
+END
+
+IDD_PAGEDERV DIALOGEX 0, 0, 186, 125
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dziedziczenie stron"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    LTEXT           "Poziom\ndziedziczenia",IDC_STATIC,8,8,42,16
+    COMBOBOX        IDC_DERVLVL,58,9,122,73,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Dziedzicz\nz makiety",IDC_STATIC,5,28,32,16
+    COMBOBOX        IDC_TYTMUT,40,30,140,110,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "W bieøπcej makiecie od strony:",IDC_STATIC,28,52,99,8
+    EDITTEXT        IDC_NR,128,50,35,13,ES_RIGHT | ES_NUMBER
+    LTEXT           "W bazowej makiecie od strony:",IDC_STATIC,28,71,99,8
+    EDITTEXT        IDC_BASE_NR,128,67,35,13,ES_RIGHT | ES_NUMBER
+    LTEXT           "Ile kolejnych stron",IDC_STATIC,68,88,58,10
+    EDITTEXT        IDC_ILEKOLUMN,128,84,35,13,ES_RIGHT | ES_NUMBER
+    PUSHBUTTON      "&Anuluj",IDCANCEL,9,103,50,14
+    DEFPUSHBUTTON   "&Zatwierdü",IDOK,128,103,50,14
+END
+
+IDD_KRATCALC DIALOGEX 0, 0, 158, 166
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Kalkulator Krat"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Krata podstawowa makiety:",IDC_STATIC,12,12,96,10
+    COMBOBOX        IDC_KRATKA,109,10,40,149,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "SzerokoúÊ og≥oszenia w mm:",IDC_STATIC,12,30,96,10
+    EDITTEXT        IDC_SIZEX,109,28,29,14,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "",IDC_SPINX,"msctls_updown32",UDS_ALIGNLEFT | UDS_ARROWKEYS | UDS_HOTTRACK,138,28,9,14,WS_EX_CLIENTEDGE
+    LTEXT           "WysokoúÊ og≥oszenia w mm:",IDC_STATIC,11,49,96,10
+    EDITTEXT        IDC_SIZEY,109,46,29,14,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "",IDC_SPINY,"msctls_updown32",UDS_ARROWKEYS,138,46,9,14,WS_EX_CLIENTEDGE
+    LTEXT           "åwiat≥o kolumn [0.1mm]:",IDC_STATIC,11,69,86,8
+    EDITTEXT        IDC_SP,109,66,39,14,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Wynik:",IDC_STATIC,11,108,21,8
+    EDITTEXT        IDC_DUWAGI,38,106,111,14,ES_AUTOHSCROLL | ES_READONLY,WS_EX_RIGHT
+    PUSHBUTTON      "Zamknij",IDOK,114,145,35,14
+    LTEXT           "åwiat≥o wierszy [0.1mm]:",IDC_STATIC,11,88,86,8
+    EDITTEXT        IDC_SPA,109,84,39,14,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Nowy kod:",IDC_STATIC,9,148,36,8
+    EDITTEXT        IDC_MODELID,45,145,30,14,ES_RIGHT | ES_UPPERCASE | ES_AUTOHSCROLL
+    PUSHBUTTON      "Za≥Ûø",IDB_DODAJ,78,145,33,14,WS_DISABLED
+    CONTROL         "Oblicz",IDC_DIR_UZU,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,12,130,30,10
+    EDITTEXT        IDC_TXTPOSX,80,126,19,14,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
+    EDITTEXT        IDC_TXTPOSY,130,126,19,14,ES_RIGHT | ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
+    LTEXT           "Kolumn:",IDC_STATIC,55,129,23,8
+    LTEXT           "Wierszy:",IDC_STATIC,104,129,26,8
+END
+
+IDD_ACCGRB DIALOGEX 0, 0, 273, 108
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Zatwierdzanie grzbietu"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Zatwierdü",IDOK,219,87,50,14
+    PUSHBUTTON      "Anuluj",IDCANCEL,163,87,50,14
+    GROUPBOX        "Zatwierdzanie grzbietu",IDC_STATIC,7,7,261,77
+    EDITTEXT        IDC_PRINT_LDRZ,15,21,212,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_PRINT_CDRZ,15,41,212,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_PRINT_ORG,15,62,212,14,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY
+    CONTROL         "LDRZ",IDC_CKPLDRZ,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,236,24,29,10
+    CONTROL         "DOD",IDC_CKPCDRZ,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,236,45,27,10
+    CONTROL         "ORG",IDC_CKPORG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,236,65,29,10
+END
+
+IDD_ATEXADDS DIALOGEX 0, 0, 601, 351
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Ostateczna Weryfikacja z systemem sprzedaøy"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Zatwierdü",IDOK,546,332,50,14
+    CONTROL         "",IDC_ADDLIST,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,587,320
+    LTEXT           "ZIELONE: Nowe og≥oszenia; Ø”£TE: Zmienione; GRANATOWE: Nie odnaleziono w ATEX'ie; FIOLETOWE: z banku",IDC_STATIC,7,337,361,8
+    CONTROL         "Zaznacz wszystkie",IDC_SIGNALL,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,464,336,72,10
+END
+
+IDD_ACDEAD DIALOGEX 0, 0, 160, 94
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Deadliny dla Czasopism"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "&Zatwierdü",IDOK,97,72,50,14
+    PUSHBUTTON      "&Anuluj",IDCANCEL,39,72,50,14
+    LTEXT           "Dostarczenie tekstÛw:",IDC_STATIC,12,12,72,8
+    LTEXT           "Dostarczenie zdjÍÊ:",IDC_STATIC,12,32,64,8
+    LTEXT           "ZamkniÍcie kolumny:",IDC_STATIC,12,51,66,8
+    CONTROL         "",IDC_RED,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,90,9,57,15
+    CONTROL         "",IDC_FOT,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,90,28,57,15
+    CONTROL         "",IDC_KOL,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,90,48,57,15
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_PENCIL              CURSOR                  "Res\\PENCIL.CUR"
+
+IDC_KOLOR               CURSOR                  "Res\\KOLOR.CUR"
+
+IDC_LOCK                CURSOR                  "Res\\LOCK.CUR"
+
+IDC_SPA                 CURSOR                  "Res\\SPA.CUR"
+
+IDC_CAPTION             CURSOR                  "Res\\CAPTION.CUR"
+
+IDC_DEADLINE            CURSOR                  "Res\\DEADLINE.CUR"
+
+IDC_RED                 CURSOR                  "Res\\RED.CUR"
+
+IDC_FLAG                CURSOR                  "Res\\FLAG.CUR"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_KOLUMNY DLGINIT
+BEGIN
+    IDC_ILEKOLUMN, 0x403, 2, 0
+0x0034, 
+    IDC_ILEKOLUMN, 0x403, 2, 0
+0x0038, 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3231, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3631, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3032, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3432, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3832, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3233, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3633, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3034, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3434, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3834, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3235, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3635, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3036, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3436, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3836, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3237, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3637, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3038, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3438, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3838, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3239, "\000" 
+    IDC_ILEKOLUMN, 0x403, 3, 0
+0x3639, "\000" 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3031, 0x0030, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3031, 0x0034, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3031, 0x0038, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3131, 0x0032, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3131, 0x0036, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3231, 0x0030, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3231, 0x0034, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3231, 0x0038, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3331, 0x0032, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3331, 0x0036, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3431, 0x0030, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3431, 0x0034, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3431, 0x0038, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3531, 0x0032, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3531, 0x0036, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3631, 0x0030, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3631, 0x0034, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3631, 0x0038, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3731, 0x0032, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3731, 0x0036, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3831, 0x0030, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3831, 0x0034, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3831, 0x0038, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3931, 0x0032, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3931, 0x0036, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3032, 0x0030, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3032, 0x0034, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3032, 0x0038, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3132, 0x0032, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3132, 0x0036, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3232, 0x0030, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3232, 0x0034, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3232, 0x0038, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3332, 0x0032, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3332, 0x0036, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3432, 0x0030, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3432, 0x0034, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3432, 0x0038, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3532, 0x0032, 
+    IDC_ILEKOLUMN, 0x403, 4, 0
+0x3532, 0x0036, 
+    0
+END
+
+IDD_NOWY_USER DLGINIT
+BEGIN
+    IDC_GRUPA, 0x403, 7, 0
+0x6564, 0x6c61, 0x7265, "\000" 
+    IDC_GRUPA, 0x403, 10, 0
+0x696b, 0x7265, 0x776f, 0x696e, 0x006b, 
+    IDC_GRUPA, 0x403, 9, 0
+0x6572, 0x6164, 0x746b, 0x726f, "\000" 
+    IDC_GRUPA, 0x403, 7, 0
+0x7473, 0x6475, 0x6f69, "\000" 
+    0
+END
+
+IDD_SPACER DLGINIT
+BEGIN
+    IDC_KROK, 0x403, 8, 0
+0x2031, 0x7a64, 0x6569, 0x00f1, 
+    IDC_KROK, 0x403, 6, 0
+0x2032, 0x6e64, 0x0069, 
+    IDC_KROK, 0x403, 6, 0
+0x2033, 0x6e64, 0x0069, 
+    IDC_KROK, 0x403, 10, 0
+0x2031, 0x7974, 0x7a64, 0x6569, 0x00f1, 
+    IDC_KROK, 0x403, 11, 0
+0x2032, 0x7974, 0x6f67, 0x6e64, 0x6569, "\000" 
+    IDC_KROK, 0x403, 11, 0
+0x2034, 0x7974, 0x6f67, 0x6e64, 0x6569, "\000" 
+    0
+END
+
+IDD_ADD DLGINIT
+BEGIN
+    IDC_STUDIO, 0x403, 5, 0
+0x7242, 0x6b61, "\000" 
+    IDC_STUDIO, 0x403, 5, 0
+0x654a, 0x7473, "\000" 
+    IDC_STUDIO, 0x403, 11, 0
+0x6b41, 0x6563, 0x7470, 0x6361, 0x616a, "\000" 
+    IDC_STUDIO, 0x403, 5, 0
+0x6f4e, 0x7977, "\000" 
+    IDC_STUDIO, 0x403, 5, 0
+0x2e4f, 0x2e4b, "\000" 
+    IDC_STUDIO, 0x403, 8, 0
+0x7957, 0xb373, 0x6e61, 0x0079, 
+    IDC_STUDIO, 0x403, 6, 0
+0x6946, 0x746c, 0x0072, 
+    IDC_STUDIO, 0x403, 7, 0
+0x6b53, 0x7361, 0x6a75, "\000" 
+    IDC_NAGL_RED, 0x403, 5, 0
+0x7242, 0x6b61, "\000" 
+    IDC_NAGL_RED, 0x403, 8, 0
+0x6552, 0x6c6b, 0x6d61, 0x0061, 
+    IDC_NAGL_RED, 0x403, 11, 0
+0x674f, 0x6fb3, 0x7a73, 0x6e65, 0x6569, "\000" 
+    IDC_NAGL_RED, 0x403, 21, 0
+0x674f, 0x6fb3, 0x7a73, 0x6e65, 0x6569, 0x6220, 0x7a65, 0xb370, 0x7461, 
+0x656e, "\000" 
+    IDC_NAGL_RED, 0x403, 18, 0
+0x674f, 0x6fb3, 0x7a73, 0x6e65, 0x6569, 0x7020, 0x61b3, 0x6e74, 0x0065, 
+
+    IDC_NAGL_RED, 0x403, 15, 0
+0x6150, 0x7472, 0x656e, 0x2072, 0x7473, 0x6f72, 0x796e, "\000" 
+    IDC_NAGL_RED, 0x403, 14, 0
+0x6150, 0x7472, 0x656e, 0x2072, 0x7473, 0x6f72, 0x006e, 
+    IDC_NAGL_RED, 0x403, 14, 0
+0x6150, 0x7472, 0x656e, 0x2072, 0x7963, 0x6c6b, 0x0075, 
+    IDC_NAGL_RED, 0x403, 16, 0
+0x6150, 0x7472, 0x656e, 0x7a72, 0x2079, 0x7963, 0x6c6b, 0x0075, 
+    IDC_NAGL_RED, 0x403, 14, 0
+0x6150, 0x7472, 0x656e, 0x2072, 0x6b61, 0x6a63, 0x0069, 
+    IDC_NAGL_RED, 0x403, 16, 0
+0x6150, 0x7472, 0x656e, 0x7a72, 0x2079, 0x6b61, 0x6a63, 0x0069, 
+    IDC_NAGL_RED, 0x403, 18, 0
+0x6150, 0x7472, 0x656e, 0x2072, 0x6f70, 0x6172, 0x6e64, 0x6b69, 0x0061, 
+
+    IDC_NAGL_RED, 0x403, 23, 0
+0x7357, 0xf370, 0x6fb3, 0x6772, 0x6e61, 0x7a69, 0x7461, 0x726f, 0x6120, 
+0x636b, 0x696a, "\000" 
+    IDC_NAGL_RED, 0x403, 16, 0
+0x6150, 0x7472, 0x656e, 0x2072, 0x7977, 0x6164, 0x696e, 0x0061, 
+    IDC_NAGL_RED, 0x403, 16, 0
+0x6150, 0x7472, 0x656e, 0x2072, 0x6f64, 0x6164, 0x6b74, 0x0075, 
+    IDC_NAGL_RED, 0x403, 15, 0
+0x6150, 0x7472, 0x656e, 0x2072, 0x6573, 0x636b, 0x696a, "\000" 
+    IDC_NAGL_RED, 0x403, 18, 0
+0x674f, 0x6fb3, 0x7a73, 0x6e65, 0x6169, 0x6420, 0x6f72, 0x6e62, 0x0065, 
+
+    IDC_NAGL_RED, 0x403, 26, 0
+0x674f, 0x6fb3, 0x7a73, 0x6e65, 0x6569, 0x7720, 0x61b3, 0x6e73, 0x2065, 
+0x7977, 0x6164, 0x6377, 0x0079, 
+    IDC_NAGL_RED, 0x403, 16, 0
+0x6150, 0x7472, 0x656e, 0x2072, 0x6572, 0x616c, 0x6a63, 0x0069, 
+    0
+END
+
+IDD_PAGEDERV DLGINIT
+BEGIN
+    IDC_DERVLVL, 0x403, 19, 0
+0x7242, 0x6b61, 0x6420, 0x697a, 0x6465, 0x697a, 0x7a63, 0x6e65, 0x6169, 
+"\000" 
+    IDC_DERVLVL, 0x403, 23, 0
+0x7a44, 0x6569, 0x7a64, 0x6369, 0x657a, 0x696e, 0x2065, 0x676f, 0x6fb3, 
+0x7a73, 0xf165, "\000" 
+    IDC_DERVLVL, 0x403, 20, 0
+0x7a55, 0x7075, 0xb365, 0x696e, 0x6e65, 0x6569, 0x7320, 0x7274, 0x6e6f, 
+0x0079, 
+    IDC_DERVLVL, 0x403, 20, 0
+0x6550, 0x6eb3, 0x2065, 0x7a64, 0x6569, 0x7a64, 0x6369, 0x657a, 0x696e, 
+0x0065, 
+    IDC_DERVLVL, 0x403, 28, 0
+0x7453, 0x6f72, 0x616e, 0x6e20, 0x6569, 0x6420, 0x206f, 0x7a64, 0x6569, 
+0x7a64, 0x6369, 0x657a, 0x696e, 0x0061, 
+    IDC_DERVLVL, 0x403, 18, 0
+0x6f4d, 0x746e, 0xbf61, 0x7720, 0x6420, 0x7572, 0x616b, 0x6e72, 0x0069, 
+
+    IDC_DERVLVL, 0x403, 21, 0
+0x7a44, 0x6569, 0x7a64, 0x6369, 0x657a, 0x696e, 0x2065, 0x6f6b, 0x6f6c, 
+0x7572, "\000" 
+    0
+END
+
+IDD_DB_OPEN DLGINIT
+BEGIN
+    IDC_OKRES, 0x403, 8, 0
+0x2031, 0x7a64, 0x6569, 0x00f1, 
+    IDC_OKRES, 0x403, 10, 0
+0x2031, 0x7974, 0x7a64, 0x6569, 0x00f1, 
+    IDC_OKRES, 0x403, 11, 0
+0x2032, 0x7974, 0x6f67, 0x6e64, 0x6569, "\000" 
+    IDC_OKRES, 0x403, 10, 0
+0x2031, 0x696d, 0x7365, 0xb969, 0x0063, 
+    IDC_OKRES, 0x403, 11, 0
+0x2032, 0x696d, 0x7365, 0xb969, 0x6563, "\000" 
+    IDC_OKRES, 0x403, 11, 0
+0x2033, 0x696d, 0x7365, 0xb969, 0x6563, "\000" 
+    IDC_OKRES, 0x403, 9, 0
+0xf370, 0x20b3, 0x6f72, 0x756b, "\000" 
+    IDC_OKRES, 0x403, 6, 0
+0x2031, 0x6f72, 0x006b, 
+    0
+END
+
+IDD_CONFIG DLGINIT
+BEGIN
+    IDC_PAGESPERROW, 0x403, 3, 0
+0x3031, "\000" 
+    IDC_PAGESPERROW, 0x403, 3, 0
+0x3231, "\000" 
+    IDC_PAGESPERROW, 0x403, 3, 0
+0x3431, "\000" 
+    IDC_PAGESPERROW, 0x403, 3, 0
+0x3631, "\000" 
+    IDC_PAGESPERROW, 0x403, 3, 0
+0x3831, "\000" 
+    IDC_PAGESPERROW, 0x403, 3, 0
+0x3032, "\000" 
+    IDC_EPS_SRC, 0x37c, 42, 0
+0x4d3c, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 0x4d5f, 0x646f, 
+0x3e65, 0x3c31, 0x4d2f, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 
+0x4d5f, 0x646f, 0x3e65, 
+    IDC_EPS_OLD, 0x37c, 42, 0
+0x4d3c, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 0x4d5f, 0x646f, 
+0x3e65, 0x3c31, 0x4d2f, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 
+0x4d5f, 0x646f, 0x3e65, 
+    IDC_EPS_DST, 0x37c, 42, 0
+0x4d3c, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 0x4d5f, 0x646f, 
+0x3e65, 0x3c31, 0x4d2f, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 
+0x4d5f, 0x646f, 0x3e65, 
+    IDC_PS_DST, 0x37c, 42, 0
+0x4d3c, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 0x4d5f, 0x646f, 
+0x3e65, 0x3c31, 0x4d2f, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 
+0x4d5f, 0x646f, 0x3e65, 
+    IDC_EPS_ZAJ, 0x37c, 42, 0
+0x4d3c, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 0x4d5f, 0x646f, 
+0x3e65, 0x3c31, 0x4d2f, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 
+0x4d5f, 0x646f, 0x3e65, 
+    IDC_EPS_POD, 0x37c, 42, 0
+0x4d3c, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 0x4d5f, 0x646f, 
+0x3e65, 0x3c31, 0x4d2f, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 
+0x4d5f, 0x646f, 0x3e65, 
+    IDC_EPS_DRO, 0x37c, 42, 0
+0x4d3c, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 0x4d5f, 0x646f, 
+0x3e65, 0x3c31, 0x4d2f, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 
+0x4d5f, 0x646f, 0x3e65, 
+    IDC_EPS_IRF, 0x37c, 42, 0
+0x4d3c, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 0x4d5f, 0x646f, 
+0x3e65, 0x3c31, 0x4d2f, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 
+0x4d5f, 0x646f, 0x3e65, 
+    IDC_EPS_UZU, 0x37c, 42, 0
+0x4d3c, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 0x4d5f, 0x646f, 
+0x3e65, 0x3c31, 0x4d2f, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 
+0x4d5f, 0x646f, 0x3e65, 
+    IDC_EPS_KOK, 0x37c, 42, 0
+0x4d3c, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 0x4d5f, 0x646f, 
+0x3e65, 0x3c31, 0x4d2f, 0x4346, 0x6445, 0x7469, 0x7242, 0x776f, 0x6573, 
+0x4d5f, 0x646f, 0x3e65, 
+    0
+END
+
+IDD_PAGE DLGINIT
+BEGIN
+    IDC_ROZKLAD, 0x403, 12, 0
+0x775a, 0x6b79, 0x61b3, 0x7020, 0x7261, 0x0061, 
+    IDC_ROZKLAD, 0x403, 16, 0
+0x7957, 0xb9b3, 0x7a63, 0x6b20, 0x6177, 0x7264, 0x7461, 0x0079, 
+    IDC_ROZKLAD, 0x403, 15, 0
+0x654a, 0x6564, 0x206e, 0x616d, 0x6574, 0x6972, 0xb361, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        RIGHTMARGIN, 170
+    END
+
+    IDD_PAGE, DIALOG
+    BEGIN
+        RIGHTMARGIN, 340
+        BOTTOMMARGIN, 249
+    END
+
+    IDD_ADD, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 260
+    END
+
+    IDD_INFO, DIALOG
+    BEGIN
+        RIGHTMARGIN, 398
+        BOTTOMMARGIN, 271
+    END
+
+    IDD_OPIS, DIALOG
+    BEGIN
+    END
+
+    IDD_CUSTZOOM, DIALOG
+    BEGIN
+    END
+
+    IDD_DB_ADD, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 136
+    END
+
+    IDD_DB_OPEN, DIALOG
+    BEGIN
+        RIGHTMARGIN, 269
+        BOTTOMMARGIN, 150
+    END
+
+    IDD_ADDDESC, DIALOG
+    BEGIN
+        RIGHTMARGIN, 199
+    END
+
+    IDD_ADD_FIND, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 89
+    END
+
+    IDD_INFOLIB, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 97
+    END
+
+    IDD_CONFIG, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 224
+    END
+
+    IDD_WAIT, DIALOG
+    BEGIN
+        RIGHTMARGIN, 221
+    END
+
+    IDD_PRNEPS, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 185
+    END
+
+    IDD_GRIDFORM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 680
+        TOPMARGIN, 15
+        BOTTOMMARGIN, 489
+    END
+
+    IDD_SPACER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 207
+    END
+
+    IDD_EPSDATE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 417
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 295
+    END
+
+    IDD_DIRDAYS, DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 60
+    END
+
+    IDD_MANCHAT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 209
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 206
+    END
+
+    IDD_GRZBIET, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 201
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 121
+    END
+
+    IDD_PAGEDERV, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 118
+    END
+
+    IDD_KRATCALC, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 151
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 158
+    END
+
+    IDD_ACCGRB, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 266
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 66
+    END
+
+    IDD_ATEXADDS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 594
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 344
+    END
+
+    IDD_ACDEAD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 153
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 87
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 7,0,2,4
+ PRODUCTVERSION 7,0,2,4
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041504b0"
+        BEGIN
+            VALUE "CompanyName", "Agora SA"
+            VALUE "FileDescription", "Manam"
+            VALUE "FileVersion", "7.0.2.4"
+            VALUE "InternalName", "Manam"
+            VALUE "LegalCopyright", "© Marcin Buchwald"
+            VALUE "OriginalFilename", "Manam.exe"
+            VALUE "ProductName", "Manager Makiet"
+            VALUE "ProductVersion", "7.0.2.4"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x415, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_TOOL_MAIN TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    BUTTON      ID_FILE_PRINT
+    SEPARATOR
+    BUTTON      ID_FILE_DBOPEN
+    BUTTON      ID_FILE_DBSAVE
+    BUTTON      ID_FILE_DBDELETE
+    SEPARATOR
+    BUTTON      ID_FILE_INFO
+    BUTTON      ID_FILE_DRZEWO
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_DRAW_SELECT
+    BUTTON      ID_DRAW_ADD
+    BUTTON      ID_DRAW_OPIS
+    BUTTON      ID_DRAW_KOLOR
+    BUTTON      ID_DRAW_LOCK
+    SEPARATOR
+    BUTTON      ID_DRAW_RED
+    BUTTON      ID_DRAW_SPACELOCKED
+    BUTTON      ID_DRAW_CAPTION
+    BUTTON      ID_DRAW_PAGE
+    BUTTON      ID_DRAW_NUMEROWANIE
+    BUTTON      ID_DRAW_DEADLINE
+    SEPARATOR
+    BUTTON      IDV_COMBO_COLOR
+    SEPARATOR
+    BUTTON      IDV_COMBO_HEAD
+    SEPARATOR
+    BUTTON      ID_VIEW_LUPKA_PLUS
+    BUTTON      ID_VIEW_LUPKA_MINUS
+    SEPARATOR
+    BUTTON      ID_APP_ABOUT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_ABOUTBOX AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_OPIS AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDP_BUSY                "Server is still busy."
+    IDP_OLE_INIT_FAILED     "OLE 2.0 initialization failed.  Make sure that the OLE libraries are the correct version."
+    IDP_FAILED_TO_CREATE    "Failed to create object.  Make sure the object is entered in the system registry."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_ARCH_URL            "http://epsilon.agora.pl/ManamOPI/Ctrl_F11.aspx?from=%s&file=%li"
+    IDS_INITVUPDF           "%PDF-1.4\n%‚„œ”\n1 0 obj\n<<\n/Type /Catalog\n/Pages 3 0 R\n/ViewerPreferences <</FitWindow true>>\n>>\nendobj\n2 0 obj\n<<\n"
+    IDS_INITVUPDF2          "/Producer (Manam)\n/Author (Marcin Buchwald)\n>>\nendobj\n3 0 obj\n<<\n/Type /Pages\n/Kids [4 0 R]\n/Count 1\n>>\nendobj\n4 0 obj\n<<\n/Type /Page\n/Parent 3 0 R\n/MediaBox [30 10 821 1161]\n/Contents 5 0 R\n/Resources <<\n\t/ProcSet [/PDF /Text /ImageC /ImageI]\n\t/Font << /FVU 6 0 R >>\n\t/XObject 7 0 R\n\t>>\n>>\nendobj\n6 0 obj\n<</Type /Font\n/Subtype /Type1\n/Encoding /WinAnsiEncoding\n/BaseFont /Helvetica\n>>\nendobj\n%Embedded PDF section\n"
+    IDS_OPISEPAR            "--Manam-OPI"
+    IDS_DB_PD               "//srv-spac.agora.pl/SPAC"
+    IDS_DB_TP               "//db-spacpom02.agora.pl/spactp"
+END
+
+STRINGTABLE
+BEGIN
+    IDR_MAINFRAME           "Manam"
+    IDR_DRAWCLTYPE          "\nManam\nManam Document\nManam (*.man)\n.man\nManam.Document\nManam Document"
+    ID_DRAW_ADD             "Tworzy nowe og≥oszenie\nOg≥oszenie"
+    ID_DRAW_RED             "Oznaczanie powierzchni redakcyjnej - nie wolno stawiaÊ na niej og≥oszeÒ\nRedakcyjne"
+    ID_DRAW_LOCK            "Blokuje po≥oøenia og≥oszenia na stronie - og≥oszenie nie daje siÍ przesunπÊ\nBlokada"
+    ID_DRAW_OPIS            "Wstawia dodatkowy opis\nOpis"
+    ID_DRAW_KOLOR           "Wstawia kolor na stronÍ lub og≥oszenie\nKolor"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_APP_TITLE       "Manam"
+    AFX_IDS_IDLEMESSAGE     "Gotowy"
+END
+
+STRINGTABLE
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_NEW             "Tworzenie nowej makiety\nNowa"
+    ID_FILE_OPEN            "Otwieranie makiety z pliku\nOtwÛrz z pliku"
+    ID_FILE_CLOSE           "ZamkniÍcie aktywnej makiety"
+    ID_FILE_SAVE            "Zachowanie makiety\nZapisz do pliku"
+    ID_FILE_SAVE_AS         "Zachowanie makiety pod nazwπ"
+    ID_FILE_PAGE_SETUP      "Zmiana ustawieÒ strony"
+    ID_FILE_PRINT_SETUP     "Zmiana ustawieÒ drukarki"
+    ID_FILE_PRINT           "Drukowanie aktywnej makiety\nDrukuj"
+    ID_FILE_PRINT_PREVIEW   "Podglπd wydruku aktywnej makiety"
+END
+
+STRINGTABLE
+BEGIN
+    ID_ADD_FIND             "Wyszukiwanie og≥oszenia z jednoczesnπ moøliwoúciπ edycji jego danych"
+    ID_DRAW_OPCJE           "Ustawianie opcji: scieøka do eps'Ûw, itp"
+    ID_FILE_PRINT_1P        "Drukowanie stron wybranej makiety na osobnych kartkach"
+    ID_FILE_DRZEWO          "Zmiana drzewa stron logicznych dla makiety\nZmiana tytu≥u"
+    ID_FILE_INFO            "Informacje o makiecie: gazeta, data edycji, prowadzπcy, sekretarz dyøyrny\nInformacje"
+    ID_FILE_NEW_BATH        "Tworzenie nowych makiet na podstawie makiet bibliotecznych wed≥ug pliku"
+    ID_FILE_PRINT_PREVIEW_1P "Podglπd wydruku pojedynczych stron makiety"
+    ID_DRAW_PAGE            "Dodaje nowe strony\nNowe strony"
+    ID_DRAW_NUMEROWANIE     "Numerowanie stron\nPrzenumeruj"
+    ID_VIEW_PAGEFONT        "Wybiera czcionkÍ strony"
+END
+
+STRINGTABLE
+BEGIN
+    ID_ADD_IMPORTADD        "Importuje og≥oszenia z pliku - dadaje do juø istniejπcych na makiecie"
+    ID_ADD_IMPORTPLUS       "Import og≥oszeÒ z pliku - og≥oszenia z pliku dodane do og≥oszeÒ na makiecie"
+END
+
+STRINGTABLE
+BEGIN
+    ID_DRAW_SELECT          "Wybiera obiekt\nZaznacz"
+    ID_DRAW_CAPTION         "Zmienia - ustawia nag≥Ûwek stony\nNag≥Ûwki"
+    ID_DRAW_DEADLINE        "Wstawia deadline'y\nDeadline'y"
+    ID_DRAW_SPACELOCKED     "Blokada powierzchni, zeby nie zosta≥a zajÍta przez og≥oszenia\nZablokowane"
+    ID_SORT_LP              "Sortuje listÍ og≥oszeÒ wg liczby porzπdkowej"
+    ID_SORT_STR             "Sortuje listÍ og≥oszeÒ wg stron"
+    ID_SORT_NREPS           "Sortuje listÍ og≥oszeÒ wg numeru eps"
+    ID_SORT_NAZWA           "Sortuje listÍ og≥oszeÒ wg nazwy "
+    ID_SORT_WARLOG          "Sortuje listÍ og≥oszeÒ wg warunku logicznego"
+    ID_SORT_NR              "Sortuje listÍ wg numeru og≥oszenia"
+    ID_SORT                 "Sortowanie tabeli og≥oszeÒ"
+END
+
+STRINGTABLE
+BEGIN
+    ID_ADD_DBIMPORT         "Import og≥oszeÒ z bazy danych - og≥oszenia na makiecie zastπpione og≥oszeniami z bazy"
+    ID_ADD_DBIMPORTPLUS     "Import og≥oszeÒ z bazy danych - og≥oszenia z bazy dodane do og≥oszeÒ na makiecie"
+    ID_ADD_DBIMPORTMINUS    "Import og≥oszeÒ z bazy danych - dodane tylko nowe og≥oszenia z bazy (porÛwnuje numery og≥oszeÒ)"
+    ID_FILE_DBOPEN          "Otwiera makietÍ lub template makiety z bazy danych\nOtwÛrz z bazy"
+    ID_FILE_DBSAVE          "Zachowuje zmiany makiety w bazie danych\nZapisz do bazy"
+    ID_FILE_DBSAVE_AS       "Zachowuje makietÍ pod innπ nazwπ, lub makietÍ z biblioteki jako makietÍ gazety"
+    ID_FILE_DBDELETE        "Usuwa bieøπcπ makietÍ z bazy danych\nUsuÒ z bazy"
+    ID_VU_MAKIETOWANIE      "Wszystkie og≥oszenia, ktÛre nie majπ przypisanych, stron stawia na konkretnych stronach"
+    ID_VU_MAK_STRONY        "Makietuje og≥oszenia na wskazanej stronie"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_ZOOMCUSTOM      "Dostosowuje wielkoúÊ zoom"
+    ID_OBJECT_MOVETOFRONT   "Move object to front of drawing"
+    ID_OBJECT_MOVETOBACK    "Move object to back of drawing"
+    ID_OBJECT_MOVEFORWARD   "Move object to next position in z-order"
+    ID_OBJECT_MOVEBACK      "Move object to previous position in z-order"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VU_CK_MAKIETOWANIE   "Okreúla czy og≥osznia postawione nieprawid≥owo sπ przekreúlone"
+    ID_ADD_IMPORTMINUS      "Import og≥oszeÒ z pliku"
+    ID_VIEW_ADDDESC         "Okreúl jaki opis ma byÊ drukowany na og≥oszeniu"
+    ID_LOGIN                "Logowanie do systemu. Makiety otwarte w poprzedniej sesji logowanej zostanπ zamkniÍte"
+    ID_FILE_REFRESH         "Zamyka aktualnie otwarte makiety i otwiera je ponownie"
+    ID_FILE_DBOPENRO        "Otwiera makietÍ lub template makiety z bazy danych w trybie tylko do odczytu"
+    ID_VU_MAKDOKUPY         "Opcja pozwala rÛwnomiernie wype≥niaÊ og≥oszeniami strony, na ktÛrych mogπ staÊ, lub staraÊ siÍ wype≥niaÊ te strony po kolei"
+    ID_ADD_SYNCHRONIZE      "Synchronizacja og≥oszeÒ z bazπ ATEX"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_SAVE_AS_PRN     "Zachowuje wybrane strony w formacie prn "
+    ID_ADD_OPCJE            "Ustawia opcjÍ importu / exportu - informacjÍ o kracie og≥oszenia"
+END
+
+STRINGTABLE
+BEGIN
+    ID_APP_ABOUT            "%s%s (x%s)\n\nWersja Unicode, Oracle 11g\nSpacer, Dziedziczenie, Grzbiety"
+    ID_APP_EXIT             "ZakoÒczenie programu."
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_MRU_FILE1       "Otwieranie makiety"
+    ID_FILE_MRU_FILE2       "Otwieranie makiety"
+    ID_FILE_MRU_FILE3       "Otwieranie makiety"
+    ID_FILE_MRU_FILE4       "Otwieranie makiety"
+END
+
+STRINGTABLE
+BEGIN
+    ID_NEXT_PANE            "Przejúcie do nastÍpnego okna"
+    ID_PREV_PANE            "Przejúcie do poprzedniego okna"
+END
+
+STRINGTABLE
+BEGIN
+    ID_WINDOW_NEW           "Otwiera nowe okno dla aktywnej makiety"
+    ID_WINDOW_ARRANGE       "Rozmieszcza okna w formie ikon na dole"
+    ID_WINDOW_CASCADE       "Rozmieszcza okna w formie kaskady"
+    ID_WINDOW_TILE_HORZ     "Rozmieszcza okna sπsiadujπco"
+    ID_WINDOW_TILE_VERT     "Arrange windows as non-overlapping tiles"
+    ID_WINDOW_SPLIT         "Split the active window into panes"
+END
+
+STRINGTABLE
+BEGIN
+    ID_EDIT_CLEAR           "Usuwa wybrane obiekty"
+    ID_EDIT_CLEAR_ALL       "Erase everything"
+    ID_EDIT_COPY            "Kopiuje do schowka\nKopiuj"
+    ID_EDIT_CUT             "Wycina i kopiuje do schowka\nWytnij"
+    ID_EDIT_FIND            "Find the specified text"
+    ID_EDIT_PASTE           "Wkleja zawartoúÊ schowka\nWklej"
+    ID_EDIT_PASTE_LINK      "Insert Clipboard contents and a link to its source"
+    ID_EDIT_PASTE_SPECIAL   "Insert Clipboard contents with options"
+    ID_EDIT_REPEAT          "Repeat the last action"
+    ID_EDIT_REPLACE         "Replace specific text with different text"
+    ID_EDIT_SELECT_ALL      "Wybiera wszystkie og≥oszenia"
+    ID_EDIT_UNDO            "Cofa ostatniπ akcjÍ"
+    ID_EDIT_REDO            "Redo the previously undone action"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_TOOLBAR         "Pokazuje - Ukrywa pasek narzÍdzi"
+    ID_VIEW_STATUS_BAR      "Pokazuje - Ukrywa pasek stanu"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_ZOOM100         "Zoom 100%"
+    ID_VIEW_ZOOM125         "Zoom 125%"
+    ID_VIEW_ZOOM150         "Zoom 150%"
+    ID_VIEW_ZOOM200         "Zoom 200%"
+    ID_VIEW_ZOOM250         "Zoom 250%"
+    ID_VIEW_ZOOM300         "Zoom 300%"
+    ID_VIEW_ZOOM400         "Zoom 400%"
+    ID_VIEW_ZOOM500         "Zoom 500%"
+    ID_VIEW_ZOOM750         "Zoom 750%"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_KRATA_ADD           "Dodaje nowπ kratÍ na wskazanej stronie"
+    IDM_KRATA_DEL           "Usuwa widocznπ kratÍ ze strony wielokratowej"
+    IDM_KRATA_SEL           "Przestawia widocznπ kratÍ dla stron wielokratowych"
+    IDM_USERMAN             "Zarzπdzanie uprawnieniami uøytkownikÛw"
+    IDM_NEWUSER             "Zak≥adanie kont w bazie danych"
+    IDM_ACCESS              "Nadawanie uprawnieÒ istniejπcym uøytkownikom"
+    IDM_CAPTIONS            "UdostÍpnia redakcyjne nag≥Ûwki stron"
+    IDM_VIEW_STUDIO         "Prze≥πcza w tryb pracy studia grafcznego"
+    ID_INDICATOR_LOGIN      "OFFLINE"
+    IDM_SHOWREPT            "Pokaø kiedy ostatnio ukaza≥o siÍ og≥oszenie o danym numerze"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_LUPKA_PLUS      "PowiÍksza widok makiety\nPrzybliøa"
+    ID_VIEW_LUPKA_MINUS     "Pomniejsza widok makiety\nOddala"
+    IDM_ASIDE_ADDS          "Zdejmuje niezablokowane og≥oszenia z niezablokowanych stron makiety"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_SETPAGINA           "Zmienia paginacjÍ stron z rzymskiej na arabskπ i odwrotnie"
+    ID_INDICATOR_ROLE       "USER"
+    IDM_SETDEA              "Pozwala kierownikom tytu≥Ûw pracowaÊ w trybie sprzedawcy og≥oszeÒ"
+    IDM_SHOWTIME            "Rysuje deadline'y na kolumnach"
+    IDM_IRFAN               "Prezentuje preview og≥oszenia w IrfanView"
+    IDM_ACCGRB              "Zatwierdzanie tygodniÛwki i zamÛwienia na druk"
+END
+
+STRINGTABLE
+BEGIN
+    ID_INDICATOR_OPENSTAT   " "
+    ID_POMOC                "Informacja o programie, wersja i autorzy\nStopka"
+    IDM_INSERTGRZBIET       "Wstawia strony z innej makiety do úrodka grzbietu lub usuwa inserty"
+END
+
+STRINGTABLE
+BEGIN
+    ID_OLE_INSERT_NEW       "Insert new linked or embedded object"
+    ID_OLE_EDIT_LINKS       "Edit linked objects"
+    ID_OLE_EDIT_CONVERT     "Convert object to different type"
+END
+
+STRINGTABLE
+BEGIN
+    ID_OLE_VERB_FIRST       "Activate embedded or linked object"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCSIZE          "Zmiana wielkoúci okna"
+    AFX_IDS_SCMOVE          "Zmiana pozycji okna"
+    AFX_IDS_SCMINIMIZE      "Do ikony"
+    AFX_IDS_SCMAXIMIZE      "Do pe≥nego ekranu"
+    AFX_IDS_SCNEXTWINDOW    "NastÍpny dokument"
+    AFX_IDS_SCPREVWINDOW    "Poprzedni dokument"
+    AFX_IDS_SCCLOSE         "Zamyka aktywnπ makietÍ; Czy zachowaÊ zmiany ?"
+END
+
+STRINGTABLE
+BEGIN
+    AFX_IDS_SCRESTORE       "Restore the window to normal size"
+    AFX_IDS_SCTASKLIST      "Activate Task List"
+    AFX_IDS_MDICHILD        "Activate this window"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_SHOWOBJECTS     "Toggle OLE object indication"
+    ID_EDIT_PROPERTIES      "Pokazuje w≥asnoúci obiektÛw"
+    ID_ADD_IMPORT           "Import og≥oszeÒ z pliku - dodane tylko nowe og≥oszenia (porÛwnuje numery og≥oszeÒ)"
+    ID_ADD_EXPORT           "Export og≥oszeÒ"
+    ID_CHOOSE_FONT          "Wybiera czcionkÍ strony"
+END
+
+STRINGTABLE
+BEGIN
+    IDV_COMBO_COLOR         "Wybiera kolor/wersjÍ\nKolory"
+    IDV_COMBO_HEAD          "Wybiera nag≥Ûwek\nNag≥Ûwki"
+END
+
+STRINGTABLE
+BEGIN
+    ID_EDIT_EPSSIZE         "Sprawdza rozmiar og≥oszenia w szpiglu i w pliku *.eps"
+    ID_VIEW_SPACELOCKS      "Pokazuje / ukrywa zablokowanπ powierzchniÍ"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_CZASOBOW        "Prze≥πcza kolorystykÍ makiety - pokazuje czas obowiπzywania og≥oszeÒ"
+    ID_FILE_PRINT_EPS       "Drukowanie EPSÛw"
+    ID_CHECK_EPS            "Kontrola materia≥u graficznego pobieranego z miejsca okreúlonego w NarzÍdzia->Opcje"
+    IDM_PASSWD              "Umoøliwia zmianÍ has≥a po wprowadzeniu dotychczasowego"
+    IDM_EDIT_FIND_NEXT      "Szuka nastÍpnego og≥oszenia wg ostatniego kryterium"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_PREVPDF             "Pobierz podglπd og≥oszenia lub kolumny w .PDF"
+    ID_FILE_PRINT_ALL       "Drukowanie ca≥ej makiety na pojedynczej kartce"
+END
+
+#endif    // Polish (Poland) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#include "afxres.rc"  // Standard components
+#include "afxprint.rc"  // printing/print preview resources
+#include "afxolecl.rc"  // OLE container resources
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
