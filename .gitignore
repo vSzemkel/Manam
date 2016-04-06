@@ -1,9 +1,11 @@
 # Microsoft
-[Dd]ebug/ 
-[Rr]elease/ 
-x64/ 
-x86/ 
-.vs/
 *.aps
 *.suo 
 *.user 
+.vs/
+/x64/
+/x86/
+/Manam.VC.db
+/Manam.VC.VC.opendb
+/Oracle.ManagedDataAccess.dll
+
