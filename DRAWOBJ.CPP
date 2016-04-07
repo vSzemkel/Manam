@@ -14,8 +14,8 @@ IMPLEMENT_SERIAL(CDrawObj, CObject, 0)
 
 CDrawObj::CDrawObj()
 {
+	info.Empty();
 	dirty = TRUE;
-	info = _T("");
 	kolor = c_brak;
 	m_pDocument = nullptr;
 }

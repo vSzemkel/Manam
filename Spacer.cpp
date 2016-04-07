@@ -66,7 +66,7 @@ CSpacerDlg::CSpacerDlg(CDrawAdd *vAdd, CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CSpacerDlg)
 	m_pageparity = m_pagelayout = FALSE;
 	m_exactplace = TRUE;
-	m_nazwa = m_wersja = m_uwagi = _T("");
+	m_nazwa.Empty(); m_wersja.Empty(); m_uwagi.Empty();
 	m_dealappend = m_wsekcji = m_sekcja = FALSE;
 	m_quepub_xx = m_spacer = 0;
 	//}}AFX_DATA_INIT

@@ -152,7 +152,7 @@ CSendDlg::CSendDlg(CWnd* pParent /*=NULL*/)
 {
 	//{{AFX_DATA_INIT(CSendDlg)
 	m_broadcast = FALSE;
-	m_rcv = m_msg = m_login = _T("");
+	m_rcv.Empty(); m_msg.Empty(); m_login.Empty();
 	//}}AFX_DATA_INIT
 }
 

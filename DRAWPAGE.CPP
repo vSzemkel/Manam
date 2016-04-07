@@ -374,7 +374,7 @@ void CDrawPage::DBChangeName(int id_drw)
 		{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &caption }
 	};
 	if (!theManODPNET.EI("select sciezka from strukt_drzewa where drw_xx=:drw_xx and str_log=:capt", orapar))
-		caption = name = _T("");
+		{ caption.Empty(); name.Empty(); }
 
 	SetDirty();  UpdateInfo();  Invalidate();
 }
