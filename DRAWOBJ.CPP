@@ -103,18 +103,12 @@ void CDrawObj::DrawTracker(CDC* pDC, TrackerState state) const
 	case active:
 		{
 			int nHandleCount = GetHandleCount();
-			for (int nHandle = 1; nHandle <= nHandleCount; nHandle += 1)
+			for (int nHandle = 1; nHandle <= nHandleCount; ++nHandle)
 			{
+				const int scale = 18;
 				CPoint handle = GetHandle(nHandle);
-				CMDIChildWnd *vWnd ;
-				double zoom = 100 ;
-				if (vWnd = ((CMainFrame*)AfxGetMainWnd())->MDIGetActive()) {
-					auto view = dynamic_cast<CDrawView*>(vWnd->GetActiveView());
-					if (view != nullptr)
-						zoom = view->GetZoomFactor();
-				}
-				zoom = vscale*(-zoom*(3.0 / 1600.0) + 19.0 / 16.0);     // :-)
-				pDC->PatBlt(handle.x - (int) (2 * zoom), handle.y - (int) (2 * zoom), (int) (5 * zoom), (int) (5 * zoom), BLACKNESS);
+
+				pDC->PatBlt(handle.x - 2 * scale, handle.y - 2 * scale, 4 * scale, 4 * scale, BLACKNESS);
 			}
 		}
 		break;

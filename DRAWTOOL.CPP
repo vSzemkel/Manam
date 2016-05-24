@@ -115,7 +115,7 @@ void CSelectTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& poi
 			selectMode = SelectMode::size;
 			auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
 			if (pAdd) {
-				if (pAdd->typ_xx || pAdd->precelWertexCnt || pAdd->flags.locked || pAdd->flags.derived)
+				if (pAdd->typ_xx || pAdd->flags.locked || pAdd->flags.derived)
 					selectMode = SelectMode::dontsize;
 			} else if (!dynamic_cast<CDrawOpis*>(pObj))
 				selectMode = SelectMode::dontsize;
@@ -147,8 +147,7 @@ void CSelectTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& poi
 	}
 
 	// Click on background, start a net-selection
-	if (selectMode == SelectMode::none)
-	{
+	if (selectMode == SelectMode::none) {
 		if ((nFlags & MK_SHIFT) == 0)
 			pView->Select(NULL);
 
@@ -159,7 +158,8 @@ void CSelectTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& poi
 		dc.DrawFocusRect(m_last_rect);
 	}
 
-	if (pView->GetDocument()->isGRB || (theApp.grupa&R_DEA) > 0) selectMode = SelectMode::none;
+	if (pView->GetDocument()->isGRB || (theApp.grupa & R_DEA) > 0)
+		selectMode = SelectMode::none;
 	
 	lastPoint = local;
 	CDrawTool::OnLButtonDown(pView, nFlags, point);
@@ -357,7 +357,7 @@ void CSelectTool::OnMouseMove(CDrawView* pView, UINT , const CPoint& point)
 			CPoint local = point;
 			pView->ClientToDoc(local);
 			m_DragHandle = pObj->HitTest(local, pView, TRUE);
-			if (m_DragHandle != 0)
+			if (m_DragHandle != 0 && (theApp.grupa & R_DEA) == 0)
 				::SetCursor(pObj->GetHandleCursor(m_DragHandle));
 			else
 				OnCancel();
@@ -365,8 +365,10 @@ void CSelectTool::OnMouseMove(CDrawView* pView, UINT , const CPoint& point)
 		return;
 	}
 
-	if (selectMode == SelectMode::netSelect)
-	{
+	if (selectMode == SelectMode::none)
+		return;
+
+	if (selectMode == SelectMode::netSelect) {
 		CClientDC dc(pView);
 		dc.DrawFocusRect(m_last_rect);
 		m_last_rect.SetRect(c_down.x, c_down.y, point.x, point.y);
