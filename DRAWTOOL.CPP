@@ -147,7 +147,7 @@ void CSelectTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& poi
 	}
 
 	// Click on background, start a net-selection
-	if (selectMode == SelectMode::none)	{
+	if (selectMode == SelectMode::none) {
 		if ((nFlags & MK_SHIFT) == 0)
 			pView->Select(NULL);
 
@@ -158,7 +158,7 @@ void CSelectTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& poi
 		dc.DrawFocusRect(m_last_rect);
 	}
 
-	if (pView->GetDocument()->isGRB || (theApp.grupa & R_DEA) > 0) 
+	if (pView->GetDocument()->isGRB || (theApp.grupa & R_DEA) > 0)
 		selectMode = SelectMode::none;
 	
 	lastPoint = local;
