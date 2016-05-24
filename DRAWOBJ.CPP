@@ -105,10 +105,10 @@ void CDrawObj::DrawTracker(CDC* pDC, TrackerState state) const
 			int nHandleCount = GetHandleCount();
 			for (int nHandle = 1; nHandle <= nHandleCount; ++nHandle)
 			{
-				const int scale = 15;
+				const int scale = 18;
 				CPoint handle = GetHandle(nHandle);
 
-				pDC->PatBlt(handle.x - 2 * scale, handle.y - 2 * scale, 5 * scale, 5 * scale, BLACKNESS);
+				pDC->PatBlt(handle.x - 2 * scale, handle.y - 2 * scale, 4 * scale, 4 * scale, BLACKNESS);
 			}
 		}
 		break;
