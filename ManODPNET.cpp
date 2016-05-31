@@ -620,8 +620,6 @@ BOOL CDrawDocDbWriter::SaveManamDoc(BOOL isSaveAs, BOOL doSaveAdds)
 
 		if (!isSaveAs && !m_doc->m_del_obj.empty()) RemoveDeletedObj(conn, FALSE);
 
-		m_doc->m_del_obj.clear();
-
 		SaveOpisyMakiety(conn, isSaveAs);
 
 		SaveSpotyMakiety(conn);
@@ -634,6 +632,8 @@ BOOL CDrawDocDbWriter::SaveManamDoc(BOOL isSaveAs, BOOL doSaveAdds)
 		}
 
 		otr->Commit();
+
+		m_doc->m_del_obj.clear();
 	} catch (OracleException^ oex) {
 		if (otr != nullptr)
 			otr->Rollback();
