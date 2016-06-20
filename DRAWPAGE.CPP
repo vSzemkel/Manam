@@ -172,7 +172,7 @@ void CDrawPage::Draw(CDC* pDC)
 	int nr_porz = nr >> 3;
 	bool isRoman = (nr & c_rzym) > 0;
 	const CString& cnr = GetNrPaginy();
-	const CString& cap = ((CDrawApp*) AfxGetApp())->swCZV & 2 ? ((CMainFrame*) AfxGetMainWnd())->GetCapStrFromData((WORD) (prn_mak_xx - (nr_porz & 1))) : caption;
+	const CString& cap = theApp.swCZV & 2 ? ((CMainFrame*) AfxGetMainWnd())->GetCapStrFromData((WORD) (prn_mak_xx - (nr_porz & 1))) : caption;
 	CRect r(rect.left + 2 * vscale, rect.top - vscale, rect.right - 2 * vscale, rect.top - pmoduly + vscale);
 	if ((!isRoman && (nr_porz & 1) == 0) || (isRoman && (nr_porz & 1) == 1))
 	{ // lewe arabskie i prawe rzymskie
