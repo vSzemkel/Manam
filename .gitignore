@@ -1,5 +1,6 @@
 # Microsoft
 *.aps
+*.db
 *.suo 
 *.user 
 .vs/
