@@ -47,13 +47,13 @@ struct OdpHelper final {
 	static const gcroot<String^> DbNull;
 
 	// reverse operation is: static String^ PtrToStringUni(IntPtr ptr), but simple assignment will do
-	inline static void String2WChar(System::String^ s, wchar_t* os, size_t noe)
+	inline static void __clrcall String2WChar(System::String^ s, wchar_t* os, size_t noe)
 	{
 		pin_ptr<const wchar_t> wch = PtrToStringChars(s);
 		wcscpy_s(os, noe, wch); 
 	} 
 
-	inline static void String2CString(System::String^ s, CString& cs)
+	inline static void __clrcall String2CString(System::String^ s, CString& cs)
 	{
 		int noe = s->Length;
 		auto buf = cs.GetBufferSetLength(s->Length);
@@ -61,14 +61,14 @@ struct OdpHelper final {
 		::CopyMemory(buf, wch, 2 * noe);
 	} 
 
-	inline static CString ReadOdrString(OracleDataReader^ odr, int index)
+	inline static CString __clrcall ReadOdrString(OracleDataReader^ odr, int index)
 	{
 		if (odr->IsDBNull(index)) return CString();
 		pin_ptr<const wchar_t> wch = PtrToStringChars(odr->GetString(index));
 		return CString(wch);
 	}
 
-	inline static void ShowErrMsgDlg(String^ msg)
+	inline static void __clrcall ShowErrMsgDlg(String^ msg)
 	{ 
 		int pos = msg->IndexOf(": ");
 		if (pos > 0) msg = msg->Substring(pos + 2);
@@ -77,13 +77,13 @@ struct OdpHelper final {
 		MessageBox::Show(nullptr, msg, L"B³¹d", MessageBoxButtons::OK, MessageBoxIcon::Error); 
 	}
 
-	inline static long long IntegerValue(OracleParameter^ op)
+	inline static long long __clrcall IntegerValue(OracleParameter^ op)
 	{
 		auto d = static_cast<OracleDecimal>(op->Value);
 		return d.IsNull ? 0 : static_cast<long long>(d);
 	}
 
-	static System::Object^ PrepareOdpParam(const CManODPNETParm& p)
+	static System::Object^ __clrcall PrepareOdpParam(const CManODPNETParm& p)
 	{
 		if (p.m_value == nullptr)
 			return System::DBNull::Value;
@@ -101,7 +101,7 @@ struct OdpHelper final {
 		}
 	}
 
-	static void RetrieveOdpParem(CManODPNETParm *p, OracleParameter^ op) {
+	static void __clrcall RetrieveOdpParem(CManODPNETParm *p, OracleParameter^ op) {
 		switch (p->m_odptype)
 		{
 		case CManODPNET::DbTypeInt32:
@@ -123,7 +123,7 @@ struct OdpHelper final {
 		}
 	}
 
-	static void AddParams(OracleCommand^ cmd, CManODPNETParms& ps)
+	static void __clrcall AddParams(OracleCommand^ cmd, CManODPNETParms& ps)
 	{
 		for (const auto& p : ps.params) {
 			auto dir = static_cast<ParameterDirection>(p.m_direction);
@@ -144,7 +144,7 @@ struct OdpHelper final {
 		}
 	}
 
-	static void ExecuteOpenedCommand(OracleCommand^ cmd, CManODPNETParms& ps)
+	static void __clrcall ExecuteOpenedCommand(OracleCommand^ cmd, CManODPNETParms& ps)
 	{
 		AddParams(cmd, ps);
 
@@ -164,7 +164,7 @@ struct OdpHelper final {
 		}
 	}
 
-	static BOOL InitRozmInternal(OracleCommand^ cmd, std::vector<CRozm>* roz) {
+	static BOOL __clrcall InitRozmInternal(OracleCommand^ cmd, std::vector<CRozm>* roz) {
 		auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
 		BOOL found = odr->HasRows;
 		while (odr->Read()) {

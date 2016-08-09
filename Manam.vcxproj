@@ -22,7 +22,7 @@
     <ProjectGuid>{61EA1643-896C-42C9-B085-DB883BBEBC57}</ProjectGuid>
     <RootNamespace>Manam</RootNamespace>
     <Keyword>MFCProj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Produkcja|Win32'" Label="Configuration">
