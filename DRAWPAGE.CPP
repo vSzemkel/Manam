@@ -503,10 +503,10 @@ BOOL CDrawPage::OnOpen(CDrawView*)
 	m_ac_red = dlg.m_red;
 	m_ac_fot = dlg.m_fot;
 	m_ac_kol = dlg.m_kol;
-	if (m_drukarnie != dlg.m_drukarnie) { //zmiana dla czwórki stron drukowanych na jednej kartce
+	if (m_drukarnie != dlg.m_drukarnie) { // zmiana dla czwórki stron drukowanych na jednej kartce
 		m_drukarnie = dlg.m_drukarnie ;
 		int obj = (int)m_pDocument->m_pages.size();
-		int nr_porz = m_pDocument->GetIPage(this->nr);
+		int nr_porz = m_pDocument->GetIPage(this);
 		auto pPage = m_pDocument->m_pages[(obj - nr_porz + 1) % obj];
 		pPage->m_drukarnie = m_drukarnie;
 		pPage->SetDirty();
@@ -522,7 +522,7 @@ BOOL CDrawPage::OnOpen(CDrawView*)
 
 	if (m_typ_pary != dlg.m_typ_pary) {
 		m_typ_pary = dlg.m_typ_pary ;
-		int nr_porz = m_pDocument->GetIPage(this->nr);
+		int nr_porz = m_pDocument->GetIPage(this);
 		auto pPage = m_pDocument->m_pages[nr_porz + 1 - 2*(nr_porz&1)];
 		pPage->m_typ_pary = m_typ_pary ;
 		pPage->SetDirty();
@@ -552,7 +552,7 @@ BOOL CDrawPage::OnOpen(CDrawView*)
 
 	if (theApp.swCZV == 2) 
 		prn_mak_xx = dlg.m_prn_mak_xx ;
-	pom_nr = m_pDocument->GetIPage(nr);
+	pom_nr = m_pDocument->GetIPage(this);
 	i = dlg.m_topage;
 	while (--i) {
 		auto vPage = m_pDocument->m_pages[div(i+pom_nr,pc).rem];
@@ -1017,7 +1017,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg) {
 	auto wThreadBuf = pArg->cBigBuf;
 	auto cThreadBuf = reinterpret_cast<char*>(pArg->cBigBuf);
 	if (pArg->bIsPRN) {
-		int lnr_porz = m_pDocument->GetIPage(nr);
+		int lnr_porz = m_pDocument->GetIPage(this);
 		num.Format(_T("%03i"), lnr_porz ? lnr_porz : (int)m_pDocument->m_pages.size());
 	} else
 		((nr & c_rzym)==c_rzym) ? num = Rzymska(nr>>3) : num.Format(_T("%03i"), (nr>>3)) ;

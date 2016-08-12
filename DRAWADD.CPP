@@ -1758,8 +1758,8 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest) {
 	char* s = reinterpret_cast<char*>(pArg->cBigBuf);
 	CDrawAdd *pLeftAdd = this;
 	unsigned long lOffset = 0, lSize = 0;
-	bool bLewaStrona = (m_pDocument->GetIPage(fizpage) & 1) == 0;
 	auto pPage = m_pDocument->GetPage(fizpage);
+	bool bLewaStrona = (m_pDocument->GetIPage(pPage) & 1) == 0;
 	auto pRozAdd = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, spad_flag ? 0 : typ_xx);	// gdy zaznaczono spad, to montuj do kraty
 	auto pRozKraty = typ_xx ? m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, 0) : pRozAdd;	// pobierz rozmiar kraty, jeœli dotychczas nie jest znany
 

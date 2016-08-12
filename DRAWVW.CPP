@@ -1959,7 +1959,7 @@ void CDrawView::OnPrevKor()
 		if (pPage) {
 			CString num, fname; /*0925dlowa001-1ake.pdf*/
 			CDrawDoc *pDoc = GetDocument();
-			int lnr_porz = pDoc->GetIPage(pPage->nr);
+			int lnr_porz = pDoc->GetIPage(pPage);
 			num.Format(_T("%03i"), lnr_porz ? lnr_porz : (int)pDoc->m_pages.size());
 			GENEPSARG genEpsArg;
 			genEpsArg.cBigBuf = theApp.bigBuf;

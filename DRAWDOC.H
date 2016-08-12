@@ -72,6 +72,7 @@ public:
 	void OnCloseDocument();
 	int AddsCount() const;
 	int GetIPage(int n) const;
+	int GetIPage(CDrawPage *pPage) const;
 	int Nr2NrPorz(const TCHAR* s) const;		// dla numeru na paginie liczy numer porz¹dkowy
 
 // Operations

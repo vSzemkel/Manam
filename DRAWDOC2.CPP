@@ -793,6 +793,11 @@ int CDrawDoc::GetIPage(int n) const
 	return -1;
 }  
 
+int CDrawDoc::GetIPage(CDrawPage *pPage) const
+{
+	return static_cast<int>(std::find(std::begin(m_pages), std::end(m_pages), pPage) - std::begin(m_pages));
+}
+
 void CDrawDoc::OnAsideAdds()
 {
 	CDrawPage* vPage = nullptr;
@@ -817,7 +822,7 @@ void CDrawDoc::OnAsideAdds()
 			}
 		AsideAdds(); 
     } else { // zdejmujemy og³oszenia ze wskazanej strony (wiemy, ¿e to strona makietowana)
-		int iOffset = iPagesInRow - (GetIPage(vPage->nr) % iPagesInRow);
+		int iOffset = iPagesInRow - (GetIPage(vPage) % iPagesInRow);
 		iOffset = iOffset*pszpalt_x*pmodulx + (iOffset/2 + 1)*pmodulx;
 		vPage->m_adds.erase( std::remove_if( vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd* pAdd) -> BOOL {
 			if (!pAdd->flags.locked && !pAdd->flags.derived) {
