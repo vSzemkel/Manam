@@ -3,11 +3,14 @@
 *.db
 *.suo 
 *.user 
+*.db-*
 .vs/
+.vscode/
 ipch/
 /x64/
 /x86/
 /Manam.VC.db
 /Manam.VC.VC.opendb
 /Oracle.ManagedDataAccess.dll
+
 
