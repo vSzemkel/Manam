@@ -668,7 +668,10 @@ CDrawPage* CDrawDoc::PageAt(const CPoint& point) const
 void CDrawDoc::ComputeCanvasSize()
 {
 	CClientDC dc(NULL);
-	CSize new_size(dc.GetDeviceCaps(HORZRES), m_pages.empty() ? dc.GetDeviceCaps(VERTRES) : (int)(pmoduly / vscale * (1 + 8 * ceil((float)m_pages.size() / iPagesInRow))));
+	auto r = div(m_pages.size(), iPagesInRow);
+	if (r.quot < 3) r.quot = 3;
+	else if (r.rem > 0) r.quot++;
+	CSize new_size(dc.GetDeviceCaps(HORZRES), m_pages.empty() ? dc.GetDeviceCaps(VERTRES) : (int)(pmoduly / vscale * (1 + 8 * r.quot)));
 
 	// if size changed then iterate over views and reset
 	if (new_size != m_size)	{
