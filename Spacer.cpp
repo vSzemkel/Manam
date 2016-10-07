@@ -701,7 +701,7 @@ void CSpacerDlg::OnOK()
 		}
 	}
 
-	if (pub->czaskto.Left(1) == _T("#") || m_quepub_xx > 0)
+	if (pub->czaskto.Left(1) == _T("#"))
 		pub->czaskto = czas_kto;
 
 	if (saleSucc) {

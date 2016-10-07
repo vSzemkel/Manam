@@ -148,9 +148,9 @@ public:
 	UINT m_manam_port;
 	CManSock m_sock;
 // Overrides
-	virtual void AddToRecentFileList(LPCTSTR lpszPathName);
-	virtual BOOL InitInstance(); 
-	virtual int ExitInstance();
+	virtual void AddToRecentFileList(LPCTSTR lpszPathName) override;
+	virtual BOOL InitInstance() override;
+	virtual int ExitInstance() override;
 
 // Implementation
 	static CTime ShortDateToCTime(const CString& sData);				// konwertuje datê w formacie dd/mm/rrrr do CTime
