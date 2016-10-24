@@ -631,12 +631,7 @@ void CDrawOleObj::MoveTo(const CRect& position, CDrawView* pView)
 }
 
 // CRozm
-CRozm::CRozm() { // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!use delegating constructor in VS2013
-	// domyœlne rozmiary kraty standardowej, bez logowania
-	w = 468; h = 575; sw = 40; sh = 34;
-	szpalt_x = 5;
-	szpalt_y = 6;
-	scale_it = typ_xx = 0;
+CRozm::CRozm() : CRozm(468, 575, 40, 34, 5, 6, 0, 0) {
 }
 
 CRozm::CRozm(int m_w, int m_h, int m_sw,int m_sh, BYTE m_szpalt_x, BYTE m_szpalt_y, int m_typ_xx, BOOL m_scale_it)

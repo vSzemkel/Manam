@@ -435,14 +435,13 @@ void CDrawDoc::Remove(CDrawObj* pObj)
 
 CDrawObj* CDrawDoc::ObjectAt(const CPoint& point) const
 {
-	CRect rect(point, CSize(1, 1));
-
-	auto clickedOne = std::find_if(m_objects.crbegin(), m_objects.crend(), [&rect](CDrawObj* const & pObj){ return pObj->Intersects(rect); });
-	if (clickedOne != m_objects.rend())
-		return *clickedOne;
+	auto inter = std::bind(&CDrawObj::Intersects, std::placeholders::_1, CRect(point, CSize(1, 1)));
+	for (const auto& p : m_objects)
+		if (inter(p))
+			return p;
 
 	for (const auto& p : m_pages)
-		if (p->Intersects(rect))
+		if (inter(p))
 			return p;
 
 	return nullptr;
@@ -477,7 +476,7 @@ int CDrawDoc::GetAddPosition(CDrawAdd* pAdd) const
 			++n;
 			return pAdd == a;
 		} else 
-			return FALSE;
+			return false;
 	});
 
 	return pos == m_objects.cend() ? -1 : n;
