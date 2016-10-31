@@ -435,14 +435,16 @@ void CDrawDoc::Remove(CDrawObj* pObj)
 
 CDrawObj* CDrawDoc::ObjectAt(const CPoint& point) const
 {
-	auto inter = std::bind(&CDrawObj::Intersects, std::placeholders::_1, CRect(point, CSize(1, 1)));
-	for (const auto& p : m_objects)
-		if (inter(p))
+	auto coll = const_cast<std::vector<CDrawObj*>*>(&m_objects);
+check:
+	for (const auto& p : *coll)
+		if (p->Contains(point))
 			return p;
 
-	for (const auto& p : m_pages)
-		if (inter(p))
-			return p;
+	if ((intptr_t)coll != (intptr_t)&m_pages) {
+		coll = reinterpret_cast<decltype(coll)>(const_cast<std::vector<CDrawPage*>*>(&m_pages));
+		goto check;
+	}
 
 	return nullptr;
 } 
@@ -501,16 +503,17 @@ int CDrawDoc::AddsCount() const
 //import i import++
 void CDrawDoc::RemoveFromHead(int n)
 {
-	for (int i = 1; i <= n; i++) 
-		delete m_objects.front();
+	for (int i = 0; i < n; ++i)
+		delete m_objects[i];
 	m_objects.erase(m_objects.begin(), m_objects.begin() + n);
 }
 
 void CDrawDoc::RemoveFromTail(int n)
 {
-	for (int i = 1; i <= n; i++) 
+	for (int i = 0; i < n; ++i) {
 		delete m_objects.back();
-	m_objects.erase(m_objects.end() - n, m_objects.end());
+		m_objects.pop_back();
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -735,20 +738,10 @@ void CDrawDoc::OnFileSaveAs()
 //////////////////////////////////////////////////////////////////////
 ////////// IMPORT 
 				    
-void CDrawDoc::OnFileImport()
-{
- OnImport(FALSE);
-}
-
-void CDrawDoc::OnDBImport()
-{
- OnImport(TRUE);
-}
-
 void CDrawDoc::OnImport(BOOL fromDB)
 {
 	int n = (int)m_objects.size();
-	if ((fromDB) ? DBImport() : Import(TRUE) )  {
+	if ((fromDB) ? DBImport() : Import(TRUE) ) {
 		auto pView = GetPanelView<CDrawView>();
 		if (pView && pView->m_bActive) pView->Select(NULL, FALSE);
 		RemoveFromHead(n);
@@ -764,7 +757,7 @@ void CDrawDoc::OnFileImportPlus()
 
 void CDrawDoc::OnFileImportMinus()
 {
-	Import(TRUE); 
+	Import(TRUE);
 	UpdateAllViews(NULL, HINT_UPDATE_WINDOW, NULL);
 }
 
@@ -803,8 +796,8 @@ BOOL CDrawDoc::Import(BOOL check_exist) // tu dodaje na koncu do m_objects najwy
 	try {
 		auto& buf = theApp.bigBuf;
 		CStdioFile file(dlg.m_ofn.lpstrFile, CFile::modeRead | CFile::typeUnicode);
-		CPoint pos(m_size.cx*vscale - (pszpalt_x + 2)*pmodulx, -pmoduly);
-		while (file.ReadString(buf, n_size) != NULL && ok) 
+		CPoint pos = GetAsideAddPos(FALSE);
+		while (file.ReadString(buf, n_size) != NULL && ok)
 			ok = CreateAdd(buf, '\t', pos, check_exist);
 
 		file.Close();
@@ -815,7 +808,7 @@ BOOL CDrawDoc::Import(BOOL check_exist) // tu dodaje na koncu do m_objects najwy
 	}
 
 	if (!ok)
-		AfxGetMainWnd()->MessageBox(_T("Z³y format pliku !\n Rozmiar og³oszenia nie mo¿e byæ: 0 x 0 "), _T("B³¹d !"), MB_OK);
+		AfxGetMainWnd()->MessageBox(_T("Dane w pliku s¹ uszkodzone"), _T("B³¹d"), MB_OK);
 	return ok;
 } 
 
