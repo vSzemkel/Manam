@@ -32,12 +32,13 @@ static const int pmodcnt		= 30;   // pszpalt_x * pszpalt_y
 static const int DLGMSG_MAX_LEN = 3000;	// timeout na uzyskanie po³¹czenia z puli wyra¿ony w milisekundach
 static const int MIN_VALID_ADNO	= 10'000'000;	// minimalny prawid³owy numer ADNO
 static const int MANAM_DEFAULT_PORT	= 2501; // domyœlny numer portu u¿ywany przez aplikacjê
-static const CTime POWTSEED_0(1999, 12, 31, 0, 0, 0); // data, w stosunku do której s¹ obliczane powtórki
-static const CTime POWTSEED_1(1999, 12, 31, 1, 0, 0); // data, w stosunku do której s¹ obliczane powtórki plus godzina
 static const TCHAR* c_formatDaty = _T("%02d/%02d/%04d");
 static const TCHAR* c_formatCzasu = _T("%02d/%02d/%04d %02d:%02d");
 static const TCHAR* c_ctimeData = _T("%d/%m/%Y");
 static const TCHAR* c_ctimeCzas = _T("%d/%m/%Y %H:%M");
+static const __time64_t ONEDAY = 86400; // liczba sekund w dobie
+static const __time64_t POWTSEED_0 = 946594800; // 31/12/1999 00:00 data, w stosunku do której s¹ obliczane powtórki
+static const __time64_t POWTSEED_1 = 946598400; // 31/12/1999 01:00 data, w stosunku do której s¹ obliczane powtórki plus godzina
 // kolory
 static const int c_brak = 1;
 static const int c_spot = 2;

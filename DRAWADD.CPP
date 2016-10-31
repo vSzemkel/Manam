@@ -597,7 +597,7 @@ BOOL CDrawAdd::OnOpen(CDrawView* pView)
 		if (m_add_xx > 0) {
 			int eok = this->flags.epsok;
 			int nrs = (int)((CMainFrame*)AfxGetMainWnd())->Spot_ID[((this->kolor)>>3)];
-			int powt = (int)(this->powtorka == 0 ? 0 : CTimeSpan(this->powtorka - POWTSEED_0).GetDays());
+			int powt = (int)(this->powtorka == 0 ? 0 : (this->powtorka - CTime(POWTSEED_0)).GetDays());
 			int ik = ((this->kolor) & c_full)==c_full ? c_full : (((this->kolor) & c_brak)==c_brak ? c_brak : c_spot);
 			CString czk = this->flags.reserv == 1 ? _T("") : this->czaskto;
 
