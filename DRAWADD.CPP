@@ -1817,9 +1817,18 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest) {
 
 		if (spad_flag == 0 && pPage->m_typ_pary < 2) { // podpisujemy tylko pasowane
 			CStringA dopodpisu;
-			dopodpisu.Format("%li%s", nreps, CStringA(wersja));
-			if (this->flags.derived && theApp.activeDoc->gazeta.Left(3) == _T("TDN"))
-				dopodpisu = "oferta krajowa/" + dopodpisu;
+			if (theApp.activeDoc->gazeta.Left(3) == _T("TBP")) {
+				CString uPodpis(_T(' '), 32);
+				CManODPNETParms orapar {
+					{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &uPodpis },
+					{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &this->m_pub_xx }
+				};
+				orapar.outParamsCount = 1;
+				theManODPNET.EI("begin :pod := pagina.podpis(:pub_xx); end;", orapar);
+				dopodpisu = uPodpis;
+			} else
+				dopodpisu.Format("%li%s", nreps, CStringA(wersja));
+
 			::StringCchPrintfA(s, n_size, "(%s) %.2f %.2f %d /Switzerland Po\r\n", dopodpisu, (x+gpx), (y-podpisH), podpisH); dest->Write(s, (UINT)strlen(s));
 			if (this->flags.reksbtl) {
 				::StringCchPrintfA(s, n_size, "(REKLAMA) %.2f %.2f 1 %d /Switzerland textLR\r\n", x, y-podpisH, podpisH);
