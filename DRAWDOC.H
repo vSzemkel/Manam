@@ -118,10 +118,8 @@ public:
 	//..,,inne akcje menu -OGLOSZENIA
 	void OnImport(BOOL fromDB); 
 	void OnImportPlus(BOOL fromDB);
-	void OnFileImport(); 
 	void OnFileImportPlus();
 	void OnFileImportMinus();
-	void OnDBImport();
 	void OnDBImportPlus();
 	void OnDBImportMinus();
 	void OnDrawOpcje();

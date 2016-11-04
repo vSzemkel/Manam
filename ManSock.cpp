@@ -138,7 +138,7 @@ void CManSock::HandleSysMsg1(TCHAR* sysmsg) const
 	pAdd->remarks = _tcstok(NULL, septok);
 	pAdd->wersja = _tcstok(NULL, septok);
 	ivar = _ttol(_tcstok(NULL, septok));
-	pAdd->powtorka = ivar ? POWTSEED_1 + CTimeSpan(ivar, 0, 0, 0) : 0 ;
+	pAdd->powtorka = ivar ? POWTSEED_1 + ivar * ONEDAY : 0 ;
 	pAdd->oldAdno = _ttol(_tcstok(NULL, septok));
 
 	theApp.activeDoc->SelectAdd(pAdd, FALSE);

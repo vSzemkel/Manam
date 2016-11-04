@@ -34,8 +34,8 @@ CFlag::CFlag(size_t s) {
 }
 
 CFlag::CFlag(int sx, int sy, int szpalt_x, int szpalt_y) {
-	int i;
-	size = DBRAW_BLOCK * (int) ceil(((double) szpalt_x*szpalt_y) / 32);
+	int i = szpalt_x * szpalt_y;
+	size = DBRAW_BLOCK * ((i >> 5) + ((i & 0x1F) > 0 ? 1 : 0));
 	if (size > CRITICAL_SIZE)
 		flag = (uintptr_t)malloc(size) ;
 	SetZero();

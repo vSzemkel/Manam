@@ -450,7 +450,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
 			ivar = pubCur->GetInt32(31); // eps_present
 			pAdd->flags.showeps = (pAdd->flags.epsok = ivar)&1;
 			ivar = pubCur->GetInt32(32); // powtorka
-			pAdd->powtorka = ivar ? POWTSEED_1 + CTimeSpan(ivar, 0, 0, 0) : 0;
+			pAdd->powtorka = ivar ? POWTSEED_1 + ivar * ONEDAY : 0;
 			pAdd->oldAdno = pubCur->GetInt32(33); // powtórka z numeru
 			pAdd->flags.studio = pubCur->GetByte(34); // studio
 			pAdd->flags.derived = pubCur->GetByte(35); // derived
@@ -937,7 +937,7 @@ void CDrawDocDbWriter::SaveOgloszenie(OracleCommand^ cmd, CDrawAdd* pAdd)
 	par[26]->Value = pAdd->txtposy;
 	par[27]->Value = pAdd->typ_xx;
 	par[28]->Value = gcnew String(pAdd->czaskto);
-	par[29]->Value = pAdd->powtorka == 0 ? 0 : CTimeSpan(pAdd->powtorka - POWTSEED_0).GetDays();
+	par[29]->Value = pAdd->powtorka == 0 ? 0 : (pAdd->powtorka - CTime(POWTSEED_0)).GetDays();
 	par[30]->Value = pAdd->oldAdno;
 	par[31]->Value = pAdd->flags.studio;
 	par[32]->Value = gcnew String(pAdd->remarks_atex);
@@ -1498,7 +1498,7 @@ BOOL CManODPNET::ReadAcDeadlines(CDrawDoc* doc)
 		auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
 		while (odr->Read()) {
 			int id_str = odr->GetInt32(0);
-			auto p = std::find_if(std::begin(doc->m_pages), std::end(doc->m_pages), [id_str](CDrawPage *p) { return p->id_str == id_str; });
+			auto p = std::find_if(std::cbegin(doc->m_pages), std::cend(doc->m_pages), [id_str](auto p) { return p->id_str == id_str; });
 			if (p != std::end(doc->m_pages)) {
 				auto s = OdpHelper::ReadOdrString(odr, 1);
 				(*p)->m_ac_red = CDrawApp::ShortDateToCTime(s);

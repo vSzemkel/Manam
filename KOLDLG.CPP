@@ -674,8 +674,8 @@ void CAddDlg::OnCbnSelchangeZajawka()
 			GetDlgItem(ID_OLDADNO)->UpdateData();
 			matchingOldAdnoUpdate = FALSE;
 			CheckDlgButton(IDC_CBPOWT, BST_CHECKED);
+			m_powtctrl.SetTime(&CTime(POWTSEED_1 + iPowt * ONEDAY));
 			m_powtctrl.EnableWindow();
-			m_powtctrl.SetTime(&(POWTSEED_1 + CTimeSpan(iPowt, 0, 0, 0)));
 		}
 	}
 
