@@ -472,7 +472,7 @@ END
 IDD_ABOUTBOX DIALOGEX 34, 22, 171, 177
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "Manam - czerwiec 2016"
+CAPTION "Manam - listopad 2016"
 FONT 8, "Verdana", 0, 0, 0x0
 BEGIN
     LTEXT           "*",IDC_CLIENT,9,133,158,42
@@ -1887,8 +1887,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 7,0,2,6
- PRODUCTVERSION 7,0,2,6
+ FILEVERSION 7,0,2,7
+ PRODUCTVERSION 7,0,2,7
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -1905,12 +1905,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Agora SA"
             VALUE "FileDescription", "Manam"
-            VALUE "FileVersion", "7.0.2.6"
+            VALUE "FileVersion", "7.0.2.7"
             VALUE "InternalName", "Manam"
             VALUE "LegalCopyright", "© Marcin Buchwald"
             VALUE "OriginalFilename", "Manam.exe"
             VALUE "ProductName", "Manager Makiet"
-            VALUE "ProductVersion", "7.0.2.6"
+            VALUE "ProductVersion", "7.0.2.7"
         END
     END
     BLOCK "VarFileInfo"

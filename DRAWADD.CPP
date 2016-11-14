@@ -1818,7 +1818,7 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest) {
 		if (spad_flag == 0 && pPage->m_typ_pary < 2) { // podpisujemy tylko pasowane
 			CStringA dopodpisu;
 			if (theApp.activeDoc->gazeta.Left(3) == _T("TBP")) {
-				CString uPodpis(_T(' '), 32);
+				CString uPodpis(_T(' '), 64);
 				CManODPNETParms orapar {
 					{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &uPodpis },
 					{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &this->m_pub_xx }
