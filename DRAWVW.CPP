@@ -1875,7 +1875,7 @@ void CDrawView::OnPrevPdf() // single Add or Page selected
 				sUrl.Format(IDS_ARCH_URL, tEdycja.Format("%Y%m%d"), pAdd->nreps);
 		}
 	} else // powtorka jest pokazywana z katalogu docelowego
-		sUrl.Format(IDS_ARCH_URL, theApp.activeDoc->daydir.Left(8), pAdd->nreps);
+		sUrl.Format(IDS_ARCH_URL, theApp.activeDoc->dayws, pAdd->nreps);
 	
 	if (sUrl.IsEmpty())
 		AfxMessageBox(_T("Brak materia³u"));

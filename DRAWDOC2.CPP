@@ -84,7 +84,8 @@ BOOL CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
 
 	data = dlg.m_dt;
 	gazeta.Format(_T("%s %s"), dlg.m_tytul, dlg.m_mutacja);
-	daydir = data.Mid(6, 4) + data.Mid(3, 2) + data.Mid(0, 2) + _T("\\");
+	dayws = data.Mid(6, 4) + data.Mid(3, 2) + data.Mid(0, 2);
+	daydir = dayws + _T("\\");
 	disableMenu = TRUE;
 	if (!theManODPNET.OpenManamDoc(this)) {
 		if (m_mak_xx != 0) {

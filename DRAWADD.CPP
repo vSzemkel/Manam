@@ -1549,7 +1549,7 @@ dajWymiarKraty:
 	}
 
 	if (powtorka != 0) { // skopiuj powtorke
-		msg.Format(_T("%li&dd=%s"), nreps, m_pDocument->daydir.Left(8));
+		msg.Format(_T("%li&dd=%s"), nreps, m_pDocument->dayws);
 		std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(theApp.GetProfileString(_T("AppServ"), _T("kopiowaniePowtorek"), _T("http://epsilon.agora.pl/ManamOPI/KopiowaniePowtorek.aspx?ad=")) + msg);
 		if (pFile != nullptr) 
 			try {
@@ -1943,10 +1943,10 @@ BOOL CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile *dest) {
 	auto pRoz = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, typ_xx);
 
 	float scaly, x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
-	float x = (float)((posx-1)*(pRoz->w+pRoz->sw)*mm2pkt);
-	float y = (float)((szpalt_y+1- posy-sizey)*(pRoz->h+pRoz->sh)*mm2pkt);
-	float gpx = (float)((sizex*(pRoz->w+pRoz->sw) - pRoz->sw)*mm2pkt); 
-	float gpy = (float)((sizey*(pRoz->h+pRoz->sh) - pRoz->sh)*mm2pkt);
+	float x = (float)((posx - 1)*(pRoz->w + pRoz->sw)*mm2pkt);
+	float y = (float)((szpalt_y + 1 - posy - sizey)*(pRoz->h + pRoz->sh)*mm2pkt);
+	float gpx = (float)((sizex*(pRoz->w + pRoz->sw) - pRoz->sw)*mm2pkt);
+	float gpy = (float)((sizey*(pRoz->h + pRoz->sh) - pRoz->sh)*mm2pkt);
 
 	if (theApp.isOpiMode)
 		nazwa.Format(_T("%s%s%03i.eps"), m_pDocument->gazeta.Left(3), m_pDocument->gazeta.Mid(4,2), txtposx);
@@ -1955,7 +1955,7 @@ BOOL CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile *dest) {
 
 	BOOL bReadFromATEX = FALSE;
 	CString sURL;
-	sURL.Format(_T("%s?drw_xx=%i&kiedy=%s&nr_porz=%i"), theApp.GetProfileString(_T("AppServ"), _T("atexURL"), _T("http://gwspacer.agora.pl/Spacer/DrobBB.aspx")), m_pDocument->id_drw, m_pDocument->data, txtposx);
+	sURL.Format(_T("%s?drw_xx=%i&kiedy=%s&nr_porz=%i"), theApp.GetProfileString(_T("AppServ"), _T("atexURL"), _T("http://gwspacer4.agora.pl/WsSpac/DrobBB")), m_pDocument->id_drw, m_pDocument->dayws, txtposx);
 	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(sURL);
 	if (pFile == nullptr) 
 		::MessageBox(pArg->pDlg->m_hWnd, _T("Nieprawid³owy URL: ") + sURL, APP_NAME, MB_OK|MB_ICONERROR);

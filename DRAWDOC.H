@@ -188,6 +188,7 @@ public:
 	CString gazeta;			// tytul i mutacja - ust przy wyborze dzewa
 	CString data;			// ust przy save'owaniu
 	CString opis;			// ustalana w Rejkodzie dzienna nazwa produktu
+	CString dayws;			// do przekazywania parametrów w web serwisów
 	CString daydir;			// do generowania ps z katalogów dniowych
 	CString docmutred;		// lista dopuszczalnych mutacji redakcyjnych
 	CString sOpiServerUrl;	// adres serwera OPI, do którego bêd¹ wysy³ane kolumny

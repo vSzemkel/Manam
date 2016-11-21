@@ -1006,7 +1006,7 @@ BOOL CDrawPage::GetDestName(PGENEPSARG pArg, CString& sNum, CString& destName)
 		destName.Append(dbDestName);
 		destName.Append(aExt[pArg->bIsPRN]);
 	} else
-		destName += m_pDocument->daydir.Left(8) + (pos<0 ? m_pDocument->gazeta : m_pDocument->gazeta.Left(pos) + m_pDocument->gazeta.Mid(pos+1)) 
+		destName += m_pDocument->dayws + (pos<0 ? m_pDocument->gazeta : m_pDocument->gazeta.Left(pos) + m_pDocument->gazeta.Mid(pos+1)) 
 				 + sNum + aExt[pArg->bIsPRN];
 	CFileFind ff;
 	return !m_pDocument->ovEPS && ff.FindFile(destName);
@@ -1106,7 +1106,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg) {
 			int dervNum;
 			CString sdervNum;
 			if (_stscanf_s(m_dervinfo.Mid(7), _T("%i"), &dervNum) == 1)
-				sdervNum.Format(_T("%s%03i"), theApp.activeDoc->daydir.Left(8), dervNum);
+				sdervNum.Format(_T("%s%03i"), theApp.activeDoc->dayws, dervNum);
 			uzupEpsPath += (((uzupEpsPath.Right(1) == "\\") ? "" : "\\") + m_dervinfo.Left(3) + m_dervinfo.Mid(4,2) + sdervNum + _T(".eps"));
 			if (externFile.Open(uzupEpsPath, CFile::modeRead | CFile::shareDenyWrite, &fEx)) {
 				isUzupEPS = TRUE;
@@ -1285,7 +1285,7 @@ BOOL CDrawPage::PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) {
 	CStringA sOpiLine = "--" + sOpiSeparator + "--\r\n";
 	sFormData.Format("--%s\r\nContent-Disposition: form-data; name=\"", sOpiSeparator);
 	sFormBody.AppendFormat("%suser\"\r\n\r\n%s\r\n", sFormData, CStringA(theManODPNET.m_userName));
-	sFormBody.AppendFormat("%sdaydir\"\r\n\r\n%s\r\n", sFormData, CStringA(m_pDocument->daydir.Left(8)));
+	sFormBody.AppendFormat("%sdaydir\"\r\n\r\n%s\r\n", sFormData, CStringA(m_pDocument->dayws));
 	sFormBody.AppendFormat("%sftype\"\r\n\r\nPAGE\r\n", sFormData);
 	sFormBody.AppendFormat("%sfname\"\r\n\r\n%s\r\n", sFormData, CStringA(pOpiFile->GetFileName()));
 	sFormBody.AppendFormat("%sfsize\"\r\n\r\n%llu\r\n", sFormData, pOpiFile->GetLength());
