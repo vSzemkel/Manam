@@ -1456,6 +1456,17 @@ void CDrawDoc::OnFileDrzewo() // zmiana drzewa
 	EndWaitCursor();
 }
 
+CString CDrawDoc::XmlReadText(IXmlReader* reader)
+{
+	XmlNodeType nodeType;
+	const wchar_t *tmp;
+	reader->Read(&nodeType);
+	reader->Read(&nodeType);
+	reader->GetValue(&tmp, nullptr);
+	if (nodeType == XmlNodeType_Text) reader->Read(&nodeType);
+	return CString(tmp);
+}
+
 ////////////////// DB ///////////////////////////////////////////////
 BOOL CDrawDoc::DBImport(BOOL synchronize) { 
 	CDbDlg dlg;
@@ -1463,97 +1474,78 @@ BOOL CDrawDoc::DBImport(BOOL synchronize) {
 	if (dlg.DoModal() != IDOK) return FALSE;
 	BeginWaitCursor();
 
-	CString sURL;
-	CDrawAdd *vAdd, *vAdd2;
-	BOOL ok = TRUE, empSet = TRUE, bBank = FALSE;
-	std::vector<int> syncATEX, dirtyATEX, zaporaATEX;
-
-	BOOL bOstateczna = dataZamkniecia < CTime::GetCurrentTime();
-	if (bOstateczna) synchronize = TRUE;
-	std::vector<CDrawAdd*> aNewAdds, aOldAdds, aModifAdds;
-	char roz[10], naz[100], kol[20], str[21], strcd[10], uwa[256], krt[50], *pocz, *kon, *endtag;
 	long adno;
-	int i;
+	CDrawAdd *vAdd, *vAdd2;
+	CString xRoz, xNaz, xKol, xStr, xUwa, xKrt;
+	std::vector<int> syncATEX, dirtyATEX, zaporaATEX;
+	std::vector<CDrawAdd*> aNewAdds, aOldAdds, aModifAdds;
+	BOOL empSet = TRUE, bBank = FALSE, bOstateczna = dataZamkniecia < CTime::GetCurrentTime();
+
+	if (bOstateczna) synchronize = TRUE;
 
 second_paper:
 	auto buf = reinterpret_cast<char*>(theApp.bigBuf);
-	sURL.Format(_T("%s?tyt=%s&mut=%s&kiedy=%s&str=%s&cli=%i&zone=%s&lastone=%i"), theApp.GetProfileString(_T("AppServ"), _T("atexURL"), _T("http://gwspacer.agora.pl/Spacer/AtexAdds.aspx")), (LPCTSTR)dlg.m_pap, (LPCTSTR)dlg.m_mut, (LPCTSTR)dlg.m_dt, (LPCTSTR)dlg.m_strlog, (int)dlg.m_client, (LPCTSTR)dlg.m_zone, bOstateczna ? 1 : 0);
-	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(sURL);
-	if (pFile == nullptr) 
-		AfxMessageBox(_T("Nieprawid³owy URL: ") + sURL);
+	xStr.Format(_T("%s?tyt=%s&mut=%s&kiedy=%s&str=%s&cli=%i&zone=%s&lastone=%i"), theApp.GetProfileString(_T("AppServ"), _T("atexURL"), _T("http://gwspacer4.agora.pl/WsSpac/AtexAds")), (LPCTSTR)dlg.m_pap, (LPCTSTR)dlg.m_mut, (LPCTSTR)dlg.m_dt, (LPCTSTR)dlg.m_strlog, (int)dlg.m_client, (LPCTSTR)dlg.m_zone, bOstateczna ? 1 : 0);
+	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(xStr);
+	if (!pFile)
+		AfxMessageBox(_T("Nieprawid³owy URL: ") + xStr);
 	else {
-		while (pFile->ReadString(theApp.bigBuf, bigSize))
-			if (!strncmp(buf, "&atex", 5)) break;
+		UINT bytesRead = pFile->Read(buf, n_size);
+		pFile->Close();
+
+		auto reader = CComPtr<IXmlReader> {};
+		CreateXmlReader(__uuidof(reader), reinterpret_cast<void**>(&reader), NULL);
+		auto stream = CComPtr<IStream>(SHCreateMemStream((const BYTE*)buf, bytesRead));
+		reader->SetInput(stream);
+
+		XmlNodeType nodeType;
+		if (S_OK != reader->Read(&nodeType)) {
+			AfxMessageBox(CString(_T("ATEX nie odpowiada\n\n")) + buf);
+			return FALSE;
+		}
+
 		CPoint pos(GetAsideAddPos(FALSE)), pos2;
-		while (pFile->ReadString(theApp.bigBuf, bigSize)) {
-			if (!strncmp(buf, "&end atex", 9)) break;
-
-			if (!strncmp(buf, "ERR", 3)) {
-				pFile->ReadString(theApp.bigBuf, bigSize);
-				AfxMessageBox(CString(_T("ATEX nie odpowiada\n\n")) + buf);
-				pFile->Close();
-				return FALSE;
-			}
-			endtag = strstr(buf, "</bo>");
-			if (!endtag) {
-				AfxMessageBox(CString(_T("W atrybucie wymienionym na koñcu listy wystêpuje niepotrzebnie znak ENTER\n")) + buf);
-				continue;
-			}
+		while (S_OK == reader->Read(&nodeType) && nodeType != XmlNodeType_EndElement) // read next ad
+		{
 			empSet = FALSE;
-
-			//"<roz>%s</roz><naz>%s</naz><adno>%ul</adno><kol>%s</kol><str>%s</str><strcd>%s</strcd><uwa>%s</uwa><krt>%s</krt><bo><insid>%i</insid><n>%i</n><k>%i</k></bo>"
-			pocz = strstr(buf, "<roz>");kon = strstr(buf, "</roz>");
-			if (!pocz) continue;
-			kon[0] = '\0'; ::StringCchCopyA(roz, 10, pocz + 5); ::CharUpperA(roz);
-			pocz = strstr(kon + 1, "<naz>"); kon = strstr(pocz,  "</naz>");
-			kon[0] = '\0'; ::StringCchCopyA(naz, 100, pocz + 5); 
-			sscanf_s(kon + 1, "/naz><adno>%ld</adno>", &adno);
-			pocz = strstr(kon + 1, "<kol>"); kon = strstr(pocz, "</kol>");
-			kon[0] = '\0'; ::StringCchCopyA(kol, 20, pocz + 5);
-			pocz = strstr(kon + 1, "<str>"); kon = strstr(pocz, "</str>");
-			kon[0] = '\0'; ::StringCchCopyA(str, 21, pocz + 5);
-			pocz = strstr(kon + 1, "<strcd>"); kon = strstr(pocz, "</strcd>");
-			kon[0] = '\0'; ::StringCchCopyA(strcd, 10, pocz + 7);
-			pocz = strstr(kon+1, "<uwa>"); kon = strstr(kon + 1, "</uwa>");
-			kon[0] = '\0'; ::StringCchCopyA(uwa, 253, pocz + 5);
-			pocz = strstr(kon + 1, "<krt>"); kon = strstr(kon + 1, "</krt>");
-			kon[0] = '\0'; ::StringCchCopyA(krt, 50, pocz + 5);
-
-			if (!CStringA(strcd).SpanExcluding(" ").IsEmpty()) {
-				::StringCchCatA(str, 21, " "); ::StringCchCatA(str, 21, strcd);
-			}
-			if (!strcmp(kol, "FULL")) ::StringCchCopyA(kol, 20, "(full)");
 			pos2 = pos;
+
+			adno = _wtoi(XmlReadText(reader));
+			xRoz = XmlReadText(reader);
+			xNaz = XmlReadText(reader);
+			xKol = XmlReadText(reader);
+			xStr = XmlReadText(reader);
+			xUwa = XmlReadText(reader);
+			xKrt = XmlReadText(reader);
+			reader->Read(&nodeType);
+
 			vAdd = AddExists(adno);
-			vAdd2 =	DBCreateAdd(CString(roz), CString(naz), adno, ValidKolor(CString(kol).GetBuffer()), CString(str), CString(uwa), CString(krt), &pos);
+			vAdd2 =	DBCreateAdd(xRoz, xNaz, adno, ValidKolor(xKol.GetBuffer()), xStr, xUwa, xKrt, &pos);
+
+			if (!reader->IsEmptyElement()) {
+				bBank = TRUE;
+				vAdd2->bank.insid = _wtoi(XmlReadText(reader));
+				vAdd2->bank.n = _wtoi(XmlReadText(reader));
+				vAdd2->bank.k = _wtoi(XmlReadText(reader));
+				reader->Read(&nodeType);
+			}
+			reader->Read(&nodeType); // </ad>
+
 			if (vAdd2 == nullptr)
 				continue;
 
-			pocz = strstr(kon + 1, "<bo>");
-			if (vAdd == nullptr && endtag - pocz > 4) { // nowe og³oszenie z banku lub z cyfrow¹ treœci¹
-				pocz = strstr(kon + 1, "<insid>"); kon = strstr(pocz, "</insid>");
-				int insid = atoi(pocz + 7);
-				if (insid > 0) {
-					bBank = TRUE;
-					kon[0] = '\0'; vAdd2->bank.insid = insid;
-					pocz = strstr(kon+1, "<n>"); kon = strstr(pocz, "</n>");
-					kon[0] = '\0'; vAdd2->bank.n = atoi(pocz + 3);
-					pocz = strstr(kon+1, "<k>"); kon = endtag - 4;
-					kon[0] = '\0'; vAdd2->bank.k = atoi(pocz + 3);
-				}
-			}
-			vAdd2->flags.digital = strstr(pocz, "sid>-1") != NULL;
+			vAdd2->flags.digital = vAdd2->bank.insid < 0;
 
 			if ((bOstateczna || bBank) && vAdd == nullptr)
 				aNewAdds.push_back(vAdd2);
 			if (vAdd) {
 				if (vAdd->logpage.IsEmpty() && vAdd->m_add_xx > 0) { // sprzedane spacerem
-					vAdd->logpage = str;
-					vAdd->remarks_atex = uwa;
+					vAdd->logpage = xStr;
+					vAdd->remarks_atex = xUwa;
 					vAdd->SetDirty();
 				}
-				if (vAdd->remarks_atex != uwa) {
-					vAdd->remarks_atex = uwa;
+				if (vAdd->remarks_atex != xUwa) {
+					vAdd->remarks_atex = xUwa;
 					vAdd->SetDirty();
 				}
 				if (vAdd->flags.digital != vAdd2->flags.digital) {
@@ -1583,7 +1575,6 @@ second_paper:
 			}
 			if (synchronize) syncATEX.push_back(adno);
 		}
-		pFile->Close();
 	}
 
 	if (!dlg.m_alttyt.IsEmpty()) {
@@ -1599,7 +1590,7 @@ second_paper:
 	if (synchronize) { // usuñ z makiety te og³oszenia, które maj¹ nr>0 i nie ma ich w ATEX'ie
 		UpdateAllViews(NULL, HINT_SAVEAS_DELETE_SELECTION, NULL);
 		BOOL spfluos = FALSE, rejestracjaSpfluos = FALSE ;
-		int j = 1, ac = (int)syncATEX.size() ;
+		int i, j = 1, ac = (int)syncATEX.size() ;
 		std::vector<CDrawAdd*> aDelAdds ;
 		CString sQueMissed ;
 		CString adnos = _T("Stwierdzono brak nastêpuj¹cych og³oszeñ w bazie ATEX:\n\n");
@@ -1684,7 +1675,7 @@ second_paper:
 	}
 
 	EndWaitCursor();
-	return ok;
+	return TRUE;
 }
 
 CDrawAdd* CDrawDoc::DBCreateAdd(LPCTSTR roz, LPCTSTR nazwa, long nr, UINT kolor, CString& warunki, LPCTSTR uwagi, LPCTSTR krt, CPoint* pos)

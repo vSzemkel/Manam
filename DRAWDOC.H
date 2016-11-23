@@ -58,6 +58,7 @@ private:
 public:
 	static const TCHAR* asDocTypeExt[3];
 	static CString ErrMess(int cause);
+	static CString XmlReadText(IXmlReader* reader);
 
 	virtual ~CDrawDoc();
 	virtual HMENU GetDefaultMenu();				// dla grzbietu zmien menu

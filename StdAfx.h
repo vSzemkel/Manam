@@ -27,6 +27,7 @@
 #include <process.h>
 
 #include <strsafe.h>
+#include <xmllite.h>
 
 // STL headers
 #include <algorithm>
