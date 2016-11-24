@@ -129,7 +129,7 @@ public:
 	BOOL DBImport(BOOL synchronize = FALSE);
 	CDrawAdd* AddExists(long nr) const;
 	CDrawAdd* PubXXExists(int pub_xx) const;
-	CDrawAdd* DBCreateAdd(LPCTSTR roz, LPCTSTR nazwa, long nr, UINT kolor, CString& warunki, LPCTSTR uwagi, LPCTSTR krt, CPoint* pos);     
+	CDrawAdd* DBCreateAdd(const CString& roz, const CString& nazwa, long nr, UINT kolor, CString& warunki, const CString& uwagi, const CString& krt, CPoint& pos);
 
 	void OnExport();
 	void SetSpotKolor(UINT idx_m_spot_makiety, UINT idx_Spot_Kolor);

@@ -1517,11 +1517,13 @@ second_paper:
 			xStr = XmlReadText(reader);
 			xUwa = XmlReadText(reader);
 			xKrt = XmlReadText(reader);
-			reader->Read(&nodeType);
 
 			vAdd = AddExists(adno);
-			vAdd2 =	DBCreateAdd(xRoz, xNaz, adno, ValidKolor(xKol.GetBuffer()), xStr, xUwa, xKrt, &pos);
+			vAdd2 =	DBCreateAdd(xRoz, xNaz, adno, ValidKolor(xKol.GetBuffer()), xStr, xUwa, xKrt, pos);
+			if (vAdd2 == nullptr)
+				continue;
 
+			reader->Read(&nodeType);
 			if (!reader->IsEmptyElement()) {
 				bBank = TRUE;
 				vAdd2->bank.insid = _wtoi(XmlReadText(reader));
@@ -1531,8 +1533,6 @@ second_paper:
 			}
 			reader->Read(&nodeType); // </ad>
 
-			if (vAdd2 == nullptr)
-				continue;
 
 			vAdd2->flags.digital = vAdd2->bank.insid < 0;
 
@@ -1678,7 +1678,7 @@ second_paper:
 	return TRUE;
 }
 
-CDrawAdd* CDrawDoc::DBCreateAdd(LPCTSTR roz, LPCTSTR nazwa, long nr, UINT kolor, CString& warunki, LPCTSTR uwagi, LPCTSTR krt, CPoint* pos)
+CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, long nr, UINT kolor, CString& warunki, const CString& uwagi, const CString& krt, CPoint& pos)
 {
 	CString sPrecelFlag;
 	int sx, sy, atex_krat, szpalt_x = 0, szpalt_y = 0, fizp = 0, posx = 0, posy = 0, typ_xx = 0;
@@ -1689,7 +1689,6 @@ CDrawAdd* CDrawDoc::DBCreateAdd(LPCTSTR roz, LPCTSTR nazwa, long nr, UINT kolor,
 	}
 
 	if (_stscanf_s(roz, _T("%iX%i"), &sx, &sy) != 2) {  // typ nazwany w ATEX'ie
-		CString sRoz(roz);
 		sPrecelFlag = CString(' ', 64);
 		CManODPNETParms orapar {
 			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &szpalt_x },
@@ -1699,7 +1698,7 @@ CDrawAdd* CDrawDoc::DBCreateAdd(LPCTSTR roz, LPCTSTR nazwa, long nr, UINT kolor,
 			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &typ_xx },
 			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &atex_krat },
 			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &sPrecelFlag },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &sRoz }
+			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, const_cast<CString*>(&roz) }
 		};
 		orapar.outParamsCount = 7;
 
@@ -1710,11 +1709,11 @@ CDrawAdd* CDrawDoc::DBCreateAdd(LPCTSTR roz, LPCTSTR nazwa, long nr, UINT kolor,
 				if (!m_Rozm.size()) IniRozm();
 				CAtexKrat krat(krt, this);
 				if (krat.isValid && !krat.Compute(&sx, &sy, &szpalt_x, &szpalt_y)) {
-					AfxMessageBox(krat.isToSmall ? _T("Og³oszenie ") + CString(nazwa) + _T(": ") + CString(roz) + _T(" jest za ma³e do automatycznego dopasowania kraty") : _T("Nie uda³o siê dopasowaæ kraty og³oszenia: ") + CString(roz), MB_OK);
+					AfxMessageBox(krat.isToSmall ? _T("Og³oszenie ") + nazwa + _T(": ") + roz + _T(" jest za ma³e do automatycznego dopasowania kraty") : _T("Nie uda³o siê dopasowaæ kraty og³oszenia: ") + roz, MB_OK);
 					return nullptr;
 				}
 			} else {
-				AfxMessageBox(_T("Nieznany rozmiar og³oszenia ") + CString(nazwa) + _T(": ") + CString(roz), MB_OK);
+				AfxMessageBox(_T("Nieznany rozmiar og³oszenia ") + nazwa + _T(": ") + roz, MB_OK);
 				return nullptr;
 			}
 		} else { // modelid zdefiniowany w s³owniku TYP_OGLOSZENIA
@@ -1730,16 +1729,14 @@ CDrawAdd* CDrawDoc::DBCreateAdd(LPCTSTR roz, LPCTSTR nazwa, long nr, UINT kolor,
 			}
 		}
 
-		if (m_pages.size() > 1) {
-			if (_tcscmp(roz, _T("LOG")) == 0) {
+		if (m_pages.size() > 1 && roz == _T("LOG")) {
 				fizp = (m_pages[1])->nr; posx = 5; posy = 1; warunki += _T(" # GP");
-			}
 		}
 	}
 
 	if (sx < 1 || sx > szpalt_x || sy < 1 || sy > szpalt_y) return FALSE;
 
-	CRect r(*pos, CSize((int)(sx*modulx), (int)(sy*(-1)*moduly))) ;
+	CRect r(pos, CSize((int)(sx*modulx), (int)(sy*(-1)*moduly))) ;
 	auto pObj = new CDrawAdd(&r);
 	Add(pObj);
 	pObj->m_pDocument = this;
@@ -1761,7 +1758,7 @@ CDrawAdd* CDrawDoc::DBCreateAdd(LPCTSTR roz, LPCTSTR nazwa, long nr, UINT kolor,
 			pObj->m_position.SetRect(pPage->m_position.left + (posx - 1)*pmodulx, pPage->m_position.top - posy*pmoduly, pPage->m_position.left + (posx + sx - 1)*pmodulx, pPage->m_position.top - (posy + sy)*pmoduly);
 		}
 	} else
-		AdvanceAsidePos(*pos);
+		AdvanceAsidePos(pos);
 
 	if (!sPrecelFlag.IsEmpty())
 		pObj->InitPrecel(sPrecelFlag);
