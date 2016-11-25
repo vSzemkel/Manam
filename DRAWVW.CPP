@@ -1805,9 +1805,9 @@ void CDrawView::OnPrevKolumnaDruk() //single Page selected
 	// pobierz œcie¿kê do pliku strony
 	auto pPage = dynamic_cast<CDrawPage*>(m_selection.GetHead());
 	int iNrPorz = theApp.activeDoc->IsPage(pPage);
-	sURL.Format(_T("%s?tyt=%s&mut=%s&kiedy=%s&nr_porz=%i"), theApp.GetProfileString(_T("AppServ"), _T("kolDrukURL"), _T("http://prodlog.agora.pl:8000/PSPSvc/getStronaFile")), theApp.activeDoc->gazeta.Left(3), theApp.activeDoc->gazeta.Mid(4,2), theApp.activeDoc->data, iNrPorz==0 ? (int)theApp.activeDoc->m_pages.size() : iNrPorz);
-	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(sURL);
-	if (pFile == nullptr) 
+	sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s&nr_porz=%i"), theApp.activeDoc->gazeta.Left(3), theApp.activeDoc->gazeta.Mid(4,2), theApp.activeDoc->data, iNrPorz==0 ? (int)theApp.activeDoc->m_pages.size() : iNrPorz);
+	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(4, sURL);
+	if (!pFile)
 		AfxMessageBox(_T("Nieprawid³owy URL: ") + sURL);
 	else
 		try {
@@ -1895,10 +1895,10 @@ void CDrawView::OnPrevDig()
 	CString dataSepia = GetDocument()->data;
 	auto buf = reinterpret_cast<char*>(theApp.bigBuf);
 	dataSepia = dataSepia.Mid(6) + "-" + dataSepia.Mid(3, 2) + "-" + dataSepia.Mid(0, 2);
-	CString sURL, sUrlTemplate = theApp.GetProfileString(_T("AppServ"), _T("prevDigURL"), _T("http://sepia.agora.pl:8000/SESvc/PobierzOgloszenie?adno=%li&kiedy=%s"));
+	CString sURL, sUrlTemplate = _T("adno=%li&kiedy=%s");
 	sURL.Format(sUrlTemplate, pAdd->nreps, dataSepia);
-	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(sURL);
-	if (pFile == nullptr) 
+	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(5, sURL);
+	if (!pFile)
 		AfxMessageBox(_T("Nieprawid³owy URL: ") + sURL);
 	else {
 		iXmlLen = pFile->Read(buf, bigSize);

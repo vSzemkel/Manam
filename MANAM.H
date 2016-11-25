@@ -160,12 +160,12 @@ public:
 	BOOL ConnecttoDB();
 	BOOL CDrawApp::OpenWebBrowser(const TCHAR* sUrl);		// otwiera przegladarke Internet Explorer i przekazuje jej sUrl
 	BOOL TryUpgradeImage();									// proba upgrade'u wersji programu na podstawie obrazu zapisanego w bazie
-	std::unique_ptr<CHttpFile> OpenURL(const TCHAR* sUrl);  // pobiera treœæ z URL, który powinien byæ typu http
 	void InitKratyDrukarnie() ;
 	void FromIniFile();
 	void SetScale(int scale);
 	void FileRefresh(CDrawDoc *refreshDoc = nullptr);		// odswieza jeden lub wszystkie otwarte jesli nullptr
 	void FillKrataCombo(CComboBox& combo, int szpalt_x = pszpalt_x, int szpalt_y = pszpalt_y);
+	std::unique_ptr<CHttpFile> OpenURL(int service, const TCHAR* sUrl); // pobiera treœæ z URL, który powinien byæ typu http
 protected:
 	//{{AFX_MSG(CDrawApp)
 	afx_msg void OnAppAbout();
@@ -191,4 +191,6 @@ protected:
 	afx_msg void OnFileRefresh();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+private:
+	std::vector<CString> m_uriDict;
 };

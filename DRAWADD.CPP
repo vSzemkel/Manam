@@ -1549,9 +1549,9 @@ dajWymiarKraty:
 	}
 
 	if (powtorka != 0) { // skopiuj powtorke
-		msg.Format(_T("%li&dd=%s"), nreps, m_pDocument->dayws);
-		std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(theApp.GetProfileString(_T("AppServ"), _T("kopiowaniePowtorek"), _T("http://epsilon.agora.pl/ManamOPI/KopiowaniePowtorek.aspx?ad=")) + msg);
-		if (pFile != nullptr) 
+		msg.Format(_T("ad=%li&dd=%s"), nreps, m_pDocument->dayws);
+		std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(1, msg);
+		if (!pFile)
 			try {
 				pFile->Read(pArg->cBigBuf, bigSize);
 				if (*reinterpret_cast<short*>(pArg->cBigBuf) != 0x4b4f) { // "OK"
@@ -1955,9 +1955,9 @@ BOOL CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile *dest) {
 
 	BOOL bReadFromATEX = FALSE;
 	CString sURL;
-	sURL.Format(_T("%s?drw_xx=%i&kiedy=%s&nr_porz=%i"), theApp.GetProfileString(_T("AppServ"), _T("atexURL"), _T("http://gwspacer4.agora.pl/WsSpac/DrobBB")), m_pDocument->id_drw, m_pDocument->dayws, txtposx);
-	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(sURL);
-	if (pFile == nullptr) 
+	sURL.Format(_T("drw_xx=%i&kiedy=%s&nr_porz=%i"), m_pDocument->id_drw, m_pDocument->dayws, txtposx);
+	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(2, sURL);
+	if (!pFile) 
 		::MessageBox(pArg->pDlg->m_hWnd, _T("Nieprawid³owy URL: ") + sURL, APP_NAME, MB_OK|MB_ICONERROR);
 	else {
 		try {

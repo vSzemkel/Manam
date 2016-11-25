@@ -623,12 +623,14 @@ BOOL CDrawApp::OpenWebBrowser(const TCHAR* sUrl) {
 	return ret > 32;
 }
 
-std::unique_ptr<CHttpFile> CDrawApp::OpenURL(const TCHAR* sUrl)
+std::unique_ptr<CHttpFile> CDrawApp::OpenURL(int service, const TCHAR* sUrl)
 {
-	ASSERT(_tcsncmp(sUrl, _T("http"), 4) == 0);
-
+	if (m_uriDict.empty()) 
+		theManODPNET.FillArr(&m_uriDict, "select uri from manam_uri order by xx", CManODPNET::emptyParm);
+	
+	ASSERT(0 <= service && service < m_uriDict.size());
 	BeginWaitCursor();
-	std::unique_ptr<CHttpFile> f(reinterpret_cast<CHttpFile*>(this->m_InternetSession.OpenURL(sUrl)));
+	std::unique_ptr<CHttpFile> f(reinterpret_cast<CHttpFile*>(this->m_InternetSession.OpenURL(m_uriDict[service] + sUrl)));
 	EndWaitCursor();
 	return f;
 }

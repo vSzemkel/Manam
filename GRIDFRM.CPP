@@ -298,9 +298,9 @@ void CGridFrm::OnShowrept()
 			::StringCchCopy(mutacja, 5, _T("0"));
 
 		auto line = reinterpret_cast<char*>(theApp.bigBuf);
-		sURL = theApp.GetProfileString(_T("AppServ"), _T("atexRepURL"), _T("http://gwspacer.agora.pl/spacer/AdnoUsed.aspx?tyt=")) + tytul + _T("&mut=") + mutacja + _T("&kiedy=") + vDoc->data;
-		std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(sURL);
-		if (pFile == nullptr) 
+		sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s"), tytul, mutacja, vDoc->data);
+		std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(3, sURL);
+		if (!pFile)
 			AfxMessageBox(_T("Nieprawid³owy URL: ") + sURL);
 		else {
 			while (pFile->ReadString(theApp.bigBuf, bigSize))

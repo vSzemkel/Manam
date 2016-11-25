@@ -1313,15 +1313,6 @@ void CDrawDoc::OnFileInfo() {
 					}
 				}
 			}
-
-			// powiadom proces BPM
-			CString sURL = theApp.GetProfileString(_T("AppServ"), _T("bpmDeadlineNotifyURL"), _T("http://gwspacer.agora.pl/WsWcfConsole/api/manam?OnDeadlineChange&tyt="));
-			sURL += gazeta.Left(3) + "&mut=" + gazeta.Mid(4,2) + "&kiedy=" + data + "&dead=" + dataZamkniecia.Format(c_ctimeCzas) + "&user=" + theApp.m_login + "&from_addr=" + theApp.m_local_ip;
-			std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(sURL);
-			if (pFile == nullptr) 
-				AfxMessageBox(_T("Nieprawid³owy adres: ") + sURL, MB_OK|MB_ICONERROR);
-			else 
-				pFile->Close();
 		}
 
 		// propagacja deadline'u
@@ -1485,8 +1476,8 @@ BOOL CDrawDoc::DBImport(BOOL synchronize) {
 
 second_paper:
 	auto buf = reinterpret_cast<char*>(theApp.bigBuf);
-	xStr.Format(_T("%s?tyt=%s&mut=%s&kiedy=%s&str=%s&cli=%i&zone=%s&lastone=%i"), theApp.GetProfileString(_T("AppServ"), _T("atexURL"), _T("http://gwspacer4.agora.pl/WsSpac/AtexAds")), (LPCTSTR)dlg.m_pap, (LPCTSTR)dlg.m_mut, (LPCTSTR)dlg.m_dt, (LPCTSTR)dlg.m_strlog, (int)dlg.m_client, (LPCTSTR)dlg.m_zone, bOstateczna ? 1 : 0);
-	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(xStr);
+	xStr.Format(_T("tyt=%s&mut=%s&kiedy=%s&str=%s&cli=%i&zone=%s&lastone=%i"), (LPCTSTR)dlg.m_pap, (LPCTSTR)dlg.m_mut, (LPCTSTR)dlg.m_dt, (LPCTSTR)dlg.m_strlog, (int)dlg.m_client, (LPCTSTR)dlg.m_zone, bOstateczna ? 1 : 0);
+	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(0, xStr);
 	if (!pFile)
 		AfxMessageBox(_T("Nieprawid³owy URL: ") + xStr);
 	else {
