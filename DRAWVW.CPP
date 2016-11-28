@@ -1923,8 +1923,13 @@ void CDrawView::OnAtexSyg() //single Add selected
 	}
 
 	CString sUrl;
-	sUrl.Format(_T("http://gwspacer.agora.pl/Spacer/Sygnatura.aspx?t=%s&m=%s&k=%s&a=%li"), GetDocument()->gazeta.Left(3), pAdd->flags.derived ? "RP" : GetDocument()->gazeta.Mid(4,2), GetDocument()->data, pAdd->nreps);
-	theApp.OpenWebBrowser(sUrl);
+	sUrl.Format(_T("t=%s&m=%s&k=%s&a=%li"), GetDocument()->gazeta.Left(3), pAdd->flags.derived ? "RP" : GetDocument()->gazeta.Mid(4,2), GetDocument()->data, pAdd->nreps);
+	auto pFile = theApp.OpenURL(7, sUrl);
+	if (pFile) {
+		auto url = pFile->GetFileURL();
+		pFile->Close();
+		theApp.OpenWebBrowser(url);
+	}
 }
 
 void CDrawView::OnPrevKor() 
