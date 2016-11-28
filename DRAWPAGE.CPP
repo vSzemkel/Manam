@@ -853,7 +853,7 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
 					if ((space.GetBit(m) > 0 ? 1 : 0) != bitToSet && (space_mark2.GetBit(m) > 0 ? 1 : 0) != bitToSet) {
 						space.SetBit(m, bitToSet);
 						space_mark2.SetBit(m, bitToSet);
-					} else if (intsec == src || intsec == dst)
+					} else if (intsec == dst)
 						clearToModify = false;
 			}
 		}
