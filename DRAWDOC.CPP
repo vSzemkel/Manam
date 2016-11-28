@@ -1477,10 +1477,8 @@ BOOL CDrawDoc::DBImport(BOOL synchronize) {
 second_paper:
 	auto buf = reinterpret_cast<char*>(theApp.bigBuf);
 	xStr.Format(_T("tyt=%s&mut=%s&kiedy=%s&str=%s&cli=%i&zone=%s&lastone=%i"), (LPCTSTR)dlg.m_pap, (LPCTSTR)dlg.m_mut, (LPCTSTR)dlg.m_dt, (LPCTSTR)dlg.m_strlog, (int)dlg.m_client, (LPCTSTR)dlg.m_zone, bOstateczna ? 1 : 0);
-	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(0, xStr);
-	if (!pFile)
-		AfxMessageBox(_T("Nieprawid³owy URL: ") + xStr);
-	else {
+	auto pFile = theApp.OpenURL(0, xStr);
+	if (pFile) {
 		UINT bytesRead = pFile->Read(buf, n_size);
 		pFile->Close();
 

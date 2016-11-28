@@ -299,10 +299,8 @@ void CGridFrm::OnShowrept()
 
 		auto line = reinterpret_cast<char*>(theApp.bigBuf);
 		sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s"), tytul, mutacja, vDoc->data);
-		std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(3, sURL);
-		if (!pFile)
-			AfxMessageBox(_T("Nieprawid³owy URL: ") + sURL);
-		else {
+		auto pFile = theApp.OpenURL(3, sURL);
+		if (pFile) {
 			while (pFile->ReadString(theApp.bigBuf, bigSize))
 				if (!strncmp(line, "&powtorki", 9)) break;
 			while (pFile->ReadString(theApp.bigBuf, bigSize)) {

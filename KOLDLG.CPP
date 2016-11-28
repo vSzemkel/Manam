@@ -843,11 +843,10 @@ BOOL CAddDlg::AtexVerify(LPCTSTR adno)
 	CString sNowy(AfxMessageBox(_T("Nowy materia³ na ka¿d¹ emisjê?"), MB_YESNO|MB_DEFBUTTON2) == IDYES ? "1" : "0");
 	if (sNowy == "1") SetDlgItemText(IDC_WERSJA, _T(".n"));
 	sURL = "add_xx=" + sAddXX + "&adno=" + adno + "&nowy_mat=" + sNowy + sURL;
-	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(6, sURL);
-	if (!pFile) {
-		AfxMessageBox(_T("Nieprawid³owy URL: ") + sURL);
+	auto pFile = theApp.OpenURL(6, sURL);
+	if (!pFile) 
 		return FALSE;
-	} else {
+	else {
 		auto buf = reinterpret_cast<char*>(theApp.bigBuf);
 		while (pFile->ReadString(theApp.bigBuf, bigSize))
 			if (!strncmp(buf, "&atex begin", 11)) break;

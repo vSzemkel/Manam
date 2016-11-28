@@ -1550,8 +1550,8 @@ dajWymiarKraty:
 
 	if (powtorka != 0) { // skopiuj powtorke
 		msg.Format(_T("ad=%li&dd=%s"), nreps, m_pDocument->dayws);
-		std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(1, msg);
-		if (!pFile)
+		auto pFile = theApp.OpenURL(1, msg);
+		if (pFile)
 			try {
 				pFile->Read(pArg->cBigBuf, bigSize);
 				if (*reinterpret_cast<short*>(pArg->cBigBuf) != 0x4b4f) { // "OK"
@@ -1956,10 +1956,8 @@ BOOL CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile *dest) {
 	BOOL bReadFromATEX = FALSE;
 	CString sURL;
 	sURL.Format(_T("drw_xx=%i&kiedy=%s&nr_porz=%i"), m_pDocument->id_drw, m_pDocument->dayws, txtposx);
-	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(2, sURL);
-	if (!pFile) 
-		::MessageBox(pArg->pDlg->m_hWnd, _T("Nieprawid³owy URL: ") + sURL, APP_NAME, MB_OK|MB_ICONERROR);
-	else {
+	auto pFile = theApp.OpenURL(2, sURL);
+	if (pFile) {
 		try {
 			bReadFromATEX = pFile->Read(s, 50) > 10 && sscanf_s(s, "%f %f %f %f", &x1, &y1, &x2, &y2) == 4;
 		} catch (CInternetException* iex) {

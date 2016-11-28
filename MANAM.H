@@ -165,7 +165,7 @@ public:
 	void SetScale(int scale);
 	void FileRefresh(CDrawDoc *refreshDoc = nullptr);		// odswieza jeden lub wszystkie otwarte jesli nullptr
 	void FillKrataCombo(CComboBox& combo, int szpalt_x = pszpalt_x, int szpalt_y = pszpalt_y);
-	std::unique_ptr<CHttpFile> OpenURL(int service, const TCHAR* sUrl); // pobiera treœæ z URL, który powinien byæ typu http
+	std::unique_ptr<CHttpFile> OpenURL(unsigned short service, const CString& sUrl); // pobiera treœæ z URL, który powinien byæ typu http
 protected:
 	//{{AFX_MSG(CDrawApp)
 	afx_msg void OnAppAbout();

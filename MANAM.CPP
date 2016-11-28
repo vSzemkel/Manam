@@ -623,15 +623,24 @@ BOOL CDrawApp::OpenWebBrowser(const TCHAR* sUrl) {
 	return ret > 32;
 }
 
-std::unique_ptr<CHttpFile> CDrawApp::OpenURL(int service, const TCHAR* sUrl)
+std::unique_ptr<CHttpFile> CDrawApp::OpenURL(unsigned short service, const CString& sUrl)
 {
-	if (m_uriDict.empty()) 
+	if (!isRDBMS) {
+		::MessageBox(NULL, _T("Wymagane po³¹czenie do bazy danych"), APP_NAME, MB_OK | MB_ICONERROR);
+		return nullptr;
+	}
+		
+	if (m_uriDict.empty())
 		theManODPNET.FillArr(&m_uriDict, "select uri from manam_uri order by xx", CManODPNET::emptyParm);
 	
 	ASSERT(0 <= service && service < m_uriDict.size());
 	BeginWaitCursor();
 	std::unique_ptr<CHttpFile> f(reinterpret_cast<CHttpFile*>(this->m_InternetSession.OpenURL(m_uriDict[service] + sUrl)));
 	EndWaitCursor();
+
+	if (!f)
+		::MessageBox(NULL, _T("Nieprawid³owy URL: ") + sUrl, APP_NAME, MB_OK | MB_ICONERROR);
+
 	return f;
 }
 

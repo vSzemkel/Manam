@@ -1794,7 +1794,7 @@ void CDrawView::OnIrfan() // single Add selected
 	else _wspawnl(_P_DETACH, irfDir + _T("\\i_view32"), _T("i_view32"), eps_name, NULL);
 }
 
-void CDrawView::OnPrevKolumnaDruk() //single Page selected
+void CDrawView::OnPrevKolumnaDruk() // single Page selected
 {
 	CString sURL;
 	if (theApp.activeDoc->isRO) {
@@ -1805,36 +1805,13 @@ void CDrawView::OnPrevKolumnaDruk() //single Page selected
 	// pobierz œcie¿kê do pliku strony
 	auto pPage = dynamic_cast<CDrawPage*>(m_selection.GetHead());
 	int iNrPorz = theApp.activeDoc->IsPage(pPage);
-	sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s&nr_porz=%i"), theApp.activeDoc->gazeta.Left(3), theApp.activeDoc->gazeta.Mid(4,2), theApp.activeDoc->data, iNrPorz==0 ? (int)theApp.activeDoc->m_pages.size() : iNrPorz);
-	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(4, sURL);
-	if (!pFile)
-		AfxMessageBox(_T("Nieprawid³owy URL: ") + sURL);
-	else
-		try {
-			pFile->Read(theApp.bigBuf, bigSize);
-			pFile->Close();
-		} catch (CInternetException* iex) {
-			iex->GetErrorMessage(theApp.bigBuf, DLGMSG_MAX_LEN);
-			AfxMessageBox(theApp.bigBuf);
-			iex->Delete();
-			return;
-		}
-
-	// dopisz parametry kontrolne i otwórz dokument w przegl¹darce
-	auto buf = reinterpret_cast<char*>(theApp.bigBuf);
-	const char* pocz = strstr(buf, "<sciezka>");
-	if (pocz != nullptr) {
-		pocz += 9;
-		char* kon = const_cast<char*>(strstr(pocz, "</sciezka>"));
-		if (!strncmp(kon - 5, "path=", 5)) 
-			AfxMessageBox(_T("Brak kolumny"));
-		else {
-			kon[0] = '\0';
-			::StringCchPrintf(theApp.bigBuf, bigSize, _T("%s&app=manam&tyt=%s&mut=%s&kiedy=%s&user=%s"), CStringW(pocz), theApp.activeDoc->gazeta.Left(3), theApp.activeDoc->gazeta.Mid(4,2), theApp.activeDoc->data, theApp.m_login);
-			theApp.OpenWebBrowser(theApp.bigBuf);
-		}
-	} else
-		AfxMessageBox(_T("Brak adresu materia³u"));
+	sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s&nrstrony=%i&format=pdf&rozmiar=1"), theApp.activeDoc->gazeta.Left(3), theApp.activeDoc->gazeta.Mid(4,2), theApp.activeDoc->dayws, iNrPorz==0 ? (int)theApp.activeDoc->m_pages.size() : iNrPorz);
+	auto pFile = theApp.OpenURL(4, sURL);
+	if (pFile) {
+		auto url = pFile->GetFileURL();
+		pFile->Close();
+		theApp.OpenWebBrowser(url);
+	}
 }
 
 void CDrawView::OnPrevPdf() // single Add or Page selected
@@ -1897,10 +1874,8 @@ void CDrawView::OnPrevDig()
 	dataSepia = dataSepia.Mid(6) + "-" + dataSepia.Mid(3, 2) + "-" + dataSepia.Mid(0, 2);
 	CString sURL, sUrlTemplate = _T("adno=%li&kiedy=%s");
 	sURL.Format(sUrlTemplate, pAdd->nreps, dataSepia);
-	std::unique_ptr<CHttpFile> pFile = theApp.OpenURL(5, sURL);
-	if (!pFile)
-		AfxMessageBox(_T("Nieprawid³owy URL: ") + sURL);
-	else {
+	auto pFile = theApp.OpenURL(5, sURL);
+	if (pFile) {
 		iXmlLen = pFile->Read(buf, bigSize);
 		pFile->Close();
 		if (iXmlLen == bigSize) {
