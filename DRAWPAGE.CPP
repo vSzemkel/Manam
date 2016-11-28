@@ -836,8 +836,6 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
 	if (bitToSet > 0 && space.GetBit(module) > 0) // stoi ogloszenie lub inny marker
 		return;
 
-	bool clearToModify = true;
-
 	if (!m_kraty_niebazowe.empty()) {
 		CRect intsec;
 		const CRect& src = GetNormalizedModuleRect(module);
@@ -854,16 +852,14 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
 						space.SetBit(m, bitToSet);
 						space_mark2.SetBit(m, bitToSet);
 					} else if (intsec == dst)
-						clearToModify = false;
+						return; // w kracie niebazowej kolizja na powierzchni pe³nego modu³u
 			}
 		}
 		SetBaseKrata(s_x, s_y, FALSE);
 	}
 
-	if (clearToModify) {
-		space.SetBit(module, bitToSet);
-		space_mark.SetBit(module, bitToSet);
-	}
+	space.SetBit(module, bitToSet);
+	space_mark.SetBit(module, bitToSet);
 
 	SetDirty();
 	Invalidate();
