@@ -623,7 +623,7 @@ BOOL CDrawApp::OpenWebBrowser(const TCHAR* sUrl) {
 	return ret > 32;
 }
 
-std::unique_ptr<CHttpFile> CDrawApp::OpenURL(unsigned short service, const CString& sUrl)
+std::unique_ptr<CHttpFile> CDrawApp::OpenURL(size_t service, const CString& sUrl)
 {
 	if (!isRDBMS) {
 		::MessageBox(NULL, _T("Wymagane po³¹czenie do bazy danych"), APP_NAME, MB_OK | MB_ICONERROR);

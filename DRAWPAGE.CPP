@@ -828,7 +828,7 @@ void CDrawPage::SetBaseKrata(int s_x, int s_y, BOOL refresh) {
 }
 
 void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
-{    
+{
 	if (m_dervlvl == DERV_FIXD) return;
 
 	CFlag& space_mark = mode == SpaceMode::spacelock ? space_locked : space_red;
@@ -836,8 +836,7 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
 	if (bitToSet > 0 && space.GetBit(module) > 0) // stoi ogloszenie lub inny marker
 		return;
 
-	space.SetBit(module, bitToSet);
-	space_mark.SetBit(module, bitToSet);
+	bool clearToModify = true;
 
 	if (!m_kraty_niebazowe.empty()) {
 		CRect intsec;
@@ -850,13 +849,20 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
 			auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
 			for (size_t m = 0; m < ilemod; ++m) {
 				const CRect& dst = GetNormalizedModuleRect(m);
-				if (intsec.IntersectRect(src, dst) && (space.GetBit(m) > 0 ? 1 : 0) != bitToSet && (space_mark2.GetBit(m) > 0 ? 1 : 0) != bitToSet) {
-					space.SetBit(m, bitToSet);
-					space_mark2.SetBit(m, bitToSet);
-				}
+				if (intsec.IntersectRect(src, dst))
+					if ((space.GetBit(m) > 0 ? 1 : 0) != bitToSet && (space_mark2.GetBit(m) > 0 ? 1 : 0) != bitToSet) {
+						space.SetBit(m, bitToSet);
+						space_mark2.SetBit(m, bitToSet);
+					} else if (intsec == src || intsec == dst)
+						clearToModify = false;
 			}
 		}
 		SetBaseKrata(s_x, s_y, FALSE);
+	}
+
+	if (clearToModify) {
+		space.SetBit(module, bitToSet);
+		space_mark.SetBit(module, bitToSet);
 	}
 
 	SetDirty();
