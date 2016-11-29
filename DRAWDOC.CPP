@@ -540,7 +540,7 @@ size_t CDrawDoc::AddPage(CDrawPage* pObj)
 
 void CDrawDoc::RemovePage(CDrawPage* pObj)
 {
-	int i = IsPage(pObj);
+	int i = GetIPage(pObj);
 	if (i == -1) 
 		return;
 
@@ -568,12 +568,6 @@ void CDrawDoc::RemovePage(CDrawPage* pObj)
 	//zmiana spotow
 	if (!(m_pages.size() & 3))
 		ZmianaSpotow((int)m_pages.size());
-}
-
-inline int CDrawDoc::IsPage(CDrawObj* pObj) const
-{
-	size_t iNrPorz = std::find(m_pages.cbegin(), m_pages.cend(), pObj) - m_pages.cbegin();
-	return iNrPorz < m_pages.size() ? (int)iNrPorz : -1;
 }
 
 bool CDrawDoc::MoveOpisAfterPage(CRect *rFrom, CRect *rTo)
@@ -990,7 +984,7 @@ void CDrawDoc::NumberPages()
 		auto pSelPage = dynamic_cast<CDrawPage*>(pView->m_selection.GetHead());
 		if (pSelPage != nullptr && (pSelPage->nr & c_normal)) {
 			iFirstPageNumber = pSelPage->nr >> 3;
-			iFirstPageToNumber = IsPage(pSelPage);
+			iFirstPageToNumber = GetIPage(pSelPage);
 			if (iFirstPageToNumber < 0) return; // wystêpuje podczas copy/paste grupy stron
 		}
 	}

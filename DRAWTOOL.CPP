@@ -210,21 +210,22 @@ void CSelectTool::OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point
 		CDrawDoc* pDoc = pView->GetDocument();
 		pObj = (CDrawObj*)pView->m_selection.GetHead();
 		pObj->SetDirty();
-		int prev_pos = pDoc->IsPage(pObj);
-		if (prev_pos != -1) {		//strona
+		auto pPage = dynamic_cast<CDrawPage*>(pObj);
+		if (pPage) { // strona
+			int prev_pos = pDoc->GetIPage(pPage);
 			while (prev_pos > 0 && pView->m_selection.Find(pDoc->m_pages[prev_pos - 1]) != NULL) 
-				pObj = (CDrawObj*)pDoc->m_pages[--prev_pos];
-			int new_pos = pDoc->ComputePageOrderNr((CDrawPage*)pObj);
+				pPage = pDoc->m_pages[--prev_pos];
+			int new_pos = pDoc->ComputePageOrderNr(pPage);
 			if (prev_pos == new_pos)
-				pDoc->SetPageRectFromOrd((CDrawPage*)pObj, prev_pos);
+				pDoc->SetPageRectFromOrd(pPage, prev_pos);
 			else {
 				int iCnt = 1;
 				while (prev_pos + iCnt < (int)pDoc->m_pages.size() && pView->m_selection.Find(pDoc->m_pages[prev_pos + iCnt]) != NULL)
 					iCnt++;
 				pDoc->MoveBlockOfPages(prev_pos, new_pos, iCnt);
 			}
-		} else {					//ogloszenie dopasowanie do gridu
-			auto pAdd = dynamic_cast<CDrawAdd*>(pObj) ;
+		} else { // ogloszenie dopasowanie do gridu
+			auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
 			if ( pAdd ) {
 				int szpalt_x = pAdd->szpalt_x ;
 				int szpalt_y = pAdd->szpalt_y ;

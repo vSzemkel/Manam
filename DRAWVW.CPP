@@ -590,7 +590,7 @@ void CDrawView::Select(CDrawObj* pObj, BOOL bAdd)
 
 		auto pPage = dynamic_cast<CDrawPage*>(pObj);
 		if (bAdd && pPage) {
-			int iHitPos = GetDocument()->IsPage(pPage);
+			int iHitPos = GetDocument()->GetIPage(pPage);
 			for (int i = iHitPos - 1; i >= 0; i--)
 				if (IsSelected(GetDocument()->m_pages[i]))
 					for (int j = i + 1; j < iHitPos; j++)
@@ -1797,14 +1797,8 @@ void CDrawView::OnIrfan() // single Add selected
 void CDrawView::OnPrevKolumnaDruk() // single Page selected
 {
 	CString sURL;
-	if (theApp.activeDoc->isRO) {
-		AfxMessageBox(_T("Do produkcyjnego podgl¹du kolumn wymagane jest otwarcie makiety w trybie zmian"));
-		return;
-	}
-
-	// pobierz œcie¿kê do pliku strony
 	auto pPage = dynamic_cast<CDrawPage*>(m_selection.GetHead());
-	int iNrPorz = theApp.activeDoc->IsPage(pPage);
+	int iNrPorz = theApp.activeDoc->GetIPage(pPage);
 	sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s&nrstrony=%i&format=pdf&rozmiar=1"), theApp.activeDoc->gazeta.Left(3), theApp.activeDoc->gazeta.Mid(4,2), theApp.activeDoc->dayws, iNrPorz==0 ? (int)theApp.activeDoc->m_pages.size() : iNrPorz);
 	auto pFile = theApp.OpenURL(4, sURL);
 	if (pFile) {

@@ -105,7 +105,6 @@ public:
 
 	void SelectAdd(CDrawAdd* pObj, BOOL multiselect = FALSE);
 
-	int IsPage(CDrawObj* pObj)	const;							// jeœli badany obiekt jest stron¹, zwraca jej index, jeœli nie to -1
 	int ComputePageOrderNr(CDrawPage* pObj) const;				// oblicza numer porz¹dkowy strony na podstawie po³o¿enia
 	void SetPageRectFromOrd(CDrawPage* pObj, size_t iOrd);		// pozycjonuje stronê na podstawie numeru porz¹dkowego
 	void MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt);	// przesuwa ci¹g³y blok stron w obrêbie makiety

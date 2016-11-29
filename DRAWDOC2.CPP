@@ -796,7 +796,8 @@ int CDrawDoc::GetIPage(int n) const
 
 int CDrawDoc::GetIPage(CDrawPage *pPage) const
 {
-	return static_cast<int>(std::find(std::begin(m_pages), std::end(m_pages), pPage) - std::begin(m_pages));
+	auto pos = std::find(std::cbegin(m_pages), std::cend(m_pages), pPage);
+	return pos == std::cend(m_pages) ? -1 : static_cast<int>(pos - std::cbegin(m_pages));
 }
 
 void CDrawDoc::OnAsideAdds()
@@ -894,7 +895,7 @@ BOOL CDrawDoc::DerivePages(CDrawPage *pPage)
 		nr_porz = npages > 1 ? 1 : 0;
 		pPage = m_pages[nr_porz];
 	} else 
-		nr_porz = IsPage(pPage);
+		nr_porz = GetIPage(pPage);
 	if (theApp.isRDBMS && !this->isGRB && !this->isLIB && !this->isRO && this->SaveModified() && !pPage->dirty) {
 		CPageDerv dlg;
 		dlg.m_idervlvl = pPage->m_dervlvl;
