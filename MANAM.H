@@ -156,9 +156,10 @@ public:
 // Implementation
 	static CTime ShortDateToCTime(const CString& sData);				// konwertuje datê w formacie dd/mm/rrrr do CTime
 	static void CTimeToShortDate(const CTime& tData, CString& sData);	// konwertuje datê przekazan¹ jako CTime do formatu dd/mm/rrrr
+	static BOOL OpenWebBrowser(const TCHAR* sUrl);						// otwiera przegladarke Internet Explorer i przekazuje jej sUrl
+	static void OpenWebBrowser(size_t service, const TCHAR* sUrl);		// otwiera przegladarke Internet Explorer i przekazuje jej sUrl
 
 	BOOL ConnecttoDB();
-	BOOL CDrawApp::OpenWebBrowser(const TCHAR* sUrl);		// otwiera przegladarke Internet Explorer i przekazuje jej sUrl
 	BOOL TryUpgradeImage();									// proba upgrade'u wersji programu na podstawie obrazu zapisanego w bazie
 	void InitKratyDrukarnie() ;
 	void FromIniFile();

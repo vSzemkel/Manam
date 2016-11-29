@@ -623,6 +623,15 @@ BOOL CDrawApp::OpenWebBrowser(const TCHAR* sUrl) {
 	return ret > 32;
 }
 
+void CDrawApp::OpenWebBrowser(size_t service ,const TCHAR* sUrl) {
+	auto pFile = theApp.OpenURL(service, sUrl);
+	if (pFile) {
+		auto url = pFile->GetFileURL();
+		pFile->Close();
+		OpenWebBrowser(url);
+	}
+}
+
 std::unique_ptr<CHttpFile> CDrawApp::OpenURL(size_t service, const CString& sUrl)
 {
 	if (!isRDBMS) {

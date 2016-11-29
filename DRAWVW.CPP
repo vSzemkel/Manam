@@ -1800,12 +1800,7 @@ void CDrawView::OnPrevKolumnaDruk() // single Page selected
 	auto pPage = dynamic_cast<CDrawPage*>(m_selection.GetHead());
 	int iNrPorz = theApp.activeDoc->GetIPage(pPage);
 	sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s&nrstrony=%i&format=pdf&rozmiar=1"), theApp.activeDoc->gazeta.Left(3), theApp.activeDoc->gazeta.Mid(4,2), theApp.activeDoc->dayws, iNrPorz==0 ? (int)theApp.activeDoc->m_pages.size() : iNrPorz);
-	auto pFile = theApp.OpenURL(4, sURL);
-	if (pFile) {
-		auto url = pFile->GetFileURL();
-		pFile->Close();
-		theApp.OpenWebBrowser(url);
-	}
+	theApp.OpenWebBrowser(4, sURL);
 }
 
 void CDrawView::OnPrevPdf() // single Add or Page selected
@@ -1918,12 +1913,7 @@ void CDrawView::OnAtexSyg() //single Add selected
 
 	CString sUrl;
 	sUrl.Format(_T("t=%s&m=%s&k=%s&a=%li"), GetDocument()->gazeta.Left(3), pAdd->flags.derived ? "RP" : GetDocument()->gazeta.Mid(4,2), GetDocument()->data, pAdd->nreps);
-	auto pFile = theApp.OpenURL(7, sUrl);
-	if (pFile) {
-		auto url = pFile->GetFileURL();
-		pFile->Close();
-		theApp.OpenWebBrowser(url);
-	}
+	theApp.OpenWebBrowser(7, sUrl);
 }
 
 void CDrawView::OnPrevKor() 

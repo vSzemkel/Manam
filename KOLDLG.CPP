@@ -1192,8 +1192,8 @@ void CInfoDlg::OnSign()
 
 void CInfoDlg::OnShowPageDeadlines() {
 	CString sUrl;
-	sUrl.Format(_T("http://gwspacer.agora.pl/Spacer/DInfo.aspx?m=%i"), theApp.activeDoc->m_mak_xx);
-	theApp.OpenWebBrowser(sUrl);
+	sUrl.Format(_T("m=%i"), theApp.activeDoc->m_mak_xx);
+	theApp.OpenWebBrowser(8, sUrl);
 }
 
 BEGIN_MESSAGE_MAP(CInfoDlg, CDialog)

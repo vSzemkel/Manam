@@ -56,14 +56,12 @@ int CAddListCtrl::OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn)
 		case logiczna:
 			CGridFrm::eLastOrder = GridSortCol::logiczna;
 			return _tcsicmp(a1->logpage, a2->logpage);
-			break;
 		case zamowienie:
 			CGridFrm::eLastOrder = GridSortCol::zamowienie;
 			bResult = a1->nreps < a2->nreps;
 			break;
 		case kod:
 			return _tcsicmp(a1->kodModulu, a2->kodModulu);
-			break;
 		case rozmiar:
 			CGridFrm::eLastOrder = GridSortCol::rozmiar;
 			bResult = a1->sizex < a2->sizex || (a1->sizex == a2->sizex && a1->sizey < a2->sizey);
@@ -71,7 +69,6 @@ int CAddListCtrl::OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn)
 		case nazwa: 
 			CGridFrm::eLastOrder = GridSortCol::nazwa;
 			return _tcsicmp(a1->nazwa, a2->nazwa);
-			break;
 		case strona:
 			CGridFrm::eLastOrder = GridSortCol::strona;
 			bResult = a1->fizpage >> 3 < a2->fizpage >> 3;
@@ -81,13 +78,11 @@ int CAddListCtrl::OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn)
 			break;
 		case uwagi:
 			return _tcsicmp(a1->remarks.IsEmpty() ? a1->remarks_atex : a1->remarks, a2->remarks.IsEmpty() ? a2->remarks_atex : a2->remarks);
-			break;		
 		case powtorka:
 			bResult = a1->powtorka < a2->powtorka;
 			break;
 		case oldadno:
 			return m_pContainer->showLastAdnoUsed ? _tcsicmp(a1->skad_ol, a2->skad_ol) : (a1->oldAdno < a2->oldAdno ? -1 : 1);
-			break;
 		case studio:
 			bResult = a1->flags.studio < a2->flags.studio;
 			break;

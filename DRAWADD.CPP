@@ -6,7 +6,6 @@
 #include "drawtool.h"
 #include "drawpage.h"
 #include "drawadd.h"
-#include "cntritem.h"
 #include "koldlg.h"
 #include "mainfrm.h"
 #include "spacer.h" 
@@ -979,7 +978,7 @@ void CDrawAdd::ParseLogpage(TCHAR *op_zew, TCHAR *sekcja, TCHAR *op_sekcji, int 
 	if (logpage.SpanExcluding(lp).GetLength() < 1) {
 		op_zew[0] = sekcja[0] = op_sekcji[0] = pl[0] = op_pl[0] = TCHAR(0);
 		if (poz_na_str) poz_na_str[0] = TCHAR(0);
-		nr_sek = nr_pl = 0;
+		*nr_sek = *nr_pl = 0;
 		return;
 	}
 	

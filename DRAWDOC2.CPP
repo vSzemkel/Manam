@@ -5,11 +5,8 @@
 #include "drawvw.h"
 #include "drawpage.h"
 #include "drawadd.h"
-#include "drawopis.h"
-#include "cntritem.h"
 #include "koldlg.h"
 #include "mainfrm.h"
-#include "queview.h"
 
 extern CDrawApp NEAR theApp ;
 extern BOOL drawErrorBoxes ;

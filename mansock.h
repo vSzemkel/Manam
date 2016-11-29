@@ -5,9 +5,6 @@
 
 class CManSock : public CSocket
 {
-// Attributes
-public:
-
 // Operations
 public:
 	CManSock();

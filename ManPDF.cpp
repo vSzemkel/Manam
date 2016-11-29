@@ -52,7 +52,6 @@ char* CManPDF::pdftok(char *str) {
 		iPdfTokenSlot %= 5;
 		::StringCchCopyA(cPdfToken[iPdfTokenSlot], 256, pdftok(buf));
 		bSearchInPdfToken = FALSE;
-		return cPdfToken[iPdfTokenSlot];
 	} else {
 		char* p = bSearchInPdfToken ? str : strtok(str,septok);
 		if (!p) return p;
@@ -84,9 +83,9 @@ nextToken:
 			iPdfTokenSlot %= 5;
 			::StringCchCopyA(cNextPdfToken, 256, e);
 			::StringCchCopyNA(cPdfToken[iPdfTokenSlot], maxTokenSize, p, e - p);
-			return cPdfToken[iPdfTokenSlot];
 	}
-	return NULL;
+
+	return cPdfToken[iPdfTokenSlot];
 }
 
 const char* CManPDF::memstr(const char *str, const char *sub, size_t len) {

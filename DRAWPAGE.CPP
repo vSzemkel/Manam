@@ -4,11 +4,9 @@
 #include "drawvw.h"
 #include "drawadd.h"
 #include "drawpage.h"
-#include "cntritem.h"
 #include "koldlg.h"
 #include "mainfrm.h"
 #include "manpdf.h"
-#include "gridfrm.h"
 #include "genepsinfodlg.h"
 
 extern BOOL drawErrorBoxes ;

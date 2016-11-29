@@ -72,9 +72,6 @@ public:
 #ifdef _DEBUG
 	void AssertValid();
 #endif
-
-	// implementation data
-protected:
 };
 
 class CDrawItem;    // COleClientItem derived class
