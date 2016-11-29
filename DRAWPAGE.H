@@ -50,9 +50,9 @@ public:
 	CDrawPage(const CRect* position);
 	virtual ~CDrawPage();
 // Overrides
-	virtual void Draw(CDC* pDC);
-	virtual void Print(CDC* pDC);
-	virtual void Serialize(CArchive& ar);
+	virtual void Draw(CDC* pDC) override;
+	virtual void Print(CDC* pDC) override;
+	virtual void Serialize(CArchive& ar) override;
 	virtual void UpdateInfo() override;
 	virtual void DrawKolor(CDC* pDC, const CRect& pos) const override;
 	virtual void MoveTo(const CRect& positon, CDrawView* pView = nullptr) override;
@@ -94,8 +94,8 @@ public:
 	// Implementation
 	void DrawGrid(CDC* pDC);
 	void DrawReserved(CDC* pDC);
-	void DrawDeadline(CDC* pDC, const CRect& pos);
-	void DrawAcDeadline(CDC* pDC, const CRect& pos);
+	void DrawDeadline(CDC* pDC, const CRect& pos) const;
+	void DrawAcDeadline(CDC* pDC, const CRect& pos) const;
 
 	void SetNr(int i);
 	void AddAdd(CDrawAdd* pAdd);
@@ -121,7 +121,7 @@ public:
 	BOOL StaleElementy(PGENEPSARG pArg, CFile *handle);
 	BOOL GenEPS(PGENEPSARG pArg);
 	BOOL GetDestName(PGENEPSARG pArg, CString& sNum, CString& destName);
-	BOOL PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile);
+	BOOL PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) const;
 	CString GetNrPaginy() const;
 
 protected:
@@ -131,7 +131,7 @@ protected:
 
 private:
 	CFlag GetReservedFlag();							// Pobiera flagê szarych modu³ów
-	CRect GetNormalizedModuleRect(size_t module);		// Prostok¹t ograniczaj¹cy modu³ o numerze porz¹dkowym module zakresu 0..sx*sy-1
+	CRect GetNormalizedModuleRect(size_t module) const;		// Prostok¹t ograniczaj¹cy modu³ o numerze porz¹dkowym module zakresu 0..sx*sy-1
 	static CString GenerateGUIDString();				// Konwertuje wygenerowany GIUD do stringu
 };
 

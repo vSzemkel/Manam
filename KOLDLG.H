@@ -1049,7 +1049,7 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
-	void ChangeMode(BOOL isExpand);
+	void ChangeMode(BOOL isExpand) const;
 };
 
 // CAccGrbDlg dialog

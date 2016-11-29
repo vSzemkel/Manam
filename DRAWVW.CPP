@@ -580,7 +580,7 @@ void CDrawView::Select(CDrawObj* pObj, BOOL bAdd)
 		m_selection.RemoveAll();
 	}
 
-	if (pObj == NULL || IsSelected(pObj))
+	if (pObj == nullptr || IsSelected(pObj))
 		return;
 
 	if (m_selection.GetCount()) {

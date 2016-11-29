@@ -17,16 +17,18 @@ class CMainFrame : public CMDIFrameWndEx
 	DECLARE_DYNAMIC(CMainFrame)
 public:
 	CMainFrame();
-// Attributes
-public:
-// Operations
+	virtual ~CMainFrame();
+	virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = nullptr, CCreateContext* pContext = nullptr) override;
+#ifdef _DEBUG
+	virtual void AssertValid() const override;
+	virtual void Dump(CDumpContext& dc) const override;
+#endif
 private:
 	void StoreComboHandlers();
 	void SwapToolbarImages(int iCmd1, int iCmd2);
 public:
-	//..,,
 	void SetStatusBarInfo(LPCTSTR tx);
-	UINT GetKolor(int ile_spotow);   //zwraca kolor z (-) gdy konkretny spot kolor
+	UINT GetKolor(int ile_spotow) const;   //zwraca kolor z (-) gdy konkretny spot kolor
 	CBrush* GetSpotBrush(int i) const;
 	CString GetCaption() const;
 	CString GetCaption(int i) const;
@@ -35,9 +37,9 @@ public:
 	int GetCaptionBoxSize() const;
 	void SetToolbarBitmap(ToolbarMode bPrevMode, ToolbarMode bNewMode);
 
-	int GetKolorInd(CString text);
-	DWORD GetCaptionDataItem(int ind);
-	CString GetKolorText();
+	int GetKolorInd(CString text) const;
+	DWORD GetCaptionDataItem(int ind) const;
+	CString GetKolorText() const;
 	void InsKolorBox();
 	void InsComboNrSpotow(int new_i);
 	void IniKolorTable();
@@ -64,12 +66,6 @@ public:
 	void SetLogonStatus( LPCTSTR t);
 	void SetOpenStatus( LPCTSTR t);
 	void SetRoleStatus();
-	virtual ~CMainFrame();
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
-#endif
-	virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = nullptr, CCreateContext* pContext = nullptr);
 
 protected:
 // control bar embedded members

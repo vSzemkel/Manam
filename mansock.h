@@ -15,7 +15,7 @@ public:
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CManSock)
 	public:
-	virtual void OnReceive(int nErrorCode);
+	virtual void OnReceive(int nErrorCode) override;
 	//}}AFX_VIRTUAL
 
 	void SendManamMessage(CString &msg, CString &login, BOOL broadcast);
@@ -55,7 +55,7 @@ public:
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CSendDlg)
 	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -63,7 +63,7 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CSendDlg)
-	virtual BOOL OnInitDialog();
+	virtual BOOL OnInitDialog() override;
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

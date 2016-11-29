@@ -37,7 +37,7 @@ CSplitFrame::~CSplitFrame()
 
 BOOL CSplitFrame::OnCreateClient(LPCREATESTRUCT, CCreateContext* pContext)
 {
-	BOOL bSuccess;    
+	BOOL bSuccess;
 	CClientDC dc(NULL);
 	int cx = dc.GetDeviceCaps(HORZRES), cy = dc.GetDeviceCaps(VERTRES) ;
 	bSuccess  = m_Splitter.CreateStatic(this, 1, 2, WS_CHILD|WS_VISIBLE, AFX_IDW_PANE_FIRST);

@@ -460,7 +460,7 @@ void CSpacerDlg::SetBlokadaState()
 		GetDlgItem(IDC_LOCKED)->EnableWindow(TRUE);
 }
 
-int CSpacerDlg::GetQueryFlag() {
+int CSpacerDlg::GetQueryFlag() const {
 	int iQF = 2;
 	if (IsDlgButtonChecked(IDC_SEKCJA))		iQF+=1;iQF*=2;	//iQF&16
 	if (IsDlgButtonChecked(IDC_WSEKCJI))	iQF+=1;iQF*=2;	//iQF&8
@@ -760,7 +760,7 @@ void CSpacerDlg::OnBnClickedOl()
 	};	
 }
 
-void CSpacerDlg::EnableMultiCond(BOOL flag) {
+void CSpacerDlg::EnableMultiCond(BOOL flag) const {
 	GetDlgItem(IDC_SEKCJA)->EnableWindow(flag);
 	GetDlgItem(IDC_WSEKCJI)->EnableWindow(flag);
 	GetDlgItem(IDC_PAGEPARITY)->EnableWindow(flag);

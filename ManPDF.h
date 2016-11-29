@@ -18,7 +18,7 @@ class CManPDF {
 		CManPDF(PGENEPSARG pArg);
 		virtual ~CManPDF();
 		unsigned long GetMediaBox(const TCHAR* fpath, float* x1, float* y1, float* x2, float* y2, HANDLE hFile = 0);
-		unsigned long SearchPattern(CFile &f, const char *pat);
+		unsigned long SearchPattern(CFile &f, const char *pat) const;
 		BOOL CreatePDF(CDrawPage *page, const TCHAR* trgName);
 	private:
 		static const long estTailLen;

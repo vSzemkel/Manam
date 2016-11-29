@@ -29,7 +29,7 @@ CDrawOpis::CDrawOpis(const CRect* position, const TCHAR* tx) : CDrawObj(position
 	m_opi_xx = -1;
 }
 
-void CDrawOpis::DrawInternal(CDC* pDC, CRect& rect)
+void CDrawOpis::DrawInternal(CDC* pDC, CRect& rect) const
 {
 	CPen* pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
 	CFont* pOldFont = pDC->SelectObject(&m_pDocument->m_pagefont);

@@ -50,7 +50,6 @@ public:
 	virtual void OnLButtonDblClk(CDrawView* pView, UINT nFlags, const CPoint& point);
 	virtual void OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point);
 	virtual void OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point);
-	void OnCancel();
 
 	// Attributes
 	DrawShape m_drawShape;
@@ -60,6 +59,8 @@ public:
 	static UINT c_nDownFlags;
 	static DrawShape c_drawShape;
 	static std::vector<CDrawTool*> c_tools;
+
+	static void OnCancel();
 	static CDrawTool* FindTool(DrawShape drawShape);
 };
 

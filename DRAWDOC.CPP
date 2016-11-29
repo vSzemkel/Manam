@@ -483,7 +483,7 @@ int CDrawDoc::GetAddPosition(CDrawAdd* pAdd) const
 	return pos == m_objects.cend() ? -1 : n;
 }
 
-void CDrawDoc::SelectAdd(CDrawAdd* pObj, BOOL multiselect)
+void CDrawDoc::SelectAdd(CDrawAdd* pObj, BOOL multiselect) const
 {
 	auto pView = GetPanelView<CDrawView>();
 	if (pView) pView->Select(pObj, multiselect) ;
@@ -584,7 +584,7 @@ bool CDrawDoc::MoveOpisAfterPage(CRect *rFrom, CRect *rTo)
 	return found;
 }
 
-void CDrawDoc::SetPageRectFromOrd(CDrawPage* pObj, size_t iOrd) {
+void CDrawDoc::SetPageRectFromOrd(CDrawPage* pObj, size_t iOrd) const {
 	ASSERT(0 <= iOrd && iOrd < m_pages.size());
 
 	int x = (int)(pmodulx*(1+floor(fmod((float)iOrd, (float)iPagesInRow)/2)+(pszpalt_x*fmod((float)iOrd, (float)iPagesInRow)))); 
@@ -930,7 +930,8 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR buffor, int ch, CPoint& pos, BOOL check_exist)
 	return TRUE;
 }
 
-int CDrawDoc::ValidKolor(TCHAR *st) const {
+int CDrawDoc::ValidKolor(TCHAR *st)
+{
 	auto n = ((CMainFrame*)AfxGetMainWnd())->Spot_Kolor.size() ; //w tablicy zawsze duzymi
 	for (size_t i = 1; i < n; i++)
 		if (!((CMainFrame*)AfxGetMainWnd())->Spot_Kolor[i].Find(st))
@@ -1360,9 +1361,6 @@ void CDrawDoc::OnFileInfo() {
 		theManODPNET.EI("begin update_makinfo(:mak_xx,:mutwyd,:cena,:naklad,:numerrok,:numer,:sekr,:prow1,:prow2,:wykup,:zamkniecie,:podpis,:szycie,:uwagi,:kto_prowadzi,:cena2,:zsy_red,:do_studia); end;", orapar4);
 	}
 }
-
-BOOL CDrawDoc::FileInfoIsEmpty()
-{	return (gazeta.IsEmpty() && prowadzacy1.IsEmpty() && prowadzacy2.IsEmpty() && sekretarz.IsEmpty());	}
 
 void CDrawDoc::PrintInfo(CDC* pDC, int max_n, int wspol_na_str)  //wspol_na_str =1 lub 2- 50  lub 100 str na wydruku
 {

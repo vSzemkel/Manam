@@ -28,7 +28,7 @@ extern CDrawApp NEAR theApp ;
 
 CManPDF::CManPDF(PGENEPSARG pArg) {
 	dlg = pArg->pDlg;
-	bSearchInPdfToken = FALSE;
+	bSearchInPdfToken = false;
 	cStore = reinterpret_cast<char*>(pArg->cBigBuf);
 	iPdfTokenSlot = 0;
 	xrefOffset = 0L;
@@ -47,11 +47,11 @@ char* CManPDF::pdftok(char *str) {
 	if (cNextPdfToken[0]) {// rozpocznij analizê fragmentu tokeny wczeœniej zwróconego przez strtok
 		char buf[256];
 		::StringCchCopyA(buf, 256, cNextPdfToken);
-		bSearchInPdfToken = TRUE;
+		bSearchInPdfToken = true;
 		iPdfTokenSlot++;
 		iPdfTokenSlot %= 5;
 		::StringCchCopyA(cPdfToken[iPdfTokenSlot], 256, pdftok(buf));
-		bSearchInPdfToken = FALSE;
+		bSearchInPdfToken = false;
 	} else {
 		char* p = bSearchInPdfToken ? str : strtok(str,septok);
 		if (!p) return p;
@@ -92,7 +92,7 @@ const char* CManPDF::memstr(const char *str, const char *sub, size_t len) {
   size_t l = 0;
   char *p;
 
-  if (!str) return NULL;
+  if (!str) return nullptr;
   if (strlen(str) == len) return strstr(str, sub);
   while(l<len)
   {
@@ -100,13 +100,13 @@ const char* CManPDF::memstr(const char *str, const char *sub, size_t len) {
        l++;
        continue;
      }
-     if((p = strstr((char*)str+l, sub)) != NULL) return (const char*)p;
+     if((p = strstr((char*)str+l, sub)) != nullptr) return (const char*)p;
      l += strlen(str + l) + 1;
   }
-  return NULL;
+  return nullptr;
 } //memstr
 
-unsigned long CManPDF::SearchPattern(CFile &f, const char *pat) {
+unsigned long CManPDF::SearchPattern(CFile &f, const char *pat) const {
 	char *p;
 	unsigned long filepos;
 	size_t res = 1;
@@ -142,7 +142,7 @@ unsigned long CManPDF::GetMainXref(CFile &f) {
 	if (!p) 
 		throw CManPDFExc(_T("GetMainXref: nie ma znacznika startxref w ostatnich 30 bajtach"));
 	strtok(p, septok);
-	return xrefOffset = atol(strtok(NULL, septok));
+	return xrefOffset = atol(strtok(nullptr, septok));
 } //GetMainXref
 
 // podaje poprzedni¹, póŸniej nadpisan¹ wartoœc offsetu do spisu xref
@@ -152,7 +152,7 @@ unsigned long CManPDF::GetPrevXref(CFile &f, unsigned long currentxrefOffset) {
 	char *a = strstr(cStore, "/Prev");
 	if (!a) return 0L;
 	strtok(a, septok);
-	return atol(strtok(NULL, septok));
+	return atol(strtok(nullptr, septok));
 } //GetPrevXref
 
 // podaje offset w pliku f pocz¹tku definicji obiektu numer obj
@@ -164,19 +164,19 @@ unsigned long CManPDF::FindObjEntry(CFile &f, unsigned int obj) {
 		f.Read(cStore,bigSize);
 		unsigned int xrefstart,xreflen;
 		char *a = strtok(cStore,sepline);
-		xrefstart = atoi((a = strtok(NULL,septok)));
-		xreflen = atoi((a = strtok(NULL,septok)));
+		xrefstart = atoi((a = strtok(nullptr, septok)));
+		xreflen = atoi((a = strtok(nullptr, septok)));
 		while (xrefstart>obj || obj>=xrefstart+xreflen) {
 			if ((a - cStore) + (2 + xreflen)*20 > bigSize) {
-				a = strtok(NULL,sepline);
+				a = strtok(nullptr, sepline);
 				f.Seek(currentxrefOffset + (a - cStore) + xreflen*20,CFile::begin);
 				currentxrefOffset = (unsigned long)f.GetPosition();
 				f.Read(cStore,bigSize);
 				a = strtok(cStore,septok);
 			} else {
 				for (unsigned int j=0; j<xreflen; j++)
-					a = strtok(NULL,sepline);
-				a = strtok(NULL,septok);
+					a = strtok(nullptr, sepline);
+				a = strtok(nullptr, septok);
 			}
 			if (!strncmp(a, "trailer",7)) {
 				currentxrefOffset = GetPrevXref(f,currentxrefOffset);
@@ -184,19 +184,19 @@ unsigned long CManPDF::FindObjEntry(CFile &f, unsigned int obj) {
 				break;
 			}
 			xrefstart = atoi(a);
-			xreflen = atoi(strtok(NULL,septok));
+			xreflen = atoi(strtok(nullptr, septok));
 		}
 		if (xrefstart == bigSize) continue;
 		//znaleziono
 		if ((a - cStore) + (2 + obj - xrefstart)*20 > bigSize) {
-			a = strtok(NULL,sepline);
+			a = strtok(nullptr, sepline);
 			f.Seek(currentxrefOffset + (a - cStore) + (obj - xrefstart)*20,CFile::begin);
 			f.Read(cStore,bigSize);
 			return atol(strtok(cStore,septok));
 		}
 		for (unsigned int i=0; i < obj - xrefstart; i++) 
-			a = strtok(NULL,sepline);
-		return atol(strtok(NULL,septok));
+			a = strtok(nullptr, sepline);
+		return atol(strtok(nullptr, septok));
 	}
 	return 0L;
 } //FindObjEntry
@@ -206,7 +206,7 @@ unsigned int CManPDF::GetRefNr(char *buf) {
 	std::vector<char*> a;
 	char *p = pdftok(buf);
 	do 
-		a.push_back(p = pdftok(NULL));
+		a.push_back(p = pdftok(nullptr));
 	while (p && strcmp(p, "R"));
 	if (!p || a.size() < 3) 
 		throw CManPDFExc(_T("GetRefNr: Nie odnaleziono prawidlowej referencji"));
@@ -234,11 +234,11 @@ void CManPDF::EmbedSection(const char *str, BOOL innerOnly) {
 
 	a.push_back(lbound);
 	do {
-		p = pdftok(NULL);
+		p = pdftok(nullptr);
 		a.push_back(p);
 		if (!strcmp(p, "R")) {
 			unsigned int srcObjNr = atoi(a[a.size() - 3]);
-			uintmap::iterator it = renumMap.find(srcObjNr);
+			auto it = renumMap.find(srcObjNr);
 			if (it == renumMap.end()) {
 				renumMap[srcObjNr] = nextObjNr;
 				StringCchPrintfA(&cStore[posInCstore], bigSize, "%u", nextObjNr++);
@@ -273,13 +273,13 @@ void CManPDF::EmbedKey(const char *buf, char *key) {
 
 	trg.Write(key, (UINT)strlen(key)); trg.Write(" ", 1);
 	p = pdftok(p);
-	de = pdftok(NULL);
+	de = pdftok(nullptr);
 	if (!strcmp(de, "<<") || !strcmp(de, "[")) 
 		EmbedSection(de);
 	else { // prosta referencja
 		unsigned int refNr = atoi(de);
-		pdftok(NULL);
-		if (strcmp(pdftok(NULL), "R")) 
+		pdftok(nullptr);
+		if (strcmp(pdftok(nullptr), "R")) 
 			throw CManPDFExc(_T("EmbedKey: Spodziewano sie prostej referencji ") + CString(key));
 		uintmap::iterator it = renumMap.find(refNr);
 		if (it == renumMap.end()) {
@@ -304,16 +304,16 @@ unsigned long CManPDF::EmbedStream(CFile &src, unsigned long offset, BOOL decora
 		throw CManPDFExc(_T("EmbedStream: Nie odnaleziono tagu /Length"));
 
 	pdftok(p);
-	p = pdftok(NULL);
-	pdftok(NULL);
-	end = pdftok(NULL);
+	p = pdftok(nullptr);
+	pdftok(nullptr);
+	end = pdftok(nullptr);
 
 	unsigned long len,ret;
 	if (!strcmp(end, "R")) {
 		src.Seek(FindObjEntry(src, atoi(p)), CFile::begin);
 		src.Read(cStore, bigSize);
 		strtok(cStore, sepline);
-		ret = len = atol(pdftok(NULL));
+		ret = len = atol(pdftok(nullptr));
 	} else
 		ret = len = atol(p);
 	if (decorate) len += 8;
@@ -346,16 +346,16 @@ unsigned long CManPDF::EmbedPakStream(CFile &src, unsigned long offset, unsigned
 	if (!p) 
 		throw CManPDFExc(_T("EmbedPakStream: Nie odnaleziono tagu /Length"));
 	pdftok(p);
-	p = pdftok(NULL);
-	pdftok(NULL);
-	end = pdftok(NULL);
+	p = pdftok(nullptr);
+	pdftok(nullptr);
+	end = pdftok(nullptr);
 
 	unsigned long paklen,niepaklen;
 	if (!strcmp(end, "R")) {
 		src.Seek(FindObjEntry(src, atoi(p)), CFile::begin);
 		src.Read(cStore, bigSize);
 		strtok(cStore, sepline);
-		paklen = atol(pdftok(NULL));
+		paklen = atol(pdftok(nullptr));
 	} else
 		paklen = atol(p);
 	str += 8;
@@ -439,19 +439,19 @@ void CManPDF::EmbedContents(CFile &src, unsigned long offset) {
 		
 	if (multi) {
 		p = pdftok(p); // skip token "<<"
-		p = pdftok(NULL);
+		p = pdftok(nullptr);
 		while (p && strcmp(p, "/Length")) {
 			trg.Write(p, (UINT)strlen(p));
 			trg.Write(" ", 1);
-			p = pdftok(NULL);
+			p = pdftok(nullptr);
 		} 
 		if (!p) 
 			throw CManPDFExc(_T("EmbedContents: nie odnaleziono /Length pierwszej czesci"));
 		StringCchPrintfA(cStore, bigSize, "/Length %u 0 R\x0a", lenObjNr = nextObjNr++);
 		trg.Write(cStore, (UINT)strlen(cStore));
-		p = pdftok(NULL);
-		t = pdftok(NULL);
-		de = pdftok(NULL);
+		p = pdftok(nullptr);
+		t = pdftok(nullptr);
+		de = pdftok(nullptr);
 		if (strcmp(de, "R")) {
 			if (strcmp(t, ">>")) {
 				StringCchPrintfA(cStore, bigSize, "%s %s ", t, de);
@@ -459,11 +459,11 @@ void CManPDF::EmbedContents(CFile &src, unsigned long offset) {
 			} else
 				trg.Write(">>\x0a", 3);
 		}
-		p = pdftok(NULL);
+		p = pdftok(nullptr);
 		while (p && strcmp(p, ">>")) {
 			trg.Write(p, (UINT)strlen(p));
 			trg.Write(" ", 1);
-			p = pdftok(NULL);
+			p = pdftok(nullptr);
 		}
 		trg.Write("\x0a",1);
 	} else
@@ -843,7 +843,7 @@ try {
 	if(!t || (de && de<t)) return FALSE;
 readMediaBox:	
 	pdftok(t);
-	t = pdftok(NULL);
+	t = pdftok(nullptr);
 	if (!strcmp(t, "["))
 		*x1 = (float)atof(strtok(NULL, septok));
 	else {
@@ -854,9 +854,9 @@ readMediaBox:
 			throw CManPDFExc(_T("GetMediaBox: uszkodzony tag /MediaBox"));
 		*x1 = (float)atof(t);
 	}
-	*y1 = (float)atof(pdftok(NULL));
-	*x2 = (float)atof(pdftok(NULL));
-	*y2 = (float)atof(pdftok(NULL));
+	*y1 = (float)atof(pdftok(nullptr));
+	*x2 = (float)atof(pdftok(nullptr));
+	*y2 = (float)atof(pdftok(nullptr));
 kids:
 	// in /Page object
 	src.Seek(offset, CFile::begin);

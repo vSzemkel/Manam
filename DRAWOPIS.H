@@ -28,5 +28,5 @@ protected:
 private:
 	static const CPoint drawrogi;
 	static const CPoint printrogi;
-	void DrawInternal(CDC* pDC, CRect& rect);
+	void DrawInternal(CDC* pDC, CRect& rect) const;
 };

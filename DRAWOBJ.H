@@ -28,7 +28,7 @@ public:
 	virtual void UpdateInfo() {}
 	virtual void DrawKolor(CDC* pDC, const CRect& pos) const;
 	virtual void MoveTo(const CRect& positon, CDrawView* pView = nullptr);
-	virtual void Serialize(CArchive& ar);
+	virtual void Serialize(CArchive& ar) override;
 	virtual BOOL OnOpen(CDrawView* pView);
 	virtual CDrawObj* Clone(CDrawDoc* pDoc = nullptr) const;
 
@@ -57,7 +57,7 @@ public:
 	void ChangeKolor(UINT new_kolor); 
 	void SetDirty();
 	void SetClean() { dirty = FALSE; }
-	BOOL IsClean() { return (!dirty); }
+	BOOL IsClean() const { return (!dirty); }
 
 
 	// Operations

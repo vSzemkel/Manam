@@ -185,7 +185,7 @@ void CGridFrm::Select(CDrawAdd *pObj, int i)
 		ScrollToPosition(CPoint(0, iSelRowY - r.Height()/2));
 }
 
-int CGridFrm::FindRow(DWORD_PTR key)
+int CGridFrm::FindRow(DWORD_PTR key) const
 {
 	int rc = lcPubList.GetItemCount();
 	for (int n = 0; n < rc; n++)

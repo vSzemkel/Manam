@@ -351,7 +351,7 @@ void CMainFrame::IniCaptionBox(int id_drw, int new_id_drw)
 	}
 }
 
-DWORD CMainFrame::GetCaptionDataItem(int ind)
+DWORD CMainFrame::GetCaptionDataItem(int ind) const
 {
 	if (ind < 0) ind = m_CaptionBox->GetCurSel() ;
 	return ind == CB_ERR ? 0 : (DWORD)m_CaptionBox->GetItemData(ind) ;
@@ -400,7 +400,7 @@ BOOL CMainFrame::DBIniCaptionCombo(BOOL iscaption, int id_drw)
 }
 
 //////////////////////////////// wyciaganie danych z tablic
-CString CMainFrame::GetKolorText() 
+CString CMainFrame::GetKolorText() const
 {
 	CString s;
 	int sel = m_KolorBox->GetCurSel();
@@ -410,13 +410,13 @@ CString CMainFrame::GetKolorText()
 	return s;
 }
 
-int CMainFrame::GetKolorInd(CString text)
+int CMainFrame::GetKolorInd(CString text) const
 {
 	int ind = m_KolorBox->FindString(0, text);
 	return ind == CB_ERR ? -1 : ind ;
 }
 
-UINT CMainFrame::GetKolor(int ile_spotow) // kolejnoœæ na liscie: spoty, brak, full, kolory
+UINT CMainFrame::GetKolor(int ile_spotow) const // kolejnoœæ na liscie: spoty, brak, full, kolory
 {
 	auto k = m_KolorBox->GetCurSel();
 

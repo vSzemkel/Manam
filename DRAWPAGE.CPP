@@ -190,7 +190,7 @@ void CDrawPage::Draw(CDC* pDC)
 	pDC->SelectObject(pOldFont);
 }
 
-void CDrawPage::DrawDeadline(CDC* pDC, const CRect& pos) {
+void CDrawPage::DrawDeadline(CDC* pDC, const CRect& pos) const {
 	CFont *oldFont = pDC->SelectObject(&(m_pDocument->m_pagefont));
 	CRect dlBox(CPoint((int) (pos.left + 1.25*pmodulx), pos.top - 2 * pmoduly), CSize((int) (2.5*pmodulx), -pmoduly - 2));
 	pDC->Rectangle(dlBox);
@@ -199,7 +199,7 @@ void CDrawPage::DrawDeadline(CDC* pDC, const CRect& pos) {
 	pDC->SelectObject(oldFont);
 }
 
-void CDrawPage::DrawAcDeadline(CDC* pDC, const CRect& pos) {
+void CDrawPage::DrawAcDeadline(CDC* pDC, const CRect& pos) const {
 	if (m_ac_red == 0L) return;
 
 	CString sDeadlines;
@@ -304,7 +304,7 @@ void CDrawPage::DrawGrid(CDC* pDC)
 	}
 }
 
-CRect CDrawPage::GetNormalizedModuleRect(size_t module) {
+CRect CDrawPage::GetNormalizedModuleRect(size_t module) const {
 #ifdef DEBUG
 	ASSERT(0 <= module && module < (size_t)szpalt_x * szpalt_y);
 #endif
@@ -678,7 +678,7 @@ void CDrawPage::RealizeSpace(CDrawAdd* pObj)
 
 BOOL CDrawPage::FindSpace(CDrawAdd* pObj, int *px, int *py, int sx, int sy) const
 {
-	bool ret = FALSE;
+	BOOL ret = FALSE;
 	if (m_dervlvl == DERV_FIXD || m_dervlvl == DERV_PROH) return FALSE;
 
 	if (*px <= 0) *px = 1;
@@ -1275,7 +1275,7 @@ foundsizex:
 	return ok;
 } // GenEPS
 
-BOOL CDrawPage::PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) {
+BOOL CDrawPage::PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) const {
 	CStringA sOpiSeparator;
 	if (!sOpiSeparator.LoadString(IDS_OPISEPAR)) 
 		throw CManPDFExc(_T("Nie odnaleziono separatora OPI"));

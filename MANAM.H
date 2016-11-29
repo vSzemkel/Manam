@@ -160,7 +160,7 @@ public:
 	static void OpenWebBrowser(size_t service, const TCHAR* sUrl);		// otwiera przegladarke Internet Explorer i przekazuje jej sUrl
 
 	BOOL ConnecttoDB();
-	BOOL TryUpgradeImage();									// proba upgrade'u wersji programu na podstawie obrazu zapisanego w bazie
+	BOOL TryUpgradeImage() const;									// proba upgrade'u wersji programu na podstawie obrazu zapisanego w bazie
 	void InitKratyDrukarnie() ;
 	void FromIniFile();
 	void SetScale(int scale);

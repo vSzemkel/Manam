@@ -47,11 +47,11 @@ public:
 	enum { IDD = IDD_KRATCALC };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
 public:
-	virtual BOOL OnInitDialog();
+	BOOL OnInitDialog() override;
 public:
 	afx_msg void OnDeltaposSpinx(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnDeltaposSpiny(NMHDR *pNMHDR, LRESULT *pResult);

@@ -84,14 +84,15 @@ private:
 	int FindRing(CPoint p0, BOOL bOuterRing); // znajduje obwodnicê precla rozpoczynaj¹c¹ siê od p0 w kierunku E, zwraca liczbê wierzcho³ków
 
 public:
+	static void PrintPadlock(CDC* pDC, const CRect& rect);
 	static BOOL BBoxFromFile(PGENEPSARG pArg, CFile *handle, float *x1, float *y1, float *x2, float *y2);
 	static BOOL LocatePreview(CFile& fEps, unsigned long *lOffset, unsigned long *lSize); 
 	static BOOL CopyNewFile(const CString& srcPath, const CString& dstPath);
+	static BOOL EpsFromATEX(const CString& num, const CString& dstPath);
 
 	void DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, BOOL top) const;
 	void DrawDesc(CDC* pDC, const CRect& rect) const;  // vu : rysuje opis tekstowy og³oszenia
 	void DrawPadlock(CDC* pDC, const CRect& rect) const;
-	void PrintPadlock(CDC* pDC, const CRect& rect) const;
 	CString PrepareBuf(TCHAR* ch) const;
 
 	BOOL Lock();
@@ -114,10 +115,9 @@ public:
 	BOOL CheckSrcFile(PGENEPSARG pArg); 
 	BOOL RewriteEps(PGENEPSARG pArg, CFile *dest);
 	BOOL RewriteDrob(PGENEPSARG pArg, CFile *dest);
-	BOOL EpsFromATEX(const CString& num, const CString& dstPath) const;
 	CString FindZajawka(CString& root, const CString& ext) const;
 	CString EpsName(int format, BOOL copyOldEPS, BOOL modifTest = FALSE);
-	void Preview(PGENEPSARG pArg, int x, int y, int dy, int szer);
+	void Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const;
 	void SetDotM(BOOL setFlag);		// parsuje wersjê i ustawia lub cofa .m
 };
 

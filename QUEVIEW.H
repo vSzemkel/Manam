@@ -23,11 +23,11 @@ public:
 // Implementation
 protected:
 	virtual ~CQueView() ;
-	virtual	void OnDraw(CDC* pDC);		// overridden to draw this view
-	virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo);
-	virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
-	virtual	void OnInitialUpdate();		// first time after construct
-	CDrawDoc* GetDocument() { return (CDrawDoc*)m_pDocument; }
+	virtual	void OnDraw(CDC* pDC) override;		// overridden to draw this view
+	virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo) override;
+	virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) override;
+	virtual	void OnInitialUpdate() override;		// first time after construct
+	CDrawDoc* GetDocument() const { return (CDrawDoc*)m_pDocument; }
 	void DocToClient(CRect* rect);
 	void ClientToDoc(CRect* rect);
 	void ClientToDoc(CPoint* point);

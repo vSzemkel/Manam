@@ -50,8 +50,8 @@ protected: // create from serialization only
 
 // Attributes
 public:
-	inline CDrawDoc* GetDocument()	{ return (CDrawDoc*)m_pDocument; }
-	unsigned char GetPagesPrinted() { return m_pagesPrinted; }
+	inline CDrawDoc* GetDocument() const { return (CDrawDoc*)m_pDocument; }
+	unsigned char GetPagesPrinted() const { return m_pagesPrinted; }
 	void SetPageSize();
 	CRect GetInitialPosition();
 
@@ -79,21 +79,21 @@ public:
 public:
 	virtual ~CDrawView() {};
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void AssertValid() const override;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 
-	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
-	virtual void OnActivateView(BOOL bActivate, CView* pActiveView, CView* pDeactiveView);
-	virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
-	virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo);
-	virtual BOOL OnScrollBy(CSize sizeScroll, BOOL bDoScroll);
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);   
-	virtual BOOL OnCommand( WPARAM wParam, LPARAM lParam );
-	virtual BOOL IsSelected(const CObject* pDocItem) const;
+	virtual void OnDraw(CDC* pDC) override;  // overridden to draw this view
+	virtual void OnActivateView(BOOL bActivate, CView* pActiveView, CView* pDeactiveView) override;
+	virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) override;
+	virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo) override;
+	virtual BOOL OnScrollBy(CSize sizeScroll, BOOL bDoScroll) override;
+	virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
+	virtual BOOL OnCommand( WPARAM wParam, LPARAM lParam ) override;
+	virtual BOOL IsSelected(const CObject* pDocItem) const override;
 
     void OnChooseFont(CFont& m_font, BOOL IsPageFont);
-	int GetZoomFactor() { return m_zoomNum.cx; };
+	int GetZoomFactor() const { return m_zoomNum.cx; };
 	BOOL SetZoomFactor(CSize zoomNum, CSize zoomDenom);
 
 	static CLIPFORMAT m_cfDraw; // custom clipboard format

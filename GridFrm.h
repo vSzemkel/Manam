@@ -50,7 +50,7 @@ private:
 	BOOL m_bInitialized;
 	CAddListCtrl lcPubList;
 	void RefreshRow(int nRow, CDrawAdd *vAdd);
-	int FindRow(DWORD_PTR key);
+	int FindRow(DWORD_PTR key) const;
 	void Select(CDrawAdd* pObj, int i);
 	void InvalObj(CDrawAdd* pObj, int idx);
 	void InvalAll();
@@ -69,7 +69,7 @@ public:
 	static GridSortCol eLastOrder;
 // Operations
 public:
-  	CDrawDoc* GetDocument()	{ return (CDrawDoc*)m_pDocument; }
+  	CDrawDoc* GetDocument() const { return (CDrawDoc*)m_pDocument; }
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -87,8 +87,8 @@ protected:
 protected:
 	virtual ~CGridFrm() {};
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	virtual void AssertValid() const override;
+	virtual void Dump(CDumpContext& dc) const override;
 #endif
 
 	// Generated message map functions

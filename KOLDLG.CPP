@@ -2636,7 +2636,7 @@ void CGrzbDlg::OnExpandGrzbiet()
 void CGrzbDlg::OnShrinkGrzbiet()
 {	ChangeMode(FALSE);	}
 
-void CGrzbDlg::ChangeMode(BOOL isExpand) {
+void CGrzbDlg::ChangeMode(BOOL isExpand) const {
 	GetDlgItem(IDC_PODWALY)->EnableWindow(isExpand);
 	GetDlgItem(IDC_DELETEINSERT)->EnableWindow(!isExpand);
 	GetDlgItem(IDC_SEKCJA)->EnableWindow(isExpand);

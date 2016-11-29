@@ -61,7 +61,7 @@ private:
 };
 
 struct CManODPNETParm {
-	CManODPNETParm(int odptype, int direction, void* val) : m_odptype(odptype), m_direction(direction), m_value(val) {};
+	CManODPNETParm(int odptype, int direction, void* val) : m_value(val), m_odptype(odptype), m_direction(direction) {};
 
 	void* m_value;
 	int m_odptype;
@@ -70,7 +70,7 @@ struct CManODPNETParm {
 
 struct CManODPNETParms {
 	CManODPNETParms(int odptype, int direction, void* val) : CManODPNETParms({ { odptype, direction, val } }) {};
-	CManODPNETParms(const std::initializer_list<CManODPNETParm>& pl) : hasReturnValue(false), outParamsCount(0), params(pl) {};
+	CManODPNETParms(const std::initializer_list<CManODPNETParm>& pl) : outParamsCount(0), params(pl), hasReturnValue(false) {};
 
 	friend struct OdpHelper;
 	friend BOOL CManODPNET::SpacerMulti(const std::vector<int>& mak_xxArr, std::vector<CString>& arr, CManODPNETParms& ps);

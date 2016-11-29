@@ -59,25 +59,23 @@ private:
 	int m_szpalt_x, m_szpalt_y;
 	CDrawAdd* pub;
 
-	int GetQueryFlag();						//oblicza flagê warunków zamówienia co do miejsca
+	int GetQueryFlag() const;						//oblicza flagê warunków zamówienia co do miejsca
 	void SetBlokadaState();					//ustawia status kontrolki do blokady miejsca odpowiednio do flagi warunków zamówienia
-	void EnableMultiCond(BOOL flag);
+	void EnableMultiCond(BOOL flag) const;
 	void InsertRequestNoDup(CString& kiedy, CString& mut);
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CSpacerDlg)
-	public:
-	virtual BOOL DestroyWindow();
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
-
-// Implementation
 protected:
+	virtual void OnOK() override;
+	virtual void OnCancel() override;
+	virtual BOOL DestroyWindow() override;
+	virtual BOOL OnInitDialog() override;
+	virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
+	//}}AFX_VIRTUAL
 
 	// Generated message map functions
 	//{{AFX_MSG(CSpacerDlg)
-	virtual BOOL OnInitDialog();
 	afx_msg void OnLocked();
 	afx_msg void OnKratowe();
 	afx_msg void OnDealappend();
@@ -89,10 +87,8 @@ protected:
 	afx_msg void OnWsekcji();
 	afx_msg void OnPageparity();
 	afx_msg void OnPagelayout();
-	virtual void OnOK();
 	afx_msg void OnDelsel();
 	afx_msg void OnDelall();
-	virtual void OnCancel();
 	afx_msg void OnQue();
 	afx_msg void OnZDnia();
 	afx_msg void OnBnClickedOl();

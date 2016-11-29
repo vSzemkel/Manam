@@ -68,7 +68,7 @@ CDrawApp NEAR theApp;
 /////////////////////////////////////////////////////////////////////////////
 // CDrawApp construction
 
-CDrawApp::CDrawApp() : m_InternetSession(APP_NAME), activeDoc(nullptr)
+CDrawApp::CDrawApp() : activeDoc(nullptr), m_InternetSession(APP_NAME)
 {
 	BYTE i,*p = reinterpret_cast<BYTE*>(::LockResource(::LoadResource(NULL, ::FindResource(NULL, (LPCTSTR)VS_VERSION_INFO, RT_VERSION))));
 	for (i = 0, p += 36; *((WORD*) p) == 0 && i < 4; p += 2, i++); // 36 == 3*WORD + sizeof(L"VS_VERSION_INFO")
@@ -672,7 +672,7 @@ void CDrawApp::OnSendmsg()
 		m_sock.SendManamMessage(theManODPNET.m_userName + _T(": ") + dlg.m_msg, dlg.m_login, dlg.m_broadcast);
 }
 
-BOOL CDrawApp::TryUpgradeImage()
+BOOL CDrawApp::TryUpgradeImage() const
 {
 	CString cmdLine(::GetCommandLine()), sBackupImage;
 	cmdLine = cmdLine.Mid(1, cmdLine.Find(_T(".exe")) + 3);

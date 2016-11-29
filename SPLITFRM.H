@@ -28,7 +28,7 @@ public:
 // Implementation
 protected:
 	virtual ~CSplitFrame();
-	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
+	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext) override;
 
 	// Generated message map functions
 	//{{AFX_MSG(CSplitFrame)

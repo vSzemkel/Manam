@@ -50,13 +50,15 @@ private:
 	long lastSearchNrSpacer ;
 	CString lastSearchNazwa ;
 
-	void AdvanceAsidePos(CPoint& p);			// wylicza polozenie kolejnego nastepnego ogloszenia z boku
+	void AdvanceAsidePos(CPoint& p) const;			// wylicza polozenie kolejnego nastepnego ogloszenia z boku
 	float PowAdd2Mod(BOOL bQueStat) const;
 	bool MoveOpisAfterPage(CRect *rFrom, CRect *rTo) ;
 	void ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_modwol) const;
 
 public:
 	static const TCHAR* asDocTypeExt[3];
+	static int ValidKolor(TCHAR *st);
+	static void DrawPageCross(CDC* pDC) ;
 	static CString ErrMess(int cause);
 	static CString XmlReadText(IXmlReader* reader);
 
@@ -91,7 +93,6 @@ public:
 	void DrawQue(CDC* pDC, CQueView* pView);
 	void Print(CDC* pDC);
 	void PrintPage(CDrawPage* pPage, CDC* pDC);
-	void DrawPageCross(CDC* pDC) ;
 	void Add(CDrawObj* pObj);
 	void AddQue(CDrawAdd* pObj);
 	void RemoveQue(CDrawAdd* pObj);
@@ -103,10 +104,10 @@ public:
 	CDrawAdd* ObjectAtQue(const CPoint& point) const;
 	CDrawAdd* FindAddAt(int i) const; // szuka ogloszenia na pozycji i wsrod ogl - opisy sie nie numeruje
 
-	void SelectAdd(CDrawAdd* pObj, BOOL multiselect = FALSE);
+	void SelectAdd(CDrawAdd* pObj, BOOL multiselect = FALSE) const;
 
 	int ComputePageOrderNr(CDrawPage* pObj) const;				// oblicza numer porz¹dkowy strony na podstawie po³o¿enia
-	void SetPageRectFromOrd(CDrawPage* pObj, size_t iOrd);		// pozycjonuje stronê na podstawie numeru porz¹dkowego
+	void SetPageRectFromOrd(CDrawPage* pObj, size_t iOrd) const;		// pozycjonuje stronê na podstawie numeru porz¹dkowego
 	void MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt);	// przesuwa ci¹g³y blok stron w obrêbie makiety
 
 	size_t AddPage(CDrawPage* pObj);				// na koncu, zwieksza pamiec na tablice
@@ -132,14 +133,12 @@ public:
 
 	void OnExport();
 	void SetSpotKolor(UINT idx_m_spot_makiety, UINT idx_Spot_Kolor);
-	int ValidKolor(TCHAR *st) const;
 
 	void OnNumberPages();
 	void NumberPages();
 
 	void OnFileInfo();
 	void OnFileDrzewo();
-	BOOL FileInfoIsEmpty();
 	void PrintInfo(CDC* pDC, int max_n, int wspol_na_str);
 
 	void OnAdd4Pages();

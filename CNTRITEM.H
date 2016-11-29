@@ -29,9 +29,9 @@ public:
 
 // Attributes
 public:
-	CDrawDoc* GetDocument()
+	CDrawDoc* GetDocument() const
 		{ return (CDrawDoc*)COleClientItem::GetDocument(); }
-	CDrawView* GetActiveView()
+	CDrawView* GetActiveView() const
 		{ return (CDrawView*)COleClientItem::GetActiveView(); }
 
 	CDrawOleObj* m_pDrawObj;    // back pointer to OLE draw object
@@ -43,15 +43,15 @@ public:
 public:
 	~CDrawItem();
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+	void AssertValid() const override;
+	void Dump(CDumpContext& dc) const override;
 #endif
-	virtual void Serialize(CArchive& ar);
-	virtual void OnGetItemPosition(CRect& rPosition);
+	void Serialize(CArchive& ar) override;
+	void OnGetItemPosition(CRect& rPosition) override;
 
 protected:
-	virtual void OnChange(OLE_NOTIFICATION wNotification, DWORD dwParam);
-	virtual BOOL OnChangeItemPosition(const CRect& rectPos);
+	void OnChange(OLE_NOTIFICATION wNotification, DWORD dwParam) override;
+	BOOL OnChangeItemPosition(const CRect& rectPos) override;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -430,7 +430,7 @@ void CDrawAdd::Print(CDC* pDC)
 	pDC->SelectObject(pOldPen);
 }
 
-void CDrawAdd::PrintPadlock(CDC* pDC, const CRect& rect) const
+void CDrawAdd::PrintPadlock(CDC* pDC, const CRect& rect)
 {
 	auto pOldBrush = static_cast<CBrush*>(pDC->SelectStockObject(BLACK_BRUSH));
 	auto pOldPen = static_cast<CPen*>(pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->pen)));
@@ -1408,7 +1408,7 @@ BOOL CDrawAdd::BBoxFromFile(PGENEPSARG pArg, CFile *handle, float *x1, float *y1
 			if (res == n_size) handle->Seek(-len, CFile::current);      // buffer has to end with zero TCHAR to be treated as string
 			s[res] = 0;
 		} else break;// break on error or EOF
-		if((p = (char*)CManPDF::memstr(s, "%BoundingBox:", res))!=NULL && s + n_size - p >= len)    { // search for substring and get it's position
+		if((p = (char*)CManPDF::memstr(s, "%BoundingBox:", res)) != nullptr && s + n_size - p >= len)    { // search for substring and get it's position
 			bRet = sscanf_s(p+14, "%f %f %f %f", x1, y1, x2, y2) == 4; //14 == _tcslen("%BoundingBox:")+1
 			break;
 		}
@@ -1475,8 +1475,8 @@ BOOL CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR *cKolor, float *bx1, float *by
 		BOOL jestBlack = FALSE;
 		int tokcount = 0;
 		char* p = strtok(buf, CManPDF::septok);
-		while (p = strtok(NULL, CManPDF::septok)) {
-			if (strtok(p, "Black") == 0) jestBlack = TRUE;
+		while (p = strtok(nullptr, CManPDF::septok)) {
+			if (strtok(p, "Black") == nullptr) jestBlack = TRUE;
 			tokcount++;
 		}
 		*cKolor = (!jestBlack || tokcount>1) ? _T('F') : _T('B');
@@ -1597,7 +1597,8 @@ BOOL CDrawAdd::CopyNewFile(const CString& srcPath, const CString& dstPath)
 	return TRUE;
 }
 
-BOOL CDrawAdd::EpsFromATEX(const CString& num, const CString& dstPath) const {
+BOOL CDrawAdd::EpsFromATEX(const CString& num, const CString& dstPath)
+{
 	CString sAtexEPS = theApp.GetProfileString(_T("GenEPS"), _T("EpsATEX"), _T("T:\\ATEX\\EPS\\"));
 	CFileFind ff;
 	CString sAtexFile;
@@ -2019,7 +2020,8 @@ BOOL CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile *dest) {
 	return TRUE;
 } // RewriteDrob
 
-void CDrawAdd::Preview(PGENEPSARG pArg,int x,int y,int dy,int szer) {
+void CDrawAdd::Preview(PGENEPSARG pArg,int x,int y,int dy,int szer) const
+{
 	BYTE *p = (BYTE*)pArg->cBigBuf;
 	auto pRoz = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, typ_xx);
 
@@ -2048,5 +2050,4 @@ void CDrawAdd::Preview(PGENEPSARG pArg,int x,int y,int dy,int szer) {
 			*(p+ i*szer+j) = ci;      //11111111 
 		ci=(ci==c1) ? c2 : c1;
 	}
-} //Preview  
-
+} //Preview

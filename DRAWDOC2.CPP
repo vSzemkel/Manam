@@ -603,7 +603,7 @@ void CDrawDoc::OnVuCkMakietowanie()
 	if (vView) vView->Invalidate(FALSE);
 }
 
-void CDrawDoc::AdvanceAsidePos(CPoint& p)
+void CDrawDoc::AdvanceAsidePos(CPoint& p) const
 {
 	if (pszpalt_y*pmoduly - p.y > m_size.cy*vscale) {
 		p.y = -pmoduly;
