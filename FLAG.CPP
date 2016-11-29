@@ -6,7 +6,6 @@
 
 #include "stdafx.h"
 #include "flag.h"
-#include <math.h>
 
 CFlag::CFlag(const CFlag& f) {
 	size = f.size ;

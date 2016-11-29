@@ -83,13 +83,13 @@ void CGridFrm::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 		return;
 
 	m_bEventLockout = TRUE;
-	CDrawDoc* pDoc = GetDocument();
+	auto pDoc = GetDocument();
 	ASSERT(pDoc->IsKindOf(RUNTIME_CLASS(CDrawDoc)));
 
 	switch (lHint)
 	{
 	case HINT_UPDATE_WINDOW:    // redraw entire window
-		if (!pSender) SetDlgItemText(IDC_GAZETA, GetDocument()->gazeta + " " + GetDocument()->data);
+		if (!pSender) SetDlgItemText(IDC_GAZETA, pDoc->gazeta + " " + pDoc->data);
 		InvalAll(); 
 		break;
 

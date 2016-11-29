@@ -4,7 +4,6 @@
 #include "drawdoc.h"
 #include "drawvw.h"
 #include "drawopis.h"
-#include "cntritem.h"
 #include "koldlg.h"
 #include "mainfrm.h" 
 

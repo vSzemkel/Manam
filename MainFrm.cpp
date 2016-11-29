@@ -2,7 +2,6 @@
 #include "stdafx.h"
 #include "manam.h"
 #include "koldlg.h"
-#include "drawvw.h"
 #include "drawdoc.h"
 #include "mainfrm.h"
 

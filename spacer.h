@@ -1,4 +1,3 @@
-#include "afxwin.h"
 
 #pragma once
 

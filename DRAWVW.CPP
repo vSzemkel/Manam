@@ -13,7 +13,6 @@
 #include "drawtool.h"
 #include "koldlg.h"
 #include "mainfrm.h"
-#include "splitfrm.h"
 #include "genepsinfodlg.h"
 #include "ManPDF.h"
 
@@ -1756,7 +1755,6 @@ void CDrawView::OnRButtonDown(UINT nFlags, CPoint point)
 		Select(pPage, FALSE);
 		ClientToScreen(&point);
 		mmutczas.LoadMenu(IDR_MENUMUTCZAS);
-		CMenu *mpopup = mmutczas.GetSubMenu(0);
 		mmutczas.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN|TPM_RIGHTBUTTON, point.x, point.y, this);
 	} else vDoc->DerivePages(pPage);
 }

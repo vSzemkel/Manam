@@ -6,10 +6,8 @@
 #include "drawdoc.h"
 #include "drawadd.h"
 #include "drawvw.h"
-#include "drawtool.h"
 #include "mainfrm.h"
 #include "queview.h"
-#include "splitfrm.h"
 
 #define		MARGIN 		4
     

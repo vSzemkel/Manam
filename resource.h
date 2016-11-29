@@ -1,7 +1,6 @@
-//{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by Manam.rc
-//
+
+#pragma once
+
 #define IDR_MAINFRAME                   1
 #define IDR_DRAWCLTYPE                  2
 #define IDB_SIGN                        3

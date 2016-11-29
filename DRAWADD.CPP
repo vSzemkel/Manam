@@ -1021,7 +1021,7 @@ void CDrawAdd::ParseLogpage(TCHAR *op_zew, TCHAR *sekcja, TCHAR *op_sekcji, int 
 			j = 0;
 			while (ch != _T('#') && ch != TCHAR(0) && !_istdigit(ch))
 				ch = lp[++i];
-			if (ch == '#' || ch == '\0') nr_sek = 0;
+			if (ch == '#' || ch == '\0') *nr_sek = 0;
 			else {
 				nr_buf[j++] = ch;
 				ch = lp[++i];
@@ -1944,8 +1944,6 @@ BOOL CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile *dest) {
 	float scaly, x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
 	float x = (float)((posx - 1)*(pRoz->w + pRoz->sw)*mm2pkt);
 	float y = (float)((szpalt_y + 1 - posy - sizey)*(pRoz->h + pRoz->sh)*mm2pkt);
-	float gpx = (float)((sizex*(pRoz->w + pRoz->sw) - pRoz->sw)*mm2pkt);
-	float gpy = (float)((sizey*(pRoz->h + pRoz->sh) - pRoz->sh)*mm2pkt);
 
 	if (theApp.isOpiMode)
 		nazwa.Format(_T("%s%s%03i.eps"), m_pDocument->gazeta.Left(3), m_pDocument->gazeta.Mid(4,2), txtposx);

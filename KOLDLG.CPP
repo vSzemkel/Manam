@@ -3,7 +3,6 @@
 #include "stdafx.h"
 #include "manam.h"
 #include "drawdoc.h"
-#include "drawvw.h"
 #include "drawadd.h"
 #include "drawpage.h"
 #include "mainfrm.h"
