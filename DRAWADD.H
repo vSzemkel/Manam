@@ -8,7 +8,7 @@
 class CGenEpsInfoDlg;
 class CDrawPage;
 
-class CDrawAdd : public CDrawObj
+class CDrawAdd final : public CDrawObj
 {
 protected:
 	DECLARE_SERIAL(CDrawAdd);

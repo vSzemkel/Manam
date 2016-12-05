@@ -19,11 +19,8 @@
 
 class CDrawView;
 class CDrawObj;
-class CDrawAdd;
 class CDrawOpis;
 class CQueView;
-class CFlag;
-class CRozm;
 
 enum class DocType : int {						// typ wyliczeniowy rodzajów dokumentów
 	makieta, 
@@ -31,7 +28,7 @@ enum class DocType : int {						// typ wyliczeniowy rodzajów dokumentów
 	grzbiet_drukowany
 };
 
-class CDrawDoc : public COleDocument
+class CDrawDoc final : public COleDocument
 {
 protected: // create from serialization only
 	CDrawDoc();
@@ -52,7 +49,7 @@ private:
 
 	void AdvanceAsidePos(CPoint& p) const;			// wylicza polozenie kolejnego nastepnego ogloszenia z boku
 	float PowAdd2Mod(BOOL bQueStat) const;
-	bool MoveOpisAfterPage(CRect *rFrom, CRect *rTo) ;
+	bool MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo);
 	void ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_modwol) const;
 
 public:

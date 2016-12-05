@@ -40,7 +40,7 @@ public:
 	CFlag m_space_red;
 };
 
-class CDrawPage : public CDrawObj
+class CDrawPage final : public CDrawObj
 {
 protected:
 	DECLARE_SERIAL(CDrawPage);
@@ -136,7 +136,7 @@ private:
 };
 
 //CRozm
-class CRozm {
+class CRozm final {
 public:
 	CRozm();
 	CRozm(int m_w, int m_h, int m_sw,int m_sh, BYTE m_szpalt_x, BYTE m_szpalt_y, int m_typ_xx, BOOL m_scale_it);

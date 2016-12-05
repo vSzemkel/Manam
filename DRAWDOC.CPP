@@ -569,15 +569,15 @@ void CDrawDoc::RemovePage(CDrawPage* pObj)
 		ZmianaSpotow((int)m_pages.size());
 }
 
-bool CDrawDoc::MoveOpisAfterPage(CRect *rFrom, CRect *rTo)
+bool CDrawDoc::MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo)
 {
 	bool found = false;
-	CRect rFromN = *rFrom ;
+	CRect rFromN = rFrom ;
 	rFromN.NormalizeRect() ;
 	for (const auto& pObj : m_objects)
 		if (dynamic_cast<CDrawOpis*>(pObj) && rFromN.PtInRect(pObj->m_position.CenterPoint())) {
 			found = true;
-			pObj->m_position += CPoint(rTo->left - rFrom->left, rTo->top - rFrom->top);
+			pObj->m_position += CPoint(rTo.left - rFrom.left, rTo.top - rFrom.top);
 			pObj->SetDirty();
 		}
 

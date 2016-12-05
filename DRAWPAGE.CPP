@@ -865,16 +865,15 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
 
 // GN *****************************************************************************************
 void CDrawPage::BoundingBox(PGENEPSARG pArg, int *bx1, int *by1,int *bx2,int *by2) {
-	int x, y, gpx, gpy;
 	BOOL first = TRUE;
 	for (const auto& pAdd : m_adds) {
 		auto pRozAdd = m_pDocument->GetCRozm(pArg, pAdd->szpalt_x, pAdd->szpalt_y, pAdd->spad_flag ? 0 : pAdd->typ_xx);	// gdy zaznaczono spad, to montuj do kraty
 		auto pRozKraty = pAdd->typ_xx ? m_pDocument->GetCRozm(pArg, pAdd->szpalt_x, pAdd->szpalt_y,0) : pRozAdd;				// pobierz rozmiar kraty, jeœli dotychczas nie jest znany
 
-		x = (int)(pAdd->posx-1) * (pRozKraty->w+pRozKraty->sw);
-		y = (int)(pAdd->szpalt_y+1 - pAdd->posy-pAdd->sizey) * (pRozKraty->h+pRozKraty->sh);
-		gpx = (int)(pAdd->sizex * (pRozAdd->w+pRozAdd->sw) - pRozAdd->sw + 3); 
-		gpy = (int)(pAdd->sizey * (pRozAdd->h+pRozAdd->sh) - pRozAdd->sh + 3);
+		const auto x = (int)(pAdd->posx-1) * (pRozKraty->w+pRozKraty->sw);
+		const auto y = (int)(pAdd->szpalt_y+1 - pAdd->posy-pAdd->sizey) * (pRozKraty->h+pRozKraty->sh);
+		const auto gpx = (int)(pAdd->sizex * (pRozAdd->w+pRozAdd->sw) - pRozAdd->sw + 3); 
+		const auto gpy = (int)(pAdd->sizey * (pRozAdd->h+pRozAdd->sh) - pRozAdd->sh + 3);
 
 		if (first) { // liczymy w mm
 			*bx1 = x; *bx2 = x + gpx; *by1 = y; *by2 = y + gpy; first = FALSE;
@@ -1280,9 +1279,9 @@ BOOL CDrawPage::PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) co
 	if (!sOpiSeparator.LoadString(IDS_OPISEPAR)) 
 		throw CManPDFExc(_T("Nie odnaleziono separatora OPI"));
 	
-	CString sAppId(APP_NAME + theApp.m_app_version);
 	CStringA sFormBody, sFormData; /* rfc2046 */
-	CStringA sOpiLine = "--" + sOpiSeparator + "--\r\n";
+	const CString sAppId(APP_NAME + theApp.m_app_version);
+	const CStringA sOpiLine = "--" + sOpiSeparator + "--\r\n";
 	sFormData.Format("--%s\r\nContent-Disposition: form-data; name=\"", sOpiSeparator);
 	sFormBody.AppendFormat("%suser\"\r\n\r\n%s\r\n", sFormData, CStringA(theManODPNET.m_userName));
 	sFormBody.AppendFormat("%sdaydir\"\r\n\r\n%s\r\n", sFormData, CStringA(m_pDocument->dayws));

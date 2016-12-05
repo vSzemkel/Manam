@@ -2,7 +2,7 @@
 #pragma once
 
 ///////// CDrawOpis
-class CDrawOpis : public CDrawObj
+class CDrawOpis final : public CDrawObj
 {
 protected:
 	DECLARE_SERIAL(CDrawOpis);

@@ -1,12 +1,13 @@
 # Microsoft
 *.aps
-*.db
-*.suo 
-*.user 
-*.db-*
+*.db*
+*.suo
+*.user
+
 .vs/
 .vscode/
 ipch/
+
 /x64/
 /x86/
 /Manam.VC.db

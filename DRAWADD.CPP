@@ -1506,7 +1506,7 @@ dajWymiarKraty:
 	}
 	
 	// check scale
-	float scalx = 0.0, scaly = 0.0, x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
+	float x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
 	if (pArg->bIsPRN != F_PDF) {
 		int ileMat;
 		TCHAR cKolor[2];
@@ -1537,8 +1537,8 @@ dajWymiarKraty:
 		f5_errInfo += msg;
 		return FALSE;
 	}
-	scalx = (float) (((sizex * (pR->w + pR->sw) - pR->sw) * mm2pkt) / (x2 - x1));
-	scaly = (float) (((sizey * (pR->h + pR->sh) - pR->sh) * mm2pkt) / (y2 - y1)); 
+	const float scalx = (float) (((sizex * (pR->w + pR->sw) - pR->sw) * mm2pkt) / (x2 - x1));
+	const float scaly = (float) (((sizey * (pR->h + pR->sh) - pR->sh) * mm2pkt) / (y2 - y1));
 	if (fabs(scalx - 1.0)>0.1 || fabs(scaly - 1.0)>0.1) {
 		msg.Format(_T("%li inny rozmiar %.2fx%.2f, "), nreps, scalx, scaly);
 		f5_errInfo += msg;
@@ -1780,8 +1780,8 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest) {
 
 	float x = (float)((posx-1)*(pRozKraty->w+pRozKraty->sw)*mm2pkt);
 	float y = (float)((szpalt_y+1- posy-sizey)*(pRozKraty->h+pRozKraty->sh)*mm2pkt+(pArg->bSignAll ? podpisH : podpisH/2));   // miejsce gdzie sie zaczyna eps bez podpisu
-	float gpx = (float)((sizex*(pRozAdd->w+pRozAdd->sw) - pRozAdd->sw)*mm2pkt); 
-	float gpy = (float)((sizey*(pRozAdd->h+pRozAdd->sh) - pRozAdd->sh)*mm2pkt);
+	const float gpx = (float)((sizex*(pRozAdd->w+pRozAdd->sw) - pRozAdd->sw)*mm2pkt); 
+	const float gpy = (float)((sizey*(pRozAdd->h+pRozAdd->sh) - pRozAdd->sh)*mm2pkt);
 	
 	if (eps_name.Mid(1,1) != _T(":")) {
 		if (pArg->bIsPRN == 1 && pArg->bDoKorekty == 0)
@@ -1836,7 +1836,7 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest) {
 			}
 		} 
 
-		float  x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0, scaly = 0.0, scalx = 0.0;
+		float x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
 		if (!pLeftAdd->GetProdInfo(pArg, nullptr, &x1, &y1, &x2, &y2, nullptr)) {
 			::MessageBox(pArg->pDlg->m_hWnd, f5_errInfo, _T("B³¹d"), MB_ICONERROR);
 			f5_errInfo.Empty();
@@ -1850,8 +1850,8 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest) {
 			y += aSpadInfo[spad_flag].fOffY*(gpy - (y2 - y1));
 			::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", x, y);  dest->Write(s, (UINT)strlen(s));
 			// skalowanie
-			scalx = (x2 == x1 || !pRozAdd->scale_it || !aSpadInfo[spad_flag].bScaX) ? 1 : gpx / (x2 - x1);
-			scaly = (y2 == y1 || !pRozAdd->scale_it || !aSpadInfo[spad_flag].bScaY) ? 1 : gpy / (y2 - y1);
+			const float scalx = (x2 == x1 || !pRozAdd->scale_it || !aSpadInfo[spad_flag].bScaX) ? 1 : gpx / (x2 - x1);
+			const float scaly = (y2 == y1 || !pRozAdd->scale_it || !aSpadInfo[spad_flag].bScaY) ? 1 : gpy / (y2 - y1);
 			if (scalx != 1 || scaly != 1) {
 				::StringCchPrintfA(s, n_size, "%.4f %.4f scale\r\n", scalx, scaly);  dest->Write(s, (UINT)strlen(s));
 			}
