@@ -577,31 +577,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 /////////////////////////////////////////////////////////////////////////////
-// CCzekajDlg dialog
-
-class CCzekajDlg : public CDialog
-{
-// Construction
-public:
-	CCzekajDlg(CWnd* pParent = nullptr);	// standard constructor
-
-// Dialog Data
-	//{{AFX_DATA(CCzekajDlg)
-	enum { IDD = IDD_WAIT };
-		// NOTE: the ClassWizard will add data members here
-	//}}AFX_DATA
-
-// Implementation
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
-
-	// Generated message map functions
-	//{{AFX_MSG(CCzekajDlg)
-	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-};
-/////////////////////////////////////////////////////////////////////////////
 // CAddFindDlg dialog
 
 class CAddFindDlg : public CDialog

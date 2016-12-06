@@ -1686,7 +1686,7 @@ CString CDrawAdd::EpsName(int format, BOOL copyOldEPS, BOOL bModifTest) {
 			if (oldAdno > 0) // z numeru
 				oldnum.Format(_T("%ld"), oldAdno);
 			CString sFileName(oldnum.IsEmpty() ? num : oldnum);
-			CString pathtail = powtorka.Format(_T("%Y%m%d")) + _T("\\") + sFileName;
+			CString pathtail = powtorka.Format(c_ctimeDataWs) + _T("\\") + sFileName;
 			s = eps_path + pathtail;
 						
 			if (ff.FindFile(s + aExt[format])) { // znaleziono plik z powtórk¹

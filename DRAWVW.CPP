@@ -1836,7 +1836,7 @@ void CDrawView::OnPrevPdf() // single Add or Page selected
 				AfxMessageBox(theApp.activeDoc->symWydawcy == _T("-") ? _T("Brak zsy³aj¹cego") : _T("Brak materia³u"));
 				return;
 			} else
-				sUrl.Format(IDS_ARCH_URL, tEdycja.Format("%Y%m%d"), pAdd->nreps);
+				sUrl.Format(IDS_ARCH_URL, tEdycja.Format(c_ctimeDataWs), pAdd->nreps);
 		}
 	} else // powtorka jest pokazywana z katalogu docelowego
 		sUrl.Format(IDS_ARCH_URL, theApp.activeDoc->dayws, pAdd->nreps);

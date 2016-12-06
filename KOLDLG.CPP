@@ -1291,8 +1291,7 @@ void CDbDlg::DoDataExchange(CDataExchange* pDX)
 
 BOOL CDbDlg::OnInitDialog() 
 {
-	CDialog::OnInitDialog();	
-	return TRUE;  
+	return CDialog::OnInitDialog();	
 }
 
 void CDbDlg::OnDefineZone() 
@@ -1302,7 +1301,7 @@ void CDbDlg::OnDefineZone()
 
 void CDbDlg::OnOK() {
 	CDialog::OnOK();
-	m_dt = m_dtime.Format(c_ctimeData);
+	m_dt = m_dtime.Format(c_ctimeDataWs);
 }
 
 BEGIN_MESSAGE_MAP(CDbDlg, CDialog)
@@ -1577,7 +1576,7 @@ void CDBOpenDlg::OnOK()
 }
 
 void CDBOpenDlg::RefreshCombo()
-{   
+{
 	CWnd* wnOldFocus = GetFocus();
 	BOOL isON = IsDlgButtonChecked(IDC_LIB) ;
 	if (bEnableCtrls) { //aktywacja kontrolek
@@ -1738,42 +1737,7 @@ END_MESSAGE_MAP()
 
 
 /////////////////////////////////////////////////////////////////////////////
-// CCzekajDlg dialog
-
-
-CCzekajDlg::CCzekajDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CCzekajDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CCzekajDlg)
-		// NOTE: the ClassWizard will add member initialization here
-	//}}AFX_DATA_INIT
-}
-
-void CCzekajDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CCzekajDlg)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
-	//}}AFX_DATA_MAP
-}
-
-BEGIN_MESSAGE_MAP(CCzekajDlg, CDialog)
-	//{{AFX_MSG_MAP(CCzekajDlg)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-
-/////////////////////////////////////////////////////////////////////////////
-// CCzekajDlg message handlers
-BOOL CCzekajDlg::OnInitDialog()
-{           
-	CDialog::OnInitDialog();
-	PostMessage(WM_CLOSE, 0, 0) ;
-	return TRUE; 
-}
-/////////////////////////////////////////////////////////////////////////////
 // CAddFindDlg dialog
-
 
 CAddFindDlg::CAddFindDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CAddFindDlg::IDD, pParent)
@@ -2234,9 +2198,7 @@ BOOL CAccDlg::OnInitDialog()
 	m_sacc = m_wacc = m_dacc = m_alltyt = FALSE;
 	yesNext = FALSE;
 
-	CDialog::OnInitDialog();
-
-	return TRUE;  
+	return CDialog::OnInitDialog();
 }
 
 void CAccDlg::DoDataExchange(CDataExchange* pDX)
@@ -2470,7 +2432,7 @@ void CDirDaysDlg::OnCab() {
 	CTime l_odkiedy = m_odkiedy;
 	while (l_odkiedy <= m_dokiedy) {
 		if (l_odkiedy.GetDayOfWeek() == 1) continue; //w niedziele nie
-		sZip = l_odkiedy.Format("%Y%m%d");
+		sZip = l_odkiedy.Format(c_ctimeDataWs);
 		sPath = m_path + sZip + "\\";
 		_spawnlp(_P_NOWAIT, "zip", "zip", "-j", m_path + sZip, sPath + "*.eps", sPath + "*.pdf", NULL);
 		l_odkiedy += m_oneday;
@@ -2483,7 +2445,7 @@ void CDirDaysDlg::OnOK() {
 	CDialog::OnOK();
 	while (m_odkiedy <= m_dokiedy) {
 		if (m_odkiedy.GetDayOfWeek() != 1) //w niedziele nie
-			::CreateDirectory(m_path + m_odkiedy.Format("%Y%m%d"), NULL);
+			::CreateDirectory(m_path + m_odkiedy.Format(c_ctimeDataWs), NULL);
 		m_odkiedy += m_oneday;
 	}
 	::WriteProfileString(_T("GenEPS"), _T("DayDirsRoot"), m_path);	

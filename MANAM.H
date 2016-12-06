@@ -34,6 +34,7 @@ static const int MIN_VALID_ADNO	= 10'000'000;	// minimalny prawid³owy numer ADNO
 static const int MANAM_DEFAULT_PORT	= 2501; // domyœlny numer portu u¿ywany przez aplikacjê
 static const TCHAR* c_formatDaty = _T("%02d/%02d/%04d");
 static const TCHAR* c_formatCzasu = _T("%02d/%02d/%04d %02d:%02d");
+static const TCHAR* c_ctimeDataWs = _T("%Y%m%d"); // domyœlny format dla parametrów web serwisów
 static const TCHAR* c_ctimeData = _T("%d/%m/%Y");
 static const TCHAR* c_ctimeCzas = _T("%d/%m/%Y %H:%M");
 static const __time64_t ONEDAY = 86400; // liczba sekund w dobie
