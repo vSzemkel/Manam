@@ -1821,11 +1821,13 @@ void CDrawDoc::OnEpsdate() {
 	dlg.DoModal();
 }
 
-void CDrawDoc::OnPagederv() 
-{ DerivePages(NULL); }
+void CDrawDoc::OnPagederv() {
+	DerivePages(nullptr);
+}
 
-HMENU CDrawDoc::GetDefaultMenu() 
-{ return isGRB ? m_grzbietMenu.GetSafeHmenu() : NULL;	}
+HMENU CDrawDoc::GetDefaultMenu() {
+	return isGRB ? m_grzbietMenu.GetSafeHmenu() : NULL;
+}
 
 void CDrawDoc::OnInsertGrzbiet() 
 {

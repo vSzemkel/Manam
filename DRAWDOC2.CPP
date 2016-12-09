@@ -884,10 +884,10 @@ const CRozm* CDrawDoc::GetCRozm(PGENEPSARG pArg, int s_x, int s_y, int typ_xx)
 	return pR == m_Rozm.cend() ? (typ_xx ? GetCRozm(pArg, s_x, s_y, 0) : nullptr) : &*pR ;
 }
 
-BOOL CDrawDoc::DerivePages(CDrawPage *pPage)
+void CDrawDoc::DerivePages(CDrawPage *pPage)
 {
 	int nr_porz, npages = (int)m_pages.size();
-	if (!npages) return FALSE;
+	if (!npages) return;
 	if (!pPage) {
 		nr_porz = npages > 1 ? 1 : 0;
 		pPage = m_pages[nr_porz];
@@ -895,34 +895,28 @@ BOOL CDrawDoc::DerivePages(CDrawPage *pPage)
 		nr_porz = GetIPage(pPage);
 	if (theApp.isRDBMS && !this->isGRB && !this->isLIB && !this->isRO && this->SaveModified() && !pPage->dirty) {
 		CPageDerv dlg;
+		dlg.m_mak_xx = this->m_mak_xx;
 		dlg.m_idervlvl = pPage->m_dervlvl;
 		dlg.m_nr = nr_porz ? nr_porz : npages;
-		if (pPage->m_dervlvl != DERV_NONE) {
-			CManODPNETParms orapar {
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &dlg.m_drw_xx },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &dlg.m_base_nr },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &this->m_mak_xx },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &nr_porz }
-			};
-			orapar.outParamsCount = 2;
-			if (!theManODPNET.EI("begin select drw_xx,derv_nr_porz into :1,:2 from derv_info where mak_xx=:dst_mak_xx and nr_porz=:dst_nr_porz; end;", orapar)) return FALSE;
-		}
 		if (dlg.DoModal() == IDOK) {
-			if (pPage->m_dervlvl == DERV_NONE && dlg.m_idervlvl == DERV_NONE) return TRUE;
+			if (dlg.m_direction == 0) {
+				if (pPage->m_dervlvl == DERV_NONE && dlg.m_idervlvl == DERV_NONE) 
+					return;
+				if (dlg.m_idervlvl != DERV_NONE && dlg.m_idervlvl != DERV_PROH && dlg.m_idervlvl != DERV_DRUK)
+					for (int i = 0; i < dlg.m_ilekol; i++)
+						if (!(m_pages[(dlg.m_nr + i) % npages])->m_adds.empty()) {
+							AfxMessageBox(_T("Przed dziedziczeniem nale¿y zdj¹æ og³oszenia ze zmienianych stron"), MB_ICONEXCLAMATION);
+							return;
+						}
+			}
+			if (dlg.m_drw_xx == this->id_drw) {
+				AfxMessageBox(_T("Autodziedziczenie jest niedozwolone"), MB_ICONEXCLAMATION);
+				return;
+			}
 			if (dlg.m_nr == npages) dlg.m_nr = 0;
 			if (dlg.m_nr + dlg.m_ilekol - 1 > npages) {
 				AfxMessageBox(_T("Sekwencja stron dziedziczonych wychodzi poza makietê"), MB_ICONEXCLAMATION);
-				return FALSE;
-			}
-			if (dlg.m_idervlvl != DERV_NONE && dlg.m_idervlvl != DERV_PROH && dlg.m_idervlvl != DERV_DRUK)
-				for (int i = 0; i < dlg.m_ilekol; i++)
-					if (!(m_pages[(dlg.m_nr + i) % npages])->m_adds.empty()) {
-						AfxMessageBox(_T("Przed dziedziczeniem nale¿y zdj¹æ og³oszenia ze zmienianych stron"), MB_ICONEXCLAMATION);
-						return FALSE;
-					}			
-			if (dlg.m_drw_xx == this->id_drw) {
-				AfxMessageBox(_T("Autodziedziczenie jest niedozwolone"), MB_ICONEXCLAMATION);
-				return FALSE;
+				return;
 			}
 			SetModifiedFlag(FALSE);
 
@@ -934,12 +928,25 @@ BOOL CDrawDoc::DerivePages(CDrawPage *pPage)
 				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &dlg.m_idervlvl },
 				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &dlg.m_ilekol }
 			};
-			if (!theManODPNET.EI("begin derv.derive_pages(:dst_mak_xx,:dst_nr_porz,:base_drw_xx,:base_nr_porz,:dervlvl,:ile_kol); end;", orapar))
-				return FALSE;
-			theApp.FileRefresh(this);
+
+			const char* sql = "begin derv.derive_pages(:dst_mak_xx,:dst_nr_porz,:base_drw_xx,:base_nr_porz,:dervlvl,:ile_kol); end;";
+			if (dlg.m_direction == 0) {
+				theManODPNET.EI(sql, orapar);
+				theApp.FileRefresh(this);
+			} else {
+				for (int d : dlg.m_derv_add) {
+					dlg.m_drw_xx = d;
+					theManODPNET.EI(sql, orapar);
+				}
+				dlg.m_idervlvl = 0;
+				for (int d : dlg.m_derv_del) {
+					dlg.m_drw_xx = d;
+					theManODPNET.EI(sql, orapar);
+				}
+				theApp.FileRefresh(nullptr);
+			}
 		}
 	}
-	return TRUE;
 } // DerivePages
 
 int CDrawDoc::Nr2NrPorz(const TCHAR* s) const

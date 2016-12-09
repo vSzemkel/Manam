@@ -84,7 +84,7 @@ public:
 	void ArrangeQue();							// ustawie og³oszenia na rysunku kolejki
 	void MakietujStrone(CDrawPage *pPage); 		// makietowanie dla wskazanej strony
 	void AddFind(long nrAtex, long nrSpacer, LPCTSTR nazwa);	// wyszukiwanie og³oszeñ
-	BOOL DerivePages(CDrawPage *pPage);			// dziedziczenie stron
+	void DerivePages(CDrawPage *pPage);			// dziedziczenie stron
 
 	void Draw(CDC* pDC, CDrawView* pView);
 	void DrawQue(CDC* pDC, CQueView* pView);

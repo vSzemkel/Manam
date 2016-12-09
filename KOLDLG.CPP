@@ -2458,7 +2458,7 @@ CPageDerv::CPageDerv(CWnd* pParent /*=NULL*/)
 {
 	//{{AFX_DATA_INIT(CPageDerv)
 	m_ilekol = 1;
-	m_base_nr = m_nr = 0;
+	m_direction = m_base_nr = m_nr = 0;
 	//}}AFX_DATA_INIT
 }
 
@@ -2467,6 +2467,7 @@ void CPageDerv::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CPageDerv)
+	DDX_Radio(pDX, IDC_FROMPAGE ,m_direction);
 	DDX_Control(pDX, IDC_TYTMUT, m_tytmut);
 	DDX_Text(pDX, IDC_ILEKOLUMN, m_ilekol);
 	DDV_MinMaxInt(pDX, m_ilekol, 1, 255);
@@ -2480,6 +2481,7 @@ void CPageDerv::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CPageDerv, CDialog)
 	//{{AFX_MSG_MAP(CPageDerv)
 	ON_CBN_SELCHANGE(IDC_DERVLVL, OnSelchangeDervlvl)
+	ON_CONTROL_RANGE(BN_CLICKED, IDC_FROMPAGE, IDC_TOPAGE, &CPageDerv::OnDirectionChange)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -2491,30 +2493,23 @@ BOOL CPageDerv::OnInitDialog()
 	if (!theApp.isRDBMS || !CDialog::OnInitDialog()) return FALSE;
 	((CComboBox*)GetDlgItem(IDC_DERVLVL))->SetCurSel(m_idervlvl);
 
+	m_drw_xx = m_mak_xx;
+	m_base_nr = m_nr;
 	CManODPNETParms orapar {
-		{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &theApp.activeDoc->m_mak_xx },
+		{ CManODPNET::DbTypeInt32, CManODPNET::ParameterInOut, &m_drw_xx },
+		{ CManODPNET::DbTypeInt32, CManODPNET::ParameterInOut, &m_base_nr },
 		{ CManODPNET::DbTypeRefCursor, CManODPNET::ParameterOut, nullptr }
 	};
-	theManODPNET.FillCombo(&m_tytmut, "begin derv.mozliwosci_derv(:mak_xx,:retCur); end;", orapar, 0);
+	orapar.outParamsCount = 2;
+	theManODPNET.FillList(&m_tytmut, "begin derv.info(:mak_xx,:nr_porz,:retCur); end;", orapar, 0);
 
-	int selind = CB_ERR, cc = m_tytmut.GetCount();
-	if (m_drw_xx > 0) 
-		for (int i = 0; i < cc; ++i)
-			if (m_tytmut.GetItemData(i) == m_drw_xx) {
-				m_tytmut.SetCurSel(i);
-				break;
-			}
-		
-	OnSelchangeDervlvl();
+	SetDlgItemInt(IDC_BASE_NR, m_base_nr);
+	OnDirectionChange(IDC_FROMPAGE);
 	return TRUE;
 }
 
-void CPageDerv::OnOK() 
+void CPageDerv::OnOK()
 {
-	if (m_tytmut.IsWindowEnabled() && m_tytmut.GetCurSel() == CB_ERR) {
-		m_tytmut.SetFocus(); return;
-	}
-	m_idervlvl = ((CComboBox*)GetDlgItem(IDC_DERVLVL))->GetCurSel();
 	if (m_idervlvl == DERV_FIXD) {
 		UpdateData(TRUE);
 		if ((m_base_nr - m_nr) & 1) {
@@ -2522,16 +2517,53 @@ void CPageDerv::OnOK()
 			return;
 		}
 	}
+
+	if (m_direction == 0)
+		if (m_tytmut.IsWindowEnabled() && m_tytmut.GetSelCount() != 1) {
+			m_tytmut.SetFocus(); 
+			AfxMessageBox(_T("Wska¿ jedn¹ makietê"));
+			return;
+		} else {
+			m_drw_xx = int(m_tytmut.GetItemData(m_tytmut.GetCurSel()));
+			if (m_drw_xx < 0) m_drw_xx *= -1;
+		}
+
+	// zapisz w tablicach pomocniczych zmienione pozycje
+	const int cc = m_tytmut.GetCount();
+	for (int i = 0; i < cc; ++i) {
+		const int isSelected = m_tytmut.GetSel(i);
+		const int sel_drw_xx = int(m_tytmut.GetItemData(i));
+		if (isSelected && sel_drw_xx > 0) // nie by³ wczeœniej zaznaczony
+			m_derv_add.push_back(-1 * sel_drw_xx);
+		else if (!isSelected && (sel_drw_xx < 0)) // zosta³ odznaczony
+			m_derv_del.push_back(sel_drw_xx);
+	}
+
 	CDialog::OnOK();
-	m_drw_xx = (int)m_tytmut.GetItemData(m_tytmut.GetCurSel());
 }
 
-void CPageDerv::OnSelchangeDervlvl() 
+void CPageDerv::OnSelchangeDervlvl()
 {
-	int dervlvl = ((CComboBox*)GetDlgItem(IDC_DERVLVL))->GetCurSel();
-	BOOL isEnabled = (dervlvl!=0 && dervlvl!=4 && dervlvl!=5);
+	m_idervlvl = ((CComboBox*)GetDlgItem(IDC_DERVLVL))->GetCurSel();
+	const BOOL isEnabled = ((m_idervlvl != 0 || m_direction == 1) && m_idervlvl != 4 && m_idervlvl != 5);
 	GetDlgItem(IDC_TYTMUT)->EnableWindow(isEnabled);
 	GetDlgItem(IDC_BASE_NR)->EnableWindow(isEnabled);
+}
+
+void CPageDerv::OnDirectionChange(UINT mode)
+{
+	const int cc = m_tytmut.GetCount();
+	if (mode == IDC_FROMPAGE) {
+		m_direction = 0;
+		for (int i = 0; i < cc; ++i)
+			m_tytmut.SetSel(i, m_tytmut.GetItemData(i) == m_drw_xx);
+	} else {
+		m_direction = 1;
+		for (int i = 0; i < cc; ++i)
+			m_tytmut.SetSel(i, int(m_tytmut.GetItemData(i)) < 0);
+	}
+
+	OnSelchangeDervlvl();
 }
 
 /////////////////////////////////////////////////////////////////////////////

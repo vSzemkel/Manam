@@ -101,7 +101,7 @@ struct OdpHelper final {
 		}
 	}
 
-	static void __clrcall RetrieveOdpParem(CManODPNETParm *p, OracleParameter^ op) {
+	static void __clrcall RetrieveOdpParam(CManODPNETParm *p, OracleParameter^ op) {
 		switch (p->m_odptype)
 		{
 		case CManODPNET::DbTypeInt32:
@@ -144,6 +144,16 @@ struct OdpHelper final {
 		}
 	}
 
+	static void __clrcall RetrieveOutParams(OracleCommand^ cmd, CManODPNETParms& ps)
+	{
+		if (ps.outParamsCount > 0)
+			for (int i = 0; i < static_cast<int>(ps.params.size()); ++i)
+				if (ps.params[i].m_direction != CManODPNET::ParameterIn) {
+					RetrieveOdpParam(&ps.params[i], cmd->Parameters[i]);
+					if (--ps.outParamsCount == 0) break;
+				}
+	}
+
 	static void __clrcall ExecuteOpenedCommand(OracleCommand^ cmd, CManODPNETParms& ps)
 	{
 		AddParams(cmd, ps);
@@ -151,16 +161,10 @@ struct OdpHelper final {
 		if (ps.hasReturnValue) {
 			auto op = gcnew OracleParameter();
 			op->Value = cmd->ExecuteScalar();
-			RetrieveOdpParem(&ps.params[0], op);
+			RetrieveOdpParam(&ps.params[0], op);
 		} else {
 			cmd->ExecuteNonQuery();
-
-			if (ps.outParamsCount > 0)
-				for (int i = 0; i < static_cast<int>(ps.params.size()); ++i)
-					if (ps.params[i].m_direction != CManODPNET::ParameterIn) {
-						RetrieveOdpParem(&ps.params[i], cmd->Parameters[i]);
-						if (--ps.outParamsCount == 0) break;
-					}
+			RetrieveOutParams(cmd, ps);
 		}
 	}
 
@@ -1149,6 +1153,7 @@ BOOL CManODPNET::FillList(CListBox* list, LPCSTR sql, CManODPNETParms& ps, int i
 	try {
 		conn->Open();
 		auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
+		OdpHelper::RetrieveOutParams(cmd, ps);
 		while (odr->Read()) {
 			int ind = list->AddString(OdpHelper::ReadOdrString(odr, 1 - indexPos*indexPos));
 			if (indexPos >= 0) 
@@ -1619,7 +1624,7 @@ BOOL CManODPNET::SpacerMulti(const std::vector<int>& mak_xxArr, std::vector<CStr
 		cmd->ExecuteNonQuery();
 
 		for (int i = 16; i < 19; ++i)
-			OdpHelper::RetrieveOdpParem(&ps.params[i], cmd->Parameters[i]);
+			OdpHelper::RetrieveOdpParam(&ps.params[i], cmd->Parameters[i]);
 	} catch (OracleException^ oex) {
 		OdpHelper::ShowErrMsgDlg(oex->Message);
 		return FALSE;
