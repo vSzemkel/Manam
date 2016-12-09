@@ -1614,7 +1614,7 @@ subseterr:
 		pDoc->sOpiServerUrl = CString(' ', 64);
 
 		CManODPNETParms orapar {
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &pDoc->m_mak_xx },
+			{ CManODPNET::DbTypeInt32, &pDoc->m_mak_xx },
 			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &pDoc->sOpiServerUrl },
 			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &err }
 		};

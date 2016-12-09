@@ -601,15 +601,15 @@ BOOL CDrawAdd::OnOpen(CDrawView* pView)
 			CString czk = this->flags.reserv == 1 ? _T("") : this->czaskto;
 
 			CManODPNETParms orapar {
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &this->m_pub_xx },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &ik },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &nrs },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &powt },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &this->oldAdno },
-				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &this->remarks },
-				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &this->wersja },
-				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &czk },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &eok }
+				{ CManODPNET::DbTypeInt32, &this->m_pub_xx },
+				{ CManODPNET::DbTypeInt32, &ik },
+				{ CManODPNET::DbTypeInt32, &nrs },
+				{ CManODPNET::DbTypeInt32, &powt },
+				{ CManODPNET::DbTypeInt32, &this->oldAdno },
+				{ CManODPNET::DbTypeVarchar2, &this->remarks },
+				{ CManODPNET::DbTypeVarchar2, &this->wersja },
+				{ CManODPNET::DbTypeVarchar2, &czk },
+				{ CManODPNET::DbTypeInt32, &eok }
 			};
 			theManODPNET.EI("begin spacer.update_reservation(:pub_xx,:ile_kol,:nr_spotu,:powtorka,:old_adno,:uwagi,:wersja,:czaskto,:eps_present); end;", orapar);
 		} else 
@@ -1428,7 +1428,7 @@ BOOL CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR *cKolor, float *bx1, float *by
 			if (!pArg->bStatus) { // przesz³o przez EpsTest, ale nie ma ProdInfo
 				bReqProdInfo = true;
 				if (powtorka > 0) EpsName(F_EPS, FALSE);
-				CManODPNETParms orapar { CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &m_pub_xx };
+				CManODPNETParms orapar { CManODPNET::DbTypeInt32, &m_pub_xx };
 				theManODPNET.EI("begin epstest.request_prod_info(:pub_xx); end;", orapar);
 			} else
 				return true;
@@ -1657,7 +1657,7 @@ CString CDrawAdd::EpsName(int format, BOOL copyOldEPS, BOOL bModifTest) {
 		int status;
 		CManODPNETParms orapar {
 			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &status },
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &nreps }
+			{ CManODPNET::DbTypeInt32, &nreps }
 		};
 		orapar.outParamsCount = 1;
 		theManODPNET.EI("begin :cc := check_emisja_zajawki(:adno); end;", orapar);
@@ -1821,7 +1821,7 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest) {
 				CString uPodpis(_T(' '), 64);
 				CManODPNETParms orapar {
 					{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &uPodpis },
-					{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &this->m_pub_xx }
+					{ CManODPNET::DbTypeInt32, &this->m_pub_xx }
 				};
 				orapar.outParamsCount = 1;
 				theManODPNET.EI("begin :pod := pagina.podpis(:pub_xx); end;", orapar);
@@ -1863,8 +1863,8 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest) {
 			CString uTrans(_T(' '), 8);
 			CString uReklama(_T(' '), 32);
 			CManODPNETParms orapar {
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &m_pDocument->m_mak_xx },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &pPage->id_str },
+				{ CManODPNET::DbTypeInt32, &m_pDocument->m_mak_xx },
+				{ CManODPNET::DbTypeInt32, &pPage->id_str },
 				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &uTrans },
 				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &uReklama },
 				{ CManODPNET::DbTypeDouble, CManODPNET::ParameterOut, &dMargDoGrb }

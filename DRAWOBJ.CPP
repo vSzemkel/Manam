@@ -629,19 +629,3 @@ void CDrawOleObj::MoveTo(const CRect& position, CDrawView* pView)
 	if (m_pClientItem->IsInPlaceActive())
 		m_pClientItem->SetItemRects();
 }
-
-// CRozm
-CRozm::CRozm() : CRozm(468, 575, 40, 34, 5, 6, 0, 0) {
-}
-
-CRozm::CRozm(int m_w, int m_h, int m_sw,int m_sh, BYTE m_szpalt_x, BYTE m_szpalt_y, int m_typ_xx, BOOL m_scale_it)
-{
-	w = (WORD)m_w;
-	h = (WORD)m_h;
-	sw = (WORD)m_sw;
-	sh = (WORD)m_sh;
-	szpalt_x = m_szpalt_x;
-	szpalt_y = m_szpalt_y;
-	typ_xx = m_typ_xx;
-	scale_it = m_scale_it;
-}

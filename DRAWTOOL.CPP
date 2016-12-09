@@ -519,9 +519,9 @@ void CKolorTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& poin
 		if (theApp.swCZV&2 && pPage != nullptr) { // naglowki_prn
 			pPage->prn_mak_xx = (int)frame->GetCaptionDataItem(-1) + ((pPage->nr>>3)&1);
 			CManODPNETParms orapar {
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &pPage->m_pDocument->m_mak_xx },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &pPage->id_str },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &pPage->prn_mak_xx }
+				{ CManODPNET::DbTypeInt32, &pPage->m_pDocument->m_mak_xx },
+				{ CManODPNET::DbTypeInt32, &pPage->id_str },
+				{ CManODPNET::DbTypeInt32, &pPage->prn_mak_xx }
 			};
 			theManODPNET.EI("begin pagina.set_config(:mak_xx,:str_xx,:prn_mak_xx); end;", orapar);
 		} else { // nag³ówki

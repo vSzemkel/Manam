@@ -27,9 +27,8 @@ typedef struct _GENEPSARG {
 	CGenEpsInfoDlg *pDlg;
 } GENEPSARG, *PGENEPSARG;
 
-class CKrataNiebazowa final
+struct CKrataNiebazowa final
 {
-public:
 	explicit CKrataNiebazowa(int s_x, int s_y, CFlag&& space, CFlag&& locked, CFlag&& red) 
 		: m_szpalt_x(s_x), m_szpalt_y(s_y), m_space(std::move(space)), m_space_locked(std::move(locked)), m_space_red(std::move(red))
 	{};
@@ -131,15 +130,22 @@ protected:
 
 private:
 	CFlag GetReservedFlag();							// Pobiera flagê szarych modu³ów
-	CRect GetNormalizedModuleRect(size_t module) const;		// Prostok¹t ograniczaj¹cy modu³ o numerze porz¹dkowym module zakresu 0..sx*sy-1
+	CRect GetNormalizedModuleRect(size_t module) const;	// Prostok¹t ograniczaj¹cy modu³ o numerze porz¹dkowym module zakresu 0..sx*sy-1
 	static CString GenerateGUIDString();				// Konwertuje wygenerowany GIUD do stringu
 };
 
 //CRozm
-class CRozm final {
-public:
-	CRozm();
-	CRozm(int m_w, int m_h, int m_sw,int m_sh, BYTE m_szpalt_x, BYTE m_szpalt_y, int m_typ_xx, BOOL m_scale_it);
+struct CRozm final {
+	CRozm() : CRozm(468, 575, 40, 34, 5, 6, 0, 0) {}
+	CRozm(int m_w, int m_h, int m_sw, int m_sh, BYTE m_szpalt_x, BYTE m_szpalt_y, int m_typ_xx, BOOL m_scale_it) :
+		w(m_w),
+		h(m_h),
+		sw(m_sw),
+		sh(m_sh),
+		szpalt_x(m_szpalt_x),
+		szpalt_y(m_szpalt_y),
+		scale_it(m_scale_it),
+		typ_xx(m_typ_xx) {}
 	WORD w;
 	WORD h;
 	WORD sw;

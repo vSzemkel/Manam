@@ -368,8 +368,8 @@ void CDrawPage::DBChangeName(int id_drw)
 
 	CManODPNETParms orapar {
 		{ CManODPNET::DbTypeVarchar2, CManODPNET::ReturnValue, &name },
-		{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &id_drw },
-		{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &caption }
+		{ CManODPNET::DbTypeInt32, &id_drw },
+		{ CManODPNET::DbTypeVarchar2, &caption }
 	};
 	if (!theManODPNET.EI("select sciezka from strukt_drzewa where drw_xx=:drw_xx and str_log=:capt", orapar))
 		{ caption.Empty(); name.Empty(); }
@@ -460,7 +460,7 @@ BOOL CDrawPage::OnOpen(CDrawView*)
 		CString mr = m_pDocument->gazeta.Left(1) == _T("Z") ? _T("Z1") : _T("RP");
 		CManODPNETParms orapar {
 			{ CManODPNET::DbTypeVarchar2, CManODPNET::ReturnValue, &m_pDocument->docmutred },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &mr }
+			{ CManODPNET::DbTypeVarchar2, &mr }
 		};
 		theManODPNET.EI("select grb.get_mutred(:rootmut) from dual", orapar);
 	}
@@ -925,8 +925,8 @@ BOOL CDrawPage::StaleElementy(PGENEPSARG pArg, CFile *handle ) {
 	BOOL isOK = TRUE;
 	std::vector<CString> elementy;
 	CManODPNETParms orapar {
-		{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &m_pDocument->m_mak_xx },
-		{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &id_str },
+		{ CManODPNET::DbTypeInt32, &m_pDocument->m_mak_xx },
+		{ CManODPNET::DbTypeInt32, &id_str },
 		{ CManODPNET::DbTypeRefCursor, CManODPNET::ParameterOut, nullptr }
 	};
 	if (theManODPNET.FillArr(&elementy, "begin pagina.gen_ps(:mak_xx,:str_xx,:retCur); end;", orapar)) {
@@ -991,8 +991,8 @@ BOOL CDrawPage::GetDestName(PGENEPSARG pArg, CString& sNum, CString& destName)
 	if (pArg->bIsPRN) {
 		CString dbDestName = CString(' ', 20);
 		CManODPNETParms orapar {
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &m_pDocument->m_mak_xx },
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &id_str },
+			{ CManODPNET::DbTypeInt32, &m_pDocument->m_mak_xx },
+			{ CManODPNET::DbTypeInt32, &id_str },
 			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &dbDestName }
 		};
 		orapar.outParamsCount = 1;
@@ -1149,8 +1149,8 @@ try {
 							if (sBoundingBox.IsEmpty()) { // pobierz BoundingBox z formatu papieru
 								CStringW wBoundingBox(' ', 32);
 								CManODPNETParms orapar {
-									{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &m_pDocument->m_mak_xx },
-									{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &this->id_str },
+									{ CManODPNET::DbTypeInt32, &m_pDocument->m_mak_xx },
+									{ CManODPNET::DbTypeInt32, &this->id_str },
 									{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &wBoundingBox }
 								};
 								orapar.outParamsCount = 1;

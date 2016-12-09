@@ -1167,7 +1167,7 @@ void CDrawDoc::OnFileInfo() {
 
 	CInfoDlg dlg;
 	CString deadline, data_z, data_s, data_w;
-	CManODPNETParm idmPar { CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &m_mak_xx };
+	CManODPNETParm idmPar { CManODPNET::DbTypeInt32, &m_mak_xx };
 	if (isLIB) {
 		CInfoDlgLib dlg2;
 		dlg2.m_tytmut = gazeta;
@@ -1187,8 +1187,8 @@ void CDrawDoc::OnFileInfo() {
 		if (dlg2.DoModal() != IDOK) return;
 
 		CManODPNETParms orapar2 {
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &dlg2.m_szycie },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg2.m_opis },
+			{ CManODPNET::DbTypeInt32, &dlg2.m_szycie },
+			{ CManODPNET::DbTypeVarchar2, &dlg2.m_opis },
 			idmPar
 		};
 		theManODPNET.EI("update makieta_lib set szycie=decode(:1,0,null,1),opis=:2 where xx=:3", orapar2);
@@ -1262,18 +1262,18 @@ void CDrawDoc::OnFileInfo() {
 			if (oldMutGrb != dlg.m_grzbiet) {
 				CManODPNETParms orapar2 { 
 					idmPar,
-					{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_grzbiet }
+					{ CManODPNET::DbTypeVarchar2, &dlg.m_grzbiet }
 				};
 				isOK = theManODPNET.EI("begin grb.set_mutgrb_explicit(:grb_xx,:mutgrb); end;", orapar2);
 			}
 
 			CManODPNETParms orapar3 { 
 				idmPar,
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &dlg.m_szyj },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &dlg.m_drukarnie },
-				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &deadline },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &dlg.m_naklad },
-				{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &d }
+				{ CManODPNET::DbTypeInt32, &dlg.m_szyj },
+				{ CManODPNET::DbTypeInt32, &dlg.m_drukarnie },
+				{ CManODPNET::DbTypeVarchar2, &deadline },
+				{ CManODPNET::DbTypeInt32, &dlg.m_naklad },
+				{ CManODPNET::DbTypeInt32, &d }
 			};
 			if (isOK) isOK = theManODPNET.EI("begin grb.update_info(:grb_xx,:przefalc,:drukarnie,:deadline,:naklad,:gramatura); end;", orapar3);
 			
@@ -1339,23 +1339,23 @@ void CDrawDoc::OnFileInfo() {
 
 		CManODPNETParms orapar4 {
 			idmPar,
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_wydawca },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_cena },
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &dlg.m_naklad },
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &dlg.m_numerrok },
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &dlg.m_numer },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &sekretarz },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &prowadzacy1 },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_kto_makietuje },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &data_w },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &data_z },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_sign_text },
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &dlg.m_szyj },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_uwagi },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &prowadzacy2 },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_cena2 },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_wydawcared },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &data_s }
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_wydawca },
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_cena },
+			{ CManODPNET::DbTypeInt32, &dlg.m_naklad },
+			{ CManODPNET::DbTypeInt32, &dlg.m_numerrok },
+			{ CManODPNET::DbTypeInt32, &dlg.m_numer },
+			{ CManODPNET::DbTypeVarchar2, &sekretarz },
+			{ CManODPNET::DbTypeVarchar2, &prowadzacy1 },
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_kto_makietuje },
+			{ CManODPNET::DbTypeVarchar2, &data_w },
+			{ CManODPNET::DbTypeVarchar2, &data_z },
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_sign_text },
+			{ CManODPNET::DbTypeInt32, &dlg.m_szyj },
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_uwagi },
+			{ CManODPNET::DbTypeVarchar2, &prowadzacy2 },
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_cena2 },
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_wydawcared },
+			{ CManODPNET::DbTypeVarchar2, &data_s }
 		};
 
 		theManODPNET.EI("begin update_makinfo(:mak_xx,:mutwyd,:cena,:naklad,:numerrok,:numer,:sekr,:prow1,:prow2,:wykup,:zamkniecie,:podpis,:szycie,:uwagi,:kto_prowadzi,:cena2,:zsy_red,:do_studia); end;", orapar4);
@@ -1678,7 +1678,7 @@ CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, long 
 			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &typ_xx },
 			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &atex_krat },
 			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &sPrecelFlag },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, const_cast<CString*>(&roz) }
+			{ CManODPNET::DbTypeVarchar2, const_cast<CString*>(&roz) }
 		};
 		orapar.outParamsCount = 7;
 
@@ -1771,7 +1771,7 @@ CDrawAdd* CDrawDoc::PubXXExists(int pub_xx) const
 void CDrawDoc::OnSyncpow() 
 {
 	if (SaveModified()) {
-		CManODPNETParms orapar { CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &m_mak_xx };
+		CManODPNETParms orapar { CManODPNET::DbTypeInt32, &m_mak_xx };
 		theManODPNET.EI("begin derv.synchronize_kraj(:mak_xx); end;", orapar);
 		SetModifiedFlag(FALSE);
 		theApp.FileRefresh(this);
@@ -1799,7 +1799,7 @@ void CDrawDoc::OnCheckrep()
 	TCHAR* buf = theApp.bigBuf;
 	std::vector<CString> badpowt;
 	CManODPNETParms orapar {
-		{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &m_mak_xx },
+		{ CManODPNET::DbTypeInt32, &m_mak_xx },
 		{ CManODPNET::DbTypeRefCursor, CManODPNET::ParameterOut, nullptr }
 	};
 
@@ -1838,8 +1838,8 @@ void CDrawDoc::OnInsertGrzbiet()
 
 		CManODPNETParms orapar {
 			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterInOut, &m_mak_xx },
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &dlg.m_drw_xx },
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &cnt },
+			{ CManODPNET::DbTypeInt32, &dlg.m_drw_xx },
+			{ CManODPNET::DbTypeInt32, &cnt },
 			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterInOut, &mutacja }
 		};
 		orapar.outParamsCount = 2;
@@ -1874,7 +1874,7 @@ void CDrawDoc::OnInsertGrzbiet()
 void CDrawDoc::OnSyncDrv() 
 {
 	if (SaveModified()) {
-		CManODPNETParms orapar { CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &m_mak_xx };
+		CManODPNETParms orapar { CManODPNET::DbTypeInt32, &m_mak_xx };
 		theManODPNET.EI("begin derv.synchronize_derv(:mak_xx); end;", orapar);
 	}
 }
@@ -1967,8 +1967,8 @@ void CDrawDoc::OnAccGrb() {
 		if (dlg.m_ckpcdrz) mask += 16;
 
 		CManODPNETParms orapar {
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &m_mak_xx },
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &mask }
+			{ CManODPNET::DbTypeInt32, &m_mak_xx },
+			{ CManODPNET::DbTypeInt32, &mask }
 		};
 
 		theManODPNET.EI("begin wyprzedzeniowe.set_accept_flag(:grb_xx,:flag); end;", orapar);
@@ -1993,7 +1993,7 @@ float CDrawDoc::GetDrobneH()
 	if (drobneH <= 0) {
 		double dh;
 		CManODPNETParms orapar {
-			{ CManODPNET::DbTypeInt32, CManODPNET::ParameterIn, &m_mak_xx },
+			{ CManODPNET::DbTypeInt32, &m_mak_xx },
 			{ CManODPNET::DbTypeDouble, CManODPNET::ParameterOut, &dh }
 		};
 		orapar.outParamsCount = 1;

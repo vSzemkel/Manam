@@ -248,8 +248,8 @@ BOOL CDrawApp::ConnecttoDB()
 	CManODPNETParms orapar {
 		{ CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &gru_xx },
 		{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterInOut, &sClientInfo },
-		{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &mac },
-		{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &adapter }
+		{ CManODPNET::DbTypeVarchar2, &mac },
+		{ CManODPNET::DbTypeVarchar2, &adapter }
 	};
 	orapar.outParamsCount = 2;
 
@@ -275,7 +275,7 @@ BOOL CDrawApp::ConnecttoDB()
 	}
 
 	if (!errinfo.IsEmpty()) {
-		CManODPNETParms orapar2 { CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &(connDlg.m_loginname + ": " + errinfo) };
+		CManODPNETParms orapar2 { CManODPNET::DbTypeVarchar2, &(connDlg.m_loginname + ": " + errinfo) };
 		theManODPNET.EI("call dump_error(:msg)", orapar2);
 		AfxMessageBox(errinfo + _T(". Zadzwoñ do Centrum i poproœ o jego zmianê lub u¿yj opcji Makieta->Administracja->Zmiana has³a"));
 	}
@@ -482,10 +482,10 @@ void CDrawApp::OnFileNewBath()
 		if (bigBuf[0] == '#' || bigBuf[0] == '\n') continue ;
 		if (_stscanf_s(bigBuf, _T("%s\t%s\t%s\t%s"), data, 11, tytul, 5, mutacja, 5, wersja, 15) == 4) {
 			CManODPNETParms orapar {
-				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &data },
-				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &tytul },
-				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &mutacja },
-				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &wersja }
+				{ CManODPNET::DbTypeVarchar2, &data },
+				{ CManODPNET::DbTypeVarchar2, &tytul },
+				{ CManODPNET::DbTypeVarchar2, &mutacja },
+				{ CManODPNET::DbTypeVarchar2, &wersja }
 			};
 			if (theManODPNET.EI("begin space_reservation.wyprzedzeniowe.create_makieta_offline(:kiedy,:tytul,:mutacja,:wersja); end;", orapar))
 				i++;
@@ -504,7 +504,7 @@ void CDrawApp::OnPasswd()
 
 	CPassDlg dlg ;
 	if (dlg.DoModal() == IDOK) {
-		CManODPNETParms orapar { CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_newpass };
+		CManODPNETParms orapar { CManODPNET::DbTypeVarchar2, &dlg.m_newpass };
 		if (theManODPNET.EI("begin set_pass(:pass); end;", orapar))
 			AfxMessageBox(_T("Has³o zosta³o zmienione"), MB_ICONINFORMATION);
 	}
@@ -516,22 +516,22 @@ void CDrawApp::OnAccess()
 yesNext:
 	if (dlg.DoModal() == IDOK) {
 		BOOL isOK;
-		CManODPNETParm komuPar { CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_loginname };
+		CManODPNETParm komuPar { CManODPNET::DbTypeVarchar2, &dlg.m_loginname };
 		if (dlg.m_senior.IsEmpty()) {
 			CString acc = CString(dlg.m_racc ? _T("R") : _T("")) + CString(dlg.m_sacc ? _T("S") : _T("")) + (dlg.m_wacc ? _T("W") : _T("")) + (dlg.m_dacc ? _T("D") : _T("")) + (dlg.m_pacc ? _T("P") : _T("")) + (dlg.m_gacc ? _T("G") : _T("")) ;
 			if (dlg.m_alltyt) 
 				dlg.m_tytul = dlg.m_mutacja = _T("%");
 			CManODPNETParms orapar {
 				komuPar,
-				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &acc },
-				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_tytul },
-				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_mutacja }
+				{ CManODPNET::DbTypeVarchar2, &acc },
+				{ CManODPNET::DbTypeVarchar2, &dlg.m_tytul },
+				{ CManODPNET::DbTypeVarchar2, &dlg.m_mutacja }
 			};
 			isOK = theManODPNET.EI("begin spacer_grant(:komu,:co,:tytul,:mutacja); end;", orapar);
 		} else {
 			CManODPNETParms orapar {
 				komuPar,
-				{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_senior }
+				{ CManODPNET::DbTypeVarchar2, &dlg.m_senior }
 			};
 			isOK = theManODPNET.EI("begin spacer_grant_like(:komu,:czyje); end;", orapar);
 		}
@@ -548,14 +548,14 @@ void CDrawApp::OnNewuser()
 yesNext:	
 	if (dlg.DoModal() == IDOK) {
 		CManODPNETParms orapar {
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_loginname },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_login_nds },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_pass },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_grupa },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_imie },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_nazwisko },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_telefon },
-			{ CManODPNET::DbTypeVarchar2, CManODPNET::ParameterIn, &dlg.m_uwagi }
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_loginname },
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_login_nds },
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_pass },
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_grupa },
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_imie },
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_nazwisko },
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_telefon },
+			{ CManODPNET::DbTypeVarchar2, &dlg.m_uwagi }
 		};
 		if (theManODPNET.EI("begin spacer_adm.add_spacer_user(:ln,:ln_ds,:pass,:grupa,:imie,:nazw,:tel,:uwagi); end;", orapar))
 			AfxMessageBox(_T("Konto utworzone"));
