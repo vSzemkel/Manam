@@ -413,7 +413,7 @@ void CSpacerDlg::OnDelsel()
 {
 	long pub_xx;
 	int i, rc = m_emisjelist.GetCount();
-	for (i = rc - 1; i > 0; i--) //pierwsze zostaje
+	for (i = rc - 1; i > 0; i--) // pierwsze zostaje
 		if (m_emisjelist.GetSel(i)) {
 			pub_xx = (long) m_emisjelist.GetItemData(i);
 			
@@ -769,7 +769,7 @@ void CSpacerDlg::EnableMultiCond(BOOL flag) const {
 	GetDlgItem(IDC_DEALAPPEND)->EnableWindow(!flag);
 }
 
-//sprawdza, czy dla zadanej kombinacji istnieje makieta oraz czy jeszcze jej nie zmówiono
+// sprawdza, czy dla zadanej kombinacji istnieje makieta oraz czy jeszcze jej nie zamówiono
 void CSpacerDlg::InsertRequestNoDup(CString& kiedy, CString& mut) {
 	int xx;
 	CManODPNETParms orapar {
@@ -793,28 +793,29 @@ void CSpacerDlg::OnBnClickedMutacje()
 		return;
 	}
 	
-	CString mut,kiedy;
+	CString mut, kiedy;
 	EnableMultiCond(TRUE);
-	for (int i = 0; i < m_ollist.GetCount(); i++)
-		if (m_ollist.GetSel(i)) {
-			m_ollist.GetText(i, mut);
-			for (int j = 0; j < m_emisjelist.GetCount(); j++)
-				if (m_emisjelist.GetSel(j)) {
-					m_emisjelist.GetText(j, kiedy);
-					InsertRequestNoDup(kiedy.Left(10), mut);
-				}
+	auto olArr = reinterpret_cast<LPINT>(theApp.bigBuf);
+	auto olCnt = m_ollist.GetSelItems(0x40, olArr);
+	auto emArr = reinterpret_cast<LPINT>(theApp.bigBuf + 0x0100);
+	auto emCnt = m_emisjelist.GetSelItems(0x40, emArr);
+
+	for (int i = 0; i < olCnt; ++i) {
+		m_ollist.GetText(olArr[i], mut);
+		for (int j = 0; j < emCnt; ++j) {
+			m_emisjelist.GetText(emArr[j], kiedy);
+			InsertRequestNoDup(kiedy.Left(10), mut);
 		}
+	}
 }
 
 void CSpacerDlg::OnBnClickedMalaSiec()
 {
-	CString m;
-	for (const auto& s : {_T("BY"), _T("GD"), _T("KA"), _T("KR"), _T("LU"), _T("LO"), _T("PO"), _T("SZ"), _T("WR"), _T("WA")})
-		for (int i = m_ollist.GetCount() - 1; i >= 0; i--) {
-			m_ollist.GetText(i, m);
-			if (m == s) 
-				m_ollist.SetSel(i);
-		}
+	for (const auto& s : {_T("BY"), _T("GD"), _T("KA"), _T("KR"), _T("LU"), _T("LO"), _T("PO"), _T("SZ"), _T("WR"), _T("WA")}) {
+		auto found = m_ollist.FindString(0, s);
+		if (found != LB_ERR)
+			m_ollist.SetSel(found);
+	}
 
 	EnableMultiCond(TRUE);
 }

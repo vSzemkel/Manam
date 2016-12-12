@@ -704,7 +704,7 @@ void CAddDlg::OnEmisje()
 void CAddDlg::OnDelsel() {
 	if (!m_fullView || !m_emisjelist.GetSelCount()) return;
 	BOOL refresh = FALSE;
-	if (IDYES == AfxMessageBox(_T("Czy na pewno chcesz zaznaczone emisje tego og³oszenia"), MB_YESNO)) {
+	if (IDYES == AfxMessageBox(_T("Czy usun¹æ zaznaczone emisje tego og³oszenia"), MB_YESNO)) {
 		CString s;
 		int i, pub_xx, rc = m_emisjelist.GetCount();
 		CManODPNETParms orapar { CManODPNET::DbTypeInt32, &pub_xx };
@@ -723,7 +723,7 @@ void CAddDlg::OnDelsel() {
 void CAddDlg::OnDelall() 
 {
 	if (!m_fullView) return;
-	if (IDYES == AfxMessageBox(_T("Czy na pewno chcesz usun¹æ wszystkie emisje tego og³oszenia"), MB_YESNO)) {
+	if (IDYES == AfxMessageBox(_T("Czy usun¹æ wszystkie emisje tego og³oszenia"), MB_YESNO)) {
 		int add_xx = GetDlgItemInt(ID_SPACER_IDA);
 		CManODPNETParms orapar { CManODPNET::DbTypeInt32, &add_xx };
 		theManODPNET.EI("begin spacer.del_all(:xx); end;", orapar);
@@ -1539,15 +1539,15 @@ void CDBOpenDlg::OnBnClickedAllMut() {
 
 void CDBOpenDlg::OnOK()
 {
-	CString s,m;
-	if (IsDlgButtonChecked(IDC_LIB)) 
-		GetDlgItemText(IDC_WERSJE_LIB,m_dt);
-	CDialog::OnOK() ;
+	CString s, m;
+	if (IsDlgButtonChecked(IDC_LIB))
+		GetDlgItemText(IDC_WERSJE_LIB, m_dt);
+	CDialog::OnOK();
 	if (m_mutacja.IsEmpty()) m_mutacja = _T(" ");
-	if (!IsDlgButtonChecked(IDC_LIB)) 
+	if (!IsDlgButtonChecked(IDC_LIB))
 		m_dt = m_dtime.Format(c_ctimeData);
 	BOOL ignoreSel = m_date_combo.GetSelCount() == 0;
-	for (int i = 0; i < m_date_combo.GetCount(); i++) 
+	for (int i = 0; i < m_date_combo.GetCount(); i++)
 		if (ignoreSel || m_date_combo.GetSel(i)) {
 			m_date_combo.GetText(i, s);
 			s.SetAt(2, _T('-'));
@@ -1555,19 +1555,19 @@ void CDBOpenDlg::OnOK()
 			m_arrDaty.emplace_back(m_tytul + _T(" ") + m_mutacja + _T("_") + s);
 			if (IsDlgButtonChecked(IDC_MEMSTAT)) {
 				BOOL ignoreSelMut = m_mutacja_combo.GetSelCount() == 0;
-				for (int j=0; j<m_mutacja_combo.GetCount(); j++) 
+				for (int j = 0; j < m_mutacja_combo.GetCount(); j++)
 					if (ignoreSelMut || m_mutacja_combo.GetSel(j)) {
 						m_mutacja_combo.GetText(j, m);
 						m_arrDaty.emplace_back(m_tytul + _T(" ") + m + _T("_") + s);
 					}
 			}
-		}	
-	
+		}
+
 	if (m_date_combo.GetCount() == 0 && IsDlgButtonChecked(IDC_MEMSTAT)) {
 		BOOL ignoreSelMut = m_mutacja_combo.GetSelCount() == 0;
 		m_dt.SetAt(2, _T('-'));
 		m_dt.SetAt(5, _T('-'));
-		for (int j=0; j<m_mutacja_combo.GetCount(); j++) 
+		for (int j = 0; j < m_mutacja_combo.GetCount(); j++)
 			if (ignoreSelMut || m_mutacja_combo.GetSel(j)) {
 				m_mutacja_combo.GetText(j, m);
 				m_arrDaty.emplace_back(m_tytul + _T(" ") + m + _T("_") + m_dt);
@@ -2518,8 +2518,8 @@ void CPageDerv::OnOK()
 		}
 	}
 
-	if (m_direction == 0)
-		if (m_tytmut.IsWindowEnabled() && m_tytmut.GetSelCount() != 1) {
+	if (m_direction == 0 && m_tytmut.IsWindowEnabled())
+		if (m_tytmut.GetSelCount() != 1) {
 			m_tytmut.SetFocus(); 
 			AfxMessageBox(_T("Wska¿ jedn¹ makietê"));
 			return;

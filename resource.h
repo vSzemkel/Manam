@@ -2,6 +2,9 @@
 // Microsoft Visual C++ generated include file.
 // Used by Manam.rc
 //
+
+#pragma once
+
 #define IDR_MAINFRAME                   1
 #define IDR_DRAWCLTYPE                  2
 #define IDB_SIGN                        3
@@ -315,7 +318,6 @@
 #define IDC_EPS_IRF                     387
 #define IDC_EPS_UZU                     388
 #define IDC_EPS_KOK                     389
-#define IDC_MFCVSLISTBOX1               390
 #define ID_ADD_FIND                     16384
 #define ID_DRAW_OPCJE                   16385
 #define ID_FILE_PRINT_1P                16386
@@ -434,7 +436,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        373
 #define _APS_NEXT_COMMAND_VALUE         32963
-#define _APS_NEXT_CONTROL_VALUE         391
+#define _APS_NEXT_CONTROL_VALUE         390
 #define _APS_NEXT_SYMED_VALUE           143
 #endif
 #endif

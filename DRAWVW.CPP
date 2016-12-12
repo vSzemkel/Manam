@@ -1813,6 +1813,7 @@ void CDrawView::OnPrevPdf() // single Add or Page selected
 	}
 
 	CString sUrl;
+	auto doc = GetDocument();
 	if (pAdd->powtorka == 0 || pAdd->powtorka > CTime::GetCurrentTime()) { // nowe lub powtórka niearchiwalna
 		int status = pAdd->nreps;
 		CString sOrgDate = GetDocument()->data;
@@ -1822,24 +1823,21 @@ void CDrawView::OnPrevPdf() // single Add or Page selected
 			if (status < 0) { // dane z qfiltr_material lub z archiwum
 				if (status < -1)
 					AfxMessageBox(_T("Ten materia³ nie zosta³ dopuszczony do druku przez EpsTest"));
-				CString sNewDate = sOrgDate.Left(2) + sOrgDate.Mid(3, 2) + sOrgDate.Right(4);
-				if (sUrl.Find(_T('?')) < 0) {
-					sOrgDate.Format(_T("?date=%s&nreps=%li&name=%s"), sNewDate, pAdd->nreps, GetDocument()->gazeta.Left(3) + GetDocument()->gazeta.Mid(4, 2));
-					sUrl += sOrgDate;
-				}
+				if (sUrl.Find(_T('?')) < 0) 
+					sUrl.AppendFormat(_T("?date=%s&nreps=%li&name=%s"), doc->dayws, pAdd->nreps, doc->gazeta.Left(3) + doc->gazeta.Mid(4, 2));
 			}
 		} else {
 			int d, m, r;
-			_stscanf_s(theApp.activeDoc->data, c_formatDaty, &d, &m, &r);
+			_stscanf_s(doc->data, c_formatDaty, &d, &m, &r);
 			CTime tEdycja(r, m, d, 0, 0, 0);
 			if (tEdycja > CTime::GetCurrentTime()) {
-				AfxMessageBox(theApp.activeDoc->symWydawcy == _T("-") ? _T("Brak zsy³aj¹cego") : _T("Brak materia³u"));
+				AfxMessageBox(doc->symWydawcy == _T("-") ? _T("Brak zsy³aj¹cego") : _T("Brak materia³u"));
 				return;
 			} else
 				sUrl.Format(IDS_ARCH_URL, tEdycja.Format(c_ctimeDataWs), pAdd->nreps);
 		}
 	} else // powtorka jest pokazywana z katalogu docelowego
-		sUrl.Format(IDS_ARCH_URL, theApp.activeDoc->dayws, pAdd->nreps);
+		sUrl.Format(IDS_ARCH_URL, doc->dayws, pAdd->nreps);
 	
 	if (sUrl.IsEmpty())
 		AfxMessageBox(_T("Brak materia³u"));
