@@ -1445,8 +1445,9 @@ CString CDrawDoc::XmlReadText(IXmlReader* reader)
 	reader->Read(&nodeType);
 	reader->Read(&nodeType);
 	reader->GetValue(&tmp, nullptr);
+	CString ret { tmp };
 	if (nodeType == XmlNodeType_Text) reader->Read(&nodeType);
-	return CString(tmp);
+	return ret;
 }
 
 ////////////////// DB ///////////////////////////////////////////////
