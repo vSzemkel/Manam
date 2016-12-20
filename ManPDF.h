@@ -1,8 +1,8 @@
 #pragma once
 #pragma warning(disable:4786)
 
+#include "stdafx.h"
 #include "drawpage.h"
-#include <map>
 
 typedef std::map<int, int, std::less<int> > uintmap;
 

@@ -16,8 +16,6 @@
 #include "genepsinfodlg.h"
 #include "ManPDF.h"
 
-#include <winspool.h>
-
 extern CDrawApp NEAR theApp ;
 extern BOOL disableMenu ;
 extern BOOL drawErrorBoxes ;

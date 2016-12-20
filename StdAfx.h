@@ -15,17 +15,15 @@
 #include <afxole.h>         // MFC OLE 2.0 support
 #include <afxodlgs.h>       // MFC OLE 2.0 dialog support
 #include <afxcmn.h>         // MFC support for Windows Common Controls
-#include <direct.h>
-#include <time.h>
-#include <math.h>
+#include <afxinet.h>
+#include <afxsock.h>
+
 #ifndef _AFX_NO_AFXCMN_SUPPORT
 #include <afxpriv.h>
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
-#include <afxinet.h>
-#include <afxsock.h>
-#include <process.h>
-
+#include <winspool.h>
+#include <iphlpapi.h>
 #include <strsafe.h>
 #include <xmllite.h>
 
@@ -33,7 +31,6 @@
 #include <algorithm>
 #include <functional>
 #include <memory>
-#include <string>
 #include <vector>
 #include <array>
 #include <map>

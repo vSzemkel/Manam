@@ -8,7 +8,6 @@
 #include "koldlg.h"
 #include "splitfrm.h"
 #include "genepsinfodlg.h"
-#include <iphlpapi.h>
 
 #pragma once
 

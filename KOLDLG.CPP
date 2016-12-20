@@ -9,7 +9,6 @@
 #include "queview.h"
 #include "genepsinfodlg.h"
 #include "koldlg.h"
-#include <process.h>
 
 extern CDrawApp NEAR theApp ;
 
