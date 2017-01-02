@@ -70,56 +70,54 @@ void CQueView::OnDraw(CDC* pDC)
 	CDrawDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 
-	CDC dc;
-	CDC* pDrawDC = pDC;
 	CBitmap bitmap;
 	CBitmap* pOldBitmap;
 
 	// only paint the rect that needs repainting
 	CRect client;
 	pDC->GetClipBox(client);
-	CRect rect = client;
-	DocToClient(&rect);
-	//if (!pDC->IsPrinting())	{
-		// draw to offscreen bitmap for fast looking repaints
-		if (dc.CreateCompatibleDC(pDC))
+	CRect rect;
+	GetClientRect(&rect);
+
+	CDC bitmapDC;
+	auto pDrawDC = pDC;
+	// draw to offscreen bitmap for fast looking repaints
+	if (bitmapDC.CreateCompatibleDC(pDC))
+	{
+		if (bitmap.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height()))
 		{
-			if (bitmap.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height()))
-			{
-				OnPrepareDC(&dc, NULL);
-				pDrawDC = &dc;
+			OnPrepareDC(&bitmapDC, nullptr);
+			pDrawDC = &bitmapDC;
 
-				// offset origin more because bitmap is just piece of the whole drawing
-				//..,,	dc.OffsetViewportOrg(-rect.left, -rect.top);
-				dc.OffsetViewportOrg(-rect.left, -rect.top);
-				pOldBitmap = dc.SelectObject(&bitmap);
-				dc.SetBrushOrg(rect.left % 8, rect.top % 8);
+			// offset origin more because bitmap is just piece of the whole drawing
+			//..,,	dc.OffsetViewportOrg(-rect.left, -rect.top);
+			bitmapDC.OffsetViewportOrg(-rect.left, -rect.top);
+			pOldBitmap = bitmapDC.SelectObject(&bitmap);
 
-				// might as well clip to the same rectangle
-				dc.IntersectClipRect(client);
-			}
+			// might as well clip to the same rectangle
+			bitmapDC.IntersectClipRect(client);
 		}
-	//}
-    
+	}
+
 	// paint background
-    CBrush brush;
-    if (!brush.CreateStockObject(WHITE_BRUSH))
+	CBrush brush;
+	if (!brush.CreateStockObject(WHITE_BRUSH))
 		return;
-	brush.UnrealizeObject();
+
 	pDrawDC->FillRect(client, &brush);
 
 	pDoc->DrawQue(pDrawDC, this);
 
-	if (pDrawDC != pDC)	{
+	if (pDrawDC != pDC)
+	{
 		pDC->SetViewportOrg(0, 0);
-		pDC->SetWindowOrg(0,0);
+		pDC->SetWindowOrg(0, 0);
 		pDC->SetMapMode(MM_TEXT);
-		dc.SetViewportOrg(0,0);
-		dc.SetWindowOrg(0,0);
-		dc.SetMapMode(MM_TEXT);
-		pDC->BitBlt(rect.left, rect.top, rect.Width(), rect.Height(),
-			&dc, 0, 0, SRCCOPY);
-		dc.SelectObject(pOldBitmap);
+		bitmapDC.SetViewportOrg(0, 0);
+		bitmapDC.SetWindowOrg(0, 0);
+		bitmapDC.SetMapMode(MM_TEXT);
+		pDC->BitBlt(rect.left, rect.top, rect.Width(), rect.Height(), pDrawDC, 0, 0, SRCCOPY);
+		bitmapDC.SelectObject(pOldBitmap);
 	}
 }
 

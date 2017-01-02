@@ -63,17 +63,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	EnableFullScreenMode(ID_FULLSCREEN);
 	afxGlobalData.EnableAccessibilitySupport(FALSE);
 
-	/*if (theApp.ribbonStyle != 0) {
-		/*if (!m_wndRibbonBar.Create(this)) {
-			TRACE("Failed to create ribbonbar\n");
-			return -2;      // fail to create
-		}
-		InitRibbon();
-	} else {*/
-		if (!CreateManamToolBar()) {
-			TRACE("Failed to create toolbar\n");
-			return -3;      // fail to create
-		}			
+	if (!CreateManamToolBar()) {
+		TRACE("Failed to create toolbar\n");
+		return -3;      // fail to create
+	}			
     
 	if (!m_wndStatusBar.Create(this) ||	!m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT)))	{
 		TRACE("Failed to create status bar\n");

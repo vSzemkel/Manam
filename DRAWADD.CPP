@@ -1894,8 +1894,10 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest) {
 						::StringCchPrintfA(s, n_size, "%s translate 90 rotate 2 (%s) 0 %.2f 1 7 %s textKLR -90 rotate\r\n", sTrans, sReklama, x1-x2-7, f);
 					dest->Write(s, (UINT)strlen(s));
 				}
-			} else 
+			} else {
 				::MessageBox(pArg->pDlg->m_hWnd, _T("Aby uzyskaæ parê kolumn z jednego materia³u wygaœ wszystkie elementy paginy"), APP_NAME, MB_ICONINFORMATION);
+				return FALSE;
+			}
 		}
 		 
 		::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", -x1, -y1); dest->Write(s, (UINT)strlen(s));
