@@ -128,12 +128,10 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDrawView construction/destruction
 
-CDrawView::CDrawView() : m_zoomNum(theApp.m_initZoom, theApp.m_initZoom), m_zoomDenom(100 * vscale, -100 * vscale)
-{
-	m_bActive = FALSE;
-	m_pDocument = nullptr;
-	m_pagesPrinted = PRINT_DOC;
-}
+CDrawView::CDrawView() :
+	m_pagesPrinted(PRINT_DOC), m_bActive(FALSE),
+	m_zoomNum(theApp.m_initZoom, theApp.m_initZoom), m_zoomDenom(100 * vscale, -100 * vscale)
+{}
 
 int CDrawView::OnDisableMenuInt(CCmdUI* pCmdUI) {
 	/* vu: jesli zwroci 0 to ustawienie statusu odbedzie sie w funkcji wolajacej */

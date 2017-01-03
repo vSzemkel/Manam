@@ -171,7 +171,6 @@ protected:
 public:	
 	int m_mak_xx;				// ident makiety
 	int id_drw; 			// ident drzewa
-	DocType iDocType;		// typ dokumentu na podstawie eDocType
 	int iPagesInRow;		// ile stron rysyje siê w wierszu
 	BYTE ovEPS : 1 ;		// nadpisuj EPS'y przy generacji
 	BYTE isRO  : 1 ;		// otwarty tylko do odczytu
@@ -188,6 +187,7 @@ public:
 	CString daydir;			// do generowania ps z katalogów dniowych
 	CString docmutred;		// lista dopuszczalnych mutacji redakcyjnych
 	CString sOpiServerUrl;	// adres serwera OPI, do którego bêd¹ wysy³ane kolumny
+	DocType iDocType;		// typ dokumentu na podstawie eDocType
 	std::vector<UINT>		m_spot_makiety;
 
 	std::vector<CDrawObj*>  m_objects; // lista og³oszeñ i opisów nale¿¹cych do dokumentu, og³oszenia przed opisami

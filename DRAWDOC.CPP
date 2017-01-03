@@ -94,12 +94,11 @@ void CDrawDoc::OnDisableGrbNotSaved(CCmdUI* pCmdUI)
 /////////////////////////////////////////////////////////////////////////////
 // CDrawDoc construction/destruction
 
-CDrawDoc::CDrawDoc() : iDocType(DocType::makieta), data(CTime::GetCurrentTime().Format(c_ctimeData))
+CDrawDoc::CDrawDoc() : 
+	drobneH(0), m_mak_xx(-1), id_drw(-2), 
+	isRO(0), isSIG(0), isGRB(0), isLIB(0), swCZV(0), isACD(0),
+	data(CTime::GetCurrentTime().Format(c_ctimeData)), iDocType(DocType::makieta)
 {
-	m_mak_xx = -1;
-	id_drw = -2;
-	drobneH = 0;
-	isACD = isGRB = isSIG = isLIB = isRO = swCZV = FALSE ; // domyœlnie RW
 	iPagesInRow = 10 + 2 * theApp.GetProfileInt(_T("General"), _T("PagesInRow"), 0);
 // font
 	LOGFONT lf {0};

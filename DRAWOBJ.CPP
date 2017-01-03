@@ -12,13 +12,8 @@ extern CDrawApp NEAR theApp ;
 
 IMPLEMENT_SERIAL(CDrawObj, CObject, 0)
 
-CDrawObj::CDrawObj()
-{
-	info.Empty();
-	dirty = TRUE;
-	kolor = c_brak;
-	m_pDocument = nullptr;
-}
+CDrawObj::CDrawObj() : m_pDocument(nullptr), kolor(c_brak), dirty(TRUE)
+{}
 
 CDrawObj::CDrawObj(const CRect* position) : CDrawObj::CDrawObj()
 {

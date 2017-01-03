@@ -22,11 +22,11 @@ CDrawOpis::CDrawOpis(const CRect* position)	: CDrawOpis(position, _T(""))
 {
 } 
 
-CDrawOpis::CDrawOpis(const CRect* position, const TCHAR* tx) : CDrawObj(position), m_Scale(1.0f)
+CDrawOpis::CDrawOpis(const CRect* position, const TCHAR* tx) :
+	CDrawObj(position), m_opi_xx(-1), m_Scale(1.0f)
 {
 	ASSERT_VALID(this);
-	info = tx; 
-	m_opi_xx = -1;
+	info = tx;
 }
 
 void CDrawOpis::DrawInternal(CDC* pDC, CRect& rect) const

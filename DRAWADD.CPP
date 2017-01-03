@@ -40,12 +40,9 @@ const int CDrawAdd::ciMaxRings = 4;
 
 IMPLEMENT_SERIAL(CDrawAdd, CDrawObj, 0)
 
-CDrawAdd::CDrawAdd() // u¿ywany tylko przez ::Serialize
-{
-	m_pub_xx = -1;
-	dirty = nag_xx = 1;
-	precelRingCnt = precelWertexCnt = iFileId = bank.insid = 0;
-}
+CDrawAdd::CDrawAdd() : // u¿ywany tylko przez ::Serialize
+	m_pub_xx(-1), nag_xx(1), bank{0}, precelWertexCnt(0), precelRingCnt(0), iFileId(0)
+{}
 
 CDrawAdd::CDrawAdd(const CRect* position) : CDrawAdd::CDrawAdd()
 {

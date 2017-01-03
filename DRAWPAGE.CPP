@@ -14,19 +14,14 @@ extern CDrawApp NEAR theApp ;
 	
 IMPLEMENT_SERIAL(CDrawPage, CDrawObj, 0)
 
-CDrawPage::CDrawPage(const CRect* position) : CDrawObj(position), space(4), space_locked(4), space_red(4)
+CDrawPage::CDrawPage(const CRect* position) : 
+	CDrawObj(position), id_str(-1), szpalt_x(pszpalt_x), szpalt_y(pszpalt_y),
+	nr(c_normal), prn_mak_xx(0), wyd_xx(-1), m_typ_pary(0), space(4), space_locked(4), space_red(4),
+	niemakietuj(0), m_dervlvl(0), m_mutczas(1),	m_drukarnie(0),	m_deadline(CTime::GetCurrentTime()),
+	m_ac_red(0), m_ac_fot(0), m_ac_kol(0)
 {
 	ASSERT_VALID(this);
-	dirty = TRUE;
-	m_mutczas = 1;
 	kolor = c_full;
-	nr = c_normal;
-	m_drukarnie = m_dervlvl = niemakietuj = prn_mak_xx = m_typ_pary = 0;
-	id_str = wyd_xx = -1;
-	szpalt_x = pszpalt_x;
-	szpalt_y = pszpalt_y;
-	m_deadline = CTime::GetCurrentTime();
-	m_ac_red = m_ac_fot = m_ac_kol = 0;
 }
 
 CDrawPage::~CDrawPage()
