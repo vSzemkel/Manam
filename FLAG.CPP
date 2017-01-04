@@ -10,8 +10,8 @@
 CFlag::CFlag(const CFlag& f) {
 	size = f.size ;
 	if (size > CRITICAL_SIZE) {
-		flag = (uintptr_t)malloc(size) ;
-		memcpy((char*)flag, (char*)f.flag, size) ;
+		flagblob_ptr = malloc(size) ;
+		memcpy(flagblob_ptr, f.flagblob_ptr, size) ;
 	} else 
 		flag = f.flag;
 }
@@ -24,11 +24,11 @@ CFlag::CFlag(CFlag&& f) noexcept {
 }
 
 CFlag::CFlag(size_t s) {
-	while (s & 3)
-		s++;
+	if (s & (CRITICAL_SIZE-1))
+		s = (s & (UINT_MAX - CRITICAL_SIZE + 1)) + CRITICAL_SIZE;
 	size = s ;
 	if (size > CRITICAL_SIZE)
-		flag = (uintptr_t)malloc(size) ;
+		flagblob_ptr = malloc(size) ;
 	SetZero();
 }
 
@@ -36,7 +36,7 @@ CFlag::CFlag(int sx, int sy, int szpalt_x, int szpalt_y) {
 	int i = szpalt_x * szpalt_y;
 	size = DBRAW_BLOCK * ((i >> 5) + ((i & 0x1F) > 0 ? 1 : 0));
 	if (size > CRITICAL_SIZE)
-		flag = (uintptr_t)malloc(size) ;
+		flagblob_ptr = malloc(size) ;
 	SetZero();
 
 	if (size <= CRITICAL_SIZE) {
@@ -56,7 +56,6 @@ CFlag::CFlag(int sx, int sy, int szpalt_x, int szpalt_y) {
 }
 
 CFlag::CFlag(const char* raw) {
-	char *dst;
 	size_t len = strlen(raw) ;
 	if (len == 0) {
 		size = DBRAW_BLOCK;
@@ -67,13 +66,12 @@ CFlag::CFlag(const char* raw) {
 		if (size > CRITICAL_SIZE) {
 			int32_t l;
 			char buf[RAW_MOD_SIZE + 1];
-			dst = (char*)malloc(size) ;
-			flag = (uintptr_t)dst ;
+			flagblob_ptr = malloc(size) ;
+			buf[RAW_MOD_SIZE] = '\0';
 			for (size_t i = 0; DBRAW_BLOCK*i < size; i++) {
 				memcpy(buf, &raw[len - RAW_MOD_SIZE*(i + 1)], RAW_MOD_SIZE);
-				buf[RAW_MOD_SIZE] = '\0';
 				sscanf_s(buf, "%lx", &l);
-				memcpy(&dst[DBRAW_BLOCK*i], (const char*)&l, DBRAW_BLOCK);
+				memcpy((char*)flagblob_ptr + DBRAW_BLOCK*i, (const char*)&l, DBRAW_BLOCK);
 			}
 		} else sscanf_s(raw, "%Ix", &flag);
 	} else { // ci¹g binarny
@@ -85,8 +83,8 @@ CFlag::CFlag(const char* raw) {
 CFlag::CFlag(CByteArray& bArr) {
 	size = bArr.GetSize() ;
 	if (size > CRITICAL_SIZE) {
-		flag = (uintptr_t)malloc(size) ;
-		memcpy((char*)flag, bArr.GetData(), size);
+		flagblob_ptr = malloc(size) ;
+		memcpy(flagblob_ptr, bArr.GetData(), size);
 	} else {
 		flag = 0;
 		auto buf = reinterpret_cast<BYTE*>(&flag);
@@ -96,14 +94,14 @@ CFlag::CFlag(CByteArray& bArr) {
 }
 
 CFlag::~CFlag() {
-	if (size > CRITICAL_SIZE) 
-		free((char*)flag) ;
+	if (size > CRITICAL_SIZE)
+		free(flagblob_ptr);
 }
 
 uintptr_t CFlag::operator! () const noexcept { // the same as IsZero()
 	if (size > CRITICAL_SIZE) {
 		int iszero = TRUE ;
-		char *str = (char*)flag ;
+		char *str = (char*)flagblob_ptr;
 		for (size_t i = 0; i < size; i++)
 			iszero &= !str[i] ;
 		return iszero ;
@@ -114,7 +112,7 @@ uintptr_t CFlag::operator! () const noexcept { // the same as IsZero()
 const CFlag& CFlag::operator= (const CFlag& f) {
 	SetSize(f.size);
 	if (size > CRITICAL_SIZE)
-		memcpy((char*)flag, (char*)f.flag, size);
+		memcpy(flagblob_ptr, f.flagblob_ptr, size);
 	else
 		flag = f.flag;
 
@@ -124,7 +122,7 @@ const CFlag& CFlag::operator= (const CFlag& f) {
 const CFlag& CFlag::operator= (CFlag&& f) noexcept {
 	if (this != &f) {
 		if (size > CRITICAL_SIZE) 
-			free((char*)flag);
+			free(flagblob_ptr);
 		size = f.size;
 		flag = f.flag;
 		if (f.size > CRITICAL_SIZE)
@@ -138,10 +136,10 @@ CFlag CFlag::operator& (const CFlag& f) const noexcept {
 	if (size != f.size) return *this;
 	CFlag ret(size) ;
 	if (size > CRITICAL_SIZE) {
-		auto src1 = (int32_t*)flag;
-		auto src2 = (int32_t*)f.flag;
-		auto dst  = (int32_t*)ret.flag;
-		size_t blocks = size >> 2;
+		auto src1 = (uintptr_t*)flag;
+		auto src2 = (uintptr_t*)f.flag;
+		auto dst  = (uintptr_t*)ret.flag;
+		size_t blocks = size / CRITICAL_SIZE;
 		for (size_t i = 0; i < blocks; ++i)
 			dst[i] = src1[i] & src2[i] ;
 	} else 
@@ -154,10 +152,10 @@ CFlag CFlag::operator| (const CFlag& f) const noexcept {
 	if (size != f.size) return *this;
 	CFlag ret(size) ;
 	if (size > CRITICAL_SIZE) {
-		auto src1 = (int32_t*)flag;
-		auto src2 = (int32_t*)f.flag;
-		auto dst  = (int32_t*)ret.flag;
-		size_t blocks = size >> 2;
+		auto src1 = (uintptr_t*)flag;
+		auto src2 = (uintptr_t*)f.flag;
+		auto dst  = (uintptr_t*)ret.flag;
+		size_t blocks = size / CRITICAL_SIZE;
 		for (size_t i = 0; i < blocks; ++i)
 			dst[i] = src1[i] | src2[i] ;
 	} else 
@@ -170,10 +168,10 @@ CFlag CFlag::operator^ (const CFlag& f) const noexcept {
 	if (size != f.size) return *this;
 	CFlag ret(size) ;
 	if (size > CRITICAL_SIZE) {
-		auto src1 = (int32_t*)flag;
-		auto src2 = (int32_t*)f.flag;
-		auto dst  = (int32_t*)ret.flag;
-		size_t blocks = size >> 2;
+		auto src1 = (uintptr_t*)flag;
+		auto src2 = (uintptr_t*)f.flag;
+		auto dst  = (uintptr_t*)ret.flag;
+		size_t blocks = size / CRITICAL_SIZE;
 		for (size_t i = 0; i < blocks; ++i)
 			dst[i] = src1[i] ^ src2[i] ;
 	} else 
@@ -182,11 +180,12 @@ CFlag CFlag::operator^ (const CFlag& f) const noexcept {
 	return ret ;
 }
 
-CFlag CFlag::Invert() noexcept {
+CFlag& CFlag::Invert() noexcept {
 	if (size > CRITICAL_SIZE) {
 		auto src = (char*)flag;
-		for (size_t i = 0; i < size; ++i)
-			src[i] ^= 0xff ;
+		size_t blocks = size / CRITICAL_SIZE;
+		for (size_t i = 0; i < blocks; ++i)
+			src[i] ^= static_cast<intptr_t>(-1);
 	} else 
 		flag ^= static_cast<intptr_t>(-1);
 
@@ -196,9 +195,9 @@ CFlag CFlag::Invert() noexcept {
 void CFlag::operator|= (const CFlag& f) noexcept {
 	if (size != f.size) return;
 	if (size > CRITICAL_SIZE) {
-		auto src = (int32_t*)f.flag;
-		auto dst  = (int32_t*)flag;
-		size_t blocks = size >> 2;
+		auto src = (uintptr_t*)f.flag;
+		auto dst = (uintptr_t*)flag;
+		size_t blocks = size / CRITICAL_SIZE;
 		for (size_t i = 0; i < blocks; ++i)
 			dst[i] |= src[i];
 	} else 
@@ -207,45 +206,49 @@ void CFlag::operator|= (const CFlag& f) noexcept {
 
 void CFlag::operator|= (uintptr_t mask) noexcept {
 	if (size > CRITICAL_SIZE) {
-		uintptr_t *pflag = (uintptr_t*)flag ;
-		*pflag |= mask ;
+		auto dst = (uintptr_t*)flag;
+		size_t blocks = size / CRITICAL_SIZE;
+		for (size_t i = 0; i < blocks; ++i)
+			dst[i] |= mask;
 	} else 
 		flag |= mask ;
 }
 
 uintptr_t CFlag::operator& (uintptr_t mask) const noexcept {
 	if (size > CRITICAL_SIZE) {
-		uintptr_t *pflag = (uintptr_t*)flag ;
-		return *pflag & mask ;
+		auto dst = (uintptr_t*)flag;
+		return dst[0] & mask;
 	} return flag & mask ;
+}
+
+void CFlag::operator&= (uintptr_t mask) noexcept {
+	if (size > CRITICAL_SIZE) {
+		auto dst = (uintptr_t*)flag;
+		size_t blocks = size / CRITICAL_SIZE;
+		for (size_t i = 0; i < blocks; ++i)
+			dst[i] &= mask;
+	} else 
+		flag &= mask ;
 }
 
 void CFlag::operator&= (const CFlag& f) noexcept {
 	if (size != f.size) return;
 	if (size > CRITICAL_SIZE) {
-		auto src = (int32_t*)f.flag;
-		auto dst  = (int32_t*)flag;
-		size_t blocks = size >> 2;
+		auto src = (uintptr_t*)f.flag;
+		auto dst  = (uintptr_t*)flag;
+		size_t blocks = size / CRITICAL_SIZE;
 		for (size_t i = 0; i < blocks; ++i)
 			dst[i] &= src[i];
 	} else 
 		flag &= f.flag;
 }
 
-void CFlag::operator&= (uintptr_t mask) noexcept {
-	if (size > CRITICAL_SIZE) {
-		uintptr_t *pflag = (uintptr_t*)flag ;
-		*pflag &= mask ;
-	} else 
-		flag &= mask ;
-}
-
 void CFlag::operator^= (const CFlag& f) noexcept {
 	if (size != f.size) return;
 	if (size > CRITICAL_SIZE) {
-		auto src = (int32_t*)f.flag;
-		auto dst  = (int32_t*)flag;
-		size_t blocks = size >> 2;
+		auto src = (uintptr_t*)f.flag;
+		auto dst = (uintptr_t*)flag;
+		size_t blocks = size / CRITICAL_SIZE;
 		for (size_t i = 0; i < blocks; ++i)
 			dst[i] ^= src[i] ;
 	} else 
@@ -254,8 +257,10 @@ void CFlag::operator^= (const CFlag& f) noexcept {
 
 void CFlag::operator^= (uintptr_t mask) noexcept {
 	if (size > CRITICAL_SIZE) {
-		uintptr_t *pflag = (uintptr_t*)flag ;
-		*pflag &= mask;
+		auto dst = (uintptr_t*)flag;
+		size_t blocks = size / CRITICAL_SIZE;
+		for (size_t i = 0; i < blocks; ++i)
+			dst[i] ^= mask;
 	} else 
 		flag ^= mask;
 }
@@ -294,7 +299,7 @@ CFlag CFlag::operator<< (size_t shift) const noexcept {
 	return ret ;
 }
 
-CFlag CFlag::operator>>= (size_t shift) noexcept {
+CFlag& CFlag::operator>>= (size_t shift) noexcept {
 	if (size > CRITICAL_SIZE) {
 		if (shift >= 8 * size) SetZero();
 		else {
@@ -310,7 +315,7 @@ CFlag CFlag::operator>>= (size_t shift) noexcept {
 	return *this ;
 }
 
-CFlag CFlag::operator<<= (size_t shift) noexcept {
+CFlag& CFlag::operator<<= (size_t shift) noexcept {
 	if (size > CRITICAL_SIZE) {
 		if (shift >= 8 * size) SetZero();
 		else {
@@ -341,20 +346,20 @@ uintptr_t CFlag::operator&& (const CFlag& f) const noexcept {
 int CFlag::operator== (const CFlag& f) const noexcept {
 	if (size != f.size) return 0;
 	if (size > CRITICAL_SIZE) {
-		return !memcmp((char*)flag, (char*)f.flag, size) ;
+		return !memcmp(flagblob_ptr, f.flagblob_ptr, size) ;
 	} return flag == f.flag ;
 }
 
 int CFlag::operator!= (const CFlag& f) const noexcept {
 	if (size != f.size) return 1;
 	if (size > CRITICAL_SIZE) {
-		return memcmp((char*)flag, (char*)f.flag, size) ;
+		return memcmp(flagblob_ptr, f.flagblob_ptr, size) ;
 	} return flag != f.flag ;
 }
 
 void CFlag::SetZero() noexcept {
 	if (size > CRITICAL_SIZE) 
-		memset((char*)flag, 0, size);
+		memset(flagblob_ptr, 0, size);
 	else 
 		flag = 0;
 }
@@ -362,19 +367,21 @@ void CFlag::SetZero() noexcept {
 bool CFlag::IsZero() const noexcept {
 	if (size > CRITICAL_SIZE) {
 		bool iszero = true ;
-		char *str = (char*)flag ;
-		for (size_t i = 0; i < size; i++)
-			iszero &= !str[i] ;
+		auto src = (uintptr_t*)flag;
+		size_t blocks = size / CRITICAL_SIZE;
+		for (size_t i = 0; i < blocks; ++i)
+			iszero &= !src[i] ;
 		return iszero ;
 	} return flag == 0 ;
 }
 
 bool CFlag::IsSet() const noexcept {
 	if (size > CRITICAL_SIZE) {
-		bool iszero = true ;
-		char *str = (char*)flag ;
-		for (size_t i = 0; i < size; i++)
-			iszero &= !str[i] ;
+		bool iszero = true;
+		auto src = (uintptr_t*)flag;
+		size_t blocks = size / CRITICAL_SIZE;
+		for (size_t i = 0; i < blocks; ++i)
+			iszero &= !src[i];
 		return !iszero ;
 	} return flag != 0 ;
 }
@@ -385,8 +392,8 @@ size_t CFlag::GetSize() const noexcept {
 
 void CFlag::SetSize(size_t s) {
 	if (size != s) {
-		if (size > CRITICAL_SIZE) free((char*)flag) ;
-		if (s > CRITICAL_SIZE) flag = (uintptr_t)malloc(s) ;
+		if (size > CRITICAL_SIZE) free(flagblob_ptr) ;
+		if (s > CRITICAL_SIZE) flagblob_ptr = malloc(s) ;
 		size = s;
 	}
 }
@@ -469,5 +476,5 @@ CString CFlag::ToRaw() const {
 }
 
 char* CFlag::GetRawFlag() const noexcept {
-	return size > CRITICAL_SIZE ? (char*)flag : (char*)&flag;
+	return size > CRITICAL_SIZE ? (char*)flagblob_ptr : (char*)&flag;
 }

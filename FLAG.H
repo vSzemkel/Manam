@@ -23,29 +23,29 @@ class CFlag final {
 		~CFlag();
 		const CFlag& operator= (const CFlag& f) ;
 		const CFlag& operator= (CFlag&& f) noexcept;		// move assignment
-		int operator== (const CFlag& f) const noexcept;
-		int operator!= (const CFlag& f) const noexcept;
+		CFlag& operator>>=(size_t shift) noexcept;
+		CFlag& operator<<=(size_t shift) noexcept;
+		CFlag  operator>> (size_t shift) const noexcept;
+		CFlag  operator<< (size_t shift) const noexcept;
+		CFlag operator| (const CFlag& f) const noexcept;
+		CFlag operator& (const CFlag& f) const noexcept;
+		CFlag  operator^ (const CFlag& f) const noexcept;
 		uintptr_t operator|| (const CFlag& f) const noexcept;
 		uintptr_t operator&& (const CFlag& f) const noexcept;
-		CFlag operator| (const CFlag& f) const noexcept;
+		uintptr_t operator& (uintptr_t mask) const noexcept;
+		uintptr_t operator! () const noexcept;
 		void operator|= (const CFlag& f) noexcept;
 		void operator|= (uintptr_t mask) noexcept;
-		CFlag operator& (const CFlag& f) const noexcept;
-		uintptr_t operator& (uintptr_t mask) const noexcept;
-		void operator&= (const CFlag& f) noexcept;
-		void operator&= (uintptr_t mask) noexcept;
-		CFlag operator^ (const CFlag& f) const noexcept;
-		void operator^= (const CFlag& f) noexcept;
-		void operator^= (uintptr_t mask) noexcept;
-		CFlag operator>> (size_t shift) const noexcept;
-		CFlag operator<< (size_t shift) const noexcept;
-		CFlag operator>>=(size_t shift) noexcept;
-		CFlag operator<<=(size_t shift) noexcept;
-		uintptr_t operator! () const noexcept;
+		void   operator&= (const CFlag& f) noexcept;
+		void   operator&= (uintptr_t mask) noexcept;
+		void   operator^= (const CFlag& f) noexcept;
+		void   operator^= (uintptr_t mask) noexcept;
+		int operator== (const CFlag& f) const noexcept;
+		int operator!= (const CFlag& f) const noexcept;
 		bool   IsZero() const noexcept;
 		bool   IsSet() const noexcept;
 		size_t GetSize() const noexcept;
-		CFlag  Invert() noexcept;
+		CFlag& Invert() noexcept;
 		void   SetZero() noexcept;
 		void   Reverse(size_t len) noexcept;
 		void   CopyFlag(CByteArray *bArr);
@@ -66,5 +66,8 @@ class CFlag final {
 		static const size_t CRITICAL_SIZE = sizeof(uintptr_t);		// do ilu bajtów operacje na fladze mo¿na robiæ wprost na rejestrach
 
 		size_t size ;												// flag size in bytes
-		uintptr_t flag ;											// if (size > CRITICAL_SIZE) uintptr_t->char*
+		union {
+			uintptr_t flag ;										// if (size > CRITICAL_SIZE) uintptr_t->char*
+			void*     flagblob_ptr;									// ASSERT(size % CRITICAL_SIZE == 0)
+		};
 };
