@@ -33,24 +33,22 @@ CFlag::CFlag(size_t s) {
 }
 
 CFlag::CFlag(int sx, int sy, int szpalt_x, int szpalt_y) {
+	ASSERT(0 <= sx && sx <= szpalt_x && 0 <= sy && sy <= szpalt_y);
 	int i = szpalt_x * szpalt_y;
 	size = DBRAW_BLOCK * ((i >> 5) + ((i & 0x1F) > 0 ? 1 : 0));
 	if (size > CRITICAL_SIZE)
 		flagblob_ptr = malloc(size) ;
-	SetZero();
 
+	SetZero();
 	if (size <= CRITICAL_SIZE) {
-		if (sx) flag = 1;
-		for (i = 1; i < sx; i++)
-			flag = (flag << 1) + 1;
-		uintptr_t tmp = flag;
-		for (i = 1; i < sy; i++)
+		uintptr_t tmp = (1 << sx) - 1;
+		for (i = 0; i < sy; ++i)
 			flag = (flag << szpalt_x) + tmp;
 	} else {
-		for (i = 0; i < sx; i++)
+		for (i = 0; i < sx; ++i)
 			SetBit(i);
 		CFlag tmp(*this);
-		for (i = 1; i < sy; i++)
+		for (i = 1; i < sy; ++i)
 			*this = (*this << szpalt_x) | tmp;
 	}
 }
@@ -101,9 +99,10 @@ CFlag::~CFlag() {
 uintptr_t CFlag::operator! () const noexcept { // the same as IsZero()
 	if (size > CRITICAL_SIZE) {
 		int iszero = TRUE ;
-		char *str = (char*)flagblob_ptr;
-		for (size_t i = 0; i < size; i++)
-			iszero &= !str[i] ;
+		auto src = (uintptr_t*)flag;
+		size_t blocks = size / CRITICAL_SIZE;
+		for (size_t i = 0; i < blocks; ++i)
+			iszero &= !src[i] ;
 		return iszero ;
 	} else 
 		return !flag ;
@@ -182,7 +181,7 @@ CFlag CFlag::operator^ (const CFlag& f) const noexcept {
 
 CFlag& CFlag::Invert() noexcept {
 	if (size > CRITICAL_SIZE) {
-		auto src = (char*)flag;
+		auto src = (uintptr_t*)flag;
 		size_t blocks = size / CRITICAL_SIZE;
 		for (size_t i = 0; i < blocks; ++i)
 			src[i] ^= static_cast<intptr_t>(-1);
