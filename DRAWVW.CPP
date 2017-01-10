@@ -1,12 +1,10 @@
 
 #include "stdafx.h"
 #include "manam.h"
-
 #include "drawdoc.h"
 #include "drawpage.h"
 #include "drawadd.h"
 #include "drawopis.h"
-#include "cntritem.h"
 #include "drawvw.h"
 #include "gridfrm.h"
 #include "queview.h"
@@ -45,7 +43,6 @@ BEGIN_MESSAGE_MAP(CDrawView, CScrollView)
 	ON_WM_SETFOCUS()
 	ON_WM_SETCURSOR()
 	ON_WM_ERASEBKGND()
-	ON_COMMAND(ID_OLE_INSERT_NEW, OnInsertObject)
 	ON_COMMAND(ID_CANCEL_EDIT, OnCancelEdit)
 	ON_COMMAND_RANGE(ID_DRAW_ADD, ID_DRAW_SPACELOCKED, OnDrawTool)
 	ON_UPDATE_COMMAND_UI(ID_DRAW_ADD, OnUpdateDrawAdd)
@@ -68,8 +65,6 @@ BEGIN_MESSAGE_MAP(CDrawView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_CUT, OnUpdateEditCut)
 	ON_COMMAND(ID_EDIT_PASTE, OnEditPaste)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_PASTE, OnUpdateEditPaste)
-	ON_COMMAND(ID_VIEW_SHOWOBJECTS, OnViewShowObjects)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_SHOWOBJECTS, OnUpdateViewShowObjects)
 	ON_COMMAND(ID_EDIT_PROPERTIES, OnEditProperties)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_PROPERTIES, OnUpdateEditProperties)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_SELECT_ALL, OnUpdateEditSelectAll)
@@ -290,14 +285,6 @@ void CDrawView::OnUpdate(CView* , LPARAM lHint, CObject* pHint)
 		}
 		break;
 
-	case HINT_UPDATE_OLE_ITEMS: {
-		CDrawDoc* pDoc = GetDocument();
-		for (const auto& pObj : pDoc->m_objects) 
-			if (pObj->IsKindOf(RUNTIME_CLASS(CDrawOleObj)))
-				InvalObj(pObj);
-		break;
-	}
-
 	case HINT_DELETE_FROM_GRID: // nie dla nas tylko dla gridu
 	case HINT_UPDATE_GRID:  
 	case HINT_EDIT_PASTE: // an entire selection has changed
@@ -433,60 +420,7 @@ void CDrawView::SetPageSize()
 
 BOOL CDrawView::IsSelected(const CObject* pDocItem) const
 {
-	auto pDrawObj = (CDrawObj*)pDocItem;
-	if (pDocItem->IsKindOf(RUNTIME_CLASS(CDrawItem)))
-		pDrawObj = ((CDrawItem*)pDocItem)->m_pDrawObj;
-	return m_selection.Find(pDrawObj) != NULL;
-}
-
-void CDrawView::OnInsertObject()
-{
-	// Invoke the standard Insert Object dialog box to obtain information
-	//  for new CDrawItem object.
-	COleInsertDialog dlg;
-	if (dlg.DoModal() != IDOK)
-		return;
-
-	BeginWaitCursor();
-
-	// First create the C++ object
-	const CRect& r = GetInitialPosition() ;
-	CDrawOleObj* pObj = new CDrawOleObj(&r);
-	ASSERT_VALID(pObj);
-	CDrawItem* pItem = new CDrawItem(GetDocument(), pObj);
-	ASSERT_VALID(pItem);
-	pObj->m_pClientItem = pItem;
-
-	// Now create the OLE object/item
-	TRY
-	{
-		if (!dlg.CreateItem(pObj->m_pClientItem))
-			AfxThrowMemoryException();
-
-		// add the object to the document
-		GetDocument()->Add(pObj);
-
-		// try to get initial presentation data
-		pItem->UpdateLink();
-		pItem->UpdateExtent();
-
-		// if insert new object -- initially show the object
-		if (dlg.GetSelectionType() == COleInsertDialog::createNewItem)
-			pItem->DoVerb(OLEIVERB_SHOW, this);
-	}
-	CATCH_ALL(e)
-	{
-		// clean up item
-		pItem->Delete();
-		pObj->m_pClientItem = NULL;
-		GetDocument()->Remove(pObj);
-		pObj->Remove();
-
-		AfxMessageBox(IDP_FAILED_TO_CREATE);
-	}
-	END_CATCH_ALL
-
-	EndWaitCursor();
+	return m_selection.Find(const_cast<CObject*>(pDocItem)) != NULL;
 }
 
 // The following command handler provides the standard keyboard
@@ -976,98 +910,24 @@ void CDrawView::OnEditCopy()
 	m_selection.Serialize(ar);
 	ar.Close();
 
-	COleDataSource* pDataSource = NULL;
-	CDrawOleObj* pDrawOle = (CDrawOleObj*)m_selection.GetHead();
-	TRY
-	{
-		pDataSource = new COleDataSource;
-		// put on local format instead of or in addation to
-		pDataSource->CacheGlobalData(m_cfDraw, file.Detach());
-
-		// if only one item and it is a COleClientItem then also
-		// paste in that format
-		if (m_selection.GetCount() == 1 &&
-			pDrawOle->IsKindOf(RUNTIME_CLASS(CDrawOleObj)))
-		{
-			pDrawOle->m_pClientItem->GetClipboardData(pDataSource, FALSE);
-		}
-		pDataSource->SetClipboard();
-	}
-	CATCH_ALL(e)
-	{
-		delete pDataSource;
-		THROW_LAST();
-	}
-	END_CATCH_ALL
+	auto pDataSource = new COleDataSource;
+	// put on local format instead of or in addation to
+	pDataSource->CacheGlobalData(m_cfDraw, file.Detach());
+	pDataSource->SetClipboard();
 }
 
-void CDrawView::PasteNative(COleDataObject& dataObject)
+void CDrawView::Paste(COleDataObject& dataObject)
 {
 	// get file refering to clipboard data
 	std::unique_ptr<CFile> pFile(dataObject.GetFileData(m_cfDraw));
-	if (pFile == nullptr)
+	if (pFile.get() == nullptr)
 		return;
 
 	// connect the file to the archive
 	CArchive ar(pFile.get(), CArchive::load);
-	TRY
-	{
-		ar.m_pDocument = GetDocument(); // set back-pointer in archive
-
-		// read the selection
-		m_selection.Serialize(ar);
-	}
-	CATCH_ALL(e)
-	{
-		ar.Close();
-		THROW_LAST();
-	}
-	END_CATCH_ALL
-
+	ar.m_pDocument = GetDocument(); // set back-pointer in archive
+	m_selection.Serialize(ar);
 	ar.Close();
-}
-
-void CDrawView::PasteEmbedded(COleDataObject& dataObject)
-{
-	BeginWaitCursor();
-
-	// paste embedded
-	const CRect& r = GetInitialPosition() ;
-	CDrawOleObj* pObj = new CDrawOleObj(&r);
-	ASSERT_VALID(pObj);
-	CDrawItem* pItem = new CDrawItem(GetDocument(), pObj);
-	ASSERT_VALID(pItem);
-	pObj->m_pClientItem = pItem;
-
-	TRY
-	{
-		if (!pItem->CreateFromData(&dataObject) &&
-			!pItem->CreateStaticFromData(&dataObject))
-		{
-			AfxThrowMemoryException();	// any exception will do
-		}
-
-		// add the object to the document
-		GetDocument()->Add(pObj);
-		m_selection.AddTail(pObj);
-
-		// try to get initial presentation data
-		pItem->UpdateLink();
-		pItem->UpdateExtent();
-	}
-	CATCH_ALL(e)
-	{
-		// clean up item
-		pItem->Delete();
-		pObj->m_pClientItem = NULL;
-		GetDocument()->Remove(pObj);
-		pObj->Remove();
-
-		AfxMessageBox(IDP_FAILED_TO_CREATE);
-	}
-	END_CATCH_ALL
-
-	EndWaitCursor();
 }
 
 void CDrawView::OnUpdateEditCopy(CCmdUI* pCmdUI)
@@ -1096,27 +956,30 @@ void CDrawView::OnEditPaste()
 	m_selection.RemoveAll();
 	BOOL to_tell = FALSE;
 	if (dataObject.IsDataAvailable(m_cfDraw)) {
-		PasteNative(dataObject);
+		Paste(dataObject);
 		// now add all items : m_selection to document
+		std::vector<CDrawObj*> pasted;
 		while (m_selection.GetCount() > 0) {
 			auto pObj = reinterpret_cast<CDrawObj*>(m_selection.RemoveHead());
 			if (dynamic_cast<CDrawPage*>(pObj))
 				GetDocument()->AddPage(reinterpret_cast<CDrawPage*>(pObj));
 			else if (dynamic_cast<CDrawOpis*>(pObj)) {
-				auto vOpi = reinterpret_cast<CDrawOpis*>(pObj);
-				vOpi->m_position += CSize(15 * vscale, -15 * vscale);
-				GetDocument()->Add(vOpi);
+				auto pOpi = reinterpret_cast<CDrawOpis*>(pObj);
+				pOpi->m_position += CSize(15 * vscale, -15 * vscale);
+				GetDocument()->Add(pOpi);
 			} else if (dynamic_cast<CDrawAdd*>(pObj)) {
 					to_tell = TRUE;
 					AfxMessageBox(_T("Aby nie dopuœciæ do powtórek, sklonowane og³oszenie nie bêdzie mia³o numeru"));
-					auto vAdd = reinterpret_cast<CDrawAdd*>(pObj);
-					vAdd->nreps = -1L;
-					GetDocument()->Add(vAdd);
+					auto pAdd = reinterpret_cast<CDrawAdd*>(pObj);
+					pAdd->nreps = -1L;
+					GetDocument()->Add(pAdd);
 			}
+			pasted.push_back(pObj);
 			pObj->Invalidate();
 		}
-	} else
-		PasteEmbedded(dataObject);
+		for (const auto& pObj : pasted)
+			this->Select(pObj, TRUE);
+	}
 
 	GetDocument()->SetModifiedFlag();
 
@@ -1267,17 +1130,6 @@ void CDrawView::OnFilePrintPreview()
 {
 	m_pagesPrinted = PRINT_DOC ;
 	AFXPrintPreview (this);
-}
-
-void CDrawView::OnViewShowObjects()
-{
-	CDrawOleObj::c_bShowItems = !CDrawOleObj::c_bShowItems;
-	GetDocument()->UpdateAllViews(NULL, HINT_UPDATE_OLE_ITEMS, NULL);
-}
-
-void CDrawView::OnUpdateViewShowObjects(CCmdUI* pCmdUI)
-{
-	if (!OnDisableMenuInt(pCmdUI)) pCmdUI->SetCheck(CDrawOleObj::c_bShowItems);
 }
 
 void CDrawView::OnEditProperties()

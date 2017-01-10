@@ -73,29 +73,3 @@ public:
 	void AssertValid();
 #endif
 };
-
-class CDrawItem;    // COleClientItem derived class
-
-class CDrawOleObj : public CDrawObj
-{
-protected:
-	DECLARE_SERIAL(CDrawOleObj);
-	CDrawOleObj();
-
-public:
-	CDrawOleObj(const CRect* position);
-	virtual ~CDrawOleObj();
-
-// Implementation
-public:
-	virtual void Serialize(CArchive& ar) override;
-	virtual void Draw(CDC* pDC) override;
-	virtual CDrawObj* Clone(CDrawDoc* pDoc) const override;
-	virtual BOOL OnOpen(CDrawView* pView) override;
-	virtual void MoveTo(const CRect& positon, CDrawView* pView = nullptr) override;
-
-	static BOOL c_bShowItems;
-
-	CDrawItem* m_pClientItem;
-	CSize m_extent; // current extent is tracked separate from scaled position
-};

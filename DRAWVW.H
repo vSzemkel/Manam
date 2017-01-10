@@ -71,8 +71,7 @@ public:
 	void InvalObj(CDrawObj* pObj);	
 	void Remove(CDrawObj* pObj);  
 	  
-	void PasteNative(COleDataObject& dataObject);
-	void PasteEmbedded(COleDataObject& dataObject);
+	void Paste(COleDataObject& dataObject);
 
 	void CheckPrintEps(BOOL isprint);	//GN
 // Implementation
@@ -97,7 +96,6 @@ public:
 	BOOL SetZoomFactor(CSize zoomNum, CSize zoomDenom);
 
 	static CLIPFORMAT m_cfDraw; // custom clipboard format
-
 	CObList m_selection;
 	BOOL m_bActive; // is the view active?
 
@@ -137,7 +135,6 @@ protected:
 	afx_msg void OnUpdateEditCopy(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateEditCut(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateEditPaste(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewShowObjects(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateEditProperties(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateEditSelectAll(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateDrawMakStrony(CCmdUI* pCmdUI); 
@@ -155,7 +152,6 @@ protected:
 	afx_msg void OnUpdateViewStudio(CCmdUI* pCmdUI);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
-	afx_msg void OnInsertObject();
 	afx_msg void OnCancelEdit();
 	afx_msg void OnDrawTool(UINT tool);
 	afx_msg void OnViewZoomN(UINT nID);
@@ -170,7 +166,6 @@ protected:
 	afx_msg void OnEditCopy();
 	afx_msg void OnEditCut();
 	afx_msg void OnEditPaste();
-	afx_msg void OnViewShowObjects();
 	afx_msg void OnEditProperties();
 	afx_msg void OnDestroy();
 	afx_msg void OnViewZoomCustom();

@@ -58,9 +58,6 @@
     <ClCompile Include="ManPDF.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="CNTRITEM.CPP">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="Spacer.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -76,9 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AtexKrat.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="CNTRITEM.H">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="DRAWADD.H">

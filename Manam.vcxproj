@@ -253,7 +253,6 @@
   <ItemGroup>
     <ClCompile Include="AddListCtrl.cpp" />
     <ClCompile Include="AtexKrat.cpp" />
-    <ClCompile Include="CNTRITEM.CPP" />
     <ClCompile Include="DRAWADD.CPP" />
     <ClCompile Include="DRAWDOC.CPP" />
     <ClCompile Include="DRAWDOC2.CPP" />
@@ -289,7 +288,6 @@
   <ItemGroup>
     <ClInclude Include="AddListCtrl.h" />
     <ClInclude Include="AtexKrat.h" />
-    <ClInclude Include="CNTRITEM.H" />
     <ClInclude Include="DRAWADD.H" />
     <ClInclude Include="DRAWDOC.H" />
     <ClInclude Include="DRAWOBJ.H" />
