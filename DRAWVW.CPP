@@ -950,42 +950,37 @@ void CDrawView::OnEditPaste()
 {
 	COleDataObject dataObject;
 	dataObject.AttachClipboard();
+	if (!dataObject.IsDataAvailable(m_cfDraw))
+		return;
 
 	// invalidate current selection since it will be deselected
 	OnUpdate(NULL, HINT_UPDATE_SELECTION, NULL);
 	m_selection.RemoveAll();
-	BOOL to_tell = FALSE;
-	if (dataObject.IsDataAvailable(m_cfDraw)) {
-		Paste(dataObject);
-		// now add all items : m_selection to document
-		std::vector<CDrawObj*> pasted;
-		while (m_selection.GetCount() > 0) {
-			auto pObj = reinterpret_cast<CDrawObj*>(m_selection.RemoveHead());
-			if (dynamic_cast<CDrawPage*>(pObj))
-				GetDocument()->AddPage(reinterpret_cast<CDrawPage*>(pObj));
-			else if (dynamic_cast<CDrawOpis*>(pObj)) {
-				auto pOpi = reinterpret_cast<CDrawOpis*>(pObj);
-				pOpi->m_position += CSize(15 * vscale, -15 * vscale);
-				GetDocument()->Add(pOpi);
-			} else if (dynamic_cast<CDrawAdd*>(pObj)) {
-					to_tell = TRUE;
-					AfxMessageBox(_T("Aby nie dopuœciæ do powtórek, sklonowane og³oszenie nie bêdzie mia³o numeru"));
-					auto pAdd = reinterpret_cast<CDrawAdd*>(pObj);
-					pAdd->nreps = -1L;
-					GetDocument()->Add(pAdd);
-			}
-			pasted.push_back(pObj);
-			pObj->Invalidate();
+	// deserialize objects from clipboard into m_selection
+	Paste(dataObject);
+	// add all items : m_selection to document
+	bool newAds = false;
+	for (POSITION pos = m_selection.GetHeadPosition(); pos != NULL; /* GetNext */) {
+		auto pObj = reinterpret_cast<CDrawObj*>(m_selection.GetNext(pos));
+		if (dynamic_cast<CDrawPage*>(pObj))
+			GetDocument()->AddPage(reinterpret_cast<CDrawPage*>(pObj));
+		else if (dynamic_cast<CDrawOpis*>(pObj)) {
+			auto pOpi = reinterpret_cast<CDrawOpis*>(pObj);
+			pOpi->m_position += CSize(15 * vscale, -15 * vscale);
+			GetDocument()->Add(pOpi);
+		} else if (dynamic_cast<CDrawAdd*>(pObj)) {
+				newAds = true;
+				AfxMessageBox(_T("Aby nie dopuœciæ do powtórek, sklonowane og³oszenie nie bêdzie mia³o numeru"));
+				auto pAdd = reinterpret_cast<CDrawAdd*>(pObj);
+				pAdd->nreps = -1L;
+				GetDocument()->Add(pAdd);
 		}
-		for (const auto& pObj : pasted)
-			this->Select(pObj, TRUE);
+		pObj->Invalidate();
 	}
-
-	GetDocument()->SetModifiedFlag();
 
 	// invalidate new pasted stuff
 	GetDocument()->UpdateAllViews(this);
-	if (to_tell)
+	if (newAds)
 		GetDocument()->UpdateAllViews(this, HINT_EDIT_PASTE, NULL); // dla gridu by dodac
 }
 

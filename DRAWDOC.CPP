@@ -533,6 +533,7 @@ size_t CDrawDoc::AddPage(CDrawPage* pObj)
 	if (!(++iNewOrd & 3))
 		ZmianaSpotow((int)iNewOrd);
 	NumberPages() ;
+	SetModifiedFlag();
 	return iNewOrd;
 }
 
