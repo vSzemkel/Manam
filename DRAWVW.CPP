@@ -960,7 +960,8 @@ void CDrawView::OnEditPaste()
 	Paste(dataObject);
 	// add all items : m_selection to document
 	bool newAds = false;
-	for (POSITION pos = m_selection.GetHeadPosition(); pos != NULL; /* GetNext */) {
+	auto pos = m_selection.GetHeadPosition();
+	while (pos != NULL) {
 		auto pObj = reinterpret_cast<CDrawObj*>(m_selection.GetNext(pos));
 		if (dynamic_cast<CDrawPage*>(pObj))
 			GetDocument()->AddPage(reinterpret_cast<CDrawPage*>(pObj));
@@ -1258,14 +1259,13 @@ void CDrawView::OnViewZoomCustom()
 
 void CDrawView::OnDrawMakStrony()
 {
-	POSITION pos = m_selection.GetHeadPosition() ;
-	//na liscie m_selection jest dokladnie jedna strona - OnUpdateDrawMakStrony
-	CDrawDoc *vDoc = GetDocument() ;
-	//przemakietuj ogloszenia na zaznaczonej stronie
-	vDoc->MakietujStrone((CDrawPage*)m_selection.GetNext(pos));
-	//ustaw z boku te, ktorych sie nie zmakietowalo automatycznie
-	vDoc->AsideAdds() ;
-	vDoc->UpdateAllViews(NULL);
+	// na liscie m_selection jest dokladnie jedna strona - OnUpdateDrawMakStrony
+	auto pDoc = GetDocument() ;
+	// przemakietuj ogloszenia na zaznaczonej stronie
+	pDoc->MakietujStrone(reinterpret_cast<CDrawPage*>(m_selection.GetHead()));
+	// ustaw z boku te, ktorych sie nie zmakietowalo automatycznie
+	pDoc->AsideAdds() ;
+	pDoc->UpdateAllViews(NULL);
 }
 
 void CDrawView::OnUpdateDrawMakStrony(CCmdUI* pCmdUI)
