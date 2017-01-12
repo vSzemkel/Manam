@@ -741,7 +741,7 @@ void CDrawView::OnEditSelectAll()
 
 void CDrawView::OnUpdateEditSelectAll(CCmdUI* pCmdUI)
 {
-	if (!OnDisableMenuInt(pCmdUI)) pCmdUI->Enable(GetDocument()->m_objects.size() != 0);
+	if (!OnDisableMenuInt(pCmdUI)) pCmdUI->Enable(!GetDocument()->m_objects.empty());
 }
 
 void CDrawView::OnEditClear()
@@ -1371,7 +1371,7 @@ void CDrawView::CheckPrintEps(BOOL isprint) {
 	CPrnEpsDlg d;
 	auto pDoc = GetDocument();
 
-	if (!pDoc->m_pages.size()) return;
+	if (pDoc->m_pages.empty()) return;
 
 	theManODPNET.LoadMakietaDirs(pDoc->m_mak_xx);
 
@@ -1442,7 +1442,7 @@ subseterr:
 			return;
 	}
 
-	if (!pDoc->m_Rozm.size())
+	if (pDoc->m_Rozm.empty())
 		pDoc->IniRozm();
 	if (isprint && !pDoc->SaveModified()) return;
 
@@ -1515,7 +1515,7 @@ subseterr:
 		if (wyborStron.GetBit(i) > 0) {
 			pPage = pDoc->m_pages[i];
 			int dl = pPage->m_dervlvl;
-			if (dl == DERV_FIXD || dl == DERV_PROH || (d.m_exclude_emptypages && pPage->m_adds.size()==0 && pPage->name.Find(_T("DROB"))==-1))
+			if (dl == DERV_FIXD || dl == DERV_PROH || (d.m_exclude_emptypages && pPage->m_adds.empty() && pPage->name.Find(_T("DROB"))==-1))
 				continue;
 
 			if (isprint) { // generate

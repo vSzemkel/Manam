@@ -201,8 +201,8 @@ void CDrawDoc::Serialize(CArchive& ar) {
 		ar<<symWydawcy;
 		//serializacja spotow
 		ar << (WORD)m_spot_makiety.size();
-		for (i=0 ;i<m_spot_makiety.size();i++)
-			ar << (UINT)m_spot_makiety[i];
+		for (const auto sp : m_spot_makiety)
+			ar << sp;
 		ar << (WORD)m_pages.size();
 		for (const auto& pPage : m_pages) {
 			pPage->CleanKraty(FALSE);
@@ -231,7 +231,7 @@ void CDrawDoc::Serialize(CArchive& ar) {
 		// serializacja spotow
 		ar >> wTemp; m_spot_makiety.resize(wTemp);
 		DWORD tm;
-		for (i = 0; i < m_spot_makiety.size(); i++) {
+		for (i = 0; i < wTemp; ++i) {
 			ar >> tm; m_spot_makiety[i] = (UINT)tm;
 		}
 		// serializacja stron
@@ -1687,7 +1687,7 @@ CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, long 
 
 		if (!szpalt_x) {
 			if (krt[0]) { // informacja o kracie z ATEXa
-				if (!m_Rozm.size()) IniRozm();
+				if (m_Rozm.empty()) IniRozm();
 				CAtexKrat krat(krt, this);
 				if (krat.isValid && !krat.Compute(&sx, &sy, &szpalt_x, &szpalt_y)) {
 					AfxMessageBox(krat.isToSmall ? _T("Og³oszenie ") + nazwa + _T(": ") + roz + _T(" jest za ma³e do automatycznego dopasowania kraty") : _T("Nie uda³o siê dopasowaæ kraty og³oszenia: ") + roz, MB_OK);
@@ -1699,7 +1699,7 @@ CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, long 
 			}
 		} else { // modelid zdefiniowany w s³owniku TYP_OGLOSZENIA
 			if (atex_krat == 1 && krt[0]) {
-				if (!m_Rozm.size()) IniRozm();
+				if (m_Rozm.empty()) IniRozm();
 				CAtexKrat krat(krt, this);
 				if (krat.isValid) {
 					int _sx, _sy, _szpalt_x, _szpalt_y;
@@ -1806,7 +1806,7 @@ void CDrawDoc::OnCheckrep()
 
 	if (!theManODPNET.FillArr(&badpowt, "begin check_repeats(:mak_xx,:retCur); end;", orapar)) return;
 
-	CString head(badpowt.size() ? "Nie ma wczeœniejszych emisji dla:\n\n" : "Nie stwierdzono b³êdnych powtórek");
+	CString head(badpowt.empty() ? "Nie stwierdzono b³êdnych powtórek" : "Nie ma wczeœniejszych emisji dla:\n\n");
 	::StringCchCopy(buf, n_size, head);
 	buf += head.GetLength();
 	for (const auto& err : badpowt) {
