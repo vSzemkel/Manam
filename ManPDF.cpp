@@ -1,7 +1,7 @@
 // ManPDF.cpp : implementation file
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "manam.h"
 #include "ManPDF.h"
 #include "drawdoc.h"
@@ -42,7 +42,7 @@ CManPDF::~CManPDF() {}
 
 // rozszerza mo¿liwoœci funkcji strtok o wydzielanie tokenów PDF nierozdzielonych od siebie
 char* CManPDF::pdftok(char *str) {
-	if (str)  //wywo³anie, które nie jest kontynuacj¹
+	if (str)  // wywo³anie, które nie jest kontynuacj¹
 		cNextPdfToken[0] = '\0';
 	if (cNextPdfToken[0]) {// rozpocznij analizê fragmentu tokeny wczeœniej zwróconego przez strtok
 		char buf[256];
@@ -575,28 +575,25 @@ BOOL CManPDF::EmbedPDF(CFile &src, unsigned int objNr, CDrawAdd &pAdd) {
 } //EmbedPDF
 
 BOOL CManPDF::GenProlog() {
+	CStringA mbs;
 	CString cs, fname;
 	if (!cs.LoadString(IDS_INITVUPDF)) 
 		throw CManPDFExc(_T("GenProlog: nie odnaleziono prologu"));
 TRY {
-	trg.Write(cs, cs.GetLength());
+	mbs = cs;
+	trg.Write(mbs, mbs.GetLength());
 	cs = trg.GetFilePath();
 	for (int i = 0; i < cs.GetLength(); i++)
 		fname += (cs[i] == '\\' ? "\\\\" : cs.Mid(i, 1));
-	DWORD len = n_size;
-	if (!::GetUserName(theApp.bigBuf, &len))
-		throw CManPDFExc(_T("GenProlog: u¿ytkownik nie jest zalogowany"));
-	theApp.bigBuf[len - 1] = '@';
-	len = n_size;
-	cs.Format(_T("/Creator (%s)\n/CreationDate (D:%s)\n/Title (%s)\n"), theApp.bigBuf, CTime::GetCurrentTime().Format("%Y%m%d%H%M%S"), fname);
+	cs.Format(_T("/Creator (%s)\n/CreationDate (D:%s)\n/Title (%s)\n"), static_cast<const TCHAR*>(theManODPNET.m_userName), static_cast<const TCHAR*>(CTime::GetCurrentTime().Format("%Y%m%d%H%M%S")), static_cast<const TCHAR*>(fname));
 
-	char* mbs = CStringA(cs).GetBuffer();
-	trg.Write(mbs, (UINT)strlen(mbs));
+	mbs = cs;
+	trg.Write(mbs, mbs.GetLength());
 
 	if (!cs.LoadString(IDS_INITVUPDF2)) 
 		throw CManPDFExc(_T("GenProlog: nie odnaleziono prologu cz. 2"));
-	mbs = CStringA(cs).GetBuffer();
-	trg.Write(mbs, (UINT)strlen(mbs));
+	mbs = cs;
+	trg.Write(mbs, mbs.GetLength());
 } CATCH(CFileException, e) {
 	e->GetErrorMessage(theApp.bigBuf, DLGMSG_MAX_LEN);
 	e->Delete();
@@ -696,7 +693,7 @@ try {
 	for (i = pocz; i < kon; i++) {
 		pAdd = page->m_adds[i - pocz];
 		BOOL copyEps = theApp.GetProfileInt(_T("GenEPS"), _T("CopyOldEPS"), 0);
-		fname = pAdd->EpsName(NULL, F_PDF, copyEps);
+		fname = pAdd->EpsName(F_PDF, FALSE);
 		filePath.emplace_back(fname);
 		if (fname.Mid(1, 1) != _T(":")) {
 			embAlias.emplace_back("");
