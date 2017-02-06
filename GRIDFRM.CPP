@@ -405,12 +405,12 @@ void CGridFrm::OnPrint(CDC* pDC, CPrintInfo* pInfo) {
 }
 
 /************************* OBS£UGA ZDARZEÑ ***************************/
-void CGridFrm::OnDbClick(NMHDR * , LRESULT *pResult)
+void CGridFrm::OnDbClick(NMHDR *pNMHDR , LRESULT *pResult)
 {
 	if (m_bEventLockout)
 		return;
 
-	int idx = lcPubList.GetSelectionMark();
+	int idx = reinterpret_cast<LPNMLISTVIEW>(pNMHDR)->iItem;
 	if (idx == -1) return;
 
 	auto pAdd = reinterpret_cast<CDrawAdd*>(lcPubList.GetItemData(idx));

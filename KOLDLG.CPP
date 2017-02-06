@@ -2370,12 +2370,11 @@ void CEPSDateDlg::OnUznaj()
 void CEPSDateDlg::OnClickEpsdate(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	UINT uFlags = 0;
-	CPoint ptAction = ((NM_LISTVIEW *)pNMHDR)->ptAction;
+	const auto& ptAction = ((LPNMITEMACTIVATE)pNMHDR)->ptAction;
+	auto ind = m_epsdate.HitTest(ptAction, &uFlags);
 
-	int r = m_epsdate.HitTest(ptAction, &uFlags);
-
-	if (r >= 0 && m_epsdate.GetItemState(r, LVIS_STATEIMAGEMASK) > 0 && (uFlags & LVHT_ONITEMSTATEICON))
-		m_epsdate.SetCheck(r, !m_epsdate.GetCheck(r));
+	if (ind >= 0 && (uFlags & LVHT_ONITEMSTATEICON))
+		m_epsdate.SetCheck(ind, !m_epsdate.GetCheck(ind));
 
 	*pResult = 0;
 }
@@ -2854,11 +2853,11 @@ void COstWer::OnCancel() { return; }
 
 void COstWer::OnNMClickAddlist(NMHDR *pNMHDR, LRESULT *pResult) {
 	UINT uFlags = 0;
-	const CPoint& ptAction = ((NMITEMACTIVATE*)pNMHDR)->ptAction;
+	const auto& ptAction = ((LPNMITEMACTIVATE)pNMHDR)->ptAction;
+	auto ind = m_adds.HitTest(ptAction, &uFlags);
 
-	int r = m_adds.HitTest(ptAction, &uFlags);
-	if (r >= 0 && m_adds.GetItemState(r, LVIS_STATEIMAGEMASK) > 0 && (uFlags & LVHT_ONITEMSTATEICON))
-		m_adds.SetCheck(r, !m_adds.GetCheck(r));
+	if (ind >= 0 && (uFlags & LVHT_ONITEMSTATEICON))
+		m_adds.SetCheck(ind, !m_adds.GetCheck(ind));
 
 	*pResult = 0;
 }
