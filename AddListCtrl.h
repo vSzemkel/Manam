@@ -21,18 +21,17 @@ enum kolejnosc : unsigned char {
 class CAddListCtrl sealed : public CMFCListCtrl
 {
 	DECLARE_DYNAMIC(CAddListCtrl)
+public:
+	CAddListCtrl(CGridFrm* pView);
+	virtual ~CAddListCtrl() {};
+
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+protected:
+	DECLARE_MESSAGE_MAP()
 private:
 	virtual void InitHeader() override;
 	virtual int OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn) override;
 	static const int iWheelUnitY;
 	CGridFrm *m_pContainer;
 	CImageList m_SmallImageList;
-public:
-	CAddListCtrl(CGridFrm* pView);
-	virtual ~CAddListCtrl() {};
-
-protected:
-	DECLARE_MESSAGE_MAP()
-public:
-	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };

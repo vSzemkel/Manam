@@ -35,16 +35,15 @@ CSplitFrame::~CSplitFrame()
 {
 }
 
-BOOL CSplitFrame::OnCreateClient(LPCREATESTRUCT, CCreateContext* pContext)
+BOOL CSplitFrame::OnCreateClient(LPCREATESTRUCT cs, CCreateContext* pContext)
 {
 	BOOL bSuccess;
-	CClientDC dc(NULL);
-	int cx = dc.GetDeviceCaps(HORZRES), cy = dc.GetDeviceCaps(VERTRES) ;
+	int cx = cs->cx, cy = cs->cy;
 	bSuccess  = m_Splitter.CreateStatic(this, 1, 2, WS_CHILD|WS_VISIBLE, AFX_IDW_PANE_FIRST);
     bSuccess &= m_Splitter2.CreateStatic(&m_Splitter, 2, 1, WS_CHILD|WS_VISIBLE|WS_BORDER, m_Splitter.IdFromRowCol(0, 0));
-	bSuccess &= m_Splitter2.CreateView(0, 0, RUNTIME_CLASS(CDrawView), CSize(cx, cy), pContext);
-	bSuccess &= m_Splitter2.CreateView(1, 0, RUNTIME_CLASS(CQueView), CSize(cx, 0), pContext);
-	bSuccess &= m_Splitter.CreateView(0, 1, RUNTIME_CLASS(CGridFrm), CSize(0, cy), pContext);
+	bSuccess &= m_Splitter2.CreateView(0, 0, pContext->m_pNewViewClass, CSize(cx, cy), pContext);
+	bSuccess &= m_Splitter2.CreateView(1, 0, CQueView::GetThisClass(), CSize(cx, 0), pContext);
+	bSuccess &= m_Splitter.CreateView(0, 1, CGridFrm::GetThisClass(), CSize(0, cy), pContext);
 
 	m_Splitter.SetColumnInfo(0, cx, 0);
 	m_Splitter.RecalcLayout() ;

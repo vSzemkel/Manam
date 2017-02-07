@@ -47,8 +47,8 @@ END_MESSAGE_MAP()
 BOOL CConnDlg::OnInitDialog() 
 {
 	CDialog::OnInitDialog();
-	if (m_passwd.GetLength()) GetDlgItem(IDOK)->EnableWindow(TRUE);
-	return TRUE;  
+	GetDlgItem(IDOK)->EnableWindow(!m_passwd.IsEmpty());
+	return TRUE;
 }
 
 void CConnDlg::OnChangePasswd() 
