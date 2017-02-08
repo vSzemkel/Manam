@@ -1,0 +1,6 @@
+AllowShortIfStatementsOnASingleLine: true
+ColumnLimit: 0
+IndentWidth: 4
+SpaceBeforeParens: ControlStatements
+TabWidth: 4
+UseTab: Never
