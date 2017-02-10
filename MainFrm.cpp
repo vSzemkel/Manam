@@ -1,22 +1,21 @@
 
 #include "stdafx.h"
-#include "manam.h"
-#include "koldlg.h"
 #include "drawdoc.h"
+#include "koldlg.h"
 #include "mainfrm.h"
+#include "manam.h"
 
-extern CDrawApp NEAR theApp ;
 /////////////////////////////////////////////////////////////////////////////
 // CMainFrame
 IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWndEx)
 
 BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
-	//{{AFX_MSG_MAP(CMainFrame)
-	ON_WM_CREATE()
-	ON_COMMAND(ID_VIEW_CUST_TLB, OnToolBarCustomize)
-	ON_COMMAND(ID_FULLSCREEN, &CMainFrame::OnFullScreen)
-	ON_REGISTERED_MESSAGE(AFX_WM_RESETTOOLBAR, OnToolBarReset)
-	//}}AFX_MSG_MAP
+    //{{AFX_MSG_MAP(CMainFrame)
+    ON_WM_CREATE()
+    ON_COMMAND(ID_VIEW_CUST_TLB, OnToolBarCustomize)
+    ON_COMMAND(ID_FULLSCREEN, &CMainFrame::OnFullScreen)
+    ON_REGISTERED_MESSAGE(AFX_WM_RESETTOOLBAR, OnToolBarReset)
+    //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -24,12 +23,12 @@ END_MESSAGE_MAP()
 
 static UINT BASED_CODE indicators[] =
 {
-	ID_SEPARATOR,           // status line indicator
-	ID_INDICATOR_OPENSTAT,
-	ID_INDICATOR_LOGIN,
-	ID_INDICATOR_ROLE,
-	ID_INDICATOR_CAPS,
-	ID_INDICATOR_NUM
+    ID_SEPARATOR,           // status line indicator
+    ID_INDICATOR_OPENSTAT,
+    ID_INDICATOR_LOGIN,
+    ID_INDICATOR_ROLE,
+    ID_INDICATOR_CAPS,
+    ID_INDICATOR_NUM
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -37,328 +36,328 @@ static UINT BASED_CODE indicators[] =
 
 CMainFrame::CMainFrame()
 {
-	lastCapToolBar = 0 ;
-	lastColToolBar = -1 ;
+    lastCapToolBar = 0;
+    lastColToolBar = -1;
 }
 
 CMainFrame::~CMainFrame()
-{ 
-	cyjan.DeleteObject();
-	magenta.DeleteObject();
-	yellow.DeleteObject();
-	rzym.DeleteObject();
-	robgcolor.DeleteObject();
-	pen.DeleteObject();
-	for (const auto& b : Spot_Brush)
-		delete b;
+{
+    cyjan.DeleteObject();
+    magenta.DeleteObject();
+    yellow.DeleteObject();
+    rzym.DeleteObject();
+    robgcolor.DeleteObject();
+    pen.DeleteObject();
+    for (const auto& b : Spot_Brush)
+        delete b;
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	if (CMDIFrameWndEx::OnCreate(lpCreateStruct) == -1)
-		return -1; 
+    if (CMDIFrameWndEx::OnCreate(lpCreateStruct) == -1)
+        return -1;
 
-	CMFCVisualManager::SetDefaultManager (RUNTIME_CLASS (CMFCVisualManagerOffice2007));
-	CMFCToolBar::EnableQuickCustomization();
-	EnableFullScreenMode(ID_FULLSCREEN);
-	afxGlobalData.EnableAccessibilitySupport(FALSE);
+    CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
+    CMFCToolBar::EnableQuickCustomization();
+    EnableFullScreenMode(ID_FULLSCREEN);
+    afxGlobalData.EnableAccessibilitySupport(FALSE);
 
-	if (!CreateManamToolBar()) {
-		TRACE("Failed to create toolbar\n");
-		return -3;      // fail to create
-	}			
-    
-	if (!m_wndStatusBar.Create(this) ||	!m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT)))	{
-		TRACE("Failed to create status bar\n");
-		return -4;      // fail to create
-	}
-	SetOpenStatus(_T(""));
+    if (!CreateManamToolBar()) {
+        TRACE("Failed to create toolbar\n");
+        return -3;      // fail to create
+    }
 
-	LOGPEN m_logpen;
-	m_logpen.lopnWidth.x = 1;
-	m_logpen.lopnWidth.y = 1;
-	m_logpen.lopnStyle = PS_SOLID; 
-	m_logpen.lopnColor = RGB(0, 0, 0);
-	if (!pen.CreatePenIndirect(&m_logpen))
-		return -5;  
+    if (!m_wndStatusBar.Create(this) || !m_wndStatusBar.SetIndicators(indicators, sizeof(indicators) / sizeof(UINT))) {
+        TRACE("Failed to create status bar\n");
+        return -4;      // fail to create
+    }
+    SetOpenStatus(_T(""));
 
-	//brush
-	LOGBRUSH m_logbrush;
-	m_logbrush.lbHatch = HS_HORIZONTAL;
-	m_logbrush.lbStyle = BS_SOLID;
+    LOGPEN m_logpen;
+    m_logpen.lopnWidth.x = 1;
+    m_logpen.lopnWidth.y = 1;
+    m_logpen.lopnStyle = PS_SOLID;
+    m_logpen.lopnColor = RGB(0, 0, 0);
+    if (!pen.CreatePenIndirect(&m_logpen))
+        return -5;
 
-	m_logbrush.lbColor = RGB(120, 255, 255);
-	if (!cyjan.CreateBrushIndirect(&m_logbrush))
-		return -6;
+    //brush
+    LOGBRUSH m_logbrush;
+    m_logbrush.lbHatch = HS_HORIZONTAL;
+    m_logbrush.lbStyle = BS_SOLID;
 
-	m_logbrush.lbColor = RGB(255, 100, 255);
-	if (!magenta.CreateBrushIndirect(&m_logbrush))
-		return -7;
+    m_logbrush.lbColor = RGB(120, 255, 255);
+    if (!cyjan.CreateBrushIndirect(&m_logbrush))
+        return -6;
 
-	m_logbrush.lbColor = RGB(255, 255, 150);
-	if (!yellow.CreateBrushIndirect(&m_logbrush))
-		return -8;
+    m_logbrush.lbColor = RGB(255, 100, 255);
+    if (!magenta.CreateBrushIndirect(&m_logbrush))
+        return -7;
 
-	m_logbrush.lbColor = RGB(135, 135, 135);
-	if (!rzym.CreateBrushIndirect(&m_logbrush))
-		return -9;
+    m_logbrush.lbColor = RGB(255, 255, 150);
+    if (!yellow.CreateBrushIndirect(&m_logbrush))
+        return -8;
 
-	m_logbrush.lbColor = RGB(200, 200, 220);
-	if (!robgcolor.CreateBrushIndirect(&m_logbrush))
-		return -10;
+    m_logbrush.lbColor = RGB(135, 135, 135);
+    if (!rzym.CreateBrushIndirect(&m_logbrush))
+        return -9;
 
-	show_spacelocks = TRUE;
+    m_logbrush.lbColor = RGB(200, 200, 220);
+    if (!robgcolor.CreateBrushIndirect(&m_logbrush))
+        return -10;
 
-	return 0;
+    show_spacelocks = TRUE;
+
+    return 0;
 }
 
-void inline CMainFrame::StoreComboHandlers() 
+void inline CMainFrame::StoreComboHandlers()
 {
-	auto m_mfcKolorCombo = dynamic_cast<CMFCToolBarComboBoxButton*>(m_wndToolBar.GetButton(m_wndToolBar.CommandToIndex(IDV_COMBO_COLOR)));
-	m_KolorBox = m_mfcKolorCombo->GetComboBox();
-	m_LastSessionKolor = m_mfcKolorCombo->GetText();
+    auto m_mfcKolorCombo = dynamic_cast<CMFCToolBarComboBoxButton*>(m_wndToolBar.GetButton(m_wndToolBar.CommandToIndex(IDV_COMBO_COLOR)));
+    m_KolorBox = m_mfcKolorCombo->GetComboBox();
+    m_LastSessionKolor = m_mfcKolorCombo->GetText();
 
-	auto cbHeadCombo = dynamic_cast<CMFCToolBarComboBoxButton*>(m_wndToolBar.GetButton(m_wndToolBar.CommandToIndex(IDV_COMBO_HEAD)));
-	cbHeadCombo->SetDropDownHeight(300);
-	m_CaptionBox = cbHeadCombo->GetComboBox();
-	m_CaptionEditBox = cbHeadCombo->GetEditCtrl();
+    auto cbHeadCombo = dynamic_cast<CMFCToolBarComboBoxButton*>(m_wndToolBar.GetButton(m_wndToolBar.CommandToIndex(IDV_COMBO_HEAD)));
+    cbHeadCombo->SetDropDownHeight(300);
+    m_CaptionBox = cbHeadCombo->GetComboBox();
+    m_CaptionEditBox = cbHeadCombo->GetEditCtrl();
 }
 
 BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParentWnd, CCreateContext* pContext)
 {
-	BOOL bRet = CMDIFrameWndEx::LoadFrame(nIDResource, dwDefaultStyle, pParentWnd, pContext);
+    BOOL bRet = CMDIFrameWndEx::LoadFrame(nIDResource, dwDefaultStyle, pParentWnd, pContext);
 
-	StoreComboHandlers();
-	UpdateWindow();
+    StoreComboHandlers();
+    UpdateWindow();
 
-	return bRet;
+    return bRet;
 }
 
 void CMainFrame::OnFullScreen()
 {
-	ShowFullScreen();
-	
-	if (!IsFullScreen()) 
-		StoreComboHandlers();
+    ShowFullScreen();
+
+    if (!IsFullScreen())
+        StoreComboHandlers();
 }
 
 ///////////////////////////////// toolbar
 BOOL CMainFrame::CreateManamToolBar()
 {
-	if (!m_wndMenuBar.CreateEx(this, CBRS_SIZE_DYNAMIC | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_TOP)) {
-		TRACE("Failed to create menubar\n");
-		return FALSE;
-	}
+    if (!m_wndMenuBar.CreateEx(this, CBRS_SIZE_DYNAMIC | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_TOP)) {
+        TRACE("Failed to create menubar\n");
+        return FALSE;
+    }
 
-	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC)) {
-		TRACE("Failed to create toolbar\n");
-		return FALSE;
-	} else if (!m_wndToolBar.LoadToolBar(IDR_TOOL_MAIN)) {
-		TRACE("Failed to load toolbar\n");
-		return FALSE;
-	}
+    if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC)) {
+        TRACE("Failed to create toolbar\n");
+        return FALSE;
+    } else if (!m_wndToolBar.LoadToolBar(IDR_TOOL_MAIN)) {
+        TRACE("Failed to load toolbar\n");
+        return FALSE;
+    }
 
-	m_wndToolBar.EnableCustomizeButton(TRUE, ID_VIEW_CUST_TLB, _T("Modyfikuj..."));
+    m_wndToolBar.EnableCustomizeButton(TRUE, ID_VIEW_CUST_TLB, _T("Modyfikuj..."));
 
-	m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
-	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
-	EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndMenuBar);
-	DockPane(&m_wndToolBar);
+    m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
+    m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
+    EnableDocking(CBRS_ALIGN_ANY);
+    DockPane(&m_wndMenuBar);
+    DockPane(&m_wndToolBar);
 
-	return TRUE;
+    return TRUE;
 }
 
-LRESULT CMainFrame::OnToolBarReset(WPARAM wp, LPARAM) 
-{ 
-	UINT uiToolBarId = (UINT) wp;
-	switch (uiToolBarId) {
-		case IDR_TOOL_MAIN:
-			CMFCToolBarComboBoxButton cbKolorCombo(IDV_COMBO_COLOR, GetCmdMgr()->GetCmdImage(IDV_COMBO_COLOR, FALSE));
-			m_wndToolBar.ReplaceButton(IDV_COMBO_COLOR, cbKolorCombo);
-
-			CMFCToolBarComboBoxButton cbHeadCombo(IDV_COMBO_HEAD, GetCmdMgr()->GetCmdImage(IDV_COMBO_HEAD, FALSE), CBS_DROPDOWN);
-			m_wndToolBar.ReplaceButton(IDV_COMBO_HEAD, cbHeadCombo);
-	
-			StoreComboHandlers();
-			if (theApp.isRDBMS) {
-				lastColToolBar = -1;
-				InsKolorBox();
-			}
-
-			m_wndToolBar.SetWindowText(_T("Narzêdzia"));
-			break;
-	}
-	return 0;
-}
-
-void CMainFrame::OnToolBarCustomize() 
+LRESULT CMainFrame::OnToolBarReset(WPARAM wp, LPARAM)
 {
-	CMFCToolBarsCustomizeDialog* pDlgCust = new CMFCToolBarsCustomizeDialog(this, TRUE);
-	this->OnToolBarReset(IDR_TOOL_MAIN, 0);
-	pDlgCust->Create();
+    UINT uiToolBarId = (UINT)wp;
+    switch (uiToolBarId) {
+        case IDR_TOOL_MAIN:
+            CMFCToolBarComboBoxButton cbKolorCombo(IDV_COMBO_COLOR, GetCmdMgr()->GetCmdImage(IDV_COMBO_COLOR, FALSE));
+            m_wndToolBar.ReplaceButton(IDV_COMBO_COLOR, cbKolorCombo);
+
+            CMFCToolBarComboBoxButton cbHeadCombo(IDV_COMBO_HEAD, GetCmdMgr()->GetCmdImage(IDV_COMBO_HEAD, FALSE), CBS_DROPDOWN);
+            m_wndToolBar.ReplaceButton(IDV_COMBO_HEAD, cbHeadCombo);
+
+            StoreComboHandlers();
+            if (theApp.isRDBMS) {
+                lastColToolBar = -1;
+                InsKolorBox();
+            }
+
+            m_wndToolBar.SetWindowText(_T("Narzêdzia"));
+            break;
+    }
+    return 0;
 }
 
-void CMainFrame::SwapToolbarImages(int iCmd1, int iCmd2) 
+void CMainFrame::OnToolBarCustomize()
 {
-	int iPos1 = m_wndToolBar.CommandToIndex(iCmd1);
-	auto btn1 = dynamic_cast<CMFCToolBarButton*>(m_wndToolBar.GetButton(iPos1));
-	iPos1 = btn1->GetImage();
-
-	int iPos2 = m_wndToolBar.CommandToIndex(iCmd2);
-	auto btn2 = dynamic_cast<CMFCToolBarButton*>(m_wndToolBar.GetButton(iPos2));
-	iPos2 = btn2->GetImage();
-
-	btn1->SetImage(iPos2);
-	btn2->SetImage(iPos1);
+    CMFCToolBarsCustomizeDialog* pDlgCust = new CMFCToolBarsCustomizeDialog(this, TRUE);
+    this->OnToolBarReset(IDR_TOOL_MAIN, 0);
+    pDlgCust->Create();
 }
 
-void CMainFrame::SetToolbarBitmap(ToolbarMode bPrevMode, ToolbarMode bNewMode) 
+void CMainFrame::SwapToolbarImages(int iCmd1, int iCmd2)
 {
-	if ((bPrevMode == ToolbarMode::normal && bNewMode == ToolbarMode::czas_obow)
-	|| (bPrevMode == ToolbarMode::czas_obow && bNewMode == ToolbarMode::normal))
-		SwapToolbarImages(ID_DRAW_LOCK, IDV_COMBO_COLOR);
-	else if ((bPrevMode == ToolbarMode::normal && bNewMode == ToolbarMode::tryb_studia)
-		 || (bPrevMode == ToolbarMode::tryb_studia && bNewMode == ToolbarMode::normal))
-		SwapToolbarImages(ID_DRAW_KOLOR, IDV_COMBO_HEAD);
-	else if (bPrevMode != bNewMode) {
-		SwapToolbarImages(ID_DRAW_LOCK, IDV_COMBO_COLOR);
-		SwapToolbarImages(ID_DRAW_KOLOR, IDV_COMBO_HEAD);
-	}
+    int iPos1 = m_wndToolBar.CommandToIndex(iCmd1);
+    auto btn1 = dynamic_cast<CMFCToolBarButton*>(m_wndToolBar.GetButton(iPos1));
+    iPos1 = btn1->GetImage();
 
-	m_wndToolBar.Invalidate(FALSE) ;
-	// byæ mo¿e trzeba odœwie¿yæ combo
-	LoadKolorCombo();
-	DBIniCaptionCombo(theApp.GetProfileInt(_T("General"), _T("Captions"), 1) == 1, theApp.activeDoc->id_drw);
+    int iPos2 = m_wndToolBar.CommandToIndex(iCmd2);
+    auto btn2 = dynamic_cast<CMFCToolBarButton*>(m_wndToolBar.GetButton(iPos2));
+    iPos2 = btn2->GetImage();
+
+    btn1->SetImage(iPos2);
+    btn2->SetImage(iPos1);
+}
+
+void CMainFrame::SetToolbarBitmap(ToolbarMode bPrevMode, ToolbarMode bNewMode)
+{
+    if ((bPrevMode == ToolbarMode::normal && bNewMode == ToolbarMode::czas_obow)
+        || (bPrevMode == ToolbarMode::czas_obow && bNewMode == ToolbarMode::normal))
+        SwapToolbarImages(ID_DRAW_LOCK, IDV_COMBO_COLOR);
+    else if ((bPrevMode == ToolbarMode::normal && bNewMode == ToolbarMode::tryb_studia)
+        || (bPrevMode == ToolbarMode::tryb_studia && bNewMode == ToolbarMode::normal))
+        SwapToolbarImages(ID_DRAW_KOLOR, IDV_COMBO_HEAD);
+    else if (bPrevMode != bNewMode) {
+        SwapToolbarImages(ID_DRAW_LOCK, IDV_COMBO_COLOR);
+        SwapToolbarImages(ID_DRAW_KOLOR, IDV_COMBO_HEAD);
+    }
+
+    m_wndToolBar.Invalidate(FALSE);
+    // byæ mo¿e trzeba odœwie¿yæ combo
+    LoadKolorCombo();
+    DBIniCaptionCombo(theApp.GetProfileInt(_T("General"), _T("Captions"), 1) == 1, theApp.activeDoc->id_drw);
 }
 
 //void CMainFrame::InitRibbon() {
-	// todo: adapt example from MFC Extensions set
+    // todo: adapt example from MFC Extensions set
 //}
 
 void CMainFrame::SetOpenStatus(LPCTSTR t)
 {
-	CSize s = GetDC()->GetTextExtent(t, (int)_tcslen(t));
-	m_wndStatusBar.SetPaneInfo(1, ID_INDICATOR_OPENSTAT, s.cx ? SBPS_NORMAL : SBPS_NOBORDERS|SBPS_DISABLED, (int)(0.8 * s.cx));
-	m_wndStatusBar.SetPaneText(1, t);
-	if (MDIGetActive()) //w grzbiecie ukryj toolbar
-		ShowPane(&m_wndToolBar, !theApp.activeDoc->isGRB, FALSE, TRUE);
+    CSize s = GetDC()->GetTextExtent(t, (int)_tcslen(t));
+    m_wndStatusBar.SetPaneInfo(1, ID_INDICATOR_OPENSTAT, s.cx ? SBPS_NORMAL : SBPS_NOBORDERS | SBPS_DISABLED, (int)(0.8 * s.cx));
+    m_wndStatusBar.SetPaneText(1, t);
+    if (MDIGetActive()) //w grzbiecie ukryj toolbar
+        ShowPane(&m_wndToolBar, !theApp.activeDoc->isGRB, FALSE, TRUE);
 }
 
 void CMainFrame::SetLogonStatus(LPCTSTR t)
 {
-	CSize s = GetDC()->GetTextExtent(t, (int)_tcslen(t));
-	m_wndStatusBar.SetPaneInfo(2, ID_INDICATOR_LOGIN, SBPS_NORMAL, (int)(0.8 * s.cx));
-	m_wndStatusBar.SetPaneText(2, t);
-	SetRoleStatus();
+    CSize s = GetDC()->GetTextExtent(t, (int)_tcslen(t));
+    m_wndStatusBar.SetPaneInfo(2, ID_INDICATOR_LOGIN, SBPS_NORMAL, (int)(0.8 * s.cx));
+    m_wndStatusBar.SetPaneText(2, t);
+    SetRoleStatus();
 }
 
 void CMainFrame::SetRoleStatus()
 {
-	CString role;
-	if (theApp.grupa&R_DEA) role = _T("DEALER");
-	else if (theApp.grupa&R_MAS) role = _T("MASTER");
-	else if (theApp.grupa&R_ADM) role = _T("ADMINISTRATOR");
-	else if (theApp.grupa&R_KIE) role = _T("KIEROWNIK");
-	else if (theApp.grupa&R_STU) role = _T("STUDIO");
-	else if (theApp.grupa&R_RED) role = _T("REDAKTOR");
-	else role = _T("GOŒÆ");
-	CSize s = GetDC()->GetTextExtent(role);
-	m_wndStatusBar.SetPaneInfo(3, ID_INDICATOR_ROLE, SBPS_NORMAL, (int)(0.8 * s.cx));
-	m_wndStatusBar.SetPaneText(3, role);
+    CString role;
+    if (theApp.grupa&R_DEA) role = _T("DEALER");
+    else if (theApp.grupa&R_MAS) role = _T("MASTER");
+    else if (theApp.grupa&R_ADM) role = _T("ADMINISTRATOR");
+    else if (theApp.grupa&R_KIE) role = _T("KIEROWNIK");
+    else if (theApp.grupa&R_STU) role = _T("STUDIO");
+    else if (theApp.grupa&R_RED) role = _T("REDAKTOR");
+    else role = _T("GOŒÆ");
+    CSize s = GetDC()->GetTextExtent(role);
+    m_wndStatusBar.SetPaneInfo(3, ID_INDICATOR_ROLE, SBPS_NORMAL, (int)(0.8 * s.cx));
+    m_wndStatusBar.SetPaneText(3, role);
 }
 
 ////////////////////////////////////////////// ini kolory
 
 void CMainFrame::IniKolorTable()
 {
-	int max_col = theApp.GetProfileInt(_T("SpotColors"), _T("Amount"), 0);
-	Spot_Kolor.resize(max_col + 2);
-	Spot_Brush.resize(max_col + 2);
-	Spot_Kolor[0] = BRAK; Spot_Brush[0] = new CBrush(RGB(190, 190, 190));
-	Spot_Kolor[1] = FULL; Spot_Brush[1] = new CBrush(BIALY);
-	CString bf;
-	for (int i = 1; i <= max_col; i++) {
-		bf.Format(_T("%i"), i);
-		Spot_Kolor[i + 1] = theApp.GetProfileString(_T("SpotColors"), _T("Spot") + bf, _T("nie ma")).MakeUpper();
-		Spot_Brush[i + 1] = new CBrush(theApp.GetProfileInt(_T("SpotColors"), _T("Color") + bf, BIALY));
-	}
+    int max_col = theApp.GetProfileInt(_T("SpotColors"), _T("Amount"), 0);
+    Spot_Kolor.resize(max_col + 2);
+    Spot_Brush.resize(max_col + 2);
+    Spot_Kolor[0] = BRAK; Spot_Brush[0] = new CBrush(RGB(190, 190, 190));
+    Spot_Kolor[1] = FULL; Spot_Brush[1] = new CBrush(BIALY);
+    CString bf;
+    for (int i = 1; i <= max_col; i++) {
+        bf.Format(_T("%i"), i);
+        Spot_Kolor[i + 1] = theApp.GetProfileString(_T("SpotColors"), _T("Spot") + bf, _T("nie ma")).MakeUpper();
+        Spot_Brush[i + 1] = new CBrush(theApp.GetProfileInt(_T("SpotColors"), _T("Color") + bf, BIALY));
+    }
 }
 
 //////////////// ini spoty o ile sa
 void CMainFrame::InsComboNrSpotow(int new_i)
-{ 
-	if (theApp.swCZV&2) return;
-	int old_i = m_KolorBox->GetCount() - (int)Spot_Kolor.size();
-	if (old_i > new_i)
-		for (int i = old_i - 1; i >= new_i; i--)
-			m_KolorBox->DeleteString(i);
-	else if (old_i >= 0)
-		for (int i = old_i; i < new_i; i++)
-			m_KolorBox->InsertString(i, (LPCTSTR)_T("SPOT ") + CDrawObj::Rzymska(i + 1));
-	m_KolorBox->Invalidate();
+{
+    if (theApp.swCZV & 2) return;
+    int old_i = m_KolorBox->GetCount() - (int)Spot_Kolor.size();
+    if (old_i > new_i)
+        for (int i = old_i - 1; i >= new_i; i--)
+            m_KolorBox->DeleteString(i);
+    else if (old_i >= 0)
+        for (int i = old_i; i < new_i; i++)
+            m_KolorBox->InsertString(i, (LPCTSTR)_T("SPOT ") + CDrawObj::Rzymska(i + 1));
+    m_KolorBox->Invalidate();
 }
 
 void CMainFrame::LoadKolorCombo()
 {
-	if (!lastColToolBar && theApp.swCZV&2) 	// ostatnio odœwie¿ono wersje
-		return;
-	lastColToolBar = theApp.swCZV&2 ? 0 : 1 ;
+    if (!lastColToolBar && theApp.swCZV & 2) 	// ostatnio odœwie¿ono wersje
+        return;
+    lastColToolBar = theApp.swCZV & 2 ? 0 : 1;
 
-	if (theApp.swCZV&2) {
-		m_KolorBox->ResetContent();
-		m_KolorBox->AddString(_T(""));
-		theManODPNET.FillCombo(m_KolorBox, "select wersja from spacer_wersje_eps order by 1", CManODPNET::emptyParm);
-	} else if (m_KolorBox->GetCount() != Spot_Kolor.size()) {
-		m_KolorBox->ResetContent();
-		// kolory
-		for (const auto& k : Spot_Kolor)
-			m_KolorBox->AddString(k);
-		m_KolorBox->SelectString(CB_ERR, m_LastSessionKolor);
-		// spoty
-		if (MDIGetActive()) 
-			InsComboNrSpotow(theApp.activeDoc->DBReadSpot((int)theApp.activeDoc->m_pages.size()));
-	}
-	m_KolorBox->Invalidate();
+    if (theApp.swCZV & 2) {
+        m_KolorBox->ResetContent();
+        m_KolorBox->AddString(_T(""));
+        theManODPNET.FillCombo(m_KolorBox, "select wersja from spacer_wersje_eps order by 1", CManODPNET::emptyParm);
+    } else if (m_KolorBox->GetCount() != Spot_Kolor.size()) {
+        m_KolorBox->ResetContent();
+        // kolory
+        for (const auto& k : Spot_Kolor)
+            m_KolorBox->AddString(k);
+        m_KolorBox->SelectString(CB_ERR, m_LastSessionKolor);
+        // spoty
+        if (MDIGetActive())
+            InsComboNrSpotow(theApp.activeDoc->DBReadSpot((int)theApp.activeDoc->m_pages.size()));
+    }
+    m_KolorBox->Invalidate();
 }
 
 void CMainFrame::InsKolorBox()
 {
-	theApp.isRDBMS ? theManODPNET.IniKolorTable(this) : IniKolorTable();
-	LoadKolorCombo();
+    theApp.isRDBMS ? theManODPNET.IniKolorTable(this) : IniKolorTable();
+    LoadKolorCombo();
 }
- 
+
 ////////////////////////////////////////////////////////// captions /lub str_log
 void CMainFrame::IniCaptionBox(int id_drw, int new_id_drw)
 {
-	if (new_id_drw == id_drw) // tylko przy zmianie produktu
-		 return ;
+    if (new_id_drw == id_drw) // tylko przy zmianie produktu
+        return;
 
-	m_CaptionEditBox->SetWindowText(_T(""));
-	if (new_id_drw == INT_MAX)
-		m_CaptionBox->ResetContent();
-	else {
-		auto isCap = theApp.GetProfileInt(_T("General"), _T("Captions"), 1) == 1;
-		if (new_id_drw > 0 && theApp.isRDBMS && !DBIniCaptionCombo(isCap, new_id_drw))
-			IniCaptionCombo(isCap);
-	}
+    m_CaptionEditBox->SetWindowText(_T(""));
+    if (new_id_drw == INT_MAX)
+        m_CaptionBox->ResetContent();
+    else {
+        auto isCap = theApp.GetProfileInt(_T("General"), _T("Captions"), 1) == 1;
+        if (new_id_drw > 0 && theApp.isRDBMS && !DBIniCaptionCombo(isCap, new_id_drw))
+            IniCaptionCombo(isCap);
+    }
 }
 
 DWORD CMainFrame::GetCaptionDataItem(int ind) const
 {
-	if (ind < 0) ind = m_CaptionBox->GetCurSel() ;
-	return ind == CB_ERR ? 0 : (DWORD)m_CaptionBox->GetItemData(ind) ;
+    if (ind < 0) ind = m_CaptionBox->GetCurSel();
+    return ind == CB_ERR ? 0 : (DWORD)m_CaptionBox->GetItemData(ind);
 }
 
 void CMainFrame::IniCaptionCombo(BOOL iscaption)
 {
-    CString tx = (iscaption) ? _T("Caption") : _T("StrLog") ; 
+    CString tx = (iscaption) ? _T("Caption") : _T("StrLog");
     int max_col = theApp.GetProfileInt(tx, _T("Amount"), 0);
     TCHAR bf[3];
     m_CaptionBox->ResetContent();
     m_CaptionBox->AddString(_T(""));
-    for (int i=1; i<=max_col; i++) {
-       _itot_s(i, bf, 3, 10);
+    for (int i = 1; i <= max_col; i++) {
+        _itot_s(i, bf, 3, 10);
         m_CaptionBox->AddString(theApp.GetProfileString(tx, tx + CString(bf), _T("")));
     }
     m_CaptionBox->SetCurSel(0);
@@ -367,109 +366,109 @@ void CMainFrame::IniCaptionCombo(BOOL iscaption)
 
 BOOL CMainFrame::DBIniCaptionCombo(BOOL iscaption, int id_drw)
 {
-	// nie odœwie¿aj niepotrzebnie
-	int checksum = (iscaption << 24) + (theApp.swCZV << 16) + id_drw ;
-	if (lastCapToolBar == checksum) return TRUE ;
-	lastCapToolBar = checksum ;
+    // nie odœwie¿aj niepotrzebnie
+    int checksum = (iscaption << 24) + (theApp.swCZV << 16) + id_drw;
+    if (lastCapToolBar == checksum) return TRUE;
+    lastCapToolBar = checksum;
 
-	bool czyListaPagin = theApp.swCZV == 2;
-	auto sql = reinterpret_cast<char*>(theApp.bigBuf);
-	StringCchPrintfA(sql, bigSize, "select %s drw_xx=:xx order by 1", 
-		czyListaPagin ? "text,xx from spacer_naglowki_prn where"
-					  : (iscaption ? "naglowek from spacer_naglowki where" 
-								   : "sciezka from strukt_drzewa where co_to='L' and"));
+    bool czyListaPagin = theApp.swCZV == 2;
+    auto sql = reinterpret_cast<char*>(theApp.bigBuf);
+    StringCchPrintfA(sql, bigSize, "select %s drw_xx=:xx order by 1",
+        czyListaPagin ? "text,xx from spacer_naglowki_prn where"
+        : (iscaption ? "naglowek from spacer_naglowki where"
+        : "sciezka from strukt_drzewa where co_to='L' and"));
 
-	m_CaptionBox->ResetContent();
-	int ind = m_CaptionBox->AddString(_T(""));
-	m_CaptionBox->SetItemData(ind, (WORD)0);
+    m_CaptionBox->ResetContent();
+    int ind = m_CaptionBox->AddString(_T(""));
+    m_CaptionBox->SetItemData(ind, (WORD)0);
 
-	CManODPNETParms orapar { CManODPNET::DbTypeInt32, &id_drw };
-	if (!theManODPNET.FillCombo(m_CaptionBox, sql, orapar, czyListaPagin ? 1 : -1)) return FALSE;
+    CManODPNETParms orapar { CManODPNET::DbTypeInt32, &id_drw };
+    if (!theManODPNET.FillCombo(m_CaptionBox, sql, orapar, czyListaPagin ? 1 : -1)) return FALSE;
 
-	m_CaptionBox->SetCurSel(0);
-	m_CaptionBox->Invalidate();
+    m_CaptionBox->SetCurSel(0);
+    m_CaptionBox->Invalidate();
 
-	return TRUE;
+    return TRUE;
 }
 
 //////////////////////////////// wyciaganie danych z tablic
 CString CMainFrame::GetKolorText() const
 {
-	CString s;
-	int sel = m_KolorBox->GetCurSel();
-	if (sel != CB_ERR)
-		m_KolorBox->GetLBText(sel, s);
+    CString s;
+    int sel = m_KolorBox->GetCurSel();
+    if (sel != CB_ERR)
+        m_KolorBox->GetLBText(sel, s);
 
-	return s;
+    return s;
 }
 
 int CMainFrame::GetKolorInd(CString text) const
 {
-	int ind = m_KolorBox->FindString(0, text);
-	return ind == CB_ERR ? -1 : ind ;
+    int ind = m_KolorBox->FindString(0, text);
+    return ind == CB_ERR ? -1 : ind;
 }
 
 UINT CMainFrame::GetKolor(int ile_spotow) const // kolejnoœæ na liscie: spoty, brak, full, kolory
 {
-	auto k = m_KolorBox->GetCurSel();
+    auto k = m_KolorBox->GetCurSel();
 
-	if (k == ile_spotow )
-		return c_brak;
-	if (k == ile_spotow + 1)
-		return c_full;
-	if (k == CB_ERR)
-		return CB_ERR;
-	if  (k < ile_spotow)
-		return ((k << 3) + c_spot); // index w tablicy spotow
-	return ((k - ile_spotow) << 3); // gdy nie jest ustawiony spot bit
+    if (k == ile_spotow)
+        return c_brak;
+    if (k == ile_spotow + 1)
+        return c_full;
+    if (k == CB_ERR)
+        return CB_ERR;
+    if (k < ile_spotow)
+        return ((k << 3) + c_spot); // index w tablicy spotow
+    return ((k - ile_spotow) << 3); // gdy nie jest ustawiony spot bit
 }
 
 CBrush* CMainFrame::GetSpotBrush(int i) const
 {
-	return i >= (int)Spot_Brush.size() || i < 0 ? reinterpret_cast<CBrush*>(::GetStockObject(BLACK_BRUSH)) : Spot_Brush[i];
+    return i >= (int)Spot_Brush.size() || i < 0 ? reinterpret_cast<CBrush*>(::GetStockObject(BLACK_BRUSH)) : Spot_Brush[i];
 }
 
 int CMainFrame::GetIdxfromSpotID(UINT spot_id) const
 {
-	for (unsigned int i = 0; i < Spot_ID.size(); i++)
-		if (spot_id == Spot_ID[i])
-			return i;
-	return 0;
+    for (unsigned int i = 0; i < Spot_ID.size(); i++)
+        if (spot_id == Spot_ID[i])
+            return i;
+    return 0;
 }
 
 ////////////////////////////////// naglowek
 CString CMainFrame::GetCaption() const
 {
-	CString rs;
-	m_CaptionEditBox->GetWindowText(rs);
-	return rs;
+    CString rs;
+    m_CaptionEditBox->GetWindowText(rs);
+    return rs;
 }
 
 CString CMainFrame::GetCaption(int i) const
 {
-	CString rs;
-	m_CaptionBox->GetLBText(i, rs);
-	return rs;
+    CString rs;
+    m_CaptionBox->GetLBText(i, rs);
+    return rs;
 }
 
 CString CMainFrame::GetCapStrFromData(DWORD w) const
 {
-	CString cap;
-	for (int i = 0; i < m_CaptionBox->GetCount(); i++) 
-		if (m_CaptionBox->GetItemData(i) == w)
-			m_CaptionBox->GetLBText(i, cap) ;
+    CString cap;
+    for (int i = 0; i < m_CaptionBox->GetCount(); i++)
+        if (m_CaptionBox->GetItemData(i) == w)
+            m_CaptionBox->GetLBText(i, cap);
 
-	return cap ;
+    return cap;
 }
 
 int CMainFrame::GetCaptionBoxSize() const
 {
-	return m_CaptionBox->GetCount();
+    return m_CaptionBox->GetCount();
 }
 
 void CMainFrame::SetStatusBarInfo(LPCTSTR tx)
 {
-	m_wndStatusBar.SetPaneText(ID_SEPARATOR, tx);
+    m_wndStatusBar.SetPaneText(ID_SEPARATOR, tx);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -478,12 +477,12 @@ void CMainFrame::SetStatusBarInfo(LPCTSTR tx)
 #ifdef _DEBUG
 void CMainFrame::AssertValid() const
 {
-	CMDIFrameWnd::AssertValid();
+    CMDIFrameWnd::AssertValid();
 }
 
 void CMainFrame::Dump(CDumpContext& dc) const
 {
-	CMDIFrameWnd::Dump(dc);
+    CMDIFrameWnd::Dump(dc);
 }
 
 #endif //_DEBUG

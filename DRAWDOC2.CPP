@@ -1,14 +1,13 @@
 
 #include "stdafx.h"
-#include "manam.h"
-#include "drawdoc.h"
-#include "drawvw.h"
-#include "drawpage.h"
 #include "drawadd.h"
+#include "drawdoc.h"
+#include "drawpage.h"
+#include "drawvw.h"
 #include "koldlg.h"
 #include "mainfrm.h"
+#include "manam.h"
 
-extern CDrawApp NEAR theApp;
 extern BOOL drawErrorBoxes;
 extern BOOL disableMenu;
 

@@ -36,5 +36,6 @@
 #include <map>
 
 // Manam
+#include "resource.h"
 #include "DrawObj.h"
 #include "ManODPNET.h"

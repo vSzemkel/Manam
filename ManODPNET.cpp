@@ -1,13 +1,13 @@
 
 #include "stdafx.h"
-#include "manam.h"
-#include "koldlg.h"
-#include "drawdoc.h"
 #include "drawadd.h"
+#include "drawdoc.h"
 #include "drawopis.h"
-#include "spacer.h"
 #include "genepsinfodlg.h"
+#include "koldlg.h"
 #include "mainfrm.h"
+#include "manam.h"
+#include "spacer.h"
 #include <vcclr.h>
 
 #using <System.dll>
@@ -23,8 +23,6 @@ using namespace System::Windows::Forms;
 using namespace System::IO;
 using namespace Oracle::ManagedDataAccess::Client;
 using namespace Oracle::ManagedDataAccess::Types;
-
-extern CDrawApp NEAR theApp;
 
 gcroot<String^> g_ConnectionString;
 

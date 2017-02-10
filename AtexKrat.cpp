@@ -13,7 +13,6 @@ const int CAtexKrat::ADJUST_LEVEL = 6 ;
 const int CAtexKrat::KRATA_PASKOWA = 10 ;
 const float CAtexKrat::TOLERANCE = 0.05f ;
 
-extern CDrawApp NEAR theApp ;
 /////////////////////////////////////////////////////////////////////////////
 // CAtexKrat
 
