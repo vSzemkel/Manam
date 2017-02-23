@@ -369,10 +369,8 @@ void CDrawView::OnDraw(CDC *pDC)
 
     if (pDrawDC != pDC) {
         pDC->SetViewportOrg(0, 0);
-        pDC->SetWindowOrg(0, 0);
         pDC->SetMapMode(MM_TEXT);
         bitmapDC.SetViewportOrg(0, 0);
-        bitmapDC.SetWindowOrg(0, 0);
         bitmapDC.SetMapMode(MM_TEXT);
         pDC->BitBlt(rect.left, rect.top, rect.Width(), rect.Height(), pDrawDC, 0, 0, SRCCOPY);
         bitmapDC.SelectObject(pOldBitmap);
