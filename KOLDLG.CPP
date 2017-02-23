@@ -13,7 +13,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CConnDlg dialog
 
-CConnDlg::CConnDlg(CWnd* pParent /*=NULL*/)
+CConnDlg::CConnDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CConnDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CConnDlg)
@@ -22,7 +22,7 @@ CConnDlg::CConnDlg(CWnd* pParent /*=NULL*/)
 }
 
 
-void CConnDlg::DoDataExchange(CDataExchange* pDX)
+void CConnDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CConnDlg)
@@ -81,7 +81,7 @@ void CConnDlg::OnOK()
 /////////////////////////////////////////////////////////////////////////////
 // CKolDlg dialog
 
-CKolDlg::CKolDlg(CWnd* pParent /*=NULL*/)
+CKolDlg::CKolDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CKolDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CKolDlg)
@@ -89,7 +89,7 @@ CKolDlg::CKolDlg(CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-void CKolDlg::DoDataExchange(CDataExchange* pDX)
+void CKolDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CKolDlg)
@@ -121,7 +121,7 @@ BOOL CKolDlg::OnInitDialog()
 /////////////////////////////////////////////////////////////////////////////
 // CPageDlg dialog
 
-CPageDlg::CPageDlg(CWnd* pParent /*=NULL*/)
+CPageDlg::CPageDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CPageDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CPageDlg)
@@ -195,7 +195,7 @@ void CPageDlg::OnOK()
     m_deadline = CTime(m_deadlineday.GetYear(), m_deadlineday.GetMonth(), m_deadlineday.GetDay(), m_deadline.GetHour(), m_deadline.GetMinute(), 0);
 }
 
-void CPageDlg::DoDataExchange(CDataExchange* pDX)
+void CPageDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CPageDlg)
@@ -423,7 +423,7 @@ BOOL CPageDlg::OnInitDialog()
 /////////////////////////////////////////////////////////////////////////////
 BOOL CAddDlg::matchingOldAdnoUpdate = FALSE;
 // CAddDlg dialog
-CAddDlg::CAddDlg(CWnd* pParent /*=NULL*/)
+CAddDlg::CAddDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CAddDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CAddDlg)
@@ -439,7 +439,7 @@ CAddDlg::CAddDlg(CWnd* pParent /*=NULL*/)
     c_height = 470; c_narrow = 340; c_wide = 500;
 }
 
-void CAddDlg::DoDataExchange(CDataExchange* pDX)
+void CAddDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     int base = m_fizpage ? 1 : 0;
@@ -1022,7 +1022,7 @@ void CAddDlg::OnOK()
 
 /////////////////////////////////////////////////////////////////////////////
 // CInfoDlg dialog
-CInfoDlg::CInfoDlg(CWnd* pParent /*=NULL*/)
+CInfoDlg::CInfoDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CInfoDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CInfoDlg)
@@ -1132,7 +1132,7 @@ void CInfoDlg::OnOK()
     }
 }
 
-void CInfoDlg::DoDataExchange(CDataExchange* pDX)
+void CInfoDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CInfoDlg)
@@ -1212,7 +1212,7 @@ END_MESSAGE_MAP()
 // CInfoDlg message handlers
 /////////////////////////////////////////////////////////////////////////////
 // COpisDlg dialog
-COpisDlg::COpisDlg(CWnd* pParent /*=NULL*/)
+COpisDlg::COpisDlg(CWnd *pParent /*=NULL*/)
     : CDialog(COpisDlg::IDD, pParent)
     , m_Centruj(FALSE)
 {
@@ -1220,7 +1220,7 @@ COpisDlg::COpisDlg(CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-void COpisDlg::DoDataExchange(CDataExchange* pDX)
+void COpisDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(COpisDlg)
@@ -1239,7 +1239,7 @@ END_MESSAGE_MAP()
 // CZoomDlg message handlers
 // ZOOM
 
-CZoomDlg::CZoomDlg(CWnd* pParent /*=NULL*/)
+CZoomDlg::CZoomDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CZoomDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CZoomDlg)
@@ -1247,7 +1247,7 @@ CZoomDlg::CZoomDlg(CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-void CZoomDlg::DoDataExchange(CDataExchange* pDX)
+void CZoomDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CZoomDlg)
@@ -1264,7 +1264,7 @@ END_MESSAGE_MAP()///////////////////////////////////////////////////////////////
 // CDbDlg dialog
 
 
-CDbDlg::CDbDlg(CWnd* pParent /*=NULL*/)
+CDbDlg::CDbDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CDbDlg::IDD, pParent)
 {
     m_dtime = CTime::GetCurrentTime();
@@ -1275,7 +1275,7 @@ CDbDlg::CDbDlg(CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-void CDbDlg::DoDataExchange(CDataExchange* pDX)
+void CDbDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CDbDlg)
@@ -1320,7 +1320,7 @@ END_MESSAGE_MAP()
 // CDrzDlg dialog
 
 
-CDrzDlg::CDrzDlg(CWnd* pParent /*=NULL*/)
+CDrzDlg::CDrzDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CDrzDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CDrzDlg)
@@ -1329,7 +1329,7 @@ CDrzDlg::CDrzDlg(CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-void CDrzDlg::DoDataExchange(CDataExchange* pDX)
+void CDrzDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CDrzDlg)
@@ -1429,7 +1429,7 @@ END_MESSAGE_MAP()
 // CDrzDlg message handlers
 /////////////////////////////////////////////////////////////////////////////
 // CDrz1Dlg dialog
-CDrz1Dlg::CDrz1Dlg(CWnd* pParent /*=NULL*/)
+CDrz1Dlg::CDrz1Dlg(CWnd *pParent /*=NULL*/)
     : CDialog(CDrz1Dlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CDrz1Dlg)
@@ -1438,7 +1438,7 @@ CDrz1Dlg::CDrz1Dlg(CWnd* pParent /*=NULL*/)
     m_id_drw = -1;
 }
 
-void CDrz1Dlg::DoDataExchange(CDataExchange* pDX)
+void CDrz1Dlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CDrz1Dlg)
@@ -1483,7 +1483,7 @@ END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CDBOpenDlg dialog
-CDBOpenDlg::CDBOpenDlg(CWnd* pParent /*=NULL*/)
+CDBOpenDlg::CDBOpenDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CDBOpenDlg::IDD, pParent)
 {
     bEnableCtrls = TRUE;
@@ -1495,7 +1495,7 @@ CDBOpenDlg::CDBOpenDlg(CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-void CDBOpenDlg::DoDataExchange(CDataExchange* pDX)
+void CDBOpenDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CDBOpenDlg)
@@ -1667,7 +1667,7 @@ END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CDBSaveAsDlg dialog
-CDBSaveAsDlg::CDBSaveAsDlg(CWnd* pParent /*=NULL*/)
+CDBSaveAsDlg::CDBSaveAsDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CDBSaveAsDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CDBSaveAsDlg)
@@ -1676,7 +1676,7 @@ CDBSaveAsDlg::CDBSaveAsDlg(CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-void CDBSaveAsDlg::DoDataExchange(CDataExchange* pDX)
+void CDBSaveAsDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CDBSaveAsDlg)
@@ -1721,7 +1721,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // velvet : CAddDesc dialog - konfigurowanie opisów do og³oszeñ
 
-CAddDesc::CAddDesc(int top, int bottom, CWnd* pParent /*=NULL*/)
+CAddDesc::CAddDesc(int top, int bottom, CWnd *pParent /*=NULL*/)
     : CDialog(CAddDesc::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CAddDesc)
@@ -1730,7 +1730,7 @@ CAddDesc::CAddDesc(int top, int bottom, CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-void CAddDesc::DoDataExchange(CDataExchange* pDX)
+void CAddDesc::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CAddDesc)
@@ -1748,7 +1748,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CAddFindDlg dialog
 
-CAddFindDlg::CAddFindDlg(CWnd* pParent /*=NULL*/)
+CAddFindDlg::CAddFindDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CAddFindDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CAddFindDlg)
@@ -1758,7 +1758,7 @@ CAddFindDlg::CAddFindDlg(CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-void CAddFindDlg::DoDataExchange(CDataExchange* pDX)
+void CAddFindDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CAddFindDlg)
@@ -1800,7 +1800,7 @@ void CAddFindDlg::OnUpdateNr()
 // CInfoDlgLib dialog
 
 
-CInfoDlgLib::CInfoDlgLib(CWnd* pParent /*=NULL*/)
+CInfoDlgLib::CInfoDlgLib(CWnd *pParent /*=NULL*/)
     : CDialog(CInfoDlgLib::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CInfoDlgLib)
@@ -1808,7 +1808,7 @@ CInfoDlgLib::CInfoDlgLib(CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-void CInfoDlgLib::DoDataExchange(CDataExchange* pDX)
+void CInfoDlgLib::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CInfoDlgLib)
@@ -1831,7 +1831,7 @@ END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CConfDlg dialog
-CConfDlg::CConfDlg(CWnd* pParent /*=NULL*/) : CDialog(CConfDlg::IDD, pParent)
+CConfDlg::CConfDlg(CWnd *pParent /*=NULL*/) : CDialog(CConfDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CConfDlg)
     m_iPagesInRow = m_hashing = m_strcnt = 0;
@@ -1840,7 +1840,7 @@ CConfDlg::CConfDlg(CWnd* pParent /*=NULL*/) : CDialog(CConfDlg::IDD, pParent)
     //}}AFX_DATA_INIT
 }
 
-void CConfDlg::DoDataExchange(CDataExchange* pDX)
+void CConfDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CConfDlg)
@@ -1961,14 +1961,14 @@ BEGIN_MESSAGE_MAP(CConfDlg, CDialog)
     //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-CPassDlg::CPassDlg(CWnd* pParent /*=NULL*/)
+CPassDlg::CPassDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CPassDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CPassDlg)
     //}}AFX_DATA_INIT
 }
 
-void CPassDlg::DoDataExchange(CDataExchange* pDX)
+void CPassDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CPassDlg)
@@ -1998,7 +1998,7 @@ void CPassDlg::OnOK()
 
 /////////////////////////////////////////////////////////////////////////////
 // CPrnEpsDlg dialog
-CPrnEpsDlg::CPrnEpsDlg(CWnd* pParent /*=NULL*/)
+CPrnEpsDlg::CPrnEpsDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CPrnEpsDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CPrnEpsDlg)
@@ -2009,7 +2009,7 @@ CPrnEpsDlg::CPrnEpsDlg(CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-void CPrnEpsDlg::DoDataExchange(CDataExchange* pDX)
+void CPrnEpsDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CPrnEpsDlg)
@@ -2109,7 +2109,7 @@ void CPrnEpsDlg::OnOK()
 // CUserDlg dialog
 
 
-CUserDlg::CUserDlg(CWnd* pParent /*=NULL*/)
+CUserDlg::CUserDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CUserDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CUserDlg)
@@ -2131,7 +2131,7 @@ void CUserDlg::OnYesnnext()
     OnOK();
 }
 
-void CUserDlg::DoDataExchange(CDataExchange* pDX)
+void CUserDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CUserDlg)
@@ -2178,7 +2178,7 @@ void CUserDlg::OnZaloz()
 // CAccDlg dialog
 
 
-CAccDlg::CAccDlg(CWnd* pParent /*=NULL*/)
+CAccDlg::CAccDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CAccDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CAccDlg)
@@ -2213,7 +2213,7 @@ BOOL CAccDlg::OnInitDialog()
     return CDialog::OnInitDialog();
 }
 
-void CAccDlg::DoDataExchange(CDataExchange* pDX)
+void CAccDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CAccDlg)
@@ -2269,7 +2269,7 @@ void CAccDlg::OnAlltyt()
 /////////////////////////////////////////////////////////////////////////////
 // CNewTitleDlg dialog
 
-CNewTitleDlg::CNewTitleDlg(CWnd* pParent /*=NULL*/)
+CNewTitleDlg::CNewTitleDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CNewTitleDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CNewTitleDlg)
@@ -2283,7 +2283,7 @@ CNewTitleDlg::CNewTitleDlg(CWnd* pParent /*=NULL*/)
     m_do_kiedy = CTime::GetCurrentTime() + CTimeSpan(30, 0, 0, 0);
 }
 
-void CNewTitleDlg::DoDataExchange(CDataExchange* pDX)
+void CNewTitleDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CNewTitleDlg)
@@ -2323,13 +2323,13 @@ END_MESSAGE_MAP()
 // CEPSDateDlg dialog
 
 
-CEPSDateDlg::CEPSDateDlg(CWnd* pParent /*=NULL*/)
+CEPSDateDlg::CEPSDateDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CEPSDateDlg::IDD, pParent)
 {
     vDoc = theApp.activeDoc;
 }
 
-void CEPSDateDlg::DoDataExchange(CDataExchange* pDX)
+void CEPSDateDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CEPSDateDlg)
@@ -2396,7 +2396,7 @@ void CEPSDateDlg::OnClickEpsdate(NMHDR* pNMHDR, LRESULT* pResult)
 // CDirDaysDlg dialog
 
 
-CDirDaysDlg::CDirDaysDlg(CWnd* pParent /*=NULL*/)
+CDirDaysDlg::CDirDaysDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CDirDaysDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CDirDaysDlg)
@@ -2407,7 +2407,7 @@ CDirDaysDlg::CDirDaysDlg(CWnd* pParent /*=NULL*/)
 }
 
 
-void CDirDaysDlg::DoDataExchange(CDataExchange* pDX)
+void CDirDaysDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CDirDaysDlg)
@@ -2466,7 +2466,7 @@ void CDirDaysDlg::OnOK()
 /////////////////////////////////////////////////////////////////////////////
 // CPageDerv dialog
 
-CPageDerv::CPageDerv(CWnd* pParent /*=NULL*/)
+CPageDerv::CPageDerv(CWnd *pParent /*=NULL*/)
     : CDialog(CPageDerv::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CPageDerv)
@@ -2476,7 +2476,7 @@ CPageDerv::CPageDerv(CWnd* pParent /*=NULL*/)
 }
 
 
-void CPageDerv::DoDataExchange(CDataExchange* pDX)
+void CPageDerv::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CPageDerv)
@@ -2582,7 +2582,7 @@ void CPageDerv::OnDirectionChange(UINT mode)
 /////////////////////////////////////////////////////////////////////////////
 // CGrzbDlg dialog
 
-CGrzbDlg::CGrzbDlg(CWnd* pParent /*=NULL*/)
+CGrzbDlg::CGrzbDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CGrzbDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CGrzbDlg)
@@ -2593,7 +2593,7 @@ CGrzbDlg::CGrzbDlg(CWnd* pParent /*=NULL*/)
 }
 
 
-void CGrzbDlg::DoDataExchange(CDataExchange* pDX)
+void CGrzbDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CGrzbDlg)
@@ -2693,7 +2693,7 @@ void CGrzbDlg::OnOK()
 
 // CAccGrbDlg dialog
 IMPLEMENT_DYNAMIC(CAccGrbDlg, CDialog)
-CAccGrbDlg::CAccGrbDlg(CWnd* pParent /*=NULL*/)
+CAccGrbDlg::CAccGrbDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CAccGrbDlg::IDD, pParent)
 {
     m_ckporg = m_ckpcdrz = m_ckpldrz = FALSE;
@@ -2710,7 +2710,7 @@ BOOL CAccGrbDlg::OnInitDialog()
     return TRUE;
 }
 
-void CAccGrbDlg::DoDataExchange(CDataExchange* pDX)
+void CAccGrbDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     DDX_Text(pDX, IDC_PRINT_LDRZ, m_print_ldrz);
@@ -2726,7 +2726,7 @@ END_MESSAGE_MAP()
 
 // COstWer dialog
 IMPLEMENT_DYNAMIC(COstWer, CDialog)
-COstWer::COstWer(CWnd* pParent /*=NULL*/)
+COstWer::COstWer(CWnd *pParent /*=NULL*/)
     : CDialog(COstWer::IDD, pParent)
 {
 }
@@ -2743,7 +2743,7 @@ COstWer::COstWer(std::vector<CDrawAdd*> *aNewAdds, std::vector<CDrawAdd*> *aOldA
 
 //COstWer::~COstWer() {}
 
-void COstWer::DoDataExchange(CDataExchange* pDX)
+void COstWer::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     DDX_Control(pDX, IDC_ADDLIST, m_adds);
@@ -2900,7 +2900,7 @@ void COstWer::OnSelectAll()
 // CAcDeadDlg
 IMPLEMENT_DYNAMIC(CAcDeadDlg, CDialog)
 
-CAcDeadDlg::CAcDeadDlg(CWnd* pParent /*=NULL*/) : CDialog(CAcDeadDlg::IDD, pParent)
+CAcDeadDlg::CAcDeadDlg(CWnd *pParent /*=NULL*/) : CDialog(CAcDeadDlg::IDD, pParent)
 {
 }
 
@@ -2908,7 +2908,7 @@ CAcDeadDlg::~CAcDeadDlg()
 {
 }
 
-void CAcDeadDlg::DoDataExchange(CDataExchange* pDX)
+void CAcDeadDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     DDX_DateTimeCtrl(pDX, IDC_RED, m_red);
@@ -2987,7 +2987,7 @@ CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
     m_memstat.Format(_T("Zu¿ycie pamiêci: %d/%d %d/%d [MB]\n%s"), B2MB(ms.ullTotalPhys - ms.ullAvailPhys), B2MB(ms.ullTotalPhys), B2MB(ms.ullTotalPageFile - ms.ullAvailPageFile), B2MB(ms.ullTotalPageFile), sProcInfo);
 }
 
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
+void CAboutDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CAboutDlg)

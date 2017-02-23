@@ -18,113 +18,113 @@ class CDrawView;
 
 enum class DrawShape : BYTE
 {
-	add      = ID_DRAW_ADD,
-	red      = ID_DRAW_RED,
-	lock     = ID_DRAW_LOCK,
-	opis     = ID_DRAW_OPIS,
-	color    = ID_DRAW_KOLOR,
-	select   = ID_DRAW_SELECT,
-	caption  = ID_DRAW_CAPTION,
-	deadline = ID_DRAW_DEADLINE,
-	space    = ID_DRAW_SPACELOCKED,
+    add      = ID_DRAW_ADD,
+    red      = ID_DRAW_RED,
+    lock     = ID_DRAW_LOCK,
+    opis     = ID_DRAW_OPIS,
+    color    = ID_DRAW_KOLOR,
+    select   = ID_DRAW_SELECT,
+    caption  = ID_DRAW_CAPTION,
+    deadline = ID_DRAW_DEADLINE,
+    space    = ID_DRAW_SPACELOCKED,
 };
 
 enum class SelectMode : BYTE
 {
-	none,
-	size,
-	move,
-	dontmove, // bo zablokowane - ale nie zmieniaj selekcji
-	dontsize, // bo niekratowe lub zablokowane
-	netSelect,
+    none,
+    size,
+    move,
+    dontmove, // bo zablokowane - ale nie zmieniaj selekcji
+    dontsize, // bo niekratowe lub zablokowane
+    netSelect,
 };
 
 class CDrawTool
 {
-	// Constructors
+    // Constructors
 public:
-	CDrawTool(DrawShape nDrawShape);
+    CDrawTool(DrawShape nDrawShape);
 
-	// Overridables
-	virtual void OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point);
-	virtual void OnLButtonDblClk(CDrawView* pView, UINT nFlags, const CPoint& point);
-	virtual void OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point);
-	virtual void OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point);
+    // Overridables
+    virtual void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point);
+    virtual void OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point);
+    virtual void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point);
+    virtual void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point);
 
-	// Attributes
-	DrawShape m_drawShape;
+    // Attributes
+    DrawShape m_drawShape;
 
-	static CPoint c_down;
-	static CPoint c_last;
-	static UINT c_nDownFlags;
-	static DrawShape c_drawShape;
-	static std::vector<CDrawTool*> c_tools;
+    static CPoint c_down;
+    static CPoint c_last;
+    static UINT c_nDownFlags;
+    static DrawShape c_drawShape;
+    static std::vector<CDrawTool*> c_tools;
 
-	static void OnCancel();
-	static CDrawTool* FindTool(DrawShape drawShape);
+    static void OnCancel();
+    static CDrawTool* FindTool(DrawShape drawShape);
 };
 
 class CSelectTool : public CDrawTool
 {
-	// Constructors
+    // Constructors
 public:
-	CSelectTool();
-	// Implementation
-	virtual void OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnLButtonDblClk(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    CSelectTool();
+    // Implementation
+    virtual void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
 
-	static int m_DragHandle;
+    static int m_DragHandle;
 private:
-	CRect m_last_rect;
+    CRect m_last_rect;
 };
 
 class CRectTool : public CDrawTool
 {
-	// Constructors
+    // Constructors
 public:
-	CRectTool(DrawShape drawShape);
+    CRectTool(DrawShape drawShape);
 
-	// Implementation
-	virtual void OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnLButtonDblClk(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    // Implementation
+    virtual void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
 };
 
 class CKolorTool : public CDrawTool
 {
-	// Constructors
+    // Constructors
 public:
-	CKolorTool(DrawShape drawShape);
-	// Implementation
-	virtual void OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnLButtonDblClk(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    CKolorTool(DrawShape drawShape);
+    // Implementation
+    virtual void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
 };
 
 class CLockTool : public CDrawTool
 {
-	// Constructors
+    // Constructors
 public:
-	CLockTool(DrawShape drawShape);
-	// Implementation
-	virtual void OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnLButtonDblClk(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    CLockTool(DrawShape drawShape);
+    // Implementation
+    virtual void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
 };
 
 class CSpaceTool : public CDrawTool
 {
-	// Constructors
+    // Constructors
 public:
-	CSpaceTool(DrawShape nDrawShape);
-	// Implementation
-	virtual void OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnLButtonDblClk(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point) override;
-	virtual void OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    CSpaceTool(DrawShape nDrawShape);
+    // Implementation
+    virtual void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    virtual void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
 };
 ////////////////////////////////////////////////////////////////////////////

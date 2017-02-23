@@ -485,7 +485,7 @@ CString CDrawAdd::PrepareBuf(TCHAR* ch) const
     return bufor;
 }
 
-BOOL CDrawAdd::OnOpen(CDrawView* pView)
+BOOL CDrawAdd::OnOpen(CDrawView *pView)
 {
     ASSERT_VALID(this);
 
@@ -918,7 +918,7 @@ void CDrawAdd::InitPrecel(const CString& sPrecelFlag)
     space >>= szpalt_x - sizex;
 }
 
-void CDrawAdd::MoveWithPage(const CRect& position, CDrawView* pView)
+void CDrawAdd::MoveWithPage(const CRect& position, CDrawView *pView)
 {
     dirty = TRUE;
     CRect toPos(position.left + (int)(modulx*(posx - 1)), position.bottom + (int)(moduly*(szpalt_y - posy + 1)), position.left + (int)(modulx*(posx + sizex - 1)), position.bottom + (int)(moduly*(szpalt_y - posy - sizey + 1)));

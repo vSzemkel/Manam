@@ -85,7 +85,7 @@ BOOL CAtexKrat::Compute(int *sizex, int *sizey, int *s_x, int *s_y) {
 const double CKratCalc::TOLERANCE = 0.011f ;
 
 IMPLEMENT_DYNAMIC(CKratCalc, CDialog)
-CKratCalc::CKratCalc(CWnd* pParent /*=NULL*/) : CDialog(CKratCalc::IDD, pParent) , m_modelid(_T(""))
+CKratCalc::CKratCalc(CWnd *pParent /*=NULL*/) : CDialog(CKratCalc::IDD, pParent) , m_modelid(_T(""))
 {
 	m_lightx = 40;
 	m_lighty = 34;
@@ -98,7 +98,7 @@ CKratCalc::~CKratCalc()
 {
 }
 
-void CKratCalc::DoDataExchange(CDataExchange* pDX)
+void CKratCalc::DoDataExchange(CDataExchange *pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_KRATKA, m_kratycombo);

@@ -146,7 +146,7 @@ void CManSock::HandleSysMsg1(TCHAR* sysmsg) const
 // CSendDlg dialog
 
 
-CSendDlg::CSendDlg(CWnd* pParent /*=NULL*/)
+CSendDlg::CSendDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CSendDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CSendDlg)
@@ -156,7 +156,7 @@ CSendDlg::CSendDlg(CWnd* pParent /*=NULL*/)
 }
 
 
-void CSendDlg::DoDataExchange(CDataExchange* pDX)
+void CSendDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CSendDlg)

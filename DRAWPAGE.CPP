@@ -655,7 +655,7 @@ void CDrawPage::RemoveAdd(CDrawAdd* pAdd, BOOL bRemodeFromAdds)
     SetDirty();
 }
 
-void CDrawPage::MoveTo(const CRect& position, CDrawView* pView)
+void CDrawPage::MoveTo(const CRect& position, CDrawView *pView)
 {
     CDrawObj::MoveTo(position, pView);
     for (const auto& pAdd : m_adds)

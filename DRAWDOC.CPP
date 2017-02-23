@@ -263,7 +263,7 @@ void CDrawDoc::Serialize(CArchive& ar)
 
 ///////////////RYSOWANIE I DRUKOWANIE ////////////////////////////////////////////////////////
 // CDrawDoc implementation
-void CDrawDoc::Draw(CDC* pDC, CDrawView* pView)
+void CDrawDoc::Draw(CDC* pDC, CDrawView *pView)
 {
     if (isRO) {
         CRect r;
@@ -684,7 +684,7 @@ void CDrawDoc::ComputeCanvasSize()
     // if size changed then iterate over views and reset
     if (new_size != m_size) {
         m_size = new_size;
-        CDrawView* pView = GetPanelView<CDrawView>();
+        CDrawView *pView = GetPanelView<CDrawView>();
         if (pView) pView->SetPageSize();
     }
 }

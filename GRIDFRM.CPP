@@ -28,7 +28,7 @@ CGridFrm::CGridFrm() : CFormView(CGridFrm::IDD), lcPubList(this)
 	showLastAdnoUsed = m_bInitialized = m_bEventLockout = FALSE;
 }
 
-void CGridFrm::DoDataExchange(CDataExchange* pDX)
+void CGridFrm::DoDataExchange(CDataExchange *pDX)
 {
 	CFormView::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CGridFrm)
@@ -68,7 +68,7 @@ void CGridFrm::Dump(CDumpContext& dc) const
 /////////////////////////////////////////////////////////////////////////////
 // CGridFrm message handlers
 
-BOOL CGridFrm::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext) 
+BOOL CGridFrm::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd *pParentWnd, UINT nID, CCreateContext* pContext) 
 {
 	BOOL ret = CFormView::Create(lpszClassName, lpszWindowName, dwStyle, rect, pParentWnd, nID, pContext);
 	OnInitialUpdate();

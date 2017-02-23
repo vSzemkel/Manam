@@ -172,20 +172,20 @@ protected:
     //{{AFX_MSG(CDrawApp)
     afx_msg void OnAppAbout();
     afx_msg void OnDBOpen();
-    afx_msg void OnDisableMenu(CCmdUI* pCmdUI);
+    afx_msg void OnDisableMenu(CCmdUI *pCmdUI);
     afx_msg void OnLogin();
-    afx_msg void OnUpdateLogin(CCmdUI* pCmdUI);
-    afx_msg void OnDisableMenuRDBMS(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateLogin(CCmdUI *pCmdUI);
+    afx_msg void OnDisableMenuRDBMS(CCmdUI *pCmdUI);
     afx_msg void OnFileDBOpenRO();
     afx_msg void OnFileNewBath();
     afx_msg void OnPasswd();
     afx_msg void OnAccess();
-    afx_msg void OnUpdateAdmin(CCmdUI* pCmdUI);
-    afx_msg void OnUpdateStudio(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateAdmin(CCmdUI *pCmdUI);
+    afx_msg void OnUpdateStudio(CCmdUI *pCmdUI);
     afx_msg void OnNewuser();
     afx_msg void OnCaptions();
-    afx_msg void OnUpdateCaptions(CCmdUI* pCmdUI);
-    afx_msg void OnUpdateToolBarCombo(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateCaptions(CCmdUI *pCmdUI);
+    afx_msg void OnUpdateToolBarCombo(CCmdUI *pCmdUI);
     afx_msg void OnNewTitle();
     afx_msg void OnDaydirs();
     afx_msg void OnHelp();
