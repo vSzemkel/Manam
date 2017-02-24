@@ -16,24 +16,24 @@ CDrawOpis::CDrawOpis()
 {
 }
 
-CDrawOpis::CDrawOpis(const CRect* position) : CDrawOpis(position, _T(""))
+CDrawOpis::CDrawOpis(const CRect *position) : CDrawOpis(position, _T(""))
 {
 }
 
-CDrawOpis::CDrawOpis(const CRect* position, const TCHAR* tx) :
+CDrawOpis::CDrawOpis(const CRect *position, const TCHAR *tx) :
     CDrawObj(position), m_opi_xx(-1), m_Scale(1.0f)
 {
     ASSERT_VALID(this);
     info = tx;
 }
 
-void CDrawOpis::DrawInternal(CDC* pDC, CRect& rect) const
+void CDrawOpis::DrawInternal(CDC *pDC, CRect& rect) const
 {
-    CPen* pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
-    CFont* pOldFont = pDC->SelectObject(&m_pDocument->m_pagefont);
+    auto pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
+    auto pOldFont = pDC->SelectObject(&m_pDocument->m_pagefont);
 
     bool coloured = kolor > 7;
-    CBrush* pOldBrush = ((CMainFrame*)AfxGetMainWnd())->GetSpotBrush(coloured ? kolor >> 3 : 1);
+    auto pOldBrush = ((CMainFrame*)AfxGetMainWnd())->GetSpotBrush(coloured ? kolor >> 3 : 1);
     if (coloured) {
         LOGBRUSH lb;
         pOldBrush->GetLogBrush(&lb);
@@ -68,7 +68,7 @@ void CDrawOpis::DrawInternal(CDC* pDC, CRect& rect) const
         pDC->SetTextColor(0);
 }
 
-void CDrawOpis::Draw(CDC* pDC)
+void CDrawOpis::Draw(CDC *pDC)
 {
     ASSERT_VALID(this);
 
@@ -78,7 +78,7 @@ void CDrawOpis::Draw(CDC* pDC)
 
 ////////////////////////////////////////////////////////
 /////////////// PRINT
-void CDrawOpis::Print(CDC* pDC)
+void CDrawOpis::Print(CDC *pDC)
 {
     ASSERT_VALID(this);
 
@@ -99,7 +99,7 @@ void CDrawOpis::Serialize(CArchive& ar)
         ar << m_Scale;
 }
 
-CDrawObj* CDrawOpis::Clone(CDrawDoc* pDoc) const
+CDrawObj* CDrawOpis::Clone(CDrawDoc *pDoc) const
 {
     ASSERT_VALID(this);
 

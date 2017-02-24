@@ -284,7 +284,7 @@ void CDrawDoc::OnVuMakietowanie()
 
     CObArray vAdds;
     CDrawPage *vTmpPage, *vPage = NULL;
-    CDrawAdd  *castval;
+    CDrawAdd *castval;
     CRect vRect;
 
     theApp.BeginWaitCursor();
@@ -311,13 +311,13 @@ void CDrawDoc::OnVuMakietowanie()
 
     int i, j, k, maxLen, maxWeight, vAddsCount = (int)vAdds.GetSize();
     //posortuj tablice po dlugosci warunku logicznego, malejaco
-    for (i = 0; i < vAddsCount - 1; i++) {
+    for (i = 0; i < vAddsCount - 1; ++i) {
         k = -1;
-        CDrawAdd *viAdd = (CDrawAdd*)vAdds.GetAt(i);
+        auto viAdd = (CDrawAdd*)vAdds.GetAt(i);
         maxLen = viAdd->logpage.GetLength();
         maxWeight = viAdd->sizex*viAdd->sizey;
         for (j = i + 1; j < vAddsCount; j++) {
-            CDrawAdd *vjAdd = (CDrawAdd*)vAdds.GetAt(j);
+            auto vjAdd = (CDrawAdd*)vAdds.GetAt(j);
             if (vjAdd->logpage.GetLength() > maxLen) {
                 maxLen = vjAdd->logpage.GetLength();
                 k = j;
@@ -340,7 +340,7 @@ void CDrawDoc::OnVuMakietowanie()
 
     //dla kazdego ogloszenia ustal liste stron fizycznych, na ktore moze trafic
     BOOL hashed = FALSE;
-    for (i = 0; i < vAddsCount; i++) {
+    for (i = 0; i < vAddsCount; ++i) {
         CString sOrgLogpage;
         BOOL bSecondRun = FALSE;
 aSecondRun:
@@ -472,7 +472,7 @@ aSecondRun:
     theApp.EndWaitCursor();
 }
 
-void CDrawDoc::MakietujStrone(CDrawPage *vPage)
+void CDrawDoc::MakietujStrone(CDrawPage *pPage)
 {
     /* vu: 	Jedynym argumentem jest referencja do strony, ktora zostanie przemakietowana.
             Przemakietowanie polega na przeniesieni ogloszen ze strony do tabeli lokalnej,
@@ -480,33 +480,33 @@ void CDrawDoc::MakietujStrone(CDrawPage *vPage)
             razem wedlug porzadku ustalonego w algorytmie sortujacym. Uwaga: funkcje nie
             odswieza widoku - musi to zrobic funkcja wywolujaca. Uwzglêdnia flagê niemakietuj. end vu */
 
-    if (vPage->niemakietuj) return;
+    if (pPage->niemakietuj) return;
 
     CObArray vAdds;
     int i, j, k;
 
     // utworz liste ogloszen na stronie 
-    vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=, &vAdds](CDrawAdd* pAdd) -> BOOL {
+    pPage->m_adds.erase(std::remove_if(pPage->m_adds.begin(), pPage->m_adds.end(), [=, &vAdds](CDrawAdd *pAdd) -> BOOL {
         if (!pAdd->flags.locked && !pAdd->flags.derived) {
             vAdds.Add(pAdd);
             pAdd->fizpage = 0;
-            vPage->RemoveAdd(pAdd, FALSE);
+            pPage->RemoveAdd(pAdd, FALSE);
             return TRUE;
         }
         return FALSE;
-    }), vPage->m_adds.end());
+    }), pPage->m_adds.end());
 
     // posortuj liste pod wzgledem kryteriow rozmieszczenia ogloszenia - {skomplikowane == poczatek listy}
     int vAddsCount = (int)vAdds.GetSize();
-    for (i = 0; i < vAddsCount - 1; i++) {
+    for (i = 0; i < vAddsCount - 1; ++i) {
         k = -1;
-        CDrawAdd *viAdd = (CDrawAdd*)vAdds.GetAt(i);
+        auto viAdd = (CDrawAdd*)vAdds.GetAt(i);
         BOOL hashedi = viAdd->logpage.ReverseFind('#') >= 0;
         // pasek ma najwyzszy priorytet
         if (hashedi && (viAdd->sizex == viAdd->szpalt_x && viAdd->sizey == 1) || (viAdd->sizey == viAdd->szpalt_y && viAdd->sizex == 1)) continue;
         int maxWeight = viAdd->sizex*viAdd->sizey;
         for (j = i + 1; j < vAddsCount; j++) {
-            CDrawAdd *vjAdd = (CDrawAdd*)vAdds.GetAt(j);
+            auto vjAdd = (CDrawAdd*)vAdds.GetAt(j);
             BOOL hashedj = vjAdd->logpage.ReverseFind('#') >= 0;
             if (hashedi && !hashedj) continue;
             if (!hashedi && hashedj) { // po znalezieniu pierwszego hashowanego sprawdzaj tylko hashowane
@@ -540,20 +540,20 @@ void CDrawDoc::MakietujStrone(CDrawPage *vPage)
                 continue;
             }
             if (k >= 0 && vjAdd->sizex * vjAdd->sizey == maxWeight) { // ogloszenie o wiekszej przekatnej ma wiekszy priorytet
-                CDrawAdd *vkAdd = (CDrawAdd*)vAdds.GetAt(k);
+                auto vkAdd = (CDrawAdd*)vAdds.GetAt(k);
                 if (__max(vjAdd->sizex, vjAdd->sizey) > __max(vkAdd->sizex, vkAdd->sizey)) k = j;
             }
         }
         if (k > -1) {
-            CDrawAdd* castval = (CDrawAdd*)vAdds.GetAt(i);
+            auto castval = (CDrawAdd*)vAdds.GetAt(i);
             vAdds.SetAt(i, vAdds.GetAt(k));
             vAdds.SetAt(k, castval);
         }
     }
 
     // Powrzucaj ogloszenia na strone w odpowiednim porzadku
-    for (i = 0; i < vAddsCount; i++) {
-        CDrawAdd *castval = (CDrawAdd*)vAdds.GetAt(i);
+    for (i = 0; i < vAddsCount; ++i) {
+        auto castval = (CDrawAdd*)vAdds.GetAt(i);
         int hashpos = castval->logpage.ReverseFind('#');
         CRect vRect;
         if (hashpos >= 0) {
@@ -563,28 +563,28 @@ void CDrawDoc::MakietujStrone(CDrawPage *vPage)
                 if (isupper((int)castval->logpage[j])) tail[k++] = castval->logpage[j];
             tail[k] = '\0';
             if (_tcsstr(tail, _T("DL")))
-                castval->SetEstPagePos(_T("DL"), &vRect, vPage);
+                castval->SetEstPagePos(_T("DL"), &vRect, pPage);
             else if (_tcsstr(tail, _T("DP")))
-                castval->SetEstPagePos(_T("DP"), &vRect, vPage);
+                castval->SetEstPagePos(_T("DP"), &vRect, pPage);
             else if (_tcsstr(tail, _T("D")))
-                castval->SetEstPagePos(_T("D"), &vRect, vPage);
+                castval->SetEstPagePos(_T("D"), &vRect, pPage);
             else if (_tcsstr(tail, _T("GP")))
-                castval->SetEstPagePos(_T("GP"), &vRect, vPage);
+                castval->SetEstPagePos(_T("GP"), &vRect, pPage);
             else if (_tcsstr(tail, _T("GL")))
-                castval->SetEstPagePos(_T("GL"), &vRect, vPage);
+                castval->SetEstPagePos(_T("GL"), &vRect, pPage);
             else if (_tcsstr(tail, _T("G")))
-                castval->SetEstPagePos(_T("G"), &vRect, vPage);
+                castval->SetEstPagePos(_T("G"), &vRect, pPage);
             else if (_tcsstr(tail, _T("L")))
-                castval->SetEstPagePos(_T("L"), &vRect, vPage);
+                castval->SetEstPagePos(_T("L"), &vRect, pPage);
             else if (_tcsstr(tail, _T("P")))
-                castval->SetEstPagePos(_T("P"), &vRect, vPage);
+                castval->SetEstPagePos(_T("P"), &vRect, pPage);
             else { // póki co rób to, co nizej
-                vRect = CRect(vPage->m_position.right - (castval->sizex)*pmodulx, vPage->m_position.bottom + castval->sizey*pmoduly, vPage->m_position.right, vPage->m_position.bottom);
-                castval->SetPosition(&vRect, vPage);
+                vRect = CRect(pPage->m_position.right - (castval->sizex)*pmodulx, pPage->m_position.bottom + castval->sizey*pmoduly, pPage->m_position.right, pPage->m_position.bottom);
+                castval->SetPosition(&vRect, pPage);
             }
         } else {
             // ustaw ogloszenie bez opisu na prawej stronie w prawym dolnym rogu strony, na lewej - w lewym dolnym
-            castval->SetEstPagePos(((vPage->nr >> 3) & 1 ? _T("DP") : _T("DL")), &vRect, vPage);
+            castval->SetEstPagePos(((pPage->nr >> 3) & 1 ? _T("DP") : _T("DL")), &vRect, pPage);
         }
         castval->m_position = vRect;
         castval->Invalidate();
@@ -632,7 +632,7 @@ void CDrawDoc::AsideAdds()
 
 CPoint CDrawDoc::GetAsideAddPos(BOOL opening) const
 {
-    int addsAsideCnt = opening ? 1 : 1 + (int)std::count_if(cbegin(m_objects), cend(m_objects), [](CDrawObj* pObj) { auto a = dynamic_cast<CDrawAdd*>(pObj); return a && a->posx == 0; });
+    int addsAsideCnt = opening ? 1 : 1 + (int)std::count_if(cbegin(m_objects), cend(m_objects), [](CDrawObj *pObj) { auto a = dynamic_cast<CDrawAdd*>(pObj); return a && a->posx == 0; });
     int marginPageMinX = (int)(pmodulx*(1 + iPagesInRow / 2 + (pszpalt_x*iPagesInRow)));
     int marginPageMaxX = (int)(floor(((float)m_size.cx*vscale * 100 / theApp.m_initZoom) / pmodulx + 0.5) - (pszpalt_x + 2))*pmodulx;
     return CPoint(max(marginPageMinX, marginPageMaxX), -pmoduly * addsAsideCnt);
@@ -709,7 +709,7 @@ void CDrawDoc::OnEditFindNext()
     AddFind(lastSearchNrAtex, lastSearchNrSpacer, lastSearchNazwa);
 }
 
-void CDrawDoc::OnUpdateEditFindNext(CCmdUI* pCmdUI)
+void CDrawDoc::OnUpdateEditFindNext(CCmdUI *pCmdUI)
 {
     pCmdUI->Enable(!disableMenu && findNextInd > -1);
 }
@@ -813,7 +813,7 @@ void CDrawDoc::OnAsideAdds()
         for (size_t i = 0; i < pcount; i++)
             if (!(m_pages[i])->niemakietuj) {
                 vPage = m_pages[i];
-                vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd* pAdd) -> BOOL {
+                vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd *pAdd) -> BOOL {
                     if (!pAdd->flags.locked && !pAdd->flags.derived) {
                         pAdd->fizpage = 0;
                         pAdd->UpdateInfo();
@@ -827,7 +827,7 @@ void CDrawDoc::OnAsideAdds()
     } else { // zdejmujemy og³oszenia ze wskazanej strony (wiemy, ¿e to strona makietowana)
         int iOffset = iPagesInRow - (GetIPage(vPage) % iPagesInRow);
         iOffset = iOffset*pszpalt_x*pmodulx + (iOffset / 2 + 1)*pmodulx;
-        vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd* pAdd) -> BOOL {
+        vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd *pAdd) -> BOOL {
             if (!pAdd->flags.locked && !pAdd->flags.derived) {
                 pAdd->fizpage = 0;
                 pAdd->m_position.left += iOffset;
@@ -855,14 +855,14 @@ void CDrawDoc::IniRozm()
     m_Rozm.emplace_back(); // krata 5x6
     int i, n = theApp.GetProfileInt(_T("EPSKratka"), _T("Amount"), 0);
     TCHAR bf[10];
-    for (i = 1; i <= n; i++) {
+    for (i = 1; i <= n; ++i) {
         _itot_s(i, bf, 10, 10); // tylko kraty inne niz 5x6
         m_Rozm.emplace_back(theApp.GetProfileInt(_T("EPSKratka"), _T("w") + CString(bf), 0), theApp.GetProfileInt(_T("EPSKratka"), _T("h") + CString(bf), 0),
             theApp.GetProfileInt(_T("EPSKratka"), _T("sw") + CString(bf), 0), theApp.GetProfileInt(_T("EPSKratka"), _T("sh") + CString(bf), 0),
             theApp.GetProfileInt(_T("EPSKratka"), _T("szpalt_x") + CString(bf), 0), theApp.GetProfileInt(_T("EPSKratka"), _T("szpalt_y") + CString(bf), 0), 0, FALSE);
     }
     n = theApp.GetProfileInt(_T("EPSNiekratowe"), _T("Amount"), 0);
-    for (i = 1; i <= n; i++) {
+    for (i = 1; i <= n; ++i) {
         _itot_s(i, bf, 10, 10);
         m_Rozm.emplace_back(theApp.GetProfileInt(_T("EPSNiekratowe"), _T("w") + CString(bf), 0), theApp.GetProfileInt(_T("Niekratowe"), _T("h") + CString(bf), 0), 0, 0, 0, 0,
             theApp.GetProfileInt(_T("EPSNiekratowe"), _T("typ_xx") + CString(bf), 0), FALSE);
@@ -956,7 +956,7 @@ DerivePages_loop:
     }
 } // DerivePages
 
-int CDrawDoc::Nr2NrPorz(const TCHAR* s) const
+int CDrawDoc::Nr2NrPorz(const TCHAR *s) const
 {
     if (!s) return -1;
     int nr_porz = _ttoi(s);
@@ -975,17 +975,17 @@ void CDrawDoc::OnChangeColsPerRow()
     CPoint pNowhere(INT_MAX >> 2, 0);
     iPagesInRow = MIN_COLSPERROW + 2 * (((iPagesInRow - MIN_COLSPERROW) / 2 + 1) % 5);
     int i, iPC = (int)m_pages.size();
-    CRect* aNoPagePos = (CRect*)theApp.bigBuf;
-    //przenieœ opisy tekstowe na bok
-    for (i = MIN_COLSPERROW; i < iPC; i++) {
+    auto aNoPagePos = (CRect*)theApp.bigBuf;
+    // przenieœ opisy tekstowe na bok
+    for (i = MIN_COLSPERROW; i < iPC; ++i) {
         aNoPagePos[i] = m_pages[i]->m_position - pNowhere;
         MoveOpisAfterPage(&m_pages[i]->m_position, &aNoPagePos[i]);
     }
-    //repozycjonuj strony
-    for (i = MIN_COLSPERROW; i < iPC; i++)
+    // repozycjonuj strony
+    for (i = MIN_COLSPERROW; i < iPC; ++i)
         this->SetPageRectFromOrd(m_pages[i], i);
-    //przywróæ opisy tekstowe na makietê
-    for (i = MIN_COLSPERROW; i < iPC; i++)
+    // przywróæ opisy tekstowe na makietê
+    for (i = MIN_COLSPERROW; i < iPC; ++i)
         MoveOpisAfterPage(&aNoPagePos[i], &m_pages[i]->m_position);
 
     UpdateAllViews(NULL);

@@ -79,22 +79,22 @@ BEGIN_MESSAGE_MAP(CDrawDoc, COleDocument)
     //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-void CDrawDoc::OnDisableMenuRO(CCmdUI* pCmdUI)
+void CDrawDoc::OnDisableMenuRO(CCmdUI *pCmdUI)
 {
     pCmdUI->Enable(!isRO && !disableMenu && theApp.isRDBMS);
 }
 
-void CDrawDoc::OnDisableDB(CCmdUI* pCmdUI)
+void CDrawDoc::OnDisableDB(CCmdUI *pCmdUI)
 {
     pCmdUI->Enable(!disableMenu && theApp.isRDBMS);
 }
 
-void CDrawDoc::OnUpdateEpsdata(CCmdUI* pCmdUI)
+void CDrawDoc::OnUpdateEpsdata(CCmdUI *pCmdUI)
 {
     pCmdUI->Enable(!disableMenu && theApp.isRDBMS && theApp.grupa&(R_MAS | R_STU));
 }
 
-void CDrawDoc::OnDisableGrbNotSaved(CCmdUI* pCmdUI)
+void CDrawDoc::OnDisableGrbNotSaved(CCmdUI *pCmdUI)
 {
     pCmdUI->Enable(!disableMenu && theApp.activeDoc->m_mak_xx > 0);
 }
@@ -263,7 +263,7 @@ void CDrawDoc::Serialize(CArchive& ar)
 
 ///////////////RYSOWANIE I DRUKOWANIE ////////////////////////////////////////////////////////
 // CDrawDoc implementation
-void CDrawDoc::Draw(CDC* pDC, CDrawView *pView)
+void CDrawDoc::Draw(CDC *pDC, CDrawView *pView)
 {
     if (isRO) {
         CRect r;
@@ -300,7 +300,7 @@ void CDrawDoc::Draw(CDC* pDC, CDrawView *pView)
             p->DrawAcDeadline(pDC, &p->m_position);
 }
 
-void CDrawDoc::DrawQue(CDC* pDC, CQueView* pView)
+void CDrawDoc::DrawQue(CDC *pDC, CQueView *pView)
 {
     for (const auto& a : m_addsque) {
         a->Draw(pDC);
@@ -316,7 +316,7 @@ void CDrawDoc::DrawQue(CDC* pDC, CQueView* pView)
     }
 }
 
-void CDrawDoc::DrawPageCross(CDC* pDC)
+void CDrawDoc::DrawPageCross(CDC *pDC)
 {
     CPoint p0(0, 0);
     CPoint p(pDC->GetDeviceCaps(HORZRES), pDC->GetDeviceCaps(VERTRES));
@@ -328,7 +328,7 @@ void CDrawDoc::DrawPageCross(CDC* pDC)
     pDC->LineTo(p0.x, p.y);
 }
 
-void CDrawDoc::Print(CDC* pDC)
+void CDrawDoc::Print(CDC *pDC)
 {
     for (const auto& p : m_pages)
         p->Print(pDC);
@@ -359,7 +359,7 @@ void CDrawDoc::Print(CDC* pDC)
             p->DrawDeadline(pDC, &p->GetPrintRect());
 }
 
-void CDrawDoc::PrintPage(CDrawPage* pPage, CDC* pDC)
+void CDrawDoc::PrintPage(CDC *pDC, CDrawPage *pPage)
 {
     pPage->Print(pDC);
 
@@ -367,7 +367,7 @@ void CDrawDoc::PrintPage(CDrawPage* pPage, CDC* pDC)
         pAdd->Print(pDC);
 
     for (const auto& pObj : m_objects) { // dodatkowy opis zeby opis byl na wierzchu przed ogl
-        CDrawOpis* pOpi = dynamic_cast<CDrawOpis*>(pObj);
+        CDrawOpis *pOpi = dynamic_cast<CDrawOpis*>(pObj);
         if (pOpi && pPage->Intersects(pOpi->m_position)) pOpi->Print(pDC);
     }
 
@@ -392,14 +392,14 @@ void CDrawDoc::PrintPage(CDrawPage* pPage, CDC* pDC)
 }
 
 ////////// CDRAWOBJ _M_OBJECTS LIST ?/////////////////////////////       
-void CDrawDoc::Add(CDrawObj* pObj)
+void CDrawDoc::Add(CDrawObj *pObj)
 {
     m_objects.push_back(pObj);
     pObj->m_pDocument = this;
     SetModifiedFlag();
 }
 
-void CDrawDoc::AddQue(CDrawAdd* pObj)
+void CDrawDoc::AddQue(CDrawAdd *pObj)
 {
     pObj->fizpage = 0;
     m_addsque.push_back(pObj);
@@ -407,14 +407,14 @@ void CDrawDoc::AddQue(CDrawAdd* pObj)
     SetModifiedFlag();
 }
 
-void CDrawDoc::RemoveQue(CDrawAdd* pObj)
+void CDrawDoc::RemoveQue(CDrawAdd *pObj)
 {
     auto pos = std::find(m_addsque.cbegin(), m_addsque.cend(), pObj);
     if (pos != m_addsque.end()) m_addsque.erase(pos);
     SetModifiedFlag();
 }
 
-void CDrawDoc::Remove(CDrawObj* pObj)
+void CDrawDoc::Remove(CDrawObj *pObj)
 {
     auto pPage = dynamic_cast<CDrawPage*>(pObj);
     if (pPage)
@@ -478,7 +478,7 @@ CDrawAdd* CDrawDoc::FindAddAt(int i) const
     return nullptr;
 }
 
-int CDrawDoc::GetAddPosition(CDrawAdd* pAdd) const
+int CDrawDoc::GetAddPosition(CDrawAdd *pAdd) const
 {
     int n = 0;
     auto pos = std::find_if(m_objects.cbegin(), m_objects.cend(), [&](CDrawObj* const & a) -> bool {
@@ -492,7 +492,7 @@ int CDrawDoc::GetAddPosition(CDrawAdd* pAdd) const
     return pos == m_objects.cend() ? -1 : n;
 }
 
-void CDrawDoc::SelectAdd(CDrawAdd* pObj, BOOL multiselect) const
+void CDrawDoc::SelectAdd(CDrawAdd *pObj, BOOL multiselect) const
 {
     auto pView = GetPanelView<CDrawView>();
     if (pView) pView->Select(pObj, multiselect);
@@ -526,14 +526,14 @@ void CDrawDoc::RemoveFromTail(int n)
 
 /////////////////////////////////////////////////////////////////////////////
 //CDrawPage
-void CDrawDoc::AddPageAt(size_t idx, CDrawPage* pObj)
+void CDrawDoc::AddPageAt(size_t idx, CDrawPage *pObj)
 {
     m_pages.insert(m_pages.cbegin() + idx, pObj);
     pObj->m_pDocument = this;
     SetModifiedFlag();
 }
 
-size_t CDrawDoc::AddPage(CDrawPage* pObj)
+size_t CDrawDoc::AddPage(CDrawPage *pObj)
 {
     size_t iNewOrd = m_pages.size();
     m_pages.push_back(pObj);
@@ -547,7 +547,7 @@ size_t CDrawDoc::AddPage(CDrawPage* pObj)
     return iNewOrd;
 }
 
-void CDrawDoc::RemovePage(CDrawPage* pObj)
+void CDrawDoc::RemovePage(CDrawPage *pObj)
 {
     int i = GetIPage(pObj);
     if (i == -1)
@@ -594,7 +594,7 @@ bool CDrawDoc::MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo)
     return found;
 }
 
-void CDrawDoc::SetPageRectFromOrd(CDrawPage* pObj, size_t iOrd) const
+void CDrawDoc::SetPageRectFromOrd(CDrawPage *pObj, size_t iOrd) const
 {
     ASSERT(0 <= iOrd && iOrd < m_pages.size());
 
@@ -605,7 +605,7 @@ void CDrawDoc::SetPageRectFromOrd(CDrawPage* pObj, size_t iOrd) const
     pObj->MoveTo(&pObj->m_position);
 }
 
-int CDrawDoc::ComputePageOrderNr(CDrawPage* pObj) const
+int CDrawDoc::ComputePageOrderNr(CDrawPage *pObj) const
 {
     int i = 0, j = 0;
     while (pmoduly*(i + 1)*(-8) >= pObj->m_position.top)
@@ -1004,7 +1004,7 @@ void CDrawDoc::NumberPages()
     // sprawdzamy, czy nie powstan¹ duble w numeracji
     int pc = (int)m_pages.size();
     int iLastPageNumber = iFirstPageNumber + pc - iFirstPageToNumber;
-    for (int i = 1; i < iFirstPageToNumber; i++) {
+    for (int i = 1; i < iFirstPageToNumber; ++i) {
         int iNrToCheck = m_pages[i]->nr >> 3;
         if (iFirstPageNumber <= iNrToCheck && iNrToCheck <= iLastPageNumber) {
             iFirstPageNumber = iFirstPageToNumber = 1;
@@ -1013,12 +1013,12 @@ void CDrawDoc::NumberPages()
     }
     // przenumerowujemy strony od pocz¹tku lub zaznaczonej a¿ do ostatniej
     if (theApp.GetProfileInt(_T("General"), _T("CiaglaNumeracja"), 0))
-        for (int i = iFirstPageToNumber; i <= pc; i++) {
+        for (int i = iFirstPageToNumber; i <= pc; ++i) {
             auto pObj = m_pages[i % pc];
             pObj->SetNr(((iFirstPageNumber++) << 3) + (pObj->nr & 0x07));
         } else {
             int rz = 0;
-            for (int i = iFirstPageToNumber; i <= pc; i++) {
+            for (int i = iFirstPageToNumber; i <= pc; ++i) {
                 auto pObj = m_pages[i % pc];
                 if (((pObj->nr) & c_rzym) == c_rzym) {
                     pObj->SetNr(((++rz) << 3) + c_rzym);
@@ -1056,7 +1056,7 @@ BOOL CDrawDoc::Add4Pages()
     CRect r { 0 };
     int n = _ttoi(dlg.m_ile_kolumn);
     size_t last = m_pages.size();
-    for (size_t i = last; i < last + n; i++) {
+    for (size_t i = last; i < last + n; ++i) {
         auto pNewPage = new CDrawPage(&r);
         if (last > 1) {
             auto pJedynka = m_pages[1];
@@ -1089,7 +1089,7 @@ BOOL CDrawDoc::AddDrz4Pages(LPCTSTR ile_kolumn)
     CRect r { 0 };
     int n = _ttoi(dlg.m_ile_kolumn);
     int last = (int)m_pages.size();
-    for (int i = last; i < last + n; i++) {
+    for (int i = last; i < last + n; ++i) {
         auto pNewPage = new CDrawPage(&r);
         AddPageAt(i, pNewPage);
         SetPageRectFromOrd(pNewPage, i);
@@ -1375,7 +1375,7 @@ void CDrawDoc::OnFileInfo()
     }
 }
 
-void CDrawDoc::PrintInfo(CDC* pDC, int max_n, int wspol_na_str)  //wspol_na_str =1 lub 2- 50  lub 100 str na wydruku
+void CDrawDoc::PrintInfo(CDC *pDC, int max_n, int wspol_na_str)  //wspol_na_str =1 lub 2- 50  lub 100 str na wydruku
 {
     ASSERT_VALID(this);
     CFont m_font, m_vertfont;
@@ -1451,7 +1451,7 @@ void CDrawDoc::OnFileDrzewo() // zmiana drzewa
     EndWaitCursor();
 }
 
-CString CDrawDoc::XmlReadText(IXmlReader* reader)
+CString CDrawDoc::XmlReadText(IXmlReader *reader)
 {
     XmlNodeType nodeType;
     const wchar_t *tmp;
@@ -1731,7 +1731,7 @@ CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, long 
 
     if (sx < 1 || sx > szpalt_x || sy < 1 || sy > szpalt_y) return FALSE;
 
-    CRect r(pos, CSize((int)(sx*modulx), (int)(sy*(-1)*moduly)));
+    CRect r(pos, CSize((int)(sx * modulx), (int)(sy * (-1) * moduly)));
     auto pObj = new CDrawAdd(&r);
     Add(pObj);
     pObj->m_pDocument = this;
@@ -1793,7 +1793,7 @@ void CDrawDoc::OnSyncpow()
     }
 }
 
-void CDrawDoc::OnUpdateSyncpow(CCmdUI* pCmdUI)
+void CDrawDoc::OnUpdateSyncpow(CCmdUI *pCmdUI)
 {
     if (gazeta.GetLength() > 4) OnDisableMenuRO(pCmdUI); else pCmdUI->Enable(FALSE);
 }
@@ -1926,7 +1926,7 @@ void CDrawDoc::OnSetDea()
     }
 }
 
-void CDrawDoc::OnUpdateSetDea(CCmdUI* pCmdUI)
+void CDrawDoc::OnUpdateSetDea(CCmdUI *pCmdUI)
 {
     pCmdUI->Enable(theApp.isRDBMS && theApp.grupa&(R_KIE | R_MAS));
     pCmdUI->SetCheck(theApp.grupa&R_DEA);
@@ -1947,12 +1947,12 @@ void CDrawDoc::OnShowAcDeadline()
     UpdateAllViews(NULL);
 }
 
-void CDrawDoc::OnUpdateShowTime(CCmdUI* pCmdUI)
+void CDrawDoc::OnUpdateShowTime(CCmdUI *pCmdUI)
 {
     pCmdUI->SetCheck(theApp.showDeadline);
 }
 
-void CDrawDoc::OnUpdateShowAcDeadline(CCmdUI* pCmdUI)
+void CDrawDoc::OnUpdateShowAcDeadline(CCmdUI *pCmdUI)
 {
     pCmdUI->SetCheck(theApp.showAcDeadline);
 }

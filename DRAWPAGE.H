@@ -94,10 +94,10 @@ public:
     CTime m_ac_fot;			// deadline na zdjêcia dla czasopism
     CTime m_ac_kol;			// deadline na kolumnê dla czasopism
     // Implementation
-    void DrawGrid(CDC* pDC);
-    void DrawReserved(CDC* pDC);
-    void DrawDeadline(CDC* pDC, const CRect& pos) const;
-    void DrawAcDeadline(CDC* pDC, const CRect& pos) const;
+    void DrawGrid(CDC *pDC);
+    void DrawReserved(CDC *pDC);
+    void DrawDeadline(CDC *pDC, const CRect& pos) const;
+    void DrawAcDeadline(CDC *pDC, const CRect& pos) const;
 
     void SetNr(int i);
     void AddAdd(CDrawAdd *pAdd);

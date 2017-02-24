@@ -451,14 +451,14 @@ CRect CDrawView::GetInitialPosition()
     return rect;
 }
 
-void CDrawView::ClientToDoc(CPoint &point)
+void CDrawView::ClientToDoc(CPoint& point)
 {
     CClientDC dc(this);
     OnPrepareDC(&dc, NULL);
     dc.DPtoLP(&point);
 }
 
-void CDrawView::ClientToDoc(CRect &rect)
+void CDrawView::ClientToDoc(CRect& rect)
 {
     CClientDC dc(this);
     OnPrepareDC(&dc, NULL);
@@ -467,14 +467,14 @@ void CDrawView::ClientToDoc(CRect &rect)
     ASSERT(rect.bottom <= rect.top);
 }
 
-void CDrawView::DocToClient(CPoint &point)
+void CDrawView::DocToClient(CPoint& point)
 {
     CClientDC dc(this);
     OnPrepareDC(&dc, NULL);
     dc.LPtoDP(&point);
 }
 
-void CDrawView::DocToClient(CRect &rect)
+void CDrawView::DocToClient(CRect& rect)
 {
     CClientDC dc(this);
     OnPrepareDC(&dc, NULL);
@@ -1047,7 +1047,7 @@ void CDrawView::OnPrint(CDC *pDC, CPrintInfo *pInfo)
             pDC->SetViewportExt(pDC->GetDeviceCaps(HORZRES), pDC->GetDeviceCaps(VERTRES));
             pDC->SetWindowOrg(pPage->m_position.left / CLIENT_SCALE - 5 * vscale, pPage->m_position.top / CLIENT_SCALE - 18 * vscale - 2 * (pInfo->m_nCurPage / (wspol * 50 + 1)) * pmoduly - PRINT_VOFFSET);
             pDC->SetWindowExt((pmodulx + 2 * vscale) * pszpalt_x, -(pmoduly + 4 * vscale) * pszpalt_y);
-            pDoc->PrintPage(pPage, pDC);
+            pDoc->PrintPage(pDC, pPage);
             break;
         case PRINT_DOC:
             pDoc->Print(pDC);
@@ -1126,7 +1126,7 @@ void CDrawView::OnUpdateEditProperties(CCmdUI *pCmdUI)
 }
 
 //FONTY
-void CDrawView::OnChooseFont(CFont &m_font, BOOL IsPageFont)
+void CDrawView::OnChooseFont(CFont& m_font, BOOL IsPageFont)
 {
     LOGFONT lf;
     if (m_font.m_hObject != nullptr)
@@ -1463,7 +1463,7 @@ subseterr:
 
         ThreadHandles = (HANDLE *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(HANDLE));
         ThreadArgs = (GENEPSARG *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(GENEPSARG));
-        for (int i = 0; i < iCpuCnt; i++) {
+        for (int i = 0; i < iCpuCnt; ++i) {
             auto& ta = ThreadArgs[i];
             ta.iChannelId = i;
             ta.bIsPRN = (BOOL)d.m_format;
@@ -1493,7 +1493,7 @@ subseterr:
     genEpsArg.pDlg = (CGenEpsInfoDlg *)pDlg;
     pDoc->ovEPS = FALSE;
 
-    for (int i = 0; !pDlg->cancelGenEPS && i < pc; i++) {
+    for (int i = 0; !pDlg->cancelGenEPS && i < pc; ++i) {
         if (wyborStron.GetBit(i) > 0) {
             pPage = pDoc->m_pages[i];
             int dl = pPage->m_dervlvl;

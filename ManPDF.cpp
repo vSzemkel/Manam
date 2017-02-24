@@ -135,7 +135,7 @@ unsigned long CManPDF::SearchPattern(CFile &f, const char *pat) const
     return CManPDF::ulNotFound;
 } //SearchPattern
 
-unsigned long CManPDF::GetMainXref(CFile &f)
+unsigned long CManPDF::GetMainXref(CFile& f)
 {
     if (xrefOffset != 0L)
         return xrefOffset;
@@ -149,7 +149,7 @@ unsigned long CManPDF::GetMainXref(CFile &f)
 } //GetMainXref
 
 // podaje poprzedni¹, póŸniej nadpisan¹ wartoœc offsetu do spisu xref
-unsigned long CManPDF::GetPrevXref(CFile &f, unsigned long currentxrefOffset)
+unsigned long CManPDF::GetPrevXref(CFile& f, unsigned long currentxrefOffset)
 {
     f.Seek(currentxrefOffset, CFile::begin);
     f.Read(cStore, bigSize);
@@ -160,7 +160,7 @@ unsigned long CManPDF::GetPrevXref(CFile &f, unsigned long currentxrefOffset)
 } //GetPrevXref
 
 // podaje offset w pliku f pocz¹tku definicji obiektu numer obj
-unsigned long CManPDF::FindObjEntry(CFile &f, unsigned int obj)
+unsigned long CManPDF::FindObjEntry(CFile& f, unsigned int obj)
 {
     unsigned long currentxrefOffset = GetMainXref(f);
     while (currentxrefOffset != 0L) {
@@ -262,7 +262,7 @@ void CManPDF::EmbedSection(const char *str, BOOL innerOnly)
     depth = (int)a.size();
     p = cStore + posInCstore;
     if (innerOnly) { depth--; pocz++; }
-    for (i = pocz; i < depth; i++) {
+    for (i = pocz; i < depth; ++i) {
         StringCchPrintfA(p, bigSize, "%s%s", a[i], i == depth - 1 ? "\x0a" : " ");
         trg.Write(p, (UINT)strlen(p));
     }
@@ -300,7 +300,7 @@ void CManPDF::EmbedKey(const char *buf, char *key)
 } //EmbedKey
 
 // analizuje obiekt wystêpuj¹cy po offset. Jeœli wystêpuje w nim stream to przepisuje go do pliku docelowego
-unsigned long CManPDF::EmbedStream(CFile &src, unsigned long offset, BOOL decorate)
+unsigned long CManPDF::EmbedStream(CFile& src, unsigned long offset, BOOL decorate)
 {
     src.Seek(offset, CFile::begin);
     src.Read(cStore, bigSize);
@@ -343,7 +343,7 @@ unsigned long CManPDF::EmbedStream(CFile &src, unsigned long offset, BOOL decora
     return ret;
 } //EmbedStream
 
-unsigned long CManPDF::EmbedPakStream(CFile &src, unsigned long offset, unsigned char *pak, unsigned char *niepak, unsigned char *tmp, const unsigned long niepakoff)
+unsigned long CManPDF::EmbedPakStream(CFile& src, unsigned long offset, unsigned char *pak, unsigned char *niepak, unsigned char *tmp, const unsigned long niepakoff)
 {
     src.Seek(offset, CFile::begin);
     src.Read(cStore, bigSize);
@@ -394,7 +394,7 @@ unsigned long CManPDF::EmbedPakStream(CFile &src, unsigned long offset, unsigned
 } //EmbedPakStream
 
 // przebisuje obiekt srcObjNr z pliku Ÿród³owego pod nowy numer do pliku docelowego
-void CManPDF::EmbedRef(CFile &src, unsigned int srcObjNr)
+void CManPDF::EmbedRef(CFile& src, unsigned int srcObjNr)
 {
     CString cs;
     unsigned long offset = FindObjEntry(src, srcObjNr);
@@ -423,7 +423,7 @@ void CManPDF::EmbedRef(CFile &src, unsigned int srcObjNr)
     trg.Write("endobj\x0a", 7);
 } // EmbedRef
 
-void CManPDF::EmbedContents(CFile &src, unsigned long offset)
+void CManPDF::EmbedContents(CFile& src, unsigned long offset)
 {
     CString cs;
     src.Seek(offset, CFile::begin);
@@ -531,7 +531,7 @@ void CManPDF::EmbedContents(CFile &src, unsigned long offset)
 } //EmbedContents
 
 //osadza w generowanym pliku og³oszenie pAdd, do którego materia³ jest w pliku src i przypisuje mu numer objNr
-BOOL CManPDF::EmbedPDF(CFile &src, unsigned int objNr, CDrawAdd &pAdd)
+BOOL CManPDF::EmbedPDF(CFile& src, unsigned int objNr, CDrawAdd& pAdd)
 {
     StringCchPrintfA(cStore, bigSize, "%u 0 obj\x0a<<\x0a/Type /XObject\x0a/Subtype /Form\x0a/FormType 1\x0a", objNr);
     trg.Write(cStore, (UINT)strlen(cStore));
@@ -707,7 +707,7 @@ BOOL CManPDF::CreatePDF(CDrawPage *page, const TCHAR *trgName)
         CDrawAdd *pAdd;
         // lista XObjectow
         unsigned int i, dziury = 0;
-        for (i = pocz; i < kon; i++) {
+        for (i = pocz; i < kon; ++i) {
             pAdd = page->m_adds[i - pocz];
             BOOL copyEps = theApp.GetProfileInt(_T("GenEPS"), _T("CopyOldEPS"), 0);
             fname = pAdd->EpsName(F_PDF, FALSE);
@@ -729,7 +729,7 @@ BOOL CManPDF::CreatePDF(CDrawPage *page, const TCHAR *trgName)
         trg.Write(">>\x0a", 3); trg.Write("endobj\x0a", 7);
         // osadx PDFy
         dziury = 0;
-        for (i = pocz; i < kon; i++) {
+        for (i = pocz; i < kon; ++i) {
             if (embAlias[i - pocz].IsEmpty()) {
                 dziury++;
                 continue;
@@ -755,7 +755,7 @@ BOOL CManPDF::CreatePDF(CDrawPage *page, const TCHAR *trgName)
         StringCchPrintfA(cStore, bigSize, "q\0121 0 0 1 %i %i cm\012", orgX, orgY);
         contentLen += (UINT)strlen(cStore);
 
-        for (i = pocz; i < kon; i++) {
+        for (i = pocz; i < kon; ++i) {
             pAdd = page->m_adds[i - pocz];
             auto pRozm = pAdd->m_pDocument->GetCRozm(pAdd->szpalt_x, pAdd->szpalt_y, pAdd->typ_xx);
             float px = (float)(mm2pkt * ((pAdd->posx + pAdd->sizex - 1) * (pRozm->w + pRozm->sw) - pRozm->sw));
@@ -891,7 +891,7 @@ kids:
     return offset;
 } //GetMediaBox
 
-inline void CManPDF::EmbedTextRight(const char* font, unsigned int fsize, float px, float py, const char* text, CStringA& buf)
+inline void CManPDF::EmbedTextRight(const char *font, unsigned int fsize, float px, float py, const char *text, CStringA& buf)
 {
     buf.Format("q BT 1 g\012%s %u Tf\0121 0 0 1 %f %f cm\012-100 Tz (%s) Tj 100 Tz 0 g (%s) Tj\012ET Q\012", font, fsize, px, py, text, text);
 }

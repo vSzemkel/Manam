@@ -300,7 +300,7 @@ BOOL CPageDlg::OnInitDialog()
     int i, j;
     m_deadlineday = m_deadline;
     CDialog::OnInitDialog();
-    for (i = 1; i < (int)m_ile_spotow + 1; i++)
+    for (i = 1; i < (int)m_ile_spotow + 1; ++i)
         m_kolorcombo.AddString(_T("SPOT ") + CDrawPage::Rzymska(i));
     m_kolorcombo.AddString(BRAK);
     m_kolorcombo.AddString(FULL);
@@ -339,7 +339,7 @@ BOOL CPageDlg::OnInitDialog()
 
     //mutred
     j = m_docmutred.GetLength() / 2;
-    for (i = 0; i < j; i++) {
+    for (i = 0; i < j; ++i) {
         CString m = m_docmutred.Mid(2 * i, 2);
         int p = 0, ind = m_mutredcombo.AddString(m);
         while (p >= 0) {
@@ -420,7 +420,7 @@ BOOL CPageDlg::OnInitDialog()
 
     return TRUE;
 } //OnInitDialog
-/////////////////////////////////////////////////////////////////////////////
+
 BOOL CAddDlg::matchingOldAdnoUpdate = FALSE;
 // CAddDlg dialog
 CAddDlg::CAddDlg(CWnd *pParent /*=NULL*/)
@@ -550,6 +550,7 @@ BOOL CAddDlg::OnInitDialog()
         default:
             m_kolorcombo.SetCurSel(m_kolor >> 3);
     }
+
     if (m_locked && m_fizpage != 0) {
         m_posxedit.SetReadOnly(TRUE);
         m_posyedit.SetReadOnly(TRUE);
@@ -570,6 +571,7 @@ BOOL CAddDlg::OnInitDialog()
         GetDlgItem(IDC_POSX)->EnableWindow(FALSE);
         GetDlgItem(IDC_POSY)->EnableWindow(FALSE);
     }
+
     // dialog otwierany z widoku kolejki ma mieæ nieaktywne wiele opcji
     if (m_fromQue) {
         GetDlgItem(IDC_POSX)->EnableWindow(FALSE);
@@ -578,6 +580,7 @@ BOOL CAddDlg::OnInitDialog()
         GetDlgItem(IDC_LOCKED)->EnableWindow(FALSE);
         GetDlgItem(IDC_FLAGA_REZERW)->EnableWindow(FALSE);
     }
+
     // po zaporze wyszarzyæ czasy
     if (m_always) {
         GetDlgItem(IDC_DATA_CZOB)->EnableWindow(FALSE);
@@ -606,6 +609,7 @@ BOOL CAddDlg::OnInitDialog()
         kon -= COleDateTimeSpan(1, 0, 0, 0);
         m_powtctrl.SetRange(&pocz, &kon);
     }
+
     if (m_powt != 0) {
         m_powtctrl.SetTime(&m_powt);
         CDrawApp::CTimeToShortDate(m_powt, m_candidateAdnoDate);
@@ -1119,7 +1123,7 @@ void CInfoDlg::OnOK()
     CDialog::OnOK();
     unsigned long mask = 1L;
     m_drukarnie = 0L;
-    for (i = 0; i < m_drukarniecombo.GetCount(); i++, mask <<= 1)
+    for (i = 0; i < m_drukarniecombo.GetCount(); ++i, mask <<= 1)
         if (m_drukarniecombo.GetSel(i))
             m_drukarnie |= mask;
     if ((i = m_wydawcycombo.GetCurSel()) != CB_ERR) {
@@ -1586,7 +1590,7 @@ void CDBOpenDlg::OnOK()
 
 void CDBOpenDlg::RefreshCombo()
 {
-    CWnd* wnOldFocus = GetFocus();
+    CWnd *wnOldFocus = GetFocus();
     BOOL isON = IsDlgButtonChecked(IDC_LIB);
     if (bEnableCtrls) { //aktywacja kontrolek
         GetDlgItem(ID_DATA_TEXT)->ShowWindow(isON ? SW_HIDE : SW_SHOW);
@@ -1783,7 +1787,7 @@ void CAddFindDlg::OnUpdateNr()
     if (typed.IsEmpty()) return;
 
     for (const auto& pObj : *m_pObList) {
-        CDrawAdd* pAdd = dynamic_cast<CDrawAdd*>(pObj);
+        CDrawAdd *pAdd = dynamic_cast<CDrawAdd*>(pObj);
         if (pAdd) {
             match.Format(_T("%ld"), pAdd->nreps);
             if (typed == match.Left(typed.GetLength())) {
@@ -2165,7 +2169,7 @@ void CUserDlg::OnZaloz()
 {
     TCHAR *s = theApp.bigBuf;
     int aiGets[6] = { IDC_IMIE, IDC_NAZWISKO, IDC_LOGINNAME, IDC_PASS, IDC_GRUPA, IDC_TELEFON };
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; ++i) {
         GetDlgItemText(aiGets[i], s, 255);
         if (!s[0]) {
             GetDlgItem(aiGets[i])->SetFocus();

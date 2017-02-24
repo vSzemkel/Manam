@@ -14,7 +14,7 @@ extern BOOL drawErrorBoxes;
 
 IMPLEMENT_SERIAL(CDrawPage, CDrawObj, 0)
 
-CDrawPage::CDrawPage(const CRect* position) :
+CDrawPage::CDrawPage(const CRect *position) :
     CDrawObj(position), id_str(-1), szpalt_x(pszpalt_x), szpalt_y(pszpalt_y),
     nr(c_normal), prn_mak_xx(0), wyd_xx(-1), m_typ_pary(0), space(4), space_locked(4), space_red(4),
     niemakietuj(0), m_dervlvl(0), m_mutczas(1), m_drukarnie(0), m_deadline(CTime::GetCurrentTime()),
@@ -55,7 +55,7 @@ void CDrawPage::Serialize(CArchive& ar)
         space_red.Serialize(ar);
         WORD ile_krat = (WORD)m_kraty_niebazowe.size();
         ar << ile_krat;
-        for (WORD i = 0; i < ile_krat; i++) {
+        for (WORD i = 0; i < ile_krat; ++i) {
             auto& krata = m_kraty_niebazowe[i];
             ar << krata.m_szpalt_x;
             ar << krata.m_szpalt_y;
@@ -87,7 +87,7 @@ void CDrawPage::Serialize(CArchive& ar)
         space_red.Serialize(ar);
         space = space_locked | space_red;
         ar >> wTemp;
-        for (WORD i = 0; i < wTemp; i++) {
+        for (WORD i = 0; i < wTemp; ++i) {
             int sx, sy;
             CFlag sp, sp_l, sp_r;
             ar >> sx;
@@ -136,7 +136,7 @@ CString CDrawPage::GetNrPaginy() const
     return pagina;
 }
 
-void CDrawPage::Draw(CDC* pDC)
+void CDrawPage::Draw(CDC *pDC)
 {
     ASSERT_VALID(this);
 
@@ -185,7 +185,7 @@ void CDrawPage::Draw(CDC* pDC)
     pDC->SelectObject(pOldFont);
 }
 
-void CDrawPage::DrawDeadline(CDC* pDC, const CRect& pos) const
+void CDrawPage::DrawDeadline(CDC *pDC, const CRect& pos) const
 {
     CFont *oldFont = pDC->SelectObject(&(m_pDocument->m_pagefont));
     CRect dlBox(CPoint((int)(pos.left + 1.25*pmodulx), pos.top - 2 * pmoduly), CSize((int)(2.5*pmodulx), -pmoduly - 2));
@@ -195,7 +195,7 @@ void CDrawPage::DrawDeadline(CDC* pDC, const CRect& pos) const
     pDC->SelectObject(oldFont);
 }
 
-void CDrawPage::DrawAcDeadline(CDC* pDC, const CRect& pos) const
+void CDrawPage::DrawAcDeadline(CDC *pDC, const CRect& pos) const
 {
     if (m_ac_red == 0L) return;
 
@@ -225,7 +225,7 @@ CFlag CDrawPage::GetReservedFlag()
     return vspace;
 }
 
-void CDrawPage::DrawReserved(CDC* pDC)
+void CDrawPage::DrawReserved(CDC *pDC)
 {
 
     /*	vu : zaznacza modu≥y za statusem zajÍte OZ, na ktÛrych jeszcze
@@ -242,7 +242,7 @@ void CDrawPage::DrawReserved(CDC* pDC)
     }
 }
 
-void CDrawPage::DrawGrid(CDC* pDC)
+void CDrawPage::DrawGrid(CDC *pDC)
 {
     if (((CMainFrame*)AfxGetMainWnd())->show_spacelocks && (space_red || space_locked)) {
         auto pOldBrush = reinterpret_cast<CBrush*>(pDC->SelectStockObject(WHITE_BRUSH));
@@ -321,7 +321,7 @@ void CDrawPage::SetSpotKolor(UINT spot_kolor) // spot kolor to index spotkoloru 
     }
 }
 
-void CDrawPage::DrawKolor(CDC* pDC, const CRect& pos) const
+void CDrawPage::DrawKolor(CDC *pDC, const CRect& pos) const
 {
     if (kolor == c_brak)
         return;
@@ -378,7 +378,7 @@ void CDrawPage::DBChangeName(int id_drw)
 }
 
 /////////////// PRINT
-void CDrawPage::Print(CDC* pDC)
+void CDrawPage::Print(CDC *pDC)
 {
     ASSERT_VALID(this);
 
@@ -388,8 +388,8 @@ void CDrawPage::Print(CDC* pDC)
     else
         pOldBrush = (CBrush*)pDC->SelectStockObject(WHITE_BRUSH);
 
-    CPen* pOldPen = reinterpret_cast<CPen*>(pDC->SelectStockObject(BLACK_PEN));
-    CFont* pOldFont = pDC->SelectObject(&(m_pDocument->m_pagefont));
+    auto pOldPen = reinterpret_cast<CPen*>(pDC->SelectStockObject(BLACK_PEN));
+    auto pOldFont = pDC->SelectObject(&(m_pDocument->m_pagefont));
 
     pDC->SetBkMode(TRANSPARENT);
 
@@ -424,7 +424,7 @@ void CDrawPage::Print(CDC* pDC)
 }
 
 // rect must be in logical coordinates
-CDrawObj* CDrawPage::Clone(CDrawDoc* pDoc) const
+CDrawObj* CDrawPage::Clone(CDrawDoc *pDoc) const
 {
     ASSERT_VALID(this);
 
@@ -623,7 +623,7 @@ void CDrawPage::UpdateInfo()
 //////////////////////////////////////////////////////
 ///////// obsluga listy ogloszen ///////////////// myadds    i blokad miejsca
 
-void CDrawPage::AddAdd(CDrawAdd* pAdd)
+void CDrawPage::AddAdd(CDrawAdd *pAdd)
 {
     ASSERT(pAdd != nullptr);
     pAdd->fizpage = this->nr;
@@ -635,7 +635,7 @@ void CDrawPage::AddAdd(CDrawAdd* pAdd)
     SetDirty();
 }
 
-void CDrawPage::RemoveAdd(CDrawAdd* pAdd, BOOL bRemodeFromAdds)
+void CDrawPage::RemoveAdd(CDrawAdd *pAdd, BOOL bRemodeFromAdds)
 {
     auto itAdd = std::find(m_adds.cbegin(), m_adds.cend(), pAdd);
     if (itAdd != m_adds.end()) {
@@ -663,19 +663,19 @@ void CDrawPage::MoveTo(const CRect& position, CDrawView *pView)
     dirty = TRUE;
 }
 
-void CDrawPage::SetSpace(CDrawAdd* pObj)
+void CDrawPage::SetSpace(CDrawAdd *pObj)
 {
     space |= pObj->GetPlacementFlag();
     dirty = TRUE;
 }
 
-void CDrawPage::RealizeSpace(CDrawAdd* pObj)
+void CDrawPage::RealizeSpace(CDrawAdd *pObj)
 {
     space ^= pObj->GetPlacementFlag();
     dirty = TRUE;
 }
 
-BOOL CDrawPage::FindSpace(CDrawAdd* pObj, int *px, int *py, int sx, int sy) const
+BOOL CDrawPage::FindSpace(CDrawAdd *pObj, int *px, int *py, int sx, int sy) const
 {
     BOOL ret = FALSE;
     if (m_dervlvl == DERV_FIXD || m_dervlvl == DERV_PROH) return FALSE;
@@ -728,7 +728,7 @@ restoreShape:
     return ret;
 }
 
-BOOL CDrawPage::CheckSpace(CDrawAdd* pObj, int px, int py) const
+BOOL CDrawPage::CheckSpace(CDrawAdd *pObj, int px, int py) const
 {
     /* vu : Sprawdza czy dane ogloszenie moøna postawic we wspolrzednych px i py na stronie		end vu */
     if (px < 1 || px + pObj->sizex - 1 > szpalt_x || py < 1 || py + pObj->sizey - 1 > szpalt_y) return FALSE;
@@ -741,7 +741,7 @@ BOOL CDrawPage::CheckSpace(CDrawAdd* pObj, int px, int py) const
     return (sp & pObj->GetPlacementFlag(px, py)).IsZero();
 }
 
-BOOL CDrawPage::CheckSpaceDiffKraty(CDrawAdd* pObj, int x, int y, int sx, int sy) const
+BOOL CDrawPage::CheckSpaceDiffKraty(CDrawAdd *pObj, int x, int y, int sx, int sy) const
 {
     if (m_kraty_niebazowe.empty()) return TRUE;
     // sprawdü przecinanie z innymi kratami
@@ -1345,8 +1345,8 @@ BOOL CDrawPage::PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) co
     return true;
 } //PostPageToWorkflowServer
 
-void CDrawPage::Preview(PGENEPSARG pArg, CFile* dest, int bx1, int by1, int bx2, int by2)
-{//GN     //x,y dx dy w 0.1 mm
+void CDrawPage::Preview(PGENEPSARG pArg, CFile *dest, int bx1, int by1, int bx2, int by2)
+{ //GN     //x,y dx dy w 0.1 mm
     DWORD header[7];
     header[0] = 0xC6D3D0C5L; // eps z preview
     header[1] = (DWORD)preview_offset; // poczatek eps'a 

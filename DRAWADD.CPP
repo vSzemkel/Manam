@@ -43,7 +43,7 @@ CDrawAdd::CDrawAdd() : // u¿ywany tylko przez ::Serialize
     m_pub_xx(-1), nag_xx(1), bank { 0 }, precelWertexCnt(0), precelRingCnt(0), iFileId(0)
 {}
 
-CDrawAdd::CDrawAdd(const CRect* position) : CDrawAdd::CDrawAdd()
+CDrawAdd::CDrawAdd(const CRect *position) : CDrawAdd::CDrawAdd()
 {
     ASSERT_VALID(this);
     m_position = *position;
@@ -97,10 +97,10 @@ void CDrawAdd::Serialize(CArchive& ar)
         ar << (WORD)spad_flag;
         ar << (WORD)precelWertexCnt;
         if (precelWertexCnt) {
-            for (int i = 0; i < precelWertexCnt; i++)
+            for (int i = 0; i < precelWertexCnt; ++i)
                 ar << this->aPrecelWertex[i];
             ar << (WORD)precelRingCnt;
-            for (int i = 0; i < precelRingCnt; i++)
+            for (int i = 0; i < precelRingCnt; ++i)
                 ar << aRingWertexCnt[i];
         }
         space.Serialize(ar);
@@ -133,11 +133,11 @@ void CDrawAdd::Serialize(CArchive& ar)
         if (precelWertexCnt) {
             aPrecelWertex = std::make_unique<CPoint[]>(precelWertexCnt + 2); // na koñcu int[4]
             aRingWertexCnt = reinterpret_cast<int*>(&aPrecelWertex[precelWertexCnt]);
-            for (int i = 0; i < precelWertexCnt; i++)
+            for (int i = 0; i < precelWertexCnt; ++i)
                 ar >> aPrecelWertex[i];
             ar >> wTemp; precelRingCnt = wTemp;
             ASSERT(precelRingCnt <= ciMaxRings);
-            for (int i = 0; i < precelRingCnt; i++)
+            for (int i = 0; i < precelRingCnt; ++i)
                 ar >> aRingWertexCnt[i];
         }
         space.Serialize(ar);
@@ -146,7 +146,7 @@ void CDrawAdd::Serialize(CArchive& ar)
 }
 
 ////////////////////////// DRAW
-void CDrawAdd::Draw(CDC* pDC)
+void CDrawAdd::Draw(CDC *pDC)
 {
     ASSERT_VALID(this);
 
@@ -246,7 +246,7 @@ void CDrawAdd::Draw(CDC* pDC)
     pDC->SelectObject(pOldPen);
 }
 
-void CDrawAdd::DrawDesc(CDC* pDC, const CRect& rect) const
+void CDrawAdd::DrawDesc(CDC *pDC, const CRect& rect) const
 {
     /* vu : Rysuje opis tekstowy og³oszenia na podanym urz¹dzeniu	end vu */
 
@@ -304,7 +304,7 @@ void CDrawAdd::DrawDesc(CDC* pDC, const CRect& rect) const
     }
 }
 
-void CDrawAdd::DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, BOOL top) const
+void CDrawAdd::DrawTx(CDC * pDC, const CRect& rect, LPCTSTR tx, BOOL top) const
 {
     CFont *oldFont = pDC->SelectObject(&(m_pDocument->m_addfont));
     CRect r = rect;
@@ -321,7 +321,7 @@ void CDrawAdd::DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, BOOL top) const
     pDC->SelectObject(oldFont);
 }
 
-void CDrawAdd::DrawPadlock(CDC* pDC, const CRect& rect) const
+void CDrawAdd::DrawPadlock(CDC *pDC, const CRect& rect) const
 {
     CBrush* pOldBrush = (CBrush*)pDC->SelectStockObject(BLACK_BRUSH);
     CPen* pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
@@ -345,7 +345,7 @@ void CDrawAdd::DrawPadlock(CDC* pDC, const CRect& rect) const
 }
 
 ////////////////////////// PRINT
-void CDrawAdd::Print(CDC* pDC)
+void CDrawAdd::Print(CDC *pDC)
 {
     ASSERT_VALID(this);
 
@@ -363,7 +363,7 @@ void CDrawAdd::Print(CDC* pDC)
                 DrawKolor(pDC, &rect);
             break;
         case 1:
-            for (int i = 0; i < precelWertexCnt; i++) {
+            for (int i = 0; i < precelWertexCnt; ++i) {
                 aPrecelWertex[i].x /= CLIENT_SCALE;
                 aPrecelWertex[i].y /= CLIENT_SCALE;
             }
@@ -373,7 +373,7 @@ void CDrawAdd::Print(CDC* pDC)
             aRectClip = (CRect*)((RGNDATA*)theApp.bigBuf)->Buffer;
             iClipRegions = ((RGNDATA*)theApp.bigBuf)->rdh.nCount;
             rgn.DeleteObject();
-            for (int i = 0; i < iClipRegions; i++) {
+            for (int i = 0; i < iClipRegions; ++i) {
                 pDC->IntersectClipRect(aRectClip[i]);
                 DrawKolor(pDC, &rect);
                 pDC->SelectClipRgn(NULL);
@@ -382,13 +382,13 @@ void CDrawAdd::Print(CDC* pDC)
             pDC->OffsetWindowOrg(-rect.left, -rect.top);
             pDC->Polygon(aPrecelWertex.get(), precelWertexCnt);
             pDC->OffsetWindowOrg(rect.left, rect.top);
-            for (int i = 0; i < precelWertexCnt; i++) {
+            for (int i = 0; i < precelWertexCnt; ++i) {
                 aPrecelWertex[i].x *= CLIENT_SCALE;
                 aPrecelWertex[i].y *= CLIENT_SCALE;
             }
             break;
         default:
-            for (int i = 0; i < precelWertexCnt; i++) {
+            for (int i = 0; i < precelWertexCnt; ++i) {
                 aPrecelWertex[i].x /= CLIENT_SCALE;
                 aPrecelWertex[i].y /= CLIENT_SCALE;
             }
@@ -398,7 +398,7 @@ void CDrawAdd::Print(CDC* pDC)
             aRectClip = (CRect*)((RGNDATA*)theApp.bigBuf)->Buffer;
             iClipRegions = ((RGNDATA*)theApp.bigBuf)->rdh.nCount;
             rgn.DeleteObject();
-            for (int i = 0; i < iClipRegions; i++) {
+            for (int i = 0; i < iClipRegions; ++i) {
                 pDC->IntersectClipRect(aRectClip[i]);
                 DrawKolor(pDC, &rect);
                 pDC->SelectClipRgn(NULL);
@@ -407,7 +407,7 @@ void CDrawAdd::Print(CDC* pDC)
             pDC->OffsetWindowOrg(-rect.left, -rect.top);
             pDC->PolyPolygon(aPrecelWertex.get(), aRingWertexCnt, precelRingCnt);
             pDC->OffsetWindowOrg(rect.left, rect.top);
-            for (int i = 0; i < precelWertexCnt; i++) {
+            for (int i = 0; i < precelWertexCnt; ++i) {
                 aPrecelWertex[i].x *= CLIENT_SCALE;
                 aPrecelWertex[i].y *= CLIENT_SCALE;
             }
@@ -426,7 +426,7 @@ void CDrawAdd::Print(CDC* pDC)
     pDC->SelectObject(pOldPen);
 }
 
-void CDrawAdd::PrintPadlock(CDC* pDC, const CRect& rect)
+void CDrawAdd::PrintPadlock(CDC *pDC, const CRect& rect)
 {
     auto pOldBrush = static_cast<CBrush*>(pDC->SelectStockObject(BLACK_BRUSH));
     auto pOldPen = static_cast<CPen*>(pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->pen)));
@@ -465,7 +465,7 @@ void CDrawAdd::UpdateInfo()
     if (fizpage) info.AppendFormat(_T(" | na str: %s (%i,%i)"), m_pDocument->GetPage(fizpage)->GetNrPaginy(), posx, posy);
 }
 
-CString CDrawAdd::PrepareBuf(TCHAR* ch) const
+CString CDrawAdd::PrepareBuf(TCHAR *ch) const
 {
     CString bufor;
     bufor.AppendFormat(_T("%ix%i%s"), sizex, sizey, ch);
@@ -689,7 +689,7 @@ void CDrawAdd::SetPosition(int fizp, int px, int py, int sx, int sy)
     UpdateInfo();
 }
 
-void CDrawAdd::SetPosition(CRect* m_pos, CDrawPage* pPage)
+void CDrawAdd::SetPosition(CRect *m_pos, CDrawPage *pPage)
 {
     int sx = min((int)ceil(abs(m_pos->right - m_pos->left) / modulx - 0.5), szpalt_x);
     int sy = min((int)ceil(abs(m_pos->top - m_pos->bottom) / moduly - 0.5), szpalt_y);
@@ -777,7 +777,7 @@ void CDrawAdd::SetSpaceAndPosition(int fizp, int px, int py)
 
 BOOL CDrawAdd::PtOnRing(CPoint p) const
 {
-    for (int i = 0; i < precelWertexCnt - 1; i++) {
+    for (int i = 0; i < precelWertexCnt - 1; ++i) {
         if (aPrecelWertex[i].y != aPrecelWertex[i + 1].y || aPrecelWertex[i].y != p.y)
             continue;
         int r1 = aPrecelWertex[i].x;
@@ -909,7 +909,7 @@ void CDrawAdd::InitPrecel(const CString& sPrecelFlag)
 
     // wyrownanie do kraty	
     int iRightBound = static_cast<int>(sizex * modulx);
-    for (int i = 0; i < precelWertexCnt; i++) {
+    for (int i = 0; i < precelWertexCnt; ++i) {
         if (aPrecelWertex[i].x == iRightBound) aPrecelWertex[i].x -= 11;
         //if (aPrecelWertex[i].y == sizey*moduly) aPrecelWertex[i].y+=3;
     }
@@ -1277,7 +1277,7 @@ postaw:
     pPage->AddAdd(this);
 }
 
-BOOL CDrawAdd::SetPagePosition(CRect *vRect, CDrawPage *vPage) //vu  
+BOOL CDrawAdd::SetPagePosition(CRect *pRect, CDrawPage *vPage) //vu  
 {
     /*	vRect ? stawia : sprawdza */
     int j, k = 0;
@@ -1289,25 +1289,25 @@ BOOL CDrawAdd::SetPagePosition(CRect *vRect, CDrawPage *vPage) //vu
         if (isupper((int)logpage[j])) tail[k++] = logpage[j];
     tail[k] = '\0';
     if (_tcsstr(tail, _T("DL")))
-        mozna = SetStrictDescPos(_T("DL"), vRect, vPage);
+        mozna = SetStrictDescPos(_T("DL"), pRect, vPage);
     else if (_tcsstr(tail, _T("DP")))
-        mozna = SetStrictDescPos(_T("DP"), vRect, vPage);
+        mozna = SetStrictDescPos(_T("DP"), pRect, vPage);
     else if (_tcsstr(tail, _T("D")))
-        mozna = SetStrictDescPos(_T("D"), vRect, vPage);
+        mozna = SetStrictDescPos(_T("D"), pRect, vPage);
     else if (_tcsstr(tail, _T("GP")))
-        mozna = SetStrictDescPos(_T("GP"), vRect, vPage);
+        mozna = SetStrictDescPos(_T("GP"), pRect, vPage);
     else if (_tcsstr(tail, _T("GL")))
-        mozna = SetStrictDescPos(_T("GL"), vRect, vPage);
+        mozna = SetStrictDescPos(_T("GL"), pRect, vPage);
     else if (_tcsstr(tail, _T("G")))
-        mozna = SetStrictDescPos(_T("G"), vRect, vPage);
+        mozna = SetStrictDescPos(_T("G"), pRect, vPage);
     else if (_tcsstr(tail, _T("L")))
-        mozna = SetStrictDescPos(_T("L"), vRect, vPage);
+        mozna = SetStrictDescPos(_T("L"), pRect, vPage);
     else if (_tcsstr(tail, _T("P")))
-        mozna = SetStrictDescPos(_T("P"), vRect, vPage);
+        mozna = SetStrictDescPos(_T("P"), pRect, vPage);
     return mozna;
 }
 
-BOOL CDrawAdd::SetStrictDescPos(TCHAR *description, CRect *vRect, CDrawPage *pPage) //vu  
+BOOL CDrawAdd::SetStrictDescPos(TCHAR *description, CRect *pRect, CDrawPage *pPage) //vu  
 {
     /* vu : Jako description - opis polozenia ogloszenia na stronie podaje sie
             jeden ze skrotow in ('P','L','G','D','GL','GP','DL','DP')
@@ -1367,10 +1367,10 @@ BOOL CDrawAdd::SetStrictDescPos(TCHAR *description, CRect *vRect, CDrawPage *pPa
     return FALSE;
 
 postaw:
-    if (vRect) {
+    if (pRect) {
         posx = i;
         posy = j;
-        vRect->SetRect(pPage->m_position.left + (int)((posx - 1)*modulx), pPage->m_position.bottom + (int)((szpalt_y - posy + 1)*moduly),
+        pRect->SetRect(pPage->m_position.left + (int)((posx - 1)*modulx), pPage->m_position.bottom + (int)((szpalt_y - posy + 1)*moduly),
             pPage->m_position.left + (int)((posx + sizex - 1)*modulx), pPage->m_position.bottom + (int)((szpalt_y - posy - sizey + 1)*moduly));
         pPage->AddAdd(this);
     }
@@ -2054,7 +2054,7 @@ void CDrawAdd::Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const
     for (i = 1; i < 3; i++)
         *(p + (y1 + 1)*szer + x2.quot - i) = (BYTE)255;   //podpis  
 
-    for (i = y2; i <= y1; i++) {
+    for (i = y2; i <= y1; ++i) {
         *(p + i*szer + x1.quot) |= (m1 | p1) & ci;       //0000100000 
         *(p + i*szer + x2.quot) |= (m2 | p2) & ci;
         for (j = x1.quot + 1; j < x2.quot; j++)

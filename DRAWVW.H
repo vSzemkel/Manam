@@ -30,7 +30,7 @@ private:
     BOOL ModifyMutczas(int n);
     unsigned char m_pagesPrinted;
     void OnPrevKolumnaDruk();	// pokazuje preview kolumny przygotowanej do druku
-    static int OnDisableMenuInt(CCmdUI* pCmdUI);
+    static int OnDisableMenuInt(CCmdUI *pCmdUI);
 protected: // create from serialization only
     CDrawView();
     void OnChoosePageFont();

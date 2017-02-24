@@ -44,7 +44,7 @@ BOOL CSpacerDlg::Deal(CDrawAdd *vAdd)
     dlg.queDeal = !vAdd->fizpage;
     if (dlg.DoModal() != IDOK && (vAdd->m_add_xx < 1 || dlg.m_quepub_xx > 0)) { //jezeli nie udalo sie sprzedac, to usun ogloszenie z makiety, z kolejki nie usuwaj
         CDrawDoc *vDoc = vAdd->m_pDocument;
-        CDrawPage* pPage = vDoc->GetPage(vAdd->fizpage);
+        CDrawPage *pPage = vDoc->GetPage(vAdd->fizpage);
         vDoc->Remove(vAdd);
         if (vAdd->m_add_xx < 1) delete vAdd;
         if (pPage) pPage->Invalidate();
@@ -256,7 +256,7 @@ void CSpacerDlg::OnDealappend()
     GetDlgItem(IDC_SPACER)->SetFocus();
 }
 
-void CSpacerDlg::OnCloseupLastemision(NMHDR*, LRESULT* pResult)
+void CSpacerDlg::OnCloseupLastemision(NMHDR *, LRESULT *pResult)
 {
     CTime t;
     m_lastemisionctl.GetTime(t);
@@ -540,7 +540,7 @@ void CSpacerDlg::OnQue()
     if (queDeal) {
         if (!theManODPNET.EI(sql, orapar))
             return;
-        for (i = 1; i < rc; i++) { //wieloemisyjny queDeal
+        for (i = 1; i < rc; ++i) { //wieloemisyjny queDeal
             next_mak_xx = static_cast<int>(m_emisjelist.GetItemData(i));
             if (!theManODPNET.EI(sql, orapar))
                 return;

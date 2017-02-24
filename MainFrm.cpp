@@ -277,7 +277,7 @@ void CMainFrame::IniKolorTable()
     Spot_Kolor[0] = BRAK; Spot_Brush[0] = new CBrush(RGB(190, 190, 190));
     Spot_Kolor[1] = FULL; Spot_Brush[1] = new CBrush(BIALY);
     CString bf;
-    for (int i = 1; i <= max_col; i++) {
+    for (int i = 1; i <= max_col; ++i) {
         bf.Format(_T("%i"), i);
         Spot_Kolor[i + 1] = theApp.GetProfileString(_T("SpotColors"), _T("Spot") + bf, _T("nie ma")).MakeUpper();
         Spot_Brush[i + 1] = new CBrush(theApp.GetProfileInt(_T("SpotColors"), _T("Color") + bf, BIALY));
@@ -356,7 +356,7 @@ void CMainFrame::IniCaptionCombo(BOOL iscaption)
     TCHAR bf[3];
     m_CaptionBox->ResetContent();
     m_CaptionBox->AddString(_T(""));
-    for (int i = 1; i <= max_col; i++) {
+    for (int i = 1; i <= max_col; ++i) {
         _itot_s(i, bf, 3, 10);
         m_CaptionBox->AddString(theApp.GetProfileString(tx, tx + CString(bf), _T("")));
     }

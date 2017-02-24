@@ -77,7 +77,7 @@ void CManSock::OnReceive(int nErrorCode)
         if (theApp.isRDBMS) SendManamMessage(theManODPNET.m_userName + ": " + dlg.m_msg, dlg.m_login, dlg.m_broadcast);
 }
 
-void CManSock::SendManamMessage(CString &msg, CString &login, BOOL broadcast)
+void CManSock::SendManamMessage(CString& msg, CString& login, BOOL broadcast)
 {
     int num;
     if (broadcast) {
@@ -103,7 +103,7 @@ void CManSock::SendManamMessage(CString &msg, CString &login, BOOL broadcast)
     }
 }
 
-void CManSock::HandleSysMsg1(TCHAR* sysmsg) const
+void CManSock::HandleSysMsg1(TCHAR *sysmsg) const
 {	// asynchroniczna obs³uga spacer.update_reservation
     CDrawAdd *pAdd;
     TCHAR *p, *septok = _T("^");

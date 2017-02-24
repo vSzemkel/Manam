@@ -53,8 +53,7 @@ protected:
 public:
     BOOL OnInitDialog() override;
 public:
-    afx_msg void OnDeltaposSpinx(NMHDR *pNMHDR, LRESULT *pResult);
-    afx_msg void OnDeltaposSpiny(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnDeltaposSpin(UINT spinCtrlId, NMHDR *pNMHDR, LRESULT *pResult);
     afx_msg void OnCbnSelchangeKratka();
     afx_msg void OnDefineModelid();
 private:

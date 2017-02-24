@@ -14,7 +14,7 @@ protected:
     DECLARE_SERIAL(CDrawAdd);
     CDrawAdd();
 public:
-    CDrawAdd(const CRect* position);
+    CDrawAdd(const CRect *position);
     virtual ~CDrawAdd();
     virtual void Draw(CDC *pDC) override;
     virtual void Print(CDC *pDC) override;
@@ -81,7 +81,7 @@ private:
     CString m_precel_flag;  // flaga precla, przechowywana po to, by niepotrzebnie nie liczyæ obwodnic po OnOpen
     std::unique_ptr<CPoint[]> aPrecelWertex;	// tablica wierzcho³ków precla
     int *aRingWertexCnt;	// tablica iloœci wierzcho³ków na poszczególnych obwornicach
-    BOOL SetStrictDescPos(TCHAR *description, CRect *vRect, CDrawPage* pPage);
+    BOOL SetStrictDescPos(TCHAR *description, CRect *vRect, CDrawPage *pPage);
     BOOL PtOnRing(CPoint p) const; // stwierdza, czy krawêdŸ (px,py)->(px+1,py) jest na dotychczas znalezionej obwodnicy precla
     int FindRing(CPoint p0, BOOL bOuterRing); // znajduje obwodnicê precla rozpoczynaj¹c¹ siê od p0 w kierunku E, zwraca liczbê wierzcho³ków
 
@@ -110,7 +110,7 @@ public:
     void SetLogpage(CString& m_op_zew, CString& m_sekcja, CString& m_op_sekcji, int m_nr_w_sekcji, CString& m_PL, CString& m_op_PL, int m_nr_PL, CString& m_poz_na_str); //vu
     void ParseLogpage(TCHAR *op_zew, TCHAR *sekcja, TCHAR *op_sekcji, int *nr_sek, TCHAR *pl, TCHAR *op_pl, int *nr_pl, TCHAR *poz_na_str = nullptr); // vu
     int  CkPageLocation(int vFizPage); //vu : czy ogloszenie moze byc na stronie numer vFizPage
-    void SetEstPagePos(TCHAR *description, CRect *vRect, CDrawPage* pPage);
+    void SetEstPagePos(TCHAR *description, CRect *vRect, CDrawPage *pPage);
     BOOL SetPagePosition(CRect *vRect, CDrawPage *vPage);
 
     BOOL GetProdInfo(PGENEPSARG pArg, TCHAR *cKolor, float *bx1, float *by1, float *bx2, float *by2, int *ileMat); // szuka danych w bazie, jeœli nie ma, to otwiera i przeszukuje plik

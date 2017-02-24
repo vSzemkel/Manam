@@ -23,10 +23,10 @@ protected:
 public:
     CDrawObj(const CRect *position);
     virtual ~CDrawObj() {};
-    virtual void Draw(CDC* pDC);
-    virtual void Print(CDC* pDC) { Draw(pDC); }
+    virtual void Draw(CDC *pDC);
+    virtual void Print(CDC *pDC) { Draw(pDC); }
     virtual void UpdateInfo() {}
-    virtual void DrawKolor(CDC* pDC, const CRect& pos) const;
+    virtual void DrawKolor(CDC *pDC, const CRect& pos) const;
     virtual void MoveTo(const CRect& positon, CDrawView *pView = nullptr);
     virtual void Serialize(CArchive& ar) override;
     virtual BOOL OnOpen(CDrawView *pView);

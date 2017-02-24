@@ -168,7 +168,7 @@ void CSelectTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& p
         // Shift+DblClk deselects object...
         CPoint local = point;
         pView->ClientToDoc(local);
-        CDrawObj* pObj = pView->GetDocument()->ObjectAt(local);
+        CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
         if (pObj != nullptr)
             pView->Deselect(pObj);
     } else {
@@ -182,7 +182,7 @@ void CSelectTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& p
 
 void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point)
 {
-    CDrawObj* pObj = nullptr;
+    CDrawObj *pObj = nullptr;
 
     if (pView->GetCapture() == pView && point != c_down) // czy kliknelismy w to samo miejsce
         switch (selectMode) {
@@ -200,7 +200,7 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
             case SelectMode::move:
             {
                 if (pView->m_selection.IsEmpty()) break;
-                CDrawDoc* pDoc = pView->GetDocument();
+                CDrawDoc *pDoc = pView->GetDocument();
                 pObj = (CDrawObj*)pView->m_selection.GetHead();
                 pObj->SetDirty();
                 auto pPage = dynamic_cast<CDrawPage*>(pObj);
@@ -327,7 +327,7 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
 void CSelectTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
 {
     c_last = point;
-    CDrawObj* pObj;
+    CDrawObj *pObj;
     CPoint l = point;
     pView->ClientToDoc(l);
 
@@ -474,7 +474,7 @@ void CKolorTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poin
     CPoint local = point;
     pView->ClientToDoc(local);
 
-    CDrawObj* pObj = pView->GetDocument()->ObjectAt(local);
+    CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
     if (!pObj) return;
 
     auto frame = (CMainFrame*)AfxGetMainWnd();
@@ -533,7 +533,7 @@ void CKolorTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
     //..,,pokazywanie na status barze co to za obiekt
     CPoint l = point;
     pView->ClientToDoc(l);
-    CDrawObj* pObj = pView->GetDocument()->ObjectAt(l);
+    CDrawObj *pObj = pView->GetDocument()->ObjectAt(l);
     if (pObj != nullptr)
         ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo(pObj->info);
     else
@@ -547,7 +547,7 @@ void CKolorTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& po
         // Shift+DblClk deselects object...
         CPoint local = point;
         pView->ClientToDoc(local);
-        CDrawObj* pObj = pView->GetDocument()->ObjectAt(local);
+        CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
         if (pObj != nullptr)
             pView->Deselect(pObj);
     } else {
@@ -577,7 +577,7 @@ void CLockTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
     pView->ClientToDoc(local);
 
     // See if the click was on an page
-    CDrawObj* pObj = pView->GetDocument()->ObjectAt(local);
+    CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
     if (pObj != nullptr) {
         if (!pView->IsSelected(pObj))
             pView->Select(pObj, (nFlags & MK_SHIFT) != 0);
@@ -607,7 +607,7 @@ void CLockTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
     //..,,pokazywanie na status barze co to za obiekt
     CPoint l = point;
     pView->ClientToDoc(l);
-    CDrawObj* pObj = pView->GetDocument()->ObjectAt(l);
+    CDrawObj *pObj = pView->GetDocument()->ObjectAt(l);
     if (pObj != nullptr)
         ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo(pObj->info);
     else
@@ -621,7 +621,7 @@ void CLockTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& poi
         // Shift+DblClk deselects object...
         CPoint local = point;
         pView->ClientToDoc(local);
-        CDrawObj* pObj = pView->GetDocument()->ObjectAt(local);
+        CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
         if (pObj != nullptr)
             pView->Deselect(pObj);
     } else {
@@ -640,7 +640,6 @@ CSpaceTool::CSpaceTool(DrawShape dsh)
 {
 }
 
-
 void CSpaceTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point)
 {
     spaceMode = (CDrawTool::c_drawShape == DrawShape::red ? SpaceMode::redlock : SpaceMode::spacelock);
@@ -656,7 +655,7 @@ void CSpaceTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
     //..,,pokazywanie na status barze co to za obiekt
     CPoint l = point;
     pView->ClientToDoc(l);
-    CDrawObj* pObj = pView->GetDocument()->ObjectAt(l);
+    CDrawObj *pObj = pView->GetDocument()->ObjectAt(l);
     if (pObj != nullptr)
         ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo(pObj->info);
     else
@@ -680,7 +679,7 @@ void CSpaceTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& po
         // Shift+DblClk deselects object...
         CPoint local = point;
         pView->ClientToDoc(local);
-        CDrawObj* pObj = pView->GetDocument()->ObjectAt(local);
+        CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
         if (pObj != nullptr)
             pView->Deselect(pObj);
     } else {

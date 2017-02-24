@@ -14,7 +14,7 @@ CDrawObj::CDrawObj() : m_pDocument(nullptr), kolor(c_brak), dirty(TRUE)
 {
 }
 
-CDrawObj::CDrawObj(const CRect* position) : CDrawObj::CDrawObj()
+CDrawObj::CDrawObj(const CRect *position) : CDrawObj::CDrawObj()
 {
     m_position = *position;
 }
@@ -85,7 +85,7 @@ void CDrawObj::Draw(CDC*)
 {
 }
 
-void CDrawObj::DrawTracker(CDC* pDC, TrackerState state) const
+void CDrawObj::DrawTracker(CDC *pDC, TrackerState state) const
 {
     ASSERT_VALID(this);
 
@@ -320,7 +320,7 @@ void CDrawObj::Invalidate()
     m_pDocument->UpdateAllViews(NULL, HINT_UPDATE_DRAWOBJ, this);
 }
 
-CDrawObj* CDrawObj::Clone(CDrawDoc* pDoc) const
+CDrawObj* CDrawObj::Clone(CDrawDoc *pDoc) const
 {
     ASSERT_VALID(this);
 
@@ -349,7 +349,7 @@ void CDrawObj::ChangeKolor(UINT new_kolor)
     Invalidate();
 }
 
-void CDrawObj::DrawKolor(CDC* pDC, const CRect& pos) const
+void CDrawObj::DrawKolor(CDC *pDC, const CRect& pos) const
 {
     CRect r1, r2, r3;
     if (kolor == c_full) {
@@ -365,7 +365,7 @@ void CDrawObj::DrawKolor(CDC* pDC, const CRect& pos) const
     }
 }
 
-CString CDrawObj::RzCyfra(int i, const CString* znaki)
+CString CDrawObj::RzCyfra(int i, const CString *znaki)
 {
     /* vu: Pierwszym argumentem jest cyfra dziesietna, drugim trzypozycyjna tablica cyfr
     rzymskich. Jej zawartosc ustalana jest na podstawie miejsca w zapisie pozycyjnym

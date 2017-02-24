@@ -77,8 +77,8 @@ public:
 protected:
     virtual void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
     virtual BOOL OnPreparePrinting(CPrintInfo* pInfo) override;
-    virtual void OnPrint(CDC* pDC, CPrintInfo* pInfo) override;
-    virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) override;
+    virtual void OnPrint(CDC *pDC, CPrintInfo* pInfo) override;
+    virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject *pHint) override;
     //}}AFX_VIRTUAL
 
 // Implementation

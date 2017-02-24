@@ -91,7 +91,7 @@ public:
     void Draw(CDC *pDC, CDrawView *pView);
     void DrawQue(CDC *pDC, CQueView *pView);
     void Print(CDC *pDC);
-    void PrintPage(CDrawPage *pPage, CDC *pDC);
+    void PrintPage(CDC *pDC, CDrawPage *pPage);
     void Add(CDrawObj *pObj);
     void AddQue(CDrawAdd *pObj);
     void RemoveQue(CDrawAdd *pObj);

@@ -282,7 +282,7 @@ BOOL CDrawDocDbReader::OpenManamDoc()
     }
 
     CRect rct(0, 0, 0, 0);
-    for (int i = 0; i < m_objetosc; i++) {
+    for (int i = 0; i < m_objetosc; ++i) {
         auto pNewPage = new CDrawPage(&rct);
         pNewPage->m_pDocument = m_doc;
         m_doc->m_pages[i] = pNewPage;
@@ -592,7 +592,7 @@ private:
     void SaveOpisyMakiety(OracleConnection^ conn, BOOL isSaveAs);
     void SaveSpotyMakiety(OracleConnection^ conn);
     void SaveStrony(OracleConnection^ conn, BOOL isSaveAs, BOOL doSaveAdds);
-    void SaveOgloszenie(OracleCommand^ conn, CDrawAdd* pAdd);
+    void SaveOgloszenie(OracleCommand^ conn, CDrawAdd *pAdd);
 };
 
 CDrawDocDbWriter::CDrawDocDbWriter(CDrawDoc* doc) : m_doc(doc)
@@ -794,7 +794,7 @@ void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, BOOL isSaveAs, BOOL do
     par->Add("wyd_xx", OracleDbType::Int32);
 
     size_t i;
-    for (i = 0; i < m_doc->m_pages.size(); i++) {
+    for (i = 0; i < m_doc->m_pages.size(); ++i) {
         String^ plsqlProc;
 
         auto pPage = m_doc->m_pages[i];
@@ -899,7 +899,7 @@ save_adds:
     }
 }
 
-void CDrawDocDbWriter::SaveOgloszenie(OracleCommand^ cmd, CDrawAdd* pAdd)
+void CDrawDocDbWriter::SaveOgloszenie(OracleCommand^ cmd, CDrawAdd *pAdd)
 {	//:mak_xx,:str_xx ustalone
     if (!pAdd->dirty) return;
 
