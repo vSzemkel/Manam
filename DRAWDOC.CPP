@@ -188,8 +188,29 @@ BOOL CDrawDoc::SaveModified()
     return CDocument::SaveModified();
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// CDrawDoc serialization
+void CDrawDoc::SetTitleAndMru(BOOL addRecentFiles)
+{
+    CString makieta;
+    makieta.AppendFormat(_T("%s %s %s"), static_cast<LPCTSTR>(gazeta), static_cast<LPCTSTR>(opis), static_cast<LPCTSTR>(data));
+    const auto len = makieta.GetLength();
+    if (!isLIB) {
+        ASSERT(data.GetLength() == 10);
+        makieta.SetAt(len - 5, _T('-'));
+        makieta.SetAt(len - 8, _T('-'));
+    }
+
+    SetTitle(CString(isGRB ? "Grzbiet drukowany " : "Makieta ") + makieta + (isRO ? (theApp.grupa&R_DEA ? " [tylko do rezerwacji]" : " [tylko do odczytu]") : ""));
+    if (!addRecentFiles) return;
+
+    ASSERT(gazeta.GetLength() == 6);
+    const auto posDate = makieta.ReverseFind(_T(' '));
+    const auto makBuf = makieta.GetBuffer();
+    memcpy(static_cast<void*>(6 + makBuf), static_cast<void*>(makBuf + posDate), (len - posDate + 1) * sizeof(TCHAR));
+    makieta.SetAt(6, _T('_'));
+    makieta.GetBufferSetLength(len - posDate + 6);
+    makieta.Append(asDocTypeExt[static_cast<int>(iDocType)]);
+    theApp.AddToRecentFileList(makieta);
+}
 
 void CDrawDoc::Serialize(CArchive& ar)
 {
@@ -1447,7 +1468,7 @@ void CDrawDoc::OnFileDrzewo() // zmiana drzewa
         id_drw = dlg.m_id_drw;
         ZmianaSpotow((int)m_pages.size() & -4);
     }
-    SetTitle(_T("Makieta ") + gazeta + _T(" ") + opis + _T(" ") + data + (isRO ? _T(" <tylko do odczytu>") : _T("")));
+    SetTitleAndMru(FALSE);
     EndWaitCursor();
 }
 

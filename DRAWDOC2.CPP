@@ -109,8 +109,7 @@ BOOL CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
         OnShowAcDeadline();
     }
 
-    theApp.AddToRecentFileList(gazeta + "_" + CString(isLIB ? data + ".LIB" : CString(filedate) + CDrawDoc::asDocTypeExt[static_cast<int>(iDocType)]));
-    SetTitle(CString(isGRB ? "Grzbiet drukowany " : "Makieta ") + gazeta + " " + opis + " " + CString(isLIB ? data : filedate) + (isRO ? (theApp.grupa&R_DEA ? " <tylko do rezerwacji>" : " <tylko do odczytu>") : ""));
+    SetTitleAndMru();
     frame->SetStatusBarInfo("Gotowy - Makieta " + gazeta + " " + data);
     theApp.EndWaitCursor();
     SetModifiedFlag(FALSE);
@@ -136,16 +135,19 @@ void CDrawDoc::DBSaveAs(BOOL isSaveAs)
 {
     if (!theApp.isRDBMS) return;
 
-    CDBSaveAsDlg dlg;
-
     if (isSaveAs) {
+        CDBSaveAsDlg dlg;
         dlg.m_tytmut = gazeta;
         dlg.m_lib = isLIB;
         if (dlg.DoModal() != IDOK) return;
-        if ((isLIB = dlg.m_lib) > 0)
-            data.Format(_T("%03Iu%s"), m_pages.size(), dlg.m_dt);
-        else data = dlg.m_dt;
-    } else dlg.m_lib = isLIB;
+        if ((isLIB = dlg.m_lib) > 0) {
+            data.Format(_T("%03Iu%s"), m_pages.size(), static_cast<LPCTSTR>(dlg.m_dt));
+            iDocType = DocType::makieta_lib;
+        } else {
+            data = dlg.m_dt;
+            iDocType = DocType::makieta;
+        }
+    }
 
     if (!theManODPNET.CkAccess(gazeta, isLIB ? _T("WD") : _T("W"))) return;
 
@@ -177,13 +179,7 @@ void CDrawDoc::DBSaveAs(BOOL isSaveAs)
         ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo((LPCTSTR)_T("Zachowywanie zakoñczone pomyœlnie."));
         SetModifiedFlag(FALSE);
 
-        TCHAR filedate[11] = _T("");
-        if (!isLIB && !data.IsEmpty()) {
-            ::StringCchCopy(filedate, 11, data);
-            filedate[2] = filedate[5] = _T('-');
-        }
-        SetTitle(_T("Makieta ") + gazeta + _T(" ") + opis + _T(" ") + CString(isLIB ? data : filedate) + (isRO ? _T(" <tylko do odczytu>") : _T("")));
-        theApp.AddToRecentFileList(gazeta + _T("_") + CString(isLIB ? data : filedate) + CDrawDoc::asDocTypeExt[static_cast<int>(iDocType)]);
+        SetTitleAndMru();
         if (!doSaveAdds)
             UpdateAllViews(NULL, HINT_SAVEAS_DELETE_SELECTION, NULL);
     } else {

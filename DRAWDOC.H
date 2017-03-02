@@ -40,7 +40,7 @@ protected: // create from serialization only
     friend class CDrawDocDbWriter;
     // Attributes
 private:
-    float drobneH;								// wysokoœæ drobnych na stronie
+    float drobneH;                                     // wysokoœæ drobnych na stronie
     int findNextInd;
     CMenu m_grzbietMenu;
     CTime dataZamkniecia;
@@ -48,7 +48,8 @@ private:
     long lastSearchNrSpacer;
     CString lastSearchNazwa;
 
-    void AdvanceAsidePos(CPoint& p) const;			// wylicza polozenie kolejnego nastepnego ogloszenia z boku
+    void SetTitleAndMru(BOOL addRecentFiles = TRUE); // wywo³uje base->SetTitle przekazuj¹c odpowiednie parametry i opcjonalnie dodaje do MRU
+    void AdvanceAsidePos(CPoint& p) const;           // wylicza polozenie kolejnego nastepnego ogloszenia z boku
     float PowAdd2Mod(BOOL bQueStat) const;
     bool MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo);
     void ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_modwol) const;

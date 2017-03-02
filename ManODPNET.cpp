@@ -227,7 +227,7 @@ BOOL CDrawDocDbReader::OpenManamDoc()
         m_objetosc = odr->GetInt32(2);
         openStatus = odr->IsDBNull(3) ? String::Empty : odr->GetString(3);
         dataZamkniecia = odr->IsDBNull(4) ? String::Empty : odr->GetString(4);
-        m_doc->opis = OdpHelper::ReadOdrString(odr, m_doc->iDocType == DocType::makieta ? 5 : 4);
+        m_doc->opis = OdpHelper::ReadOdrString(odr, m_doc->iDocType == DocType::grzbiet_drukowany ? 4 : 5);
         odr->Close();
     } catch (OracleException^ oex) {
         OdpHelper::ShowErrMsgDlg(oex->Message);

@@ -220,17 +220,17 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
                 } else { // ogloszenie dopasowanie do gridu
                     auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
                     if (pAdd) {
-                        int szpalt_x = pAdd->szpalt_x;
-                        int szpalt_y = pAdd->szpalt_y;
-                        int mx = min(pmodulx, (int)modulx);
-                        int my = -min(pmoduly, (int)moduly);
-                        int x = (int)(mx*ceil((double)pAdd->m_position.left / mx - 0.5));
-                        int y = (int)(my*ceil((double)pAdd->m_position.top / my - 0.5));
+                        const int szpalt_x = pAdd->szpalt_x;
+                        const int szpalt_y = pAdd->szpalt_y;
+                        const int mx = min(pmodulx, (int)modulx);
+                        const int my = -min(pmoduly, (int)moduly);
+                        const int x = (int)(mx*ceil((double)pAdd->m_position.left / mx - 0.5));
+                        const int y = (int)(my*ceil((double)pAdd->m_position.top / my - 0.5));
+                        const auto adCentr = pAdd->m_position.CenterPoint();
+                        const auto srcPage = pDoc->GetPage(pAdd->fizpage);
 
                         CRect toPos;
-                        CPoint p = pAdd->m_position.CenterPoint();
-                        CDrawPage* dstPage = pDoc->PageAt(p);
-                        CDrawPage* srcPage = pDoc->GetPage(pAdd->fizpage);
+                        auto dstPage = pDoc->PageAt(adCentr);
                         if (dstPage && (dstPage->szpalt_x != szpalt_x || dstPage->szpalt_y != szpalt_y)) {
                             if (srcPage) dstPage = srcPage;
                             toPos.SetRect(dstPage->m_position.left + (int)(modulx*(pAdd->posx - 1)), dstPage->m_position.bottom + (int)(moduly*(szpalt_y - pAdd->posy + 1)),
