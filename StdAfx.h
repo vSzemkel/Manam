@@ -3,7 +3,7 @@
 #pragma warning(disable : 4996) // no deprecated funcions warnings
 
 #ifndef WINVER
-#define WINVER 0x0600       // Windows Vista
+#define WINVER _WIN32_WINNT_WIN7
 #endif
 
 #define VC_EXTRALEAN        // Exclude rarely-used stuff from Windows headers
@@ -39,3 +39,5 @@
 #include "resource.h"
 #include "DrawObj.h"
 #include "ManODPNET.h"
+
+/* Napisy wyswietlane w GUI, ktore sa osadzone w kodzie powinny byc edytowane jako Windows 1250*/
