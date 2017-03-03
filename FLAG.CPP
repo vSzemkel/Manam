@@ -69,7 +69,7 @@ CFlag::CFlag(const char *raw)
         size = CRITICAL_SIZE;
         return;
     }
-    if (!(len & 7) && strspn(raw, "0123456789ABCDEFabcdef") == len) { // ci�g 4n dwuznakowych bat�w
+    if (!(len & 7) && strspn(raw, "0123456789ABCDEFabcdef") == len) { // ciag 4n dwuznakowych batow
         size = len >> 1;
 #ifdef _WIN64
         if (size & 0x04)

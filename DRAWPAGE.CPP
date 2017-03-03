@@ -228,9 +228,9 @@ CFlag CDrawPage::GetReservedFlag()
 void CDrawPage::DrawReserved(CDC *pDC)
 {
 
-    /*	vu : zaznacza modu�y za statusem zaj�te OZ, na kt�rych jeszcze
-             nie stoj� og�oszenia. Wizualizuje w ten spos�b miejsce z
-             og�oszeniami dziedziczonymi	end vu */
+    /*	vu : zaznacza moduly za statusem zajete OZ, na ktorych jeszcze
+             nie stoja ogloszenia. Wizualizuje w ten sposob miejsce z
+             ogloszeniami dziedziczonymi	end vu */
     const CFlag& vspace = GetReservedFlag();
     if (vspace.IsSet()) {
         pDC->SelectStockObject(((nr & c_rzym) == c_rzym ? LTGRAY_BRUSH : GRAY_BRUSH));
@@ -278,7 +278,7 @@ void CDrawPage::DrawGrid(CDC *pDC)
         COLORREF bkColor = 0, oldBkColor = pDC->GetBkColor();
         switch (m_dervlvl) {
             case DERV_ADDS: bkColor = 0xFF64BC; break; // fioletowy
-            case DERV_TMPL: bkColor = 0x43C1FB; break; // pomara�czowy
+            case DERV_TMPL: bkColor = 0x43C1FB; break; // pomaranczowy
             case DERV_FIXD: bkColor = 0x7B78F1; break; // czerwony
             case DERV_PROH: bkColor = 0x6EC27C; break; // zielony
             case DERV_COLO: bkColor = 0x111111; break; // czarny
@@ -501,7 +501,7 @@ BOOL CDrawPage::OnOpen(CDrawView*)
     m_ac_red = dlg.m_red;
     m_ac_fot = dlg.m_fot;
     m_ac_kol = dlg.m_kol;
-    if (m_drukarnie != dlg.m_drukarnie) { // zmiana dla czw�rki stron drukowanych na jednej kartce
+    if (m_drukarnie != dlg.m_drukarnie) { // zmiana dla czworki stron drukowanych na jednej kartce
         m_drukarnie = dlg.m_drukarnie;
         int obj = (int)m_pDocument->m_pages.size();
         int nr_porz = m_pDocument->GetIPage(this);
@@ -531,11 +531,11 @@ BOOL CDrawPage::OnOpen(CDrawView*)
     int i, pom_nr = ((dlg.m_nr << 3) + ((dlg.m_rzymska) ? c_rzym : c_normal));
     int pc = (int)m_pDocument->m_pages.size();
     if (nr != pom_nr) {
-        //sprawd� czy istnieje ju� taka strona - bo numer/typ_num nie mo�e si� powtarza�
+        // sprawdz czy istnieje juz taka strona - bo numer/typ_num nie moze sie powtarzac
         for (i = 0; i < pc; i++)
             if ((m_pDocument->m_pages[i])->nr == pom_nr) break;
         if (i < pc)
-            AfxMessageBox(_T("Strona o podanym numerze i typie numeracji ju� istnieje. Numer nie zostanie zmieniony."), MB_ICONEXCLAMATION);
+            AfxMessageBox(_T("Strona o podanym numerze i typie numeracji już istnieje. Numer nie zostanie zmieniony."), MB_ICONEXCLAMATION);
         else {
             nr = pom_nr;
             for (const auto& pAdd : m_adds) {
@@ -643,11 +643,11 @@ void CDrawPage::RemoveAdd(CDrawAdd *pAdd, BOOL bRemodeFromAdds)
         RealizeSpace(*itAdd);
         if (bRemodeFromAdds)
             m_adds.erase(itAdd);
-    } else { //gdy dwie strony maj� ten sam numer - to nie ma prawa si� zdarzy�
+    } else { // gdy dwie strony maja ten sam numer - to nie ma prawa sie zdarzyc
         for (const auto& p : m_pDocument->m_pages)
             if (p != this && p->nr == this->nr) {
                 CString sMsg;
-                sMsg.Format(_T("W makiecie powtarza si� numer strony %i. Prosz� porawi�"), this->nr >> 3);
+                sMsg.Format(_T("W makiecie powtarza się numer strony %i. Proszę porawić"), this->nr >> 3);
                 MessageBox(NULL, sMsg, _T("Makieta uszkodzna"), MB_ICONSTOP);
             }
     }
@@ -683,17 +683,17 @@ BOOL CDrawPage::FindSpace(CDrawAdd *pObj, int *px, int *py, int sx, int sy) cons
     if (*px <= 0) *px = 1;
     if (*py <= 0) *py = 1;
 
-    // kontekst wyo�ania
+    // kontekst wyolania
     bool interPage = pObj->fizpage == nr;
     bool symulateNewShape = pObj->sizex != sx || pObj->sizey != sy;
 
-    // zwolnij miejsce zajmowane poprzednio je�eli przesuni�cie w obr�bie strony
-    // const CFlag& sp = (interPage) ? space ^ pObj->GetPlacementFlag() : space; kompiluje si� fatalnie
+    // zwolnij miejsce zajmowane poprzednio jezeli przesuniecie w obrebie strony
+    // const CFlag& sp = (interPage) ? space ^ pObj->GetPlacementFlag() : space; kompiluje sie fatalnie
     CFlag sp(space);
     if (interPage)
         sp ^= pObj->GetPlacementFlag();
 
-    // przy zmianie rozmiaru sprawdza� na docelowych wymiarach
+    // przy zmianie rozmiaru sprawdzac na docelowych wymiarach
     int sx_org, sy_org;
     if (symulateNewShape) {
         sx_org = pObj->sizex;
@@ -721,7 +721,7 @@ BOOL CDrawPage::FindSpace(CDrawAdd *pObj, int *px, int *py, int sx, int sy) cons
     *px = *py = 0;
 
 restoreShape:
-    // przywr�c rzeczywisty kszta�t
+    // przywroc rzeczywisty kształt
     if (symulateNewShape)
         pObj->SetSpaceSize(sx_org, sy_org);
 
@@ -730,10 +730,10 @@ restoreShape:
 
 BOOL CDrawPage::CheckSpace(CDrawAdd *pObj, int px, int py) const
 {
-    /* vu : Sprawdza czy dane ogloszenie mo�na postawic we wspolrzednych px i py na stronie		end vu */
+    /* vu : Sprawdza czy dane ogloszenie mozna postawic we wspolrzednych px i py na stronie		end vu */
     if (px < 1 || px + pObj->sizex - 1 > szpalt_x || py < 1 || py + pObj->sizey - 1 > szpalt_y) return FALSE;
 
-    // zwolnij miejsce zajmowane poprzednio je�eli przesuni�cie w obr�bie strony
+    // zwolnij miejsce zajmowane poprzednio jezeli przesuniecie w obrebie strony
     CFlag sp(space);
     if (nr == pObj->fizpage)
         sp ^= pObj->GetPlacementFlag();
@@ -744,7 +744,7 @@ BOOL CDrawPage::CheckSpace(CDrawAdd *pObj, int px, int py) const
 BOOL CDrawPage::CheckSpaceDiffKraty(CDrawAdd *pObj, int x, int y, int sx, int sy) const
 {
     if (m_kraty_niebazowe.empty()) return TRUE;
-    // sprawd� przecinanie z innymi kratami
+    // sprawdz przecinanie z innymi kratami
     CRect dstRect(m_position.left + (int)(modulx*(x - 1)), m_position.bottom + (int)(moduly*(szpalt_y - y - sy + 1)), m_position.left + (int)(modulx*(x + sx - 1)), m_position.bottom + (int)(moduly*(szpalt_y - y + 1)));
     for (const auto& pAdd : m_adds)
         if ((pAdd->szpalt_x != pObj->szpalt_x || pAdd->szpalt_y != pObj->szpalt_y) && pAdd->precelWertexCnt == 0 && pAdd->Intersects(dstRect))
@@ -773,8 +773,8 @@ BOOL CDrawPage::CheckSpaceDiffKraty(CDrawAdd *pObj, int x, int y, int sx, int sy
 
 void CDrawPage::SetBaseKrata(int s_x, int s_y, BOOL refresh)
 {
-    /*	poszukaj czy taka krata jest ju� zdefiniowana na tej stronie.
-        je�li nie to zmie� krat� bazow�. je�li incremental to dopisz */
+    /*  poszukaj czy taka krata jest juz zdefiniowana na tej stronie.
+        jezli nie to zmien krate bazowa. jeeli incremental to dopisz */
     if (szpalt_x == s_x && szpalt_y == s_y) return;
 
     CKrataNiebazowa* cached = nullptr;
@@ -792,7 +792,7 @@ void CDrawPage::SetBaseKrata(int s_x, int s_y, BOOL refresh)
     } else {
         m_kraty_niebazowe.emplace_back(szpalt_x, szpalt_y, std::move(space), std::move(space_locked), std::move(space_red));
         space = space_locked = space_red = CFlag(0, 0, s_x, s_y);
-        if (refresh) { // ustaw modu�y na nowej kracie, przeniesienie info o red i lock
+        if (refresh) { // ustaw moduly na nowej kracie, przeniesienie info o red i lock
             auto& kn = m_kraty_niebazowe.back();
             CFlag& lastred = kn.m_space_red;
             CFlag& lastlocked = kn.m_space_locked;
@@ -851,7 +851,7 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
                         space.SetBit(m, bitToSet);
                         space_mark2.SetBit(m, bitToSet);
                     } else if (intsec == dst)
-                        return; // w kracie niebazowej kolizja na powierzchni pe�nego modu�u
+                        return; // w kracie niebazowej kolizja na powierzchni pelnego modulu
             }
         }
         SetBaseKrata(s_x, s_y, FALSE);
@@ -869,8 +869,8 @@ void CDrawPage::BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *
 {
     BOOL first = TRUE;
     for (const auto& pAdd : m_adds) {
-        auto pRozAdd = m_pDocument->GetCRozm(pArg, pAdd->szpalt_x, pAdd->szpalt_y, pAdd->spad_flag ? 0 : pAdd->typ_xx);	// gdy zaznaczono spad, to montuj do kraty
-        auto pRozKraty = pAdd->typ_xx ? m_pDocument->GetCRozm(pArg, pAdd->szpalt_x, pAdd->szpalt_y, 0) : pRozAdd;				// pobierz rozmiar kraty, je�li dotychczas nie jest znany
+        auto pRozAdd = m_pDocument->GetCRozm(pArg, pAdd->szpalt_x, pAdd->szpalt_y, pAdd->spad_flag ? 0 : pAdd->typ_xx); // gdy zaznaczono spad, to montuj do kraty
+        auto pRozKraty = pAdd->typ_xx ? m_pDocument->GetCRozm(pArg, pAdd->szpalt_x, pAdd->szpalt_y, 0) : pRozAdd;       // pobierz rozmiar kraty, jesli dotychczas nie jest znany
 
         const auto x = (int)(pAdd->posx - 1) * (pRozKraty->w + pRozKraty->sw);
         const auto y = (int)(pAdd->szpalt_y + 1 - pAdd->posy - pAdd->sizey) * (pRozKraty->h + pRozKraty->sh);
@@ -885,7 +885,7 @@ void CDrawPage::BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *
         }
     }
     *bx1 = (int)ceil(*bx1 * mm2pkt - 0.5);
-    *by1 = (int)ceil(*by1 * mm2pkt - 0.5); //-1 �eby nie obcina� u do�u
+    *by1 = (int)ceil(*by1 * mm2pkt - 0.5); //-1 zeby nie obcinac u dolu
     *bx2 = (int)ceil(*bx2 * mm2pkt - 0.5);
     *by2 = (int)ceil(*by2 * mm2pkt - 0.5) + podpisH;
 } // BoundingBox
@@ -899,7 +899,7 @@ BOOL CDrawPage::CheckSrcFile(PGENEPSARG pArg)
     pArg->pDlg->StrInfo(pArg->iChannelId, sNrStr);
     if (!CheckRozmKrat(pArg)) {
         isOK = FALSE;
-        f5_errInfo = _T("brak wymiar�w krat ");
+        f5_errInfo = _T("brak wymiarów krat ");
     } else {
         for (const auto& pAdd : m_adds) {
             if (pAdd->CheckSrcFile(pArg)) {
@@ -951,7 +951,7 @@ BOOL CDrawPage::StaleElementy(PGENEPSARG pArg, CFile *handle)
                 } else {
                     CFile eps;
                     if (!eps.Open(logo, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
-                        ::MessageBox(pArg->pDlg->m_hWnd, _T("Nie mo�na otworzy� pliku ") + logo, _T("B��d"), MB_OK);
+                        ::MessageBox(pArg->pDlg->m_hWnd, _T("Nie można otworzyć pliku ") + logo, _T("Błąd"), MB_OK);
                         return FALSE;
                     }
                     UINT res;
@@ -1045,17 +1045,17 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
     pArg->pDlg->StrInfo(pArg->iChannelId, CString(_T("Strona ")) + num + CString(_T(" do pliku ")) + dest_name);
 
     if (isDrobEPS && dirty) {
-        ::MessageBox(pArg->pDlg->m_hWnd, _T("Przed wyeksportowaniem strony z drobnymi nale�y zachowa� makiet�"), APP_NAME, MB_OK | MB_ICONINFORMATION);
+        ::MessageBox(pArg->pDlg->m_hWnd, _T("Przed wyeksportowaniem strony z drobnymi należy zachować makietę"), APP_NAME, MB_OK | MB_ICONINFORMATION);
         return FALSE;
     } else if (m_drukarnie == 0 && pArg->bIsPRN == 1 && pArg->bDoKorekty == 0) {
-        ::MessageBox(pArg->pDlg->m_hWnd, "Prosz� wybra� drukarni� dla strony " + num, _T("Brak danych"), MB_OK);
+        ::MessageBox(pArg->pDlg->m_hWnd, "Proszę wybrać drukarnię dla strony " + num, _T("Brak danych"), MB_OK);
         return FALSE;
     } else if (!CheckRozmKrat(pArg)) {
         ::MessageBox(pArg->pDlg->m_hWnd, "Brak wymiarow w 0.1 mm dla wszystkich krat strony " + num, _T("Brak danych"), MB_OK);
         return FALSE;
     }
     if (fileWarn && !theApp.isOpiMode) { // czy plik istnieje
-        if (IDNO == ::MessageBox(pArg->pDlg->m_hWnd, _T("Docelowy plik ") + dest_name + _T(" ju� istnieje. Czy chcesz zast�pi� wszystkie istniej�ce pliki?"), APP_NAME, MB_YESNO | MB_ICONQUESTION))
+        if (IDNO == ::MessageBox(pArg->pDlg->m_hWnd, _T("Docelowy plik ") + dest_name + _T(" już istnieje. Czy chcesz zastąpić wszystkie istniejące pliki?"), APP_NAME, MB_YESNO | MB_ICONQUESTION))
             return FALSE;
         m_pDocument->ovEPS = TRUE;
     }
@@ -1074,7 +1074,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
 #ifdef _DEBUG
             afxDump << "File " + dest_name + "  could not be opened " << e.m_cause << "\n";
 #endif
-            ::MessageBox(pArg->pDlg->m_hWnd, "Plik " + dest_name + " nie mo�e by� otwarty!\n " + m_pDocument->ErrMess(e.m_cause), _T("B��d"), MB_OK);
+            ::MessageBox(pArg->pDlg->m_hWnd, "Plik " + dest_name + " nie może być otwarty!\n " + m_pDocument->ErrMess(e.m_cause), _T("Błąd"), MB_OK);
             return FALSE;
         }
     }
@@ -1102,7 +1102,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
         }
     }
 
-    // uzupe�nienie dziedziczenia
+    // uzupelnienie dziedziczenia
     BOOL isUzupEPS = FALSE;
     CString uzupEpsPath;
     if (this->m_dervlvl == DERV_TMPL) {
@@ -1180,7 +1180,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
             dest->Write("%%EndPageSetup\r\n/STAN_STR save def\r\n", 36);
         dest->Flush();
     } catch (CFileException* e2) {
-        ::MessageBox(pArg->pDlg->m_hWnd, "B��d czytania pliku src lub pisania do dest!\n " + m_pDocument->ErrMess(e2->m_cause), _T("B��d !"), MB_OK);
+        ::MessageBox(pArg->pDlg->m_hWnd, "Błąd czytania pliku src lub pisania do dest!\n " + m_pDocument->ErrMess(e2->m_cause), _T("Błąd"), MB_OK);
         e2->Delete();
         ok = FALSE;
     }
@@ -1261,7 +1261,7 @@ foundsizex:
             dest->Write(cThreadBuf, br);
         dest->Write("\r\n", 2);
     } catch (CFileException* e2) {
-        ::MessageBox(pArg->pDlg->m_hWnd, "IO error\n " + m_pDocument->ErrMess(e2->m_cause), _T("B��d"), MB_OK);
+        ::MessageBox(pArg->pDlg->m_hWnd, "IO error\n " + m_pDocument->ErrMess(e2->m_cause), _T("Błąd"), MB_OK);
         e2->Delete();
         ok = FALSE;
     }
@@ -1301,7 +1301,7 @@ BOOL CDrawPage::PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) co
     DWORD dwServiceType;
     CString strServerName, strObject;
     if (!AfxParseURL(m_pDocument->sOpiServerUrl, dwServiceType, strServerName, strObject, nPort)) {
-        ::MessageBox(pArg->pDlg->m_hWnd, _T("Nieprawid�owy adres OPI: ") + m_pDocument->sOpiServerUrl, _T("B��d"), MB_OK);
+        ::MessageBox(pArg->pDlg->m_hWnd, _T("Nieprawidłowy adres OPI: ") + m_pDocument->sOpiServerUrl, _T("Błąd"), MB_OK);
         return false;
     } else {
         theApp.BeginWaitCursor();
@@ -1363,14 +1363,15 @@ void CDrawPage::Preview(PGENEPSARG pArg, CFile *dest, int bx1, int by1, int bx2,
     int p_size = (int)(dy*szer * sizeof(BYTE));
 
     if (p_size > n_size) {
+        const TCHAR* errMsg = _T("Zbyt gęsta krata. Proszę wyłączyć opcję generowania preview");
         if (p_size < 10 * n_size) {
             pArg->cBigBuf = (TCHAR*)LocalReAlloc(pArg->cBigBuf, p_size, LMEM_MOVEABLE);
             if (pArg->cBigBuf == nullptr) {
-                ::MessageBox(pArg->pDlg->m_hWnd, _T("Zbyt g�sta krata. Prosz� wy��czy� opcj� generowania preview"), _T("Brak pami�ci"), MB_OK | MB_ICONERROR);
+                ::MessageBox(pArg->pDlg->m_hWnd, errMsg, _T("Brak pamięci"), MB_OK | MB_ICONERROR);
                 return;
             }
         } else {
-            ::MessageBox(pArg->pDlg->m_hWnd, _T("Zbyt g�sta krata. Prosz� wy��czy� opcj� generowania preview"), _T("B��d"), MB_OK | MB_ICONINFORMATION);
+            ::MessageBox(pArg->pDlg->m_hWnd, errMsg, _T("Błąd"), MB_OK | MB_ICONINFORMATION);
             dest->SetLength(0);
             return;
         }
@@ -1399,7 +1400,7 @@ BOOL CDrawPage::GenPDF(PGENEPSARG pArg)
     dstName.Format(_T("%02i"), nr >> 3);
 
     if (!CheckRozmKrat(pArg)) {
-        ::MessageBox(pArg->pDlg->m_hWnd, "Brak wymiarow w 0.1 mm dla wszystkich krat strony: " + num, _T("B��d"), MB_ICONERROR | MB_OK);
+        ::MessageBox(pArg->pDlg->m_hWnd, "Brak wymiarow w 0.1 mm dla wszystkich krat strony: " + num, _T("Błąd"), MB_ICONERROR | MB_OK);
         return FALSE;
     }
 
@@ -1408,7 +1409,7 @@ BOOL CDrawPage::GenPDF(PGENEPSARG pArg)
 
     // czy plik istnieje
     if (fileWarn) {
-        if (IDNO == ::MessageBox(pArg->pDlg->m_hWnd, _T("Docelowy plik ju� istnieje. Czy chcesz zast�pi� wszystkie istniej�ce pliki?"), _T("GenPdf"), MB_YESNO | MB_ICONQUESTION))
+        if (IDNO == ::MessageBox(pArg->pDlg->m_hWnd, _T("Docelowy plik już istnieje. Czy chcesz zastąpić wszystkie istniejące pliki?"), _T("GenPdf"), MB_YESNO | MB_ICONQUESTION))
             return FALSE;
         m_pDocument->ovEPS = TRUE;
     }
