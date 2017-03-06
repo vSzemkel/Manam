@@ -11,6 +11,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{A96AD5
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sql", "Sql", "{871D3535-E22A-468C-B441-03DB4E32E391}"
+	ProjectSection(SolutionItems) = preProject
+		Sql\DERV.pls = Sql\DERV.pls
+		Sql\EPSTEST.pls = Sql\EPSTEST.pls
+		Sql\GRB.pls = Sql\GRB.pls
+		Sql\INSERT_SPACER_PUB.pls = Sql\INSERT_SPACER_PUB.pls
+		Sql\INSERT_STRONA.pls = Sql\INSERT_STRONA.pls
+		Sql\OPEN_SPOQ.pls = Sql\OPEN_SPOQ.pls
+		Sql\PAGINA.pls = Sql\PAGINA.pls
+		Sql\SPACER.pls = Sql\SPACER.pls
+		Sql\SR.pls = Sql\SR.pls
+		Sql\UPDATE_SPACER_PUB.pls = Sql\UPDATE_SPACER_PUB.pls
+		Sql\UPDATE_STRONA.pls = Sql\UPDATE_STRONA.pls
+		Sql\VFORMAT.pls = Sql\VFORMAT.pls
+		Sql\ZAJAWKI.pls = Sql\ZAJAWKI.pls
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
