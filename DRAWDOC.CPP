@@ -859,8 +859,8 @@ CString CDrawDoc::ErrMess(int cause)
     }
 }
 
-BOOL CDrawDoc::CreateAdd(LPCTSTR buffor, int ch, CPoint& pos, BOOL check_exist)
-{	// tworzenie og³oszeñ importowanych z pliku tekstowego
+BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL check_exist)
+{ // tworzenie ogloszen importowanych z pliku tekstowego
     enum nazcstr
     {
         kratka,
@@ -883,17 +883,17 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR buffor, int ch, CPoint& pos, BOOL check_exist)
 
     int sx, sy, fizpage = 0, posx = 0, posy = 0;
     // interesuj¹ nas tylko linie które zaczynaj¹ siê od rozmiaru KxW
-    if (_stscanf_s(buffor, _T("%ix%i"), &sx, &sy) != 2)
+    if (adBuf == nullptr || _stscanf_s(adBuf, _T("%ix%i"), &sx, &sy) != 2)
         return FALSE;
 
     int szpalt_x = pszpalt_x;
     int szpalt_y = pszpalt_y;
-    buffor = _tcschr(buffor, ch) + 1;
+    adBuf = _tcschr(adBuf, sepChar) + 1;
 
-    while (*buffor != _T('\n') && i != dodomu) {
-        auto pdest = _tcschr(buffor, ch);
-        auto result = (pdest != nullptr) ? ((pdest - buffor) > 20 ? 20 : pdest - buffor) : 0;
-        ::StringCchCopyN(st, 21, buffor, result);
+    while (*adBuf != _T('\n') && i != dodomu) {
+        auto pdest = _tcschr(adBuf, sepChar);
+        auto result = (pdest != nullptr) ? ((pdest - adBuf) > 20 ? 20 : pdest - adBuf) : 0;
+        ::StringCchCopyN(st, 21, adBuf, result);
         st[result] = 0;
 
         if (result == 0 && pdest == nullptr) // urwana linia
@@ -928,7 +928,7 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR buffor, int ch, CPoint& pos, BOOL check_exist)
         if (pdest == nullptr)
             i = dodomu;
         else if (i != dodomu)
-            buffor = ++pdest;
+            adBuf = ++pdest;
     }
 
     if (check_exist ? AddExists(p_nreps) : FALSE) {

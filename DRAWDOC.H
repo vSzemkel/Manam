@@ -125,7 +125,7 @@ public:
     void OnDBImportMinus();
     void OnDrawOpcje();
     BOOL Import(BOOL check_exist);
-    BOOL CreateAdd(LPCTSTR buffor, int ch, CPoint& pos, BOOL check_exist);
+    BOOL CreateAdd(LPCTSTR buffor, const TCHAR sepChar, CPoint& pos, BOOL check_exist);
     BOOL DBImport(BOOL synchronize = FALSE);
     CDrawAdd* AddExists(long nr) const;
     CDrawAdd* PubXXExists(int pub_xx) const;
@@ -145,13 +145,10 @@ public:
     BOOL Add4Pages();									// dodaje strony tzn obiekty
     BOOL AddDrz4Pages(LPCTSTR ile_kolumn = _T("4"));	// dodaje strony tzn obiekty
 
-    //open
     BOOL DBOpenDoc(TCHAR *sMakieta = nullptr);
-    //save
     void OnDBSave();
     void OnDBSaveAs();
     void DBSaveAs(BOOL isSaveAs);
-    //delete makieta
     void OnDBDelete();
 
     int DBReadSpot(int n);
