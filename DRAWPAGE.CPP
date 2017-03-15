@@ -211,18 +211,17 @@ void CDrawPage::DrawAcDeadline(CDC *pDC, const CRect& pos) const
 
 CFlag CDrawPage::GetReservedFlag()
 {
-    CFlag vspace = space;
-    if (vspace.IsSet()) {
-        CFlag space_add(space.GetSize());
-        for (const auto& pAdd : m_adds)
-            if (szpalt_x == pAdd->szpalt_x || szpalt_y == pAdd->szpalt_y)
-                space_add |= pAdd->GetPlacementFlag();
+    if (space.IsZero())
+        return space;
 
-        space_add |= space_locked;
-        space_add |= space_red;
-        vspace ^= space_add;
-    }
-    return vspace;
+    CFlag space_add(space.GetSize());
+    for (const auto& pAdd : m_adds)
+        if (szpalt_x == pAdd->szpalt_x && szpalt_y == pAdd->szpalt_y)
+            space_add |= pAdd->GetPlacementFlag();
+
+    space_add |= space_locked;
+    space_add |= space_red;
+    return space ^ space_add;
 }
 
 void CDrawPage::DrawReserved(CDC *pDC)
