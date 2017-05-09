@@ -466,9 +466,9 @@ CDrawObj* CDrawDoc::ObjectAt(const CPoint& point) const
 {
     auto coll = const_cast<std::vector<CDrawObj*>*>(&m_objects);
 check:
-    for (const auto& p : *coll)
-        if (p->Contains(point))
-            return p;
+    auto found = std::find_if(std::rbegin(*coll), std::rend(*coll), [&point](const auto& p) {return p->Contains(point); });
+    if (found != std::rend(*coll))
+        return *found;
 
     if ((intptr_t)coll != (intptr_t)&m_pages) {
         coll = reinterpret_cast<decltype(coll)>(const_cast<std::vector<CDrawPage*>*>(&m_pages));
