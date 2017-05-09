@@ -850,7 +850,7 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
                         space.SetBit(m, bitToSet);
                         space_mark2.SetBit(m, bitToSet);
                     } else if (intsec == dst)
-                        return; // w kracie niebazowej kolizja na powierzchni pelnego modulu
+                        break; // w kracie niebazowej kolizja na powierzchni pelnego modulu
             }
         }
         SetBaseKrata(s_x, s_y, FALSE);
