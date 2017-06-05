@@ -499,7 +499,7 @@ CDrawAdd* CDrawDoc::FindAddAt(int i) const
     return nullptr;
 }
 
-int CDrawDoc::GetAddPosition(CDrawAdd *pAdd) const
+int CDrawDoc::GetAdPosition(const CDrawAdd *pAdd) const
 {
     int n = 0;
     auto pos = std::find_if(m_objects.cbegin(), m_objects.cend(), [&](CDrawObj* const & a) -> bool {

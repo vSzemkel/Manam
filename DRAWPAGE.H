@@ -102,18 +102,18 @@ public:
     void SetNr(int i);
     void AddAdd(CDrawAdd *pAdd);
     void RemoveAdd(CDrawAdd *pAdd, BOOL bRemodeFromAdds = TRUE);
-    void SetSpace(CDrawAdd *pObj);
+    void SetSpace(const CDrawAdd *pObj);
     void SetSpotKolor(UINT spot_kolor);
     void SetBaseKrata(int s_x, int s_y, BOOL refresh = TRUE);
-    void RealizeSpace(CDrawAdd *pObj);
+    void RealizeSpace(const CDrawAdd *pObj);
     void ChangeMark(size_t module, SpaceMode mode);
     void ChangeCaption(BOOL iscaption, const CString& cap);
     void DBChangeName(int id_drw);
     std::vector<int> CleanKraty(BOOL dbSave);
 
     BOOL FindSpace(CDrawAdd *pObj, int *px, int *py, int sx, int sy) const;
-    BOOL CheckSpace(CDrawAdd *pObj, int px, int py) const;
-    BOOL CheckSpaceDiffKraty(CDrawAdd *pObj, int x, int y, int sx, int sy) const;
+    BOOL CheckSpace(const CDrawAdd *pObj, int px, int py) const;
+    BOOL CheckSpaceDiffKraty(const CDrawAdd *pObj, int x, int y, int sx, int sy) const;
 
     void BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *by2);
     void Preview(PGENEPSARG pArg, CFile *dest, int bx1, int by1, int bx2, int by2);

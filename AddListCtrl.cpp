@@ -45,14 +45,14 @@ void CAddListCtrl::InitHeader()
 int CAddListCtrl::OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn)
 {
     bool bResult = false;
-    auto a1 = reinterpret_cast<CDrawAdd*>(lParam1);
-    auto a2 = reinterpret_cast<CDrawAdd*>(lParam2);
+    const auto a1 = reinterpret_cast<CDrawAdd*>(lParam1);
+    const auto a2 = reinterpret_cast<CDrawAdd*>(lParam2);
 
     switch (iColumn)
 		case lp:
     {
         CGridFrm::eLastOrder = GridSortCol::lp;
-        bResult = a1->m_pDocument->GetAddPosition(a1) < a1->m_pDocument->GetAddPosition(a2);
+        bResult = a1->m_pDocument->GetAdPosition(a1) < a1->m_pDocument->GetAdPosition(a2);
         break;
         case logiczna:
             CGridFrm::eLastOrder = GridSortCol::logiczna;

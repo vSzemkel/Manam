@@ -662,13 +662,13 @@ void CDrawPage::MoveTo(const CRect& position, CDrawView *pView)
     dirty = TRUE;
 }
 
-void CDrawPage::SetSpace(CDrawAdd *pObj)
+void CDrawPage::SetSpace(const CDrawAdd *pObj)
 {
     space |= pObj->GetPlacementFlag();
     dirty = TRUE;
 }
 
-void CDrawPage::RealizeSpace(CDrawAdd *pObj)
+void CDrawPage::RealizeSpace(const CDrawAdd *pObj)
 {
     space ^= pObj->GetPlacementFlag();
     dirty = TRUE;
@@ -727,7 +727,7 @@ restoreShape:
     return ret;
 }
 
-BOOL CDrawPage::CheckSpace(CDrawAdd *pObj, int px, int py) const
+BOOL CDrawPage::CheckSpace(const CDrawAdd *pObj, int px, int py) const
 {
     /* vu : Sprawdza czy dane ogloszenie mozna postawic we wspolrzednych px i py na stronie		end vu */
     if (px < 1 || px + pObj->sizex - 1 > szpalt_x || py < 1 || py + pObj->sizey - 1 > szpalt_y) return FALSE;
@@ -740,7 +740,7 @@ BOOL CDrawPage::CheckSpace(CDrawAdd *pObj, int px, int py) const
     return (sp & pObj->GetPlacementFlag(px, py)).IsZero();
 }
 
-BOOL CDrawPage::CheckSpaceDiffKraty(CDrawAdd *pObj, int x, int y, int sx, int sy) const
+BOOL CDrawPage::CheckSpaceDiffKraty(const CDrawAdd *pObj, int x, int y, int sx, int sy) const
 {
     if (m_kraty_niebazowe.empty()) return TRUE;
     // sprawdz przecinanie z innymi kratami
