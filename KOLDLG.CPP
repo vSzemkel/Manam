@@ -2927,6 +2927,9 @@ END_MESSAGE_MAP()
 IMPLEMENT_DYNAMIC(CAboutDlg, CDialog)
 
 #pragma unmanaged
+
+extern "C" void GetProcId(char* procId);
+
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 {
     //{{AFX_DATA_INIT(CAboutDlg)
@@ -2934,60 +2937,15 @@ CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
     MEMORYSTATUSEX ms;
     ms.dwLength = sizeof(ms);
     GlobalMemoryStatusEx(&ms);
-#ifdef _WIN64
-    SYSTEM_INFO si;
-    ::GetSystemInfo(&si);
-    CString sProcInfo;
-    sProcInfo.Format(_T("Procesor %lu (%lu), pagesize %lu"), si.wProcessorArchitecture, si.wProcessorRevision, si.dwPageSize);
-#else
-    char procId[48] = "";
-    __asm {
-        push esi
-        push edi
-        push ebx
-        mov eax, 080000000h
-        cpuid
-        cmp eax, 080000004h
-        jl zakoncz
-        lea edi, procId
-        mov eax, 080000002h
-        cpuid
-        stosd
-        mov eax, ebx
-        stosd
-        mov eax, ecx
-        stosd
-        mov eax, edx
-        stosd
-        mov eax, 080000003h
-        cpuid
-        stosd
-        mov eax, ebx
-        stosd
-        mov eax, ecx
-        stosd
-        mov eax, edx
-        stosd
-        mov eax, 080000004h
-        cpuid
-        stosd
-        mov eax, ebx
-        stosd
-        mov eax, ecx
-        stosd
-        mov eax, edx
-        stosd
-        zakoncz :
-        pop ebx
-            pop edi
-            pop esi
-    }
+
+    char procId[48];
+    GetProcId(procId);
     CString sProcInfo = CString(procId);
-#endif
     if (sProcInfo.IsEmpty())
         sProcInfo = _T("Procesor < Pentium 4");
     else
         sProcInfo.Trim().Replace(_T("  "), _T(" "));
+
     m_memstat.Format(_T("Zu¿ycie pamiêci: %d/%d %d/%d [MB]\n%s"), B2MB(ms.ullTotalPhys - ms.ullAvailPhys), B2MB(ms.ullTotalPhys), B2MB(ms.ullTotalPageFile - ms.ullAvailPageFile), B2MB(ms.ullTotalPageFile), sProcInfo);
 }
 

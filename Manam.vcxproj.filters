@@ -208,6 +208,9 @@
     <Filter Include="Resources">
       <UniqueIdentifier>{4a42d4b5-ece8-435a-80ae-fdaf8789be6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asm">
+      <UniqueIdentifier>{444bee4a-31ff-4881-9c1f-61c8a531ff60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Manam.rc">
@@ -218,5 +221,13 @@
     <Natvis Include="Manam.natvis">
       <Filter>Resources</Filter>
     </Natvis>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="Asm\ProcIdx86.asm">
+      <Filter>Asm</Filter>
+    </MASM>
+    <MASM Include="Asm\ProcIdx64.asm">
+      <Filter>Asm</Filter>
+    </MASM>
   </ItemGroup>
 </Project>

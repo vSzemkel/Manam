@@ -122,7 +122,7 @@ public:
     BOOL CheckSrcFile(PGENEPSARG pArg);
     BOOL StaleElementy(PGENEPSARG pArg, CFile *handle);
     BOOL GenEPS(PGENEPSARG pArg);
-    BOOL GetDestName(PGENEPSARG pArg, CString& sNum, CString& destName);
+    BOOL GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destName);
     BOOL PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) const;
     CString GetNrPaginy() const;
 

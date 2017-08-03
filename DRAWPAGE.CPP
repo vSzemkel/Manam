@@ -986,7 +986,7 @@ BOOL CDrawPage::CheckRozmKrat(PGENEPSARG pArg)
     return isValid;
 } // CheckRozmKrat
 
-BOOL CDrawPage::GetDestName(PGENEPSARG pArg, CString& sNum, CString& destName)
+BOOL CDrawPage::GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destName)
 {
     TCHAR* aExt[3] = { _T(".eps"), _T(".ps"), _T(".pdf") };
     destName = theApp.GetProfileString(_T("GenEPS"), pArg->bIsPRN ? _T("PsDst") : _T("EpsDst"), _T(""));
