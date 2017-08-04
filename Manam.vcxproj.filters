@@ -197,6 +197,7 @@
     <None Include="Res\MANAM.ICO">
       <Filter>Resources</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">

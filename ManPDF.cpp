@@ -9,7 +9,6 @@
 #include "manam.h"
 #include "manpdf.h"
 
-#define ZLIB_WINAPI
 #include "zlib.h"
 
 const int CManPDF::orgX = 80;
