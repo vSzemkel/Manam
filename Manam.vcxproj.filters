@@ -1,6 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{bb74f10a-ac62-4c26-a337-af355b043d23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{bd4858d6-c3bc-4ba6-aa34-1ac049738e24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{4a42d4b5-ece8-435a-80ae-fdaf8789be6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asm">
+      <UniqueIdentifier>{444bee4a-31ff-4881-9c1f-61c8a531ff60}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="AtexKrat.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
@@ -143,6 +157,14 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <MASM Include="Asm\ProcIdx86.asm">
+      <Filter>Asm</Filter>
+    </MASM>
+    <MASM Include="Asm\ProcIdx64.asm">
+      <Filter>Asm</Filter>
+    </MASM>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Res\CAPTION.CUR">
       <Filter>Resources</Filter>
     </None>
@@ -188,30 +210,16 @@
     <None Include="Res\PENCIL.CUR">
       <Filter>Resources</Filter>
     </None>
-    <None Include="res\toolbar_main.bmp">
-      <Filter>Resources</Filter>
-    </None>
     <None Include="Res\SPA.CUR">
       <Filter>Resources</Filter>
     </None>
     <None Include="Res\MANAM.ICO">
       <Filter>Resources</Filter>
     </None>
+    <None Include="Res\toolbar_main.bmp">
+      <Filter>Resources</Filter>
+    </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Headers">
-      <UniqueIdentifier>{bb74f10a-ac62-4c26-a337-af355b043d23}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources">
-      <UniqueIdentifier>{bd4858d6-c3bc-4ba6-aa34-1ac049738e24}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources">
-      <UniqueIdentifier>{4a42d4b5-ece8-435a-80ae-fdaf8789be6c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Asm">
-      <UniqueIdentifier>{444bee4a-31ff-4881-9c1f-61c8a531ff60}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Manam.rc">
@@ -222,13 +230,5 @@
     <Natvis Include="Manam.natvis">
       <Filter>Resources</Filter>
     </Natvis>
-  </ItemGroup>
-  <ItemGroup>
-    <MASM Include="Asm\ProcIdx86.asm">
-      <Filter>Asm</Filter>
-    </MASM>
-    <MASM Include="Asm\ProcIdx64.asm">
-      <Filter>Asm</Filter>
-    </MASM>
   </ItemGroup>
 </Project>
