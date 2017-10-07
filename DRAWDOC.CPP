@@ -838,27 +838,6 @@ BOOL CDrawDoc::Import(BOOL check_exist) // tu dodaje na koncu do m_objects najwy
     return ok;
 }
 
-CString CDrawDoc::ErrMess(int cause)
-{
-    switch (cause) {
-        case CFileException::none: return  "ok";
-        case CFileException::fileNotFound: return  "Nie mogê znaleŸæ pliku";
-        case CFileException::badPath: return  "Z³a œcie¿ka";
-        case CFileException::tooManyOpenFiles: return  "Zbyt wiele otwartych plików";
-        case CFileException::accessDenied: return  "Brak dostêpu do pliku";
-        case CFileException::invalidFile: return  "Próba u¿ycia niepoprawnego handlera pliku";
-        case CFileException::removeCurrentDir: return  "Bie¿¹cy katalog nie mo¿e byæ usuniêty";
-        case CFileException::directoryFull: return  "Katalog jest pe³ny";
-        case CFileException::badSeek: return  "B³¹d ustawiania pozycji pliku";
-        case CFileException::hardIO: return  "B³¹d hardware";
-        case CFileException::sharingViolation: return  "B³¹d wspó³dzielenia";
-        case CFileException::lockViolation: return  "Próba operacji blokowania";
-        case CFileException::diskFull: return  "Brak miejsca";
-        case CFileException::endOfFile: return  "Koniec pliku";
-        default: return "ok";
-    }
-}
-
 BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL check_exist)
 { // tworzenie ogloszen importowanych z pliku tekstowego
     enum nazcstr
@@ -1131,7 +1110,7 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
         if (vPage->m_dervlvl == DERV_PROH)
             continue;
         l_modogl = l_modred = l_modrez = 0;
-        int pmods = vPage->szpalt_x*vPage->szpalt_y;
+        int pmods = vPage->szpalt_x * vPage->szpalt_y;
         for (int j = 0; j < pmods; j++) {
             if (vPage->space_red.GetBit(j)) l_modred++;
             else if (vPage->space_locked.GetBit(j)) l_modrez++;

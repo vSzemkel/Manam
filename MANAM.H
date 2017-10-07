@@ -154,11 +154,12 @@ class CDrawApp : public CWinAppEx
     static void CTimeToShortDate(const CTime& tData, CString& sData); // konwertuje datê przekazan¹ jako CTime do formatu dd/mm/rrrr
     static BOOL OpenWebBrowser(const TCHAR* sUrl);                    // otwiera przegladarke Internet Explorer i przekazuje jej sUrl
     static void OpenWebBrowser(size_t service, const TCHAR* sUrl);    // otwiera przegladarke Internet Explorer i przekazuje jej sUrl
+    static void SetErrorMessage(LPTSTR lpBuffer);
 
     BOOL ConnecttoDB();
     BOOL TryUpgradeImage() const; // proba upgrade'u wersji programu na podstawie obrazu zapisanego w bazie
-    void InitKratyDrukarnie();
     void FromIniFile();
+    void InitKratyDrukarnie();
     void SetScale(int scale);
     void FileRefresh(CDrawDoc* refreshDoc = nullptr); // odswieza jeden lub wszystkie otwarte jesli nullptr
     void FillKrataCombo(CComboBox& combo, int szpalt_x = pszpalt_x, int szpalt_y = pszpalt_y);

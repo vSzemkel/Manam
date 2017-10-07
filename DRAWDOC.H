@@ -58,7 +58,6 @@ public:
     static const TCHAR* asDocTypeExt[3];
     static int ValidKolor(TCHAR *st);
     static void DrawPageCross(CDC *pDC);
-    static CString ErrMess(int cause);
     static CString XmlReadText(IXmlReader *reader);
 
     virtual ~CDrawDoc();

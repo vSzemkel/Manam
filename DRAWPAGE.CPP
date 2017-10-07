@@ -1062,18 +1062,15 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
     CMemFile destOpi;
     CFile destNonOpi;
     CFile *dest = nullptr;
-    CFileException e;
 
     if (theApp.isOpiMode) {
         destOpi.SetFilePath(dest_name);
         dest = &destOpi;
     } else {
         dest = &destNonOpi;
-        if (!dest->Open(dest_name, CFile::modeCreate | CFile::modeReadWrite | CFile::typeBinary, &e)) {
-#ifdef _DEBUG
-            afxDump << "File " + dest_name + "  could not be opened " << e.m_cause << "\n";
-#endif
-            ::MessageBox(pArg->pDlg->m_hWnd, "Plik " + dest_name + " nie mo¿e byæ otwarty\n " + m_pDocument->ErrMess(e.m_cause), _T("B³¹d"), MB_OK);
+        if (!dest->Open(dest_name, CFile::modeCreate | CFile::modeReadWrite | CFile::typeBinary)) {
+            theApp.SetErrorMessage(pArg->cBigBuf);
+            ::MessageBox(pArg->pDlg->m_hWnd, CString(pArg->cBigBuf) + "\n" + dest_name, _T("B³¹d"), MB_OK);
             return FALSE;
         }
     }
@@ -1132,8 +1129,9 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
     BOOL ok = TRUE;
 
     CStdioFile fManamEps;
-    if (!fManamEps.Open(theApp.sManamEpsName, CFile::modeRead | CFile::typeText | CFile::shareDenyWrite, &fEx)) {
-        ::MessageBox(pArg->pDlg->m_hWnd, "Otwarcie pliku Manam.eps nie powiod³o siê\n" + m_pDocument->ErrMess(fEx.m_cause), _T("Blad"), MB_ICONERROR);
+    if (!fManamEps.Open(theApp.sManamEpsName, CFile::modeRead | CFile::typeText | CFile::shareDenyWrite)) {
+        theApp.SetErrorMessage(pArg->cBigBuf);
+        ::MessageBox(pArg->pDlg->m_hWnd, CString("Otwarcie pliku Manam.eps nie powiod³o siê\n") + pArg->cBigBuf, _T("B³¹d"), MB_ICONERROR);
         return FALSE;
     }
 
@@ -1178,8 +1176,9 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
         if (!pArg->bIsPRN)
             dest->Write("%%EndPageSetup\r\n/STAN_STR save def\r\n", 36);
         dest->Flush();
-    } catch (CFileException* e2) {
-        ::MessageBox(pArg->pDlg->m_hWnd, "B³¹d przepisywania plików\n " + m_pDocument->ErrMess(e2->m_cause), _T("B³¹d"), MB_ICONERROR);
+    } catch (CException* e2) {
+        theApp.SetErrorMessage(pArg->cBigBuf);
+        ::MessageBox(pArg->pDlg->m_hWnd, CString("B³¹d przepisywania plików\n") + pArg->cBigBuf, _T("B³¹d"), MB_ICONERROR);
         e2->Delete();
         ok = FALSE;
     }
@@ -1260,7 +1259,8 @@ foundsizex:
             dest->Write(cThreadBuf, br);
         dest->Write("\r\n", 2);
     } catch (CFileException* e2) {
-        ::MessageBox(pArg->pDlg->m_hWnd, "IO error\n " + m_pDocument->ErrMess(e2->m_cause), _T("B³¹d"), MB_ICONERROR);
+        theApp.SetErrorMessage(pArg->cBigBuf);
+        ::MessageBox(pArg->pDlg->m_hWnd, CString("B³¹d przepisywania plików 2\n") + pArg->cBigBuf, _T("B³¹d"), MB_ICONERROR);
         e2->Delete();
         ok = FALSE;
     }

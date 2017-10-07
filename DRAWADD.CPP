@@ -1447,12 +1447,13 @@ BOOL CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR *cKolor, float *bx1, float *by
     }
 
     CFile eps;
-    CFileException e;
-    if (!eps.Open(eps_name, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite, &e)) {
+    if (!eps.Open(eps_name, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
         if (eps_name.Left(2) == _T("::"))
             f5_errInfo += eps_name.Mid(3) + (bReqProdInfo ? _T(" zamówiono dodatkowe sprawdzenie, ") : _T(" brak materia³u, "));
-        else
-            f5_errInfo.AppendFormat(_T(" %li (b³¹d IO: %li), %s"), nreps, e.m_lOsError, m_pDocument->ErrMess(e.m_cause));
+        else {
+            theApp.SetErrorMessage(pArg->cBigBuf);
+            f5_errInfo.AppendFormat(_T(" %li: %s"), nreps, pArg->cBigBuf);
+        }
 
         return false;
     }
@@ -1917,9 +1918,9 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
         dest->Write(s, (UINT)strlen(s));
     } else {
         CFile eps;
-        CFileException e;
-        if (!eps.Open(eps_name, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite, &e)) {
-            ::MessageBox(pArg->pDlg->m_hWnd, _T("Nie mo¿na uzyskaæ dostêpu do pliku: ") + eps_name + _T("\n ") + m_pDocument->ErrMess(e.m_cause), _T("B³¹d"), MB_OK);
+        if (!eps.Open(eps_name, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
+            theApp.SetErrorMessage(pArg->cBigBuf);
+            ::MessageBox(pArg->pDlg->m_hWnd, CString(pArg->cBigBuf) + _T("\n") + eps_name, _T("B³¹d"), MB_OK);
             return FALSE;
         }
         CDrawAdd::LocatePreview(eps, &lOffset, &lSize);
@@ -1938,9 +1939,9 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
 
     ::StringCchPrintfA(s, n_size, "%%%%EndDocument\r\nendManamEPS\r\n");
     dest->Write(s, (UINT)strlen(s));
-    } CATCH(CFileException, e)
-    {
-        ::MessageBox(pArg->pDlg->m_hWnd, _T("B³¹d przy przepisywaniu eps'a ") + eps_name + _T("\n ") + m_pDocument->ErrMess(e->m_cause), _T("B³¹d"), MB_OK | MB_ICONERROR);
+    } CATCH(CFileException, e) {
+        theApp.SetErrorMessage(pArg->cBigBuf);
+        ::MessageBox(pArg->pDlg->m_hWnd, CString("B³¹d przy przepisywaniu eps'a ") + eps_name + _T("\n ") + pArg->cBigBuf, _T("B³¹d"), MB_OK | MB_ICONERROR);
         return FALSE;
     } END_CATCH
 
@@ -1982,9 +1983,9 @@ BOOL CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile *dest)
 
     if (!bReadFromATEX) {
         CFile eps;
-        CFileException e;
-        if (!eps.Open(nazwa, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite, &e)) {
-            ::MessageBox(pArg->pDlg->m_hWnd, _T("Nie wyeksportowano strony z Drobnixa lub nie mo¿na uzyskaæ dostêpu do pliku: ") + nazwa + _T("\n ") + m_pDocument->ErrMess(e.m_cause), APP_NAME, MB_OK | MB_ICONERROR);
+        if (!eps.Open(nazwa, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
+            theApp.SetErrorMessage(pArg->cBigBuf);
+            ::MessageBox(pArg->pDlg->m_hWnd, CString("Brakuje strony z Drobnixa: ") + nazwa + _T("\n") + pArg->cBigBuf, APP_NAME, MB_OK | MB_ICONERROR);
             return FALSE;
         }
         eps.SeekToBegin();
@@ -2007,9 +2008,9 @@ BOOL CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile *dest)
         dest->Write(s, (UINT)strlen(s));
     } else {
         CFile eps;
-        CFileException e;
-        if (!eps.Open(nazwa, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite, &e)) {
-            ::MessageBox(pArg->pDlg->m_hWnd, _T("Nie mo¿na uzyskaæ dostêpu do pliku: ") + nazwa + "\n " + m_pDocument->ErrMess(e.m_cause), _T("B³¹d"), MB_OK);
+        if (!eps.Open(nazwa, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
+            theApp.SetErrorMessage(pArg->cBigBuf);
+            ::MessageBox(pArg->pDlg->m_hWnd, CString("Brakuje strony z Drobnixa: ") + nazwa + _T("\n") + pArg->cBigBuf, APP_NAME, MB_OK | MB_ICONERROR);
             return FALSE;
         }
         CDrawAdd::LocatePreview(eps, &lOffset, &lSize);

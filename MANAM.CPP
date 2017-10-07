@@ -641,6 +641,12 @@ void CDrawApp::OpenWebBrowser(size_t service, const TCHAR* sUrl)
     }
 }
 
+void CDrawApp::SetErrorMessage(LPTSTR lpBuffer)
+{
+    const auto dw = GetLastError();
+    ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, dw, LANG_USER_DEFAULT, lpBuffer, n_size, NULL);
+}
+
 std::unique_ptr<CHttpFile> CDrawApp::OpenURL(size_t service, const CString& sUrl)
 {
     if (!isRDBMS) {
