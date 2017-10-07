@@ -519,7 +519,7 @@ void CDrawDoc::SelectAdd(CDrawAdd *pObj, BOOL multiselect) const
     if (pView) pView->Select(pObj, multiselect);
 }
 
-int CDrawDoc::AddsCount() const
+int CDrawDoc::AddsCount() const noexcept
 {
     int cnt = 0;
     for (const auto& pObj : m_objects)

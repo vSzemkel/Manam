@@ -68,14 +68,14 @@ public:
     virtual void Serialize(CArchive& ar) override;  // overridden for document i/o
     virtual BOOL CDrawDoc::SaveModified() override; // plik do pliku , baza do bazy
 
-    template<class T> T* GetPanelView() const;
+    template<class T> T* GetPanelView() const noexcept;
     const CSize& GetSize() const { return m_size; }
     float GetDrobneH();
     void ComputeCanvasSize();
-    int AddsCount() const;
-    int GetIPage(int n) const;
-    int GetIPage(CDrawPage *pPage) const;
-    int Nr2NrPorz(const TCHAR* s) const;		// dla numeru na paginie liczy numer porz¹dkowy
+    int AddsCount() const noexcept;
+    int GetIPage(int n) const noexcept;
+    int GetIPage(CDrawPage *pPage) const noexcept;
+    int Nr2NrPorz(const TCHAR* s) const noexcept;   // dla numeru na paginie liczy numer porz¹dkowy
 
 // Operations
 public:
@@ -242,7 +242,7 @@ protected:
 
 /////////////////////////////////////////////////////////////////////////////
 
-template<class T> T* CDrawDoc::GetPanelView() const
+template<class T> T* CDrawDoc::GetPanelView() const noexcept
 {
     POSITION pos = GetFirstViewPosition();
     while (pos != NULL) {

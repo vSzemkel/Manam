@@ -783,7 +783,7 @@ void CDrawDoc::OnDrawOpcje()
     theApp.WriteInt(_T("PodwalySubDir"), dlg.m_podwal_subdir);
 }
 
-int CDrawDoc::GetIPage(int n) const
+int CDrawDoc::GetIPage(int n) const noexcept
 {
     for (int i = 0; i < (int)m_pages.size(); i++)
         if (m_pages[i]->nr == n)
@@ -791,7 +791,7 @@ int CDrawDoc::GetIPage(int n) const
     return -1;
 }
 
-int CDrawDoc::GetIPage(CDrawPage *pPage) const
+int CDrawDoc::GetIPage(CDrawPage *pPage) const noexcept
 {
     auto pos = std::find(std::cbegin(m_pages), std::cend(m_pages), pPage);
     return pos == std::cend(m_pages) ? -1 : static_cast<int>(pos - std::cbegin(m_pages));
@@ -952,7 +952,7 @@ DerivePages_loop:
     }
 } // DerivePages
 
-int CDrawDoc::Nr2NrPorz(const TCHAR *s) const
+int CDrawDoc::Nr2NrPorz(const TCHAR *s) const noexcept
 {
     if (!s) return -1;
     int nr_porz = _ttoi(s);
