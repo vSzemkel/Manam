@@ -643,7 +643,7 @@ void CDrawApp::OpenWebBrowser(size_t service, const TCHAR* sUrl)
 
 void CDrawApp::SetErrorMessage(LPTSTR lpBuffer)
 {
-    const auto dw = GetLastError();
+    const auto dw = ::GetLastError();
     ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, dw, LANG_USER_DEFAULT, lpBuffer, n_size, NULL);
 }
 

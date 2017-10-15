@@ -159,8 +159,8 @@ class CDrawApp : public CWinAppEx
     BOOL ConnecttoDB();
     BOOL TryUpgradeImage() const; // proba upgrade'u wersji programu na podstawie obrazu zapisanego w bazie
     void FromIniFile();
-    void InitKratyDrukarnie();
     void SetScale(int scale);
+    void InitKratyDrukarnie();
     void FileRefresh(CDrawDoc* refreshDoc = nullptr); // odswieza jeden lub wszystkie otwarte jesli nullptr
     void FillKrataCombo(CComboBox& combo, int szpalt_x = pszpalt_x, int szpalt_y = pszpalt_y);
     std::unique_ptr<CHttpFile> OpenURL(size_t service, const CString& sUrl); // pobiera treœæ z URL, który powinien byæ typu http
