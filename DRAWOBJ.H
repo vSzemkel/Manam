@@ -1,7 +1,7 @@
 
-#include "flag.h"
-
 #pragma once
+
+#include "flag.h"
 
 class CDrawView;
 class CDrawDoc;

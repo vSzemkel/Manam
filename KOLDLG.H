@@ -1,13 +1,13 @@
 // koldlg.h : header file
 
+#pragma once
+
 #include "afxwin.h"
 #include "atltime.h"
 #include "afxcmn.h"
 #include "afxdtctl.h"
 
 #include "drawobj.h"
-
-#pragma once
 
 // podpisy og³oszeñ maj¹ wspó³rzêdne z zakresu [-TXTSHIFT, TXTSHIFT]
 const int TXTSHIFT = 20;

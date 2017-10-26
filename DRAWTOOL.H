@@ -10,9 +10,9 @@
 // See these sources for detailed information regarding the
 // Microsoft Foundation Classes product.
 
-#include "drawobj.h"
-
 #pragma once
+
+#include "drawobj.h"
 
 class CDrawView;
 

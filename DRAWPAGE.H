@@ -1,7 +1,7 @@
 
-#include "drawobj.h"
-
 #pragma once
+
+#include "drawobj.h"
 
 class CFlag;
 class CDrawAdd;

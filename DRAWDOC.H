@@ -10,9 +10,9 @@
 // See these sources for detailed information regarding the
 // Microsoft Foundation Classes product.
 
-#include "drawpage.h"
-
 #pragma once
+
+#include "drawpage.h"
 
 #define A4 (5 * theApp.activeDoc->iPagesInRow)
 #define A3 (10 * theApp.activeDoc->iPagesInRow)

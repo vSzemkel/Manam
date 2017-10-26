@@ -1510,7 +1510,7 @@ BOOL CManODPNET::ReadAcDeadlines(CDrawDoc* doc)
         auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
         while (odr->Read()) {
             int id_str = odr->GetInt32(0);
-            auto p = std::find_if(std::cbegin(doc->m_pages), std::cend(doc->m_pages), [id_str](auto p) { return p->id_str == id_str; });
+            auto p = std::find_if(std::cbegin(doc->m_pages), std::cend(doc->m_pages), [id_str](auto pPage) { return pPage->id_str == id_str; });
             if (p != std::end(doc->m_pages)) {
                 auto s = OdpHelper::ReadOdrString(odr, 1);
                 (*p)->m_ac_red = CDrawApp::ShortDateToCTime(s);
