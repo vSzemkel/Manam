@@ -39,7 +39,7 @@ protected: // create from serialization only
 
     // Attributes
 public:
-    auto GetDocument() const { return reinterpret_cast<CDrawDoc*>(m_pDocument); }
+    auto GetDocument() const noexcept { return reinterpret_cast<CDrawDoc*>(m_pDocument); }
     unsigned char GetPagesPrinted() const { return m_pagesPrinted; }
     void SetPageSize();
     CRect GetInitialPosition();

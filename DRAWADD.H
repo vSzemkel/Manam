@@ -10,11 +10,12 @@ class CDrawPage;
 
 class CDrawAdd final : public CDrawObj
 {
-protected:
     DECLARE_SERIAL(CDrawAdd);
-    CDrawAdd();
-public:
-    CDrawAdd(const CRect *position);
+
+// public: declared in macro
+    CDrawAdd() noexcept;
+    CDrawAdd(const CRect& position) noexcept;
+
     virtual ~CDrawAdd();
     virtual void Draw(CDC *pDC) override;
     virtual void Print(CDC *pDC) override;
@@ -22,7 +23,6 @@ public:
     virtual void Serialize(CArchive& ar) override;
     virtual BOOL OnOpen(CDrawView *pView) override;
 
-  public:
     int m_pub_xx;
     int m_add_xx;	// FK_SPACER_AD
     int szpalt_x;
@@ -76,16 +76,6 @@ public:
     CTime powtorka;			// data powtórki
     CTime epsDate;			// data pliku
 
-private:
-    static const int ciMaxRings; // maksymalna iloœæ obwodnic precla
-    CString m_precel_flag;  // flaga precla, przechowywana po to, by niepotrzebnie nie liczyæ obwodnic po OnOpen
-    std::unique_ptr<CPoint[]> aPrecelWertex;	// tablica wierzcho³ków precla
-    int *aRingWertexCnt;	// tablica iloœci wierzcho³ków na poszczególnych obwornicach
-    BOOL SetStrictDescPos(TCHAR *description, CRect *vRect, CDrawPage *pPage);
-    BOOL PtOnRing(CPoint p) const; // stwierdza, czy krawêdŸ (px,py)->(px+1,py) jest na dotychczas znalezionej obwodnicy precla
-    int FindRing(CPoint p0, BOOL bOuterRing); // znajduje obwodnicê precla rozpoczynaj¹c¹ siê od p0 w kierunku E, zwraca liczbê wierzcho³ków
-
-public:
     static void PrintPadlock(CDC *pDC, const CRect& rect);
     static BOOL BBoxFromFile(PGENEPSARG pArg, CFile *handle, float *x1, float *y1, float *x2, float *y2);
     static BOOL LocatePreview(CFile& fEps, unsigned long *lOffset, unsigned long *lSize);
@@ -121,6 +111,15 @@ public:
     CString EpsName(int format, BOOL copyOldEPS, BOOL modifTest = FALSE);
     void Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const;
     void SetDotM(BOOL setFlag);		// parsuje wersjê i ustawia lub cofa .m
+
+private:
+    static const int ciMaxRings; // maksymalna iloœæ obwodnic precla
+    CString m_precel_flag;  // flaga precla, przechowywana po to, by niepotrzebnie nie liczyæ obwodnic po OnOpen
+    std::unique_ptr<CPoint[]> aPrecelWertex;	// tablica wierzcho³ków precla
+    int *aRingWertexCnt;	// tablica iloœci wierzcho³ków na poszczególnych obwornicach
+    BOOL SetStrictDescPos(TCHAR *description, CRect *vRect, CDrawPage *pPage);
+    BOOL PtOnRing(CPoint p) const; // stwierdza, czy krawêdŸ (px,py)->(px+1,py) jest na dotychczas znalezionej obwodnicy precla
+    int FindRing(CPoint p0, BOOL bOuterRing); // znajduje obwodnicê precla rozpoczynaj¹c¹ siê od p0 w kierunku E, zwraca liczbê wierzcho³ków
 };
 
 struct SpadInfo

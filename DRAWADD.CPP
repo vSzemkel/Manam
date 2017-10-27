@@ -39,14 +39,14 @@ const int CDrawAdd::ciMaxRings = 4;
 
 IMPLEMENT_SERIAL(CDrawAdd, CDrawObj, 0)
 
-CDrawAdd::CDrawAdd() : // u¿ywany tylko przez ::Serialize
+CDrawAdd::CDrawAdd() noexcept : // u¿ywany tylko przez ::Serialize
     m_pub_xx(-1), nag_xx(1), bank { 0 }, precelWertexCnt(0), precelRingCnt(0), iFileId(0)
 {}
 
-CDrawAdd::CDrawAdd(const CRect *position) : CDrawAdd::CDrawAdd()
+CDrawAdd::CDrawAdd(const CRect& position) noexcept : CDrawAdd::CDrawAdd()
 {
     ASSERT_VALID(this);
-    m_position = *position;
+    m_position = position;
     m_add_xx = -1;
     nreps = oldAdno = -1;
     czaskto = "# []";

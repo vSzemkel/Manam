@@ -240,8 +240,10 @@ void CMainFrame::SetOpenStatus(LPCTSTR t)
     CSize s = GetDC()->GetTextExtent(t, (int)_tcslen(t));
     m_wndStatusBar.SetPaneInfo(1, ID_INDICATOR_OPENSTAT, s.cx ? SBPS_NORMAL : SBPS_NOBORDERS | SBPS_DISABLED, (int)(0.8 * s.cx));
     m_wndStatusBar.SetPaneText(1, t);
-    if (MDIGetActive()) // w grzbiecie ukryj toolbar
-        ShowPane(&m_wndToolBar, !theApp.activeDoc->isGRB, TRUE, TRUE);
+    if (MDIGetActive()) { // w grzbiecie ukryj toolbar
+        const BOOL showToolbar = !theApp.activeDoc->isGRB;
+        ShowPane(&m_wndToolBar, showToolbar, TRUE, showToolbar);
+    }
 }
 
 void CMainFrame::SetLogonStatus(LPCTSTR t)

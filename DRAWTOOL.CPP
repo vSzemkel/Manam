@@ -413,7 +413,7 @@ void CRectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
                 return;
             }
             r = CRect(local, CSize(0, 0));
-            auto pAdd = new CDrawAdd(&r);
+            auto pAdd = new CDrawAdd(r);
             if (pPage || !pDoc->m_pages.empty()) {
                 if (!pPage) pPage = pDoc->m_pages[0];
                 pAdd->szpalt_x = pPage->szpalt_x;
@@ -428,7 +428,7 @@ void CRectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
         case DrawShape::opis:
         {
             r = CRect(local, CSize(0, 0));
-            auto pObj = new CDrawOpis(&r);
+            auto pObj = new CDrawOpis(r);
             pView->GetDocument()->Add(pObj);
             pView->Select(pObj);
         }
@@ -593,8 +593,8 @@ void CLockTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
                     pAdd->Lock();
             }
         } else if (pPage != nullptr) { // DrawShape::deadline
-            CRect r(local, CSize((int)(2.7 * pmodulx), -pmoduly));
-            auto pOpi = new CDrawOpis(&r, theApp.GetProfileString(_T("General"), _T("Deadline"), _T("")));
+            const CRect r(local, CSize((int)(2.7 * pmodulx), -pmoduly));
+            auto pOpi = new CDrawOpis(r, theApp.GetProfileString(_T("General"), _T("Deadline"), _T("")));
             pView->GetDocument()->Add(pOpi);
             pView->Select(pOpi);
         }
@@ -604,7 +604,7 @@ void CLockTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
 void CLockTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
 {
     c_last = point;
-    //..,,pokazywanie na status barze co to za obiekt
+    // pokazywanie na status barze co to za obiekt
     CPoint l = point;
     pView->ClientToDoc(l);
     CDrawObj *pObj = pView->GetDocument()->ObjectAt(l);

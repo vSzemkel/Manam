@@ -917,8 +917,8 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL c
         return FALSE;
     }
 
-    CRect r(pos, CSize(sx * pmodulx, -sy * pmoduly));
-    auto pObj = new CDrawAdd(&r);
+    const CRect r(pos, CSize(sx * pmodulx, -sy * pmoduly));
+    auto pObj = new CDrawAdd(r);
     Add(pObj);
     pObj->nazwa = p_nazwa;
     pObj->nreps = p_nreps;
@@ -1057,7 +1057,7 @@ BOOL CDrawDoc::Add4Pages()
     int n = _ttoi(dlg.m_ile_kolumn);
     size_t last = m_pages.size();
     for (size_t i = last; i < last + n; ++i) {
-        auto pNewPage = new CDrawPage(&r);
+        auto pNewPage = new CDrawPage(r);
         if (last > 1) {
             auto pJedynka = m_pages[1];
             pNewPage->m_drukarnie = pJedynka->m_drukarnie;
@@ -1090,7 +1090,7 @@ BOOL CDrawDoc::AddDrz4Pages(LPCTSTR ile_kolumn)
     int n = _ttoi(dlg.m_ile_kolumn);
     int last = (int)m_pages.size();
     for (int i = last; i < last + n; ++i) {
-        auto pNewPage = new CDrawPage(&r);
+        auto pNewPage = new CDrawPage(r);
         AddPageAt(i, pNewPage);
         SetPageRectFromOrd(pNewPage, i);
     }
@@ -1732,7 +1732,7 @@ CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, long 
     if (sx < 1 || sx > szpalt_x || sy < 1 || sy > szpalt_y) return FALSE;
 
     CRect r(pos, CSize((int)(sx * modulx), (int)(sy * (-1) * moduly)));
-    auto pObj = new CDrawAdd(&r);
+    auto pObj = new CDrawAdd(r);
     Add(pObj);
     pObj->m_pDocument = this;
     pObj->szpalt_x = szpalt_x;

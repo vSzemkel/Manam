@@ -31,30 +31,15 @@ enum class DocType : int
 
 class CDrawDoc final : public COleDocument
 {
-protected: // create from serialization only
-    CDrawDoc();
     DECLARE_DYNCREATE(CDrawDoc)
+
+    // public: declared in macro
+    CDrawDoc();
 
     friend class CManODPNET;
     friend class CDrawDocDbReader;
     friend class CDrawDocDbWriter;
-    // Attributes
-private:
-    float drobneH;                                     // wysokoœæ drobnych na stronie
-    int findNextInd;
-    CMenu m_grzbietMenu;
-    CTime dataZamkniecia;
-    long lastSearchNrAtex;
-    long lastSearchNrSpacer;
-    CString lastSearchNazwa;
 
-    void SetTitleAndMru(BOOL addRecentFiles = TRUE); // wywo³uje base->SetTitle przekazuj¹c odpowiednie parametry i opcjonalnie dodaje do MRU
-    void AdvanceAsidePos(CPoint& p) const;           // wylicza polozenie kolejnego nastepnego ogloszenia z boku
-    float PowAdd2Mod(BOOL bQueStat) const;
-    bool MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo);
-    void ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_modwol) const;
-
-public:
     static const TCHAR* asDocTypeExt[3];
     static int ValidKolor(TCHAR *st);
     static void DrawPageCross(CDC *pDC);
@@ -78,7 +63,6 @@ public:
     int Nr2NrPorz(const TCHAR* s) const noexcept;   // dla numeru na paginie liczy numer porz¹dkowy
 
 // Operations
-public:
     //dotyczy CDrawObj - obiektow i add ogloszen
     void OnAsideAdds();
     void AsideAdds();							// ustawia z boku ogloszenia bez okreslonej strony
@@ -163,10 +147,6 @@ public:
     virtual void Dump(CDumpContext& dc) const;
 #endif
 
-protected:
-    CSize m_size;
-
-public:
     int m_mak_xx;				// ident makiety
     int id_drw; 			// ident drzewa
     int iPagesInRow;		// ile stron rysyje siê w wierszu
@@ -202,8 +182,10 @@ public:
     CString sekretarz;		// dla makiet bibliotecznych zawiera opis
     CString symWydawcy;		// dwuliterowy symbol dzia³u zsy³aj¹cego
 
-// Generated message map functions
 protected:
+    CSize m_size;
+
+    // Generated message map functions
     //{{AFX_MSG(CDrawDoc)
     afx_msg void OnFileSaveAs();
     afx_msg void OnVuMakietowanie();
@@ -238,6 +220,21 @@ protected:
     afx_msg void OnChangeColsPerRow();
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
+
+private:
+    float drobneH;                                     // wysokoœæ drobnych na stronie
+    int findNextInd;
+    CMenu m_grzbietMenu;
+    CTime dataZamkniecia;
+    long lastSearchNrAtex;
+    long lastSearchNrSpacer;
+    CString lastSearchNazwa;
+
+    void SetTitleAndMru(BOOL addRecentFiles = TRUE); // wywo³uje base->SetTitle przekazuj¹c odpowiednie parametry i opcjonalnie dodaje do MRU
+    void AdvanceAsidePos(CPoint& p) const;           // wylicza polozenie kolejnego nastepnego ogloszenia z boku
+    float PowAdd2Mod(BOOL bQueStat) const;
+    bool MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo);
+    void ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_modwol) const;
 };
 
 /////////////////////////////////////////////////////////////////////////////

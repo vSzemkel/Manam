@@ -12,15 +12,11 @@ IMPLEMENT_SERIAL(CDrawOpis, CDrawObj, 0)
 const CPoint CDrawOpis::drawrogi(50, 70);
 const CPoint CDrawOpis::printrogi(2, 3);
 
-CDrawOpis::CDrawOpis()
+CDrawOpis::CDrawOpis(const CRect& position) noexcept : CDrawOpis(position, _T(""))
 {
 }
 
-CDrawOpis::CDrawOpis(const CRect *position) : CDrawOpis(position, _T(""))
-{
-}
-
-CDrawOpis::CDrawOpis(const CRect *position, const TCHAR *tx) :
+CDrawOpis::CDrawOpis(const CRect& position, const TCHAR *tx) noexcept :
     CDrawObj(position), m_opi_xx(-1), m_Scale(1.0f)
 {
     ASSERT_VALID(this);
@@ -103,7 +99,7 @@ CDrawObj* CDrawOpis::Clone(CDrawDoc *pDoc) const
 {
     ASSERT_VALID(this);
 
-    auto pClone = new CDrawOpis(&m_position);
+    auto pClone = new CDrawOpis(m_position);
     ASSERT_VALID(pClone);
     pClone->info = info;
     pClone->kolor = kolor;

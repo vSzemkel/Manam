@@ -31,7 +31,7 @@ typedef struct _GENEPSARG
 
 struct CKrataNiebazowa final
 {
-    explicit CKrataNiebazowa(int s_x, int s_y, CFlag&& space, CFlag&& locked, CFlag&& red)
+    explicit CKrataNiebazowa(int s_x, int s_y, CFlag&& space, CFlag&& locked, CFlag&& red) noexcept
         : m_szpalt_x(s_x), m_szpalt_y(s_y), m_space(std::move(space)), m_space_locked(std::move(locked)), m_space_red(std::move(red))
     {
     };
@@ -44,12 +44,11 @@ struct CKrataNiebazowa final
 
 class CDrawPage final : public CDrawObj
 {
-protected:
     DECLARE_SERIAL(CDrawPage);
-    CDrawPage() {};
 
-public:
-    CDrawPage(const CRect *position);
+// public: declared in macro
+    CDrawPage() noexcept {};
+    CDrawPage(const CRect& position) noexcept;
     virtual ~CDrawPage();
     // Overrides
     virtual void Draw(CDC *pDC) override;

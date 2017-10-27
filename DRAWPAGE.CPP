@@ -14,7 +14,7 @@ extern BOOL drawErrorBoxes;
 
 IMPLEMENT_SERIAL(CDrawPage, CDrawObj, 0)
 
-CDrawPage::CDrawPage(const CRect *position) :
+CDrawPage::CDrawPage(const CRect& position) noexcept :
     CDrawObj(position), id_str(-1), szpalt_x(pszpalt_x), szpalt_y(pszpalt_y),
     nr(c_normal), prn_mak_xx(0), wyd_xx(-1), m_typ_pary(0), space(), space_locked(), space_red(),
     niemakietuj(0), m_dervlvl(0), m_mutczas(1), m_drukarnie(0), m_deadline(CTime::GetCurrentTime()),
@@ -29,7 +29,7 @@ CDrawPage::~CDrawPage()
     // ogloszenia spadaja poza makiete
     for (const auto& pAdd : m_adds) {
         auto px = pszpalt_x*m_pDocument->iPagesInRow + m_pDocument->iPagesInRow / 2 + pAdd->posx;
-        CRect rect(pmodulx*px, pmoduly*(-1 - pAdd->posy), pmodulx*(px + pAdd->sizex), pmoduly*(-1 - pAdd->posy - pAdd->sizey));
+        const CRect rect(pmodulx*px, pmoduly*(-1 - pAdd->posy), pmodulx*(px + pAdd->sizex), pmoduly*(-1 - pAdd->posy - pAdd->sizey));
         pAdd->MoveTo(rect);
         pAdd->fizpage = pAdd->posx = pAdd->posy = 0;
         pAdd->UpdateInfo();
@@ -163,8 +163,8 @@ void CDrawPage::Draw(CDC *pDC)
         pDC->LineTo(rect.right, rect.top + 4 * vscale);
     }
 
-    int nr_porz = nr >> 3;
-    bool isRoman = (nr & c_rzym) > 0;
+    const int nr_porz = nr >> 3;
+    const bool isRoman = (nr & c_rzym) > 0;
     const CString& cnr = GetNrPaginy();
     const CString& cap = theApp.swCZV & 2 ? ((CMainFrame*)AfxGetMainWnd())->GetCapStrFromData((WORD)(prn_mak_xx - (nr_porz & 1))) : caption;
     CRect r(rect.left + 2 * vscale, rect.top - vscale, rect.right - 2 * vscale, rect.top - pmoduly + vscale);
@@ -306,9 +306,9 @@ CRect CDrawPage::GetNormalizedModuleRect(size_t module) const
 #ifdef DEBUG
     ASSERT(0 <= module && module < (size_t)szpalt_x * szpalt_y);
 #endif
-    auto tmp = div((int)module, szpalt_x);
-    int posx = szpalt_x - tmp.rem;
-    int posy = szpalt_y - tmp.quot;
+    const auto tmp = div((int)module, szpalt_x);
+    const auto posx = szpalt_x - tmp.rem;
+    const auto posy = szpalt_y - tmp.quot;
     return CRect(m_position.left + (int)(modulx*(posx - 1)), m_position.bottom + (int)(moduly*(szpalt_y - posy)), m_position.left + (int)(modulx*posx), m_position.bottom + (int)(moduly*(szpalt_y - posy + 1)));
 }
 
@@ -324,16 +324,16 @@ void CDrawPage::DrawKolor(CDC *pDC, const CRect& pos) const
 {
     if (kolor == c_brak)
         return;
-    CRect r1, r2, r3;
+
     if (kolor == c_full) {
-        r1 = CRect(pos.left, pos.top + 3 * vscale, pos.left + (int)floor(szpalt_x*modulx / 3), pos.top);
-        r2 = CRect(pos.left + (int)floor(szpalt_x*modulx / 3), pos.top + 3 * vscale, pos.right - (int)floor(szpalt_x*modulx / 3), pos.top);
-        r3 = CRect(pos.right - (int)floor(szpalt_x*modulx / 3), pos.top + 3 * vscale, pos.right, pos.top);
+        const auto r1 = CRect(pos.left, pos.top + 3 * vscale, pos.left + (int)floor(szpalt_x*modulx / 3), pos.top);
+        const auto r2 = CRect(pos.left + (int)floor(szpalt_x*modulx / 3), pos.top + 3 * vscale, pos.right - (int)floor(szpalt_x*modulx / 3), pos.top);
+        const auto r3 = CRect(pos.right - (int)floor(szpalt_x*modulx / 3), pos.top + 3 * vscale, pos.right, pos.top);
         pDC->FillRect(r1, &((CMainFrame*)AfxGetMainWnd())->cyjan);
         pDC->FillRect(r2, &((CMainFrame*)AfxGetMainWnd())->magenta);
         pDC->FillRect(r3, &((CMainFrame*)AfxGetMainWnd())->yellow);
     } else {
-        r1 = CRect(pos.left, pos.top + 3 * vscale, pos.right, pos.top);
+        auto r1 = CRect(pos.left, pos.top + 3 * vscale, pos.right, pos.top);
         CBrush* pOldBrush;
         CPen* pOldPen = reinterpret_cast<CPen*>(pDC->SelectStockObject(NULL_PEN));
         if (m_pDocument->isGRB) pOldBrush = reinterpret_cast<CBrush*>(pDC->SelectStockObject(LTGRAY_BRUSH));
@@ -392,7 +392,7 @@ void CDrawPage::Print(CDC *pDC)
 
     pDC->SetBkMode(TRANSPARENT);
 
-    CRect saved_position = m_position;
+    const CRect saved_position = m_position;
     m_position = GetPrintRect();
 
     pDC->Rectangle(m_position);
@@ -400,8 +400,8 @@ void CDrawPage::Print(CDC *pDC)
     DrawKolor(pDC, &m_position);
     DrawReserved(pDC);
 
-    int nr_porz = nr >> 3;
-    bool isRoman = (nr & c_rzym) > 0;
+    const int nr_porz = nr >> 3;
+    const bool isRoman = (nr & c_rzym) > 0;
     const CString& cnr = GetNrPaginy();
     CRect r(m_position.left + 2 * vscale, m_position.top - vscale, m_position.right - 2 * vscale, m_position.top - pmoduly + vscale);
     if ((!isRoman && (nr_porz & 1) == 0) || (isRoman && (nr_porz & 1) == 1)) { // lewe arabskie i prawe rzymskie
@@ -427,7 +427,7 @@ CDrawObj* CDrawPage::Clone(CDrawDoc *pDoc) const
 {
     ASSERT_VALID(this);
 
-    auto pClone = new CDrawPage(&m_position);
+    auto pClone = new CDrawPage(m_position);
     pClone->name = name;
     pClone->caption = caption;
     pClone->nr = nr;

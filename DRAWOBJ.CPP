@@ -10,13 +10,13 @@ extern BOOL drawErrorBoxes;
 
 IMPLEMENT_SERIAL(CDrawObj, CObject, 0)
 
-CDrawObj::CDrawObj() : m_pDocument(nullptr), kolor(c_brak), dirty(TRUE)
+CDrawObj::CDrawObj() noexcept : m_pDocument(nullptr), kolor(c_brak), dirty(TRUE)
 {
 }
 
-CDrawObj::CDrawObj(const CRect *position) : CDrawObj::CDrawObj()
+CDrawObj::CDrawObj(const CRect& position) noexcept : CDrawObj::CDrawObj()
 {
-    m_position = *position;
+    m_position = position;
 }
 
 void CDrawObj::DrawNapis(CDC *pDC, LPCTSTR napis, int cnt, LPRECT r, UINT format, int bkMode)

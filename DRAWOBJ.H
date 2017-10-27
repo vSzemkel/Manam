@@ -13,15 +13,14 @@ using delobj_t = std::pair<int, short>;
 
 class CDrawObj : public CObject
 {
-protected:
     DECLARE_SERIAL(CDrawObj);
-    CDrawObj();
-    static CString RzCyfra(int i, const CString *znaki); //vu
-    int GetVertPrintShift() const;
+
+// public: declared in macro
 
     // Constructors
-public:
-    CDrawObj(const CRect *position);
+    CDrawObj() noexcept;
+    CDrawObj(const CRect& position) noexcept;
+
     virtual ~CDrawObj() {};
     virtual void Draw(CDC *pDC);
     virtual void Print(CDC *pDC) { Draw(pDC); }
@@ -36,6 +35,7 @@ public:
     static double mody(double y);
     static CString Rzymska(int i);
     static int Arabska(LPCTSTR rz);
+    static CString RzCyfra(int i, const CString *znaki);
     static void DrawNapis(CDC *pDC, LPCTSTR napis, int cnt, LPRECT r, UINT format, int bkMode);
 
     enum TrackerState { normal, selected, active };
@@ -50,6 +50,7 @@ public:
     // dla strony wyzsze bity oznaczaja nr spotu spotI spotII itp
 
     int GetHandleCount() const;
+    int GetVertPrintShift() const;
     CPoint GetHandle(int nHandle) const;
     CRect GetHandleRect(int nHandleID, CDrawView *pView) const;
     HCURSOR GetHandleCursor(int nHandle) const;
@@ -58,7 +59,6 @@ public:
     void SetDirty();
     void SetClean() { dirty = FALSE; }
     BOOL IsClean() const { return (!dirty); }
-
 
     // Operations
     void Remove();

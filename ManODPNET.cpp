@@ -283,7 +283,7 @@ BOOL CDrawDocDbReader::OpenManamDoc()
 
     CRect rct(0, 0, 0, 0);
     for (int i = 0; i < m_objetosc; ++i) {
-        auto pNewPage = new CDrawPage(&rct);
+        auto pNewPage = new CDrawPage(rct);
         pNewPage->m_pDocument = m_doc;
         m_doc->m_pages[i] = pNewPage;
         m_doc->SetPageRectFromOrd(pNewPage, i);
@@ -325,7 +325,7 @@ void CDrawDocDbReader::OpenOpis(OracleDataReader^ opiCur)
         b = opiCur->GetInt32(3);
         r = opiCur->GetInt32(4);
         CRect rc(l*vscale, t*vscale, r*vscale, b*vscale);
-        auto pOpis = new CDrawOpis(&rc, OdpHelper::ReadOdrString(opiCur, 5));
+        auto pOpis = new CDrawOpis(rc, OdpHelper::ReadOdrString(opiCur, 5));
         pOpis->m_opi_xx = opiCur->GetInt32(0);
         pOpis->m_Scale = opiCur->GetFloat(6);
         pOpis->kolor = opiCur->GetInt32(7);
@@ -338,7 +338,7 @@ void CDrawDocDbReader::OpenQued(OracleDataReader^ queCur)
 {
     while (queCur->Read()) {
         CRect r(0, 0, 1, 1);
-        auto pAdd = new CDrawAdd(&r);
+        auto pAdd = new CDrawAdd(r);
         m_doc->AddQue(pAdd);
         pAdd->flags.reserv = 0;
         pAdd->m_pub_xx = queCur->GetInt32(0); // xx
@@ -427,7 +427,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
                 szpalt_x = pubCur->GetInt32(4); // szpalt_x
                 szpalt_y = pubCur->GetInt32(5); // szpalt_y
                 CRect rt(pos, CSize((int)(ivx*modulx), (int)(ivy*(-1)*moduly)));
-                auto pAdd = new CDrawAdd(&rt);
+                auto pAdd = new CDrawAdd(rt);
                 pAdd->m_pub_xx = pubCur->GetInt32(0); // xx
                 pAdd->m_add_xx = pubCur->GetInt32(1); // add_xx
                 pAdd->posx = pubCur->GetInt32(6); // posx
