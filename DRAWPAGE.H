@@ -50,6 +50,7 @@ class CDrawPage final : public CDrawObj
     CDrawPage() noexcept {};
     CDrawPage(const CRect& position) noexcept;
     virtual ~CDrawPage();
+
     // Overrides
     virtual void Draw(CDC *pDC) override;
     virtual void Print(CDC *pDC) override;
@@ -59,7 +60,6 @@ class CDrawPage final : public CDrawObj
     virtual void MoveTo(const CRect &positon, CDrawView *pView = nullptr) override;
     virtual BOOL OnOpen(CDrawView *pView) override;
     virtual CDrawObj *Clone(CDrawDoc *pDoc) const override;
-public:
 
     //Members
     int id_str;
@@ -92,6 +92,7 @@ public:
     CTime m_ac_red;			// deadline redakcyjny dla czasopism
     CTime m_ac_fot;			// deadline na zdjêcia dla czasopism
     CTime m_ac_kol;			// deadline na kolumnê dla czasopism
+
     // Implementation
     void DrawGrid(CDC *pDC);
     void DrawReserved(CDC *pDC);
@@ -123,24 +124,19 @@ public:
     BOOL GenEPS(PGENEPSARG pArg);
     BOOL GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destName);
     BOOL PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) const;
+    CRect GetNormalizedModuleRect(size_t module) const;	// Prostok¹t ograniczaj¹cy modu³ o numerze porz¹dkowym module zakresu 0..sx*sy-1
     CString GetNrPaginy() const;
-
-protected:
-    friend class CRectTool;
-    friend class CKolorTool;
-    friend class CSpaceTool;
 
 private:
     CFlag GetReservedFlag();							// Pobiera flagê szarych modu³ów
-    CRect GetNormalizedModuleRect(size_t module) const;	// Prostok¹t ograniczaj¹cy modu³ o numerze porz¹dkowym module zakresu 0..sx*sy-1
     static CString GenerateGUIDString();				// Konwertuje wygenerowany GIUD do stringu
 };
 
-//CRozm
+// CRozm
 struct CRozm final
 {
-    CRozm() : CRozm(468, 575, 40, 34, 5, 6, 0, 0) {}
-    CRozm(int m_w, int m_h, int m_sw, int m_sh, BYTE m_szpalt_x, BYTE m_szpalt_y, int m_typ_xx, BOOL m_scale_it) :
+    CRozm() noexcept : CRozm(468, 575, 40, 34, 5, 6, 0, 0) {}
+    CRozm(int m_w, int m_h, int m_sw, int m_sh, BYTE m_szpalt_x, BYTE m_szpalt_y, int m_typ_xx, BOOL m_scale_it) noexcept :
         w(m_w),
         h(m_h),
         sw(m_sw),
