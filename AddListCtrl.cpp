@@ -72,7 +72,7 @@ int CAddListCtrl::OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn)
             return _tcsicmp(a1->nazwa, a2->nazwa);
         case strona:
             CGridFrm::eLastOrder = GridSortCol::strona;
-            bResult = a1->fizpage >> 3 < a2->fizpage >> 3;
+            bResult = a1->fizpage >> 16 < a2->fizpage >> 16;
             break;
         case kolorek:
             bResult = a1->kolor < a2->kolor;

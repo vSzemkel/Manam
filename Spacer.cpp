@@ -188,7 +188,7 @@ BOOL CSpacerDlg::OnInitDialog()
     // ustaw label kratki i strony
     ::StringCchPrintf(theApp.bigBuf, n_size, _T("Kratka: %ix%i"), pub->szpalt_x, pub->szpalt_y);
     SetDlgItemText(IDC_KRATKA, theApp.bigBuf);
-    ::StringCchPrintf(theApp.bigBuf, n_size, _T("Strona fizyczna: %i"), (pub->fizpage >> 3));
+    ::StringCchPrintf(theApp.bigBuf, n_size, _T("Strona fizyczna: %i"), (pub->fizpage >> 16));
     SetDlgItemText(IDC_FIZPAGE, theApp.bigBuf);
 
     // set narrow

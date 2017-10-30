@@ -32,7 +32,7 @@ typedef struct _GENEPSARG
 struct CKrataNiebazowa final
 {
     explicit CKrataNiebazowa(int s_x, int s_y, CFlag&& space, CFlag&& locked, CFlag&& red) noexcept
-        : m_szpalt_x(s_x), m_szpalt_y(s_y), m_space(std::move(space)), m_space_locked(std::move(locked)), m_space_red(std::move(red))
+        : m_szpalt_x(s_x), m_szpalt_y(s_y), m_space(std::forward<CFlag>(space)), m_space_locked(std::forward<CFlag>(locked)), m_space_red(std::forward<CFlag>(red))
     {
     };
     int m_szpalt_x;
@@ -61,22 +61,28 @@ class CDrawPage final : public CDrawObj
     virtual BOOL OnOpen(CDrawView *pView) override;
     virtual CDrawObj *Clone(CDrawDoc *pDoc) const override;
 
-    //Members
+    // Members
     int id_str;
     int szpalt_x;
     int szpalt_y;
-    int nr;				// nr strony, dolne 3 bity typ numeracji 0 normalna, 1 rzymska, wyzsze nr
-    int prn_mak_xx;	// identyfikator makiety prn
-    int wyd_xx;		// identyfikator wydawcy strony
-    BYTE m_typ_pary;	// czy strona wchodzi do sztucznej rozkladowki
-    CString caption;	// widoczny naglowek, redakcyjny lub cennikowy
+    union {
+        struct {
+            short pagina_type;  // typ numeracji normalna:1, rzymska:2
+            short pagina;       // numer strony na paginie
+        };
+        int nr;    // numer strony
+    };
+    int prn_mak_xx;     // identyfikator makiety prn
+    int wyd_xx;         // identyfikator wydawcy strony
+    BYTE m_typ_pary;    // czy strona wchodzi do sztucznej rozkladowki
+    CString caption;    // widoczny naglowek, redakcyjny lub cennikowy
     CString caption_alt;// alternatywny naglowek, cennikowy lub redakcyjny
-    CString name;		// logiczna strony z atexa ==sciezka ale zmieniamy  str_log np RED/PRG/PON user poprwia tylko pon
-    CString mutred;		// alternatywne mutacje redakcyjne strony
-    CFlag space;		// bitowa maska zajêtosci
+    CString name;       // logiczna strony z atexa ==sciezka ale zmieniamy  str_log np RED/PRG/PON user poprwia tylko pon
+    CString mutred;     // alternatywne mutacje redakcyjne strony
+    CFlag space;        // bitowa maska zajêtosci
     CFlag space_locked; // bitowa maska blokady
-    CFlag space_red;	// bitowa maska powierzchni redakcyjnej
-    BOOL niemakietuj;	// blokada makietowania
+    CFlag space_red;    // bitowa maska powierzchni redakcyjnej
+    BOOL niemakietuj;   // blokada makietowania
 
     std::vector<CDrawAdd*> m_adds;	// og³oszenia przypisane do danej strony
     std::vector<CKrataNiebazowa> m_kraty_niebazowe;	// kraty niebazowe

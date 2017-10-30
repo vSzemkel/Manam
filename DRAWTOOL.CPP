@@ -510,7 +510,7 @@ void CKolorTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poin
         }
     } else  // caption tool
         if (theApp.swCZV & 2 && pPage != nullptr) { // naglowki_prn
-            pPage->prn_mak_xx = (int)frame->GetCaptionDataItem(-1) + ((pPage->nr >> 3) & 1);
+            pPage->prn_mak_xx = (int)frame->GetCaptionDataItem(-1) + (pPage->pagina & 1);
             CManODPNETParms orapar {
                 { CManODPNET::DbTypeInt32, &pPage->m_pDocument->m_mak_xx },
                 { CManODPNET::DbTypeInt32, &pPage->id_str },

@@ -228,7 +228,7 @@ void CGridFrm::RefreshRow(int nRow, CDrawAdd *vAdd)
     ::StringCchPrintf(bf, 64, _T("%iX%i "), vAdd->sizex, vAdd->sizey);
     lcPubList.SetItemText(nRow, rozmiar, bf);
     lcPubList.SetItemText(nRow, nazwa, vAdd->nazwa);
-    _itot_s(((vAdd->fizpage) >> 3), bf, 64, 10);
+    _itot_s(((vAdd->fizpage) >> 16), bf, 64, 10);
     if (vAdd->fizpage & c_rzym)
         ::StringCchCat(bf, 64, _T("rom"));
     lcPubList.SetItemText(nRow, strona, bf);

@@ -44,7 +44,7 @@ void CDrawPage::Serialize(CArchive& ar)
 
     CDrawObj::Serialize(ar);
     if (ar.IsStoring()) {
-        ar << (WORD)nr;
+        ar << nr;
         ar << (WORD)szpalt_x;
         ar << (WORD)szpalt_y;
         ar << name;
@@ -75,7 +75,7 @@ void CDrawPage::Serialize(CArchive& ar)
         ar << m_typ_pary;
     } else {
         WORD wTemp;
-        ar >> wTemp; nr = wTemp;
+        ar >> nr;
         ar >> wTemp; szpalt_x = wTemp;
         ar >> wTemp; szpalt_y = wTemp;
         ar >> name;
@@ -127,13 +127,13 @@ inline CString CDrawPage::GenerateGUIDString()
 
 CString CDrawPage::GetNrPaginy() const
 {
-    CString pagina;
-    if ((nr & c_rzym) == c_rzym)
-        pagina = CDrawObj::Rzymska(nr >> 3);
-    else
-        pagina.Format(_T("%i"), nr >> 3);
+    if (pagina_type == c_rzym)
+        return CDrawObj::Rzymska(pagina);
 
-    return pagina;
+    CString paginacja;
+    paginacja.Format(_T("%i"), pagina);
+
+    return paginacja;
 }
 
 void CDrawPage::Draw(CDC *pDC)
@@ -141,7 +141,7 @@ void CDrawPage::Draw(CDC *pDC)
     ASSERT_VALID(this);
 
     CBrush* pOldBrush;
-    if ((nr & c_rzym) == c_rzym) {
+    if (pagina_type == c_rzym) {
         pOldBrush = pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->rzym));
         pDC->SetBkColor(RGB(135, 135, 135));
     } else {
@@ -163,12 +163,11 @@ void CDrawPage::Draw(CDC *pDC)
         pDC->LineTo(rect.right, rect.top + 4 * vscale);
     }
 
-    const int nr_porz = nr >> 3;
-    const bool isRoman = (nr & c_rzym) > 0;
+    const bool isRoman = (pagina_type & c_rzym) > 0;
     const CString& cnr = GetNrPaginy();
-    const CString& cap = theApp.swCZV & 2 ? ((CMainFrame*)AfxGetMainWnd())->GetCapStrFromData((WORD)(prn_mak_xx - (nr_porz & 1))) : caption;
+    const CString& cap = theApp.swCZV & 2 ? ((CMainFrame*)AfxGetMainWnd())->GetCapStrFromData((WORD)(prn_mak_xx - (pagina & 1))) : caption;
     CRect r(rect.left + 2 * vscale, rect.top - vscale, rect.right - 2 * vscale, rect.top - pmoduly + vscale);
-    if ((!isRoman && (nr_porz & 1) == 0) || (isRoman && (nr_porz & 1) == 1)) { // lewe arabskie i prawe rzymskie
+    if ((!isRoman && (pagina & 1) == 0) || (isRoman && (pagina & 1) == 1)) { // lewe arabskie i prawe rzymskie
         DrawNapis(pDC, cap, cap.GetLength(), r, DT_RIGHT | DT_VCENTER | DT_SINGLELINE, OPAQUE);
         DrawNapis(pDC, cnr, cnr.GetLength(), r, DT_LEFT | DT_VCENTER | DT_SINGLELINE, OPAQUE);
     } else { // prawe arabskie i lewe rzymskie
@@ -232,7 +231,7 @@ void CDrawPage::DrawReserved(CDC *pDC)
              ogloszeniami dziedziczonymi	end vu */
     const CFlag& vspace = GetReservedFlag();
     if (vspace.IsSet()) {
-        pDC->SelectStockObject(((nr & c_rzym) == c_rzym ? LTGRAY_BRUSH : GRAY_BRUSH));
+        pDC->SelectStockObject((pagina_type == c_rzym ? LTGRAY_BRUSH : GRAY_BRUSH));
         auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
         for (size_t module = 0; module < ilemod; ++module)
             if (vspace.GetBit(module) > 0)
@@ -253,7 +252,7 @@ void CDrawPage::DrawGrid(CDC *pDC)
                 pDC->SelectStockObject(DKGRAY_BRUSH);
                 pDC->Rectangle(rect);
             } else if (space_red.GetBit(module) > 0) {
-                if ((nr & c_rzym) == c_rzym)
+                if (pagina_type == c_rzym)
                     pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->rzym));
                 else
                     pDC->SelectStockObject(WHITE_BRUSH);
@@ -382,7 +381,7 @@ void CDrawPage::Print(CDC *pDC)
     ASSERT_VALID(this);
 
     CBrush* pOldBrush;
-    if (((nr & c_rzym) == c_rzym))
+    if ((pagina_type == c_rzym))
         pOldBrush = pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->rzym));
     else
         pOldBrush = (CBrush*)pDC->SelectStockObject(WHITE_BRUSH);
@@ -400,11 +399,10 @@ void CDrawPage::Print(CDC *pDC)
     DrawKolor(pDC, &m_position);
     DrawReserved(pDC);
 
-    const int nr_porz = nr >> 3;
-    const bool isRoman = (nr & c_rzym) > 0;
+    const bool isRoman = pagina_type > 0;
     const CString& cnr = GetNrPaginy();
     CRect r(m_position.left + 2 * vscale, m_position.top - vscale, m_position.right - 2 * vscale, m_position.top - pmoduly + vscale);
-    if ((!isRoman && (nr_porz & 1) == 0) || (isRoman && (nr_porz & 1) == 1)) { // lewe arabskie i prawe rzymskie
+    if ((!isRoman && (pagina & 1) == 0) || (isRoman && (pagina & 1) == 1)) { // lewe arabskie i prawe rzymskie
         DrawNapis(pDC, caption, caption.GetLength(), r, DT_NOCLIP | DT_RIGHT | DT_VCENTER | DT_SINGLELINE, OPAQUE);
         DrawNapis(pDC, cnr, cnr.GetLength(), r, DT_LEFT | DT_VCENTER | DT_SINGLELINE, OPAQUE);
     } else { // prawe arabskie i lewe rzymskie
@@ -472,8 +470,8 @@ BOOL CDrawPage::OnOpen(CDrawView*)
     dlg.m_name = name;
     dlg.m_caption = caption;
     dlg.m_iscaption = m_pDocument->isRED;
-    dlg.m_nr = (nr >> 3);
-    dlg.m_rzymska = ((nr & c_rzym) == c_rzym);
+    dlg.m_nr = pagina;
+    dlg.m_rzymska = (pagina_type == c_rzym);
     dlg.m_szpalt_x = szpalt_x;
     dlg.m_szpalt_y = szpalt_y;
     dlg.m_niemakietuj = niemakietuj;
@@ -527,7 +525,7 @@ BOOL CDrawPage::OnOpen(CDrawView*)
 
     SetBaseKrata(dlg.m_szpalt_x, dlg.m_szpalt_y);
 
-    int i, pom_nr = ((dlg.m_nr << 3) + ((dlg.m_rzymska) ? c_rzym : c_normal));
+    int i, pom_nr = (dlg.m_nr << 16) + (dlg.m_rzymska ? c_rzym : c_normal);
     int pc = (int)m_pDocument->m_pages.size();
     if (nr != pom_nr) {
         // sprawdz czy istnieje juz taka strona - bo numer/typ_num nie moze sie powtarzac
@@ -646,7 +644,7 @@ void CDrawPage::RemoveAdd(CDrawAdd *pAdd, BOOL bRemodeFromAdds)
         for (const auto& p : m_pDocument->m_pages)
             if (p != this && p->nr == this->nr) {
                 CString sMsg;
-                sMsg.Format(_T("W makiecie powtarza siê numer strony %i. Proszê poprawiæ"), this->nr >> 3);
+                sMsg.Format(_T("W makiecie powtarza siê numer strony %i. Proszê poprawiæ"), this->pagina);
                 MessageBox(NULL, sMsg, _T("Makieta uszkodzna"), MB_ICONSTOP);
             }
     }
@@ -682,9 +680,9 @@ BOOL CDrawPage::FindSpace(CDrawAdd *pObj, int *px, int *py, int sx, int sy) cons
     if (*px <= 0) *px = 1;
     if (*py <= 0) *py = 1;
 
-    // kontekst wyolania
-    bool interPage = pObj->fizpage == nr;
-    bool symulateNewShape = pObj->sizex != sx || pObj->sizey != sy;
+    // kontekst wywolania
+    const bool interPage = pObj->fizpage == nr;
+    const bool symulateNewShape = pObj->sizex != sx || pObj->sizey != sy;
 
     // zwolnij miejsce zajmowane poprzednio jezeli przesuniecie w obrebie strony
     // const CFlag& sp = (interPage) ? space ^ pObj->GetPlacementFlag() : space; kompiluje sie fatalnie
@@ -1024,7 +1022,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
         int lnr_porz = m_pDocument->GetIPage(this);
         num.Format(_T("%03i"), lnr_porz ? lnr_porz : (int)m_pDocument->m_pages.size());
     } else
-        ((nr & c_rzym) == c_rzym) ? num = Rzymska(nr >> 3) : num.Format(_T("%03i"), (nr >> 3));
+        (pagina_type == c_rzym) ? num = Rzymska(pagina) : num.Format(_T("%03i"), pagina);
 
     CString dest_name;
     BOOL isDrobEPS = name.Find(_T("DR")) > -1;
@@ -1230,7 +1228,7 @@ foundsizex:
             }
         }
         if (isDrobEPS) {
-            externAdd.txtposx = std::find_if(std::cbegin(m_pDocument->m_pages), std::cend(m_pDocument->m_pages), [](const CDrawPage* p) {return p->nr & c_rzym; }) != std::cend(m_pDocument->m_pages) ? nr >> 3 : m_pDocument->GetIPage(this);
+            externAdd.txtposx = std::find_if(std::cbegin(m_pDocument->m_pages), std::cend(m_pDocument->m_pages), [](const CDrawPage* p) {return p->pagina_type & c_rzym; }) != std::cend(m_pDocument->m_pages) ? pagina : m_pDocument->GetIPage(this);
             if (externAdd.txtposx == 0) externAdd.txtposx = (int)m_pDocument->m_pages.size();
             externAdd.posx = externAdd.posy = 1;
             externAdd.sizex = externAdd.szpalt_x = pszpalt_x;
@@ -1395,7 +1393,7 @@ BOOL CDrawPage::GenPDF(PGENEPSARG pArg)
     CString dstName, num = GetNrPaginy();
 
     CManPDF pdf(pArg);
-    dstName.Format(_T("%02i"), nr >> 3);
+    dstName.Format(_T("%02i"), pagina);
 
     if (!CheckRozmKrat(pArg)) {
         ::MessageBox(pArg->pDlg->m_hWnd, "Brak wymiarów dla wszystkich krat strony: " + num, _T("B³¹d"), MB_ICONERROR | MB_OK);

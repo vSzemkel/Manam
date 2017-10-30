@@ -300,11 +300,11 @@ void CDrawDoc::Draw(CDC *pDC, CDrawView *pView)
     }
 
     auto psize = m_pages.size();
-    if (psize > 0 && ((psize & 1) == 0)) { //makieta ma rozkladowke
+    if (psize > 0 && ((psize & 1) == 0)) { // makieta ma rozkladowke
         CDrawPage *pPage = m_pages[psize / 2];
         CRect& pRozkl = pPage->m_position;
         CRect r(pRozkl.right - vscale, pRozkl.top - pmoduly - vscale, pRozkl.right + vscale, pRozkl.bottom + vscale);
-        pDC->FillRect(r, (pPage->nr & c_rzym) == c_rzym ? (CBrush*)pDC->SelectStockObject(WHITE_BRUSH) : &((CMainFrame*)AfxGetMainWnd())->rzym);
+        pDC->FillRect(r, pPage->pagina_type == c_rzym ? (CBrush*)pDC->SelectStockObject(WHITE_BRUSH) : &((CMainFrame*)AfxGetMainWnd())->rzym);
     }
 
     for (const auto& pObj : m_objects) {
@@ -397,7 +397,7 @@ void CDrawDoc::PrintPage(CDC *pDC, CDrawPage *pPage)
 
     for (const auto& pAdd : pPage->m_adds) {
         pDC->SetWindowOrg(2 * (pPage->m_position.left / CLIENT_SCALE - 5 * vscale) - pAdd->m_position.left / CLIENT_SCALE,
-            2 * (pPage->m_position.top / CLIENT_SCALE - 18 * vscale + pmoduly) - pAdd->m_position.top / CLIENT_SCALE + 2 * ((pPage->nr >> 3) / 51)*pmoduly);
+            2 * (pPage->m_position.top / CLIENT_SCALE - 18 * vscale + pmoduly) - pAdd->m_position.top / CLIENT_SCALE + 2 * (pPage->pagina / 51) * pmoduly);
         CRect rect = pAdd->GetPrintRect();
         pAdd->DrawDesc(pDC, &rect);
     }
@@ -884,8 +884,8 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL c
                 i = fizpag;
                 break;
             case fizpag: fizpage = _istdigit(st[0])
-                ? ((_ttoi(st)) << 3) + c_normal
-                : ((CDrawObj::Arabska(st)) << 3) + c_rzym;
+                ? ((_ttoi(st)) << 16) + c_normal
+                : ((CDrawObj::Arabska(st)) << 16) + c_rzym;
                 i = pox;
                 break;
             case pox: posx = ((fizpage == 0) ? 0 : (result == 0 ? szpalt_x + 1 - sx : _ttoi(st))); i = poy; break;
@@ -995,17 +995,17 @@ void CDrawDoc::NumberPages()
     auto pView = GetPanelView<CDrawView>();
     if (pView->m_selection.GetCount() == 1) {
         auto pSelPage = dynamic_cast<CDrawPage*>(pView->m_selection.GetHead());
-        if (pSelPage != nullptr && (pSelPage->nr & c_normal)) {
-            iFirstPageNumber = pSelPage->nr >> 3;
+        if (pSelPage != nullptr && pSelPage->pagina_type == c_normal) {
+            iFirstPageNumber = pSelPage->pagina;
             iFirstPageToNumber = GetIPage(pSelPage);
             if (iFirstPageToNumber < 0) return; // wystêpuje podczas copy/paste grupy stron
         }
     }
     // sprawdzamy, czy nie powstan¹ duble w numeracji
-    int pc = (int)m_pages.size();
-    int iLastPageNumber = iFirstPageNumber + pc - iFirstPageToNumber;
+    const int pc = (int)m_pages.size();
+    const int iLastPageNumber = iFirstPageNumber + pc - iFirstPageToNumber;
     for (int i = 1; i < iFirstPageToNumber; ++i) {
-        int iNrToCheck = m_pages[i]->nr >> 3;
+        const int iNrToCheck = m_pages[i]->pagina;
         if (iFirstPageNumber <= iNrToCheck && iNrToCheck <= iLastPageNumber) {
             iFirstPageNumber = iFirstPageToNumber = 1;
             break;
@@ -1015,22 +1015,22 @@ void CDrawDoc::NumberPages()
     if (theApp.GetProfileInt(_T("General"), _T("CiaglaNumeracja"), 0))
         for (int i = iFirstPageToNumber; i <= pc; ++i) {
             auto pObj = m_pages[i % pc];
-            pObj->SetNr(((iFirstPageNumber++) << 3) + (pObj->nr & 0x07));
-        } else {
-            int rz = 0;
-            for (int i = iFirstPageToNumber; i <= pc; ++i) {
-                auto pObj = m_pages[i % pc];
-                if (((pObj->nr) & c_rzym) == c_rzym) {
-                    pObj->SetNr(((++rz) << 3) + c_rzym);
-                    iFirstPageNumber++;
-                } else
-                    pObj->SetNr((((iFirstPageNumber++) - rz) << 3) + c_normal);
-            }
+            pObj->SetNr(((iFirstPageNumber++) << 16) + pObj->pagina_type);
+    } else {
+        int rz = 0;
+        for (int i = iFirstPageToNumber; i <= pc; ++i) {
+            auto pObj = m_pages[i % pc];
+            if (pObj->pagina_type == c_rzym) {
+                pObj->SetNr(((++rz) << 16) + c_rzym);
+                iFirstPageNumber++;
+            } else
+                pObj->SetNr((((iFirstPageNumber++) - rz) << 16) + c_normal);
         }
+    }
     // przenumerowanie od ostatniej wymaga przywrócenia numeru
     if (iFirstPageToNumber == 0) {
         auto pPage = m_pages[0];
-        pPage->SetNr(((--iFirstPageNumber - pc) << 3) + (pPage->nr & 0x07));
+        pPage->SetNr(((--iFirstPageNumber - pc) << 16) + pPage->pagina_type);
     }
 
     UpdateAllViews(NULL);

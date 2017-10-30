@@ -473,9 +473,9 @@ CString CDrawAdd::PrepareBuf(TCHAR *ch) const
         bufor.AppendFormat(_T("%ix%i%s"), szpalt_x, szpalt_y, ch);
 
     if ((fizpage & c_rzym) == c_rzym)
-        bufor.Append(CDrawObj::Rzymska(fizpage >> 3));
+        bufor.Append(CDrawObj::Rzymska(fizpage >> 16));
     else
-        bufor.AppendFormat(_T("%i"), fizpage >> 3);
+        bufor.AppendFormat(_T("%i"), fizpage >> 16);
 
     bufor.AppendFormat(_T("%s%i%s%i%s%s%s"), ch, posx, ch, posy, ch, nazwa, ch);
     if (nreps > -1)
@@ -502,7 +502,7 @@ BOOL CDrawAdd::OnOpen(CDrawView *pView)
     dlg.m_remarks = remarks;
     dlg.m_uwagi_atex = remarks_atex;
     dlg.m_rzymnum = ((fizpage & c_rzym) == c_rzym);
-    dlg.m_fizpage = (fizpage >> 3);
+    dlg.m_fizpage = (fizpage >> 16);
     dlg.m_posx = posx;
     dlg.m_posy = posy;
     dlg.m_sizex = sizex;
@@ -560,7 +560,7 @@ BOOL CDrawAdd::OnOpen(CDrawView *pView)
     flags.locked = (fizpage ? dlg.m_locked : FALSE);
     flags.studio = dlg.m_studio;
     dlg.m_always ? czaskto.Format(_T("# [%s]"), (LPCTSTR)dlg.m_sprzedal) : czaskto.Format(_T("%s %s [%s]"), dlg.m_data_czob.Format(c_ctimeData), dlg.m_godz_czob.Format(_T("%H:%M")), (LPCTSTR)dlg.m_sprzedal);
-    int pom_fizpage = ((dlg.m_fizpage << 3) + ((dlg.m_rzymnum) ? c_rzym : c_normal));
+    int pom_fizpage = ((dlg.m_fizpage << 16) + ((dlg.m_rzymnum) ? c_rzym : c_normal));
     SetPosition(pom_fizpage, dlg.m_posx, dlg.m_posy, dlg.m_sizex, dlg.m_sizey); // robi updateinfo
     if (!dlg.m_precel_flag.IsEmpty() && dlg.m_precel_flag != m_precel_flag) {
         m_precel_flag = dlg.m_precel_flag;
@@ -1137,17 +1137,17 @@ int CDrawAdd::CkPageLocation(int vFizPage)
         //nie na sciezce
         if (sekcja[0] && !_tcsstr(vStrLog, sekcja)) return 2;
         //lewa - nieparzysty numer
-        if (!_tcscmp(pl, _T("L")) && ((vPage->nr >> 3) % 2)) return 2;
+        if (!_tcscmp(pl, _T("L")) && (vPage->pagina % 2)) return 2;
         //prawa - parzysty numer
-        if (!_tcscmp(pl, _T("P")) && !((vPage->nr >> 3) % 2)) return 2;
+        if (!_tcscmp(pl, _T("P")) && !(vPage->pagina % 2)) return 2;
         //polozenie pl
         if (pl[0] && op_pl[0]) {
             //brak numeru
             if (nr_pl < 1) return 2;
-            if (((vPage->nr >> 3) - vnr_sek) % 2)	//czy sekcja zaczyna sie na stronie o parzstym numerze
-                nr_off = (sekcja[0] ? (((vPage->nr >> 3) % 2) ? vnr_sek - 1 : vnr_sek + 1) : vPage->nr >> 3); //czy numer odnosi sie do sekcji czy do gazety
+            if ((vPage->pagina - vnr_sek) % 2)	//czy sekcja zaczyna sie na stronie o parzstym numerze
+                nr_off = (sekcja[0] ? ((vPage->pagina % 2) ? vnr_sek - 1 : vnr_sek + 1) : vPage->pagina); //czy numer odnosi sie do sekcji czy do gazety
             else
-                nr_off = (sekcja[0] ? vnr_sek : vPage->nr >> 3); //czy numer odnosi sie do sekcji czy do gazety
+                nr_off = (sekcja[0] ? vnr_sek : vPage->pagina); //czy numer odnosi sie do sekcji czy do gazety
             //inna strona prawa/lewa niz zadano
             if (!_tcscmp(op_pl, _T("=")) && !_tcscmp(pl, _T("P")) && nr_off != 2 * nr_pl - 1) return 2;
             if (!_tcscmp(op_pl, _T("=")) && !_tcscmp(pl, _T("L")) && nr_off != 2 * nr_pl) return 2;

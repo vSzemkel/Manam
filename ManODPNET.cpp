@@ -374,13 +374,13 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
         pPage->szpalt_y = s_y = strCur->GetInt32(10);
         ivar = strCur->GetInt32(2); // nr
         if (ivar < 0) pPage->niemakietuj = TRUE;
-        pPage->nr = (abs(ivar)) << 3;
+        pPage->pagina = abs(ivar);
         ivar = strCur->GetInt32(3); // num_xx
         if (ivar < 0) {
             ivar *= -1;
             multiKraty->SetBit(ind);
         }
-        pPage->nr += ivar;
+        pPage->pagina_type = ivar;
         ivar = strCur->GetInt32(4); // ile_kol
         pPage->kolor = ivar;
         if (pPage->kolor == c_spot) {
@@ -841,8 +841,8 @@ void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, BOOL isSaveAs, BOOL do
         par[2]->Value = pPage->szpalt_x;
         par[3]->Value = pPage->szpalt_y;
         par[4]->Value = i;
-        par[5]->Value = (pPage->nr >> 3) * (pPage->niemakietuj ? -1 : 1);
-        par[6]->Value = pPage->nr & 0x07;
+        par[5]->Value = pPage->pagina * (pPage->niemakietuj ? -1 : 1);
+        par[6]->Value = pPage->pagina_type;
         par[7]->Value = pPage->kolor & 0x07;
         par[8]->Value = (int)(pPage->kolor&c_spot ? 1 + (pPage->kolor >> 3) : 0);
         par[9]->Value = gcnew String(pPage->name);
@@ -1433,7 +1433,7 @@ BOOL CManODPNET::F4(CDrawDoc* doc, CListCtrl* list, BOOL initialize)
                     list->InsertItem(rc, cs, 2);
                     list->SetCheck(rc, FALSE);
                     list->SetItemData(rc, 0L);
-                    cs.Format(_T("%i"), vAdd->fizpage >> 3);
+                    cs.Format(_T("%i"), vAdd->fizpage >> 16);
                     if (vAdd->fizpage & c_rzym)
                         cs += _T("rom");
                     list->SetItemText(rc, 1, cs);

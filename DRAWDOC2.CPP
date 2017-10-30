@@ -373,17 +373,17 @@ aSecondRun:
                 if (bSecondRun && iPos + sSekOgl.GetLength() != vStrLog.GetLength()) continue;
             }
             //lewa - nieparzysty numer
-            if (!_tcscmp(pl, _T("L")) && ((vPage->nr >> 3) % 2)) continue;
+            if (!_tcscmp(pl, _T("L")) && (vPage->pagina % 2)) continue;
             //prawa - parzysty numer
-            if (!_tcscmp(pl, _T("P")) && !((vPage->nr >> 3) % 2)) continue;
+            if (!_tcscmp(pl, _T("P")) && !(vPage->pagina % 2)) continue;
             //polozenie pl
             if (pl[0] && op_pl[0]) {
                 //brak numeru
                 if (nr_pl < 1) continue;
-                if (((vPage->nr >> 3) - vnr_sek) % 2)	//czy sekcja zaczyna sie na stronie o parzstym numerze
-                    nr_off = (sekcja[0] ? (((vPage->nr >> 3) % 2) ? vnr_sek - 1 : vnr_sek + 1) : vPage->nr >> 3); //czy numer odnosi sie do sekcji czy do gazety
+                if ((vPage->pagina - vnr_sek) % 2)	//czy sekcja zaczyna sie na stronie o parzstym numerze
+                    nr_off = (sekcja[0] ? ((vPage->pagina % 2) ? vnr_sek - 1 : vnr_sek + 1) : vPage->pagina); //czy numer odnosi sie do sekcji czy do gazety
                 else
-                    nr_off = (sekcja[0] ? vnr_sek : vPage->nr >> 3); //czy numer odnosi sie do sekcji czy do gazety
+                    nr_off = (sekcja[0] ? vnr_sek : vPage->pagina); //czy numer odnosi sie do sekcji czy do gazety
                 //inna strona prawa/lewa niz zadano
                 if (!_tcscmp(op_pl, _T("=")) && !_tcscmp(pl, _T("P")) && nr_off != 2 * nr_pl - 1) continue;
                 if (!_tcscmp(op_pl, _T("=")) && !_tcscmp(pl, _T("L")) && nr_off != 2 * nr_pl) continue;
@@ -580,7 +580,7 @@ void CDrawDoc::MakietujStrone(CDrawPage *pPage)
             }
         } else {
             // ustaw ogloszenie bez opisu na prawej stronie w prawym dolnym rogu strony, na lewej - w lewym dolnym
-            castval->SetEstPagePos(((pPage->nr >> 3) & 1 ? _T("DP") : _T("DL")), &vRect, pPage);
+            castval->SetEstPagePos((pPage->pagina & 1 ? _T("DP") : _T("DL")), &vRect, pPage);
         }
         castval->m_position = vRect;
         castval->Invalidate();
@@ -960,9 +960,9 @@ int CDrawDoc::Nr2NrPorz(const TCHAR *s) const noexcept
         if ((nr_porz = CDrawObj::Arabska(s)) == 0)
             nr_porz = -1;
         else
-            nr_porz = GetIPage((nr_porz << 3) + c_rzym);
+            nr_porz = GetIPage((nr_porz << 16) + c_rzym);
     else
-        nr_porz = GetIPage((nr_porz << 3) + c_normal);
+        nr_porz = GetIPage((nr_porz << 16) + c_normal);
     return nr_porz;
 }
 
