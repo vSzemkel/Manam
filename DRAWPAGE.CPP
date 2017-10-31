@@ -1228,7 +1228,7 @@ foundsizex:
             }
         }
         if (isDrobEPS) {
-            externAdd.txtposx = std::find_if(std::cbegin(m_pDocument->m_pages), std::cend(m_pDocument->m_pages), [](const CDrawPage* p) {return p->pagina_type & c_rzym; }) != std::cend(m_pDocument->m_pages) ? pagina : m_pDocument->GetIPage(this);
+            externAdd.txtposx = std::any_of(std::cbegin(m_pDocument->m_pages), std::cend(m_pDocument->m_pages), [](const CDrawPage* p) { return p->pagina_type == c_rzym; }) ? pagina : m_pDocument->GetIPage(this);
             if (externAdd.txtposx == 0) externAdd.txtposx = (int)m_pDocument->m_pages.size();
             externAdd.posx = externAdd.posy = 1;
             externAdd.sizex = externAdd.szpalt_x = pszpalt_x;
