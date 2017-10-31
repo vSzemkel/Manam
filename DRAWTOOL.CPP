@@ -206,14 +206,14 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
                 auto pPage = dynamic_cast<CDrawPage*>(pObj);
                 if (pPage) { // strona
                     int prev_pos = pDoc->GetIPage(pPage);
-                    while (prev_pos > 0 && pView->m_selection.Find(pDoc->m_pages[prev_pos - 1]) != NULL)
+                    while (prev_pos > 0 && pView->IsSelected(pDoc->m_pages[prev_pos - 1]))
                         pPage = pDoc->m_pages[--prev_pos];
                     int new_pos = pDoc->ComputePageOrderNr(pPage);
                     if (prev_pos == new_pos)
                         pDoc->SetPageRectFromOrd(pPage, prev_pos);
                     else {
                         int iCnt = 1;
-                        while (prev_pos + iCnt < (int)pDoc->m_pages.size() && pView->m_selection.Find(pDoc->m_pages[prev_pos + iCnt]) != NULL)
+                        while (prev_pos + iCnt < (int)pDoc->m_pages.size() && pView->IsSelected(pDoc->m_pages[prev_pos + iCnt]))
                             iCnt++;
                         pDoc->MoveBlockOfPages(prev_pos, new_pos, iCnt);
                     }
