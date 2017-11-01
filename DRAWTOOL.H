@@ -71,7 +71,6 @@ public:
     CSelectTool();
     // Implementation
     virtual void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    virtual void OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point) override;
     virtual void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point) override;
     virtual void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
 
@@ -100,7 +99,6 @@ public:
     CKolorTool(DrawShape drawShape);
     // Implementation
     virtual void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    virtual void OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point) override;
     virtual void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point) override;
     virtual void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
 };
@@ -112,7 +110,6 @@ public:
     CLockTool(DrawShape drawShape);
     // Implementation
     virtual void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    virtual void OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point) override;
     virtual void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
 };
 
@@ -123,7 +120,6 @@ public:
     CSpaceTool(DrawShape nDrawShape);
     // Implementation
     virtual void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    virtual void OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point) override;
     virtual void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point) override;
     virtual void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
 };

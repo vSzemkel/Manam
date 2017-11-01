@@ -64,8 +64,17 @@ void CDrawTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
     c_last = point;
 }
 
-void CDrawTool::OnLButtonDblClk(CDrawView*, UINT, const CPoint&)
+void CDrawTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point)
 {
+    if ((nFlags & MK_SHIFT) != 0) {
+        // Shift+DblClk deselects object...
+        CPoint local = point;
+        pView->ClientToDoc(local);
+        CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
+        if (pObj != nullptr)
+            pView->Deselect(pObj);
+    } else
+        pView->OpenSelected();
 }
 
 void CDrawTool::OnLButtonUp(CDrawView*, UINT, const CPoint& point)
@@ -105,12 +114,12 @@ void CSelectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poi
     selectMode = SelectMode::none;
 
     // Check for resizing ads (only allowed on single selections)
-    if (pView->m_selection.GetCount() == 1) {
-        auto pObj = static_cast<CDrawObj*>(pView->m_selection.GetHead());
+    if (pView->m_selection.size() == 1) {
+        const auto pObj = pView->m_selection.front();
         m_DragHandle = pObj->HitTest(local, pView, TRUE);
         if (m_DragHandle != 0) {
             selectMode = SelectMode::size;
-            auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
+            const auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
             if (pAdd) {
                 if (pAdd->typ_xx || pAdd->flags.locked || pAdd->flags.derived)
                     selectMode = SelectMode::dontsize;
@@ -162,24 +171,6 @@ void CSelectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poi
     CDrawTool::OnLButtonDown(pView, nFlags, point);
 }
 
-void CSelectTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point)
-{
-    if ((nFlags & MK_SHIFT) != 0) {
-        // Shift+DblClk deselects object...
-        CPoint local = point;
-        pView->ClientToDoc(local);
-        CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
-        if (pObj != nullptr)
-            pView->Deselect(pObj);
-    } else {
-        // "Normal" DblClk opens properties, or OLE server...
-        if (pView->m_selection.GetCount() == 1)
-            ((CDrawObj*)pView->m_selection.GetHead())->OnOpen(pView);
-    }
-
-    CDrawTool::OnLButtonDblClk(pView, nFlags, point);
-}
-
 void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point)
 {
     CDrawObj *pObj = nullptr;
@@ -199,16 +190,16 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
 
             case SelectMode::move:
             {
-                if (pView->m_selection.IsEmpty()) break;
+                if (pView->m_selection.empty()) break;
                 CDrawDoc *pDoc = pView->GetDocument();
-                pObj = (CDrawObj*)pView->m_selection.GetHead();
+                pObj = pView->m_selection.front();
                 pObj->SetDirty();
                 auto pPage = dynamic_cast<CDrawPage*>(pObj);
                 if (pPage) { // strona
                     int prev_pos = pDoc->GetIPage(pPage);
                     while (prev_pos > 0 && pView->IsSelected(pDoc->m_pages[prev_pos - 1]))
                         pPage = pDoc->m_pages[--prev_pos];
-                    int new_pos = pDoc->ComputePageOrderNr(pPage);
+                    const int new_pos = pDoc->ComputePageOrderNr(pPage);
                     if (prev_pos == new_pos)
                         pDoc->SetPageRectFromOrd(pPage, prev_pos);
                     else {
@@ -279,24 +270,24 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
 
             case SelectMode::size:
             {
-                pObj = (CDrawObj*)pView->m_selection.GetHead();
+                pObj = pView->m_selection.front();
                 pObj->SetDirty();
                 CRect toPos = pObj->m_position;
                 toPos.NormalizeRect();
                 auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
                 if (pAdd) {
-                    int szpalt_x = pAdd->szpalt_x;
-                    int szpalt_y = pAdd->szpalt_y;
-                    int mx = min(pmodulx, (int)modulx);
-                    int my = -min(pmoduly, (int)moduly);
-                    int x = (int)(mx * ceil((double)toPos.left / mx - 0.5));
-                    int y = (int)(my * ceil((double)toPos.bottom / my - 0.5));
-                    auto cx = ceil((toPos.right - toPos.left) / modulx - 0.5);
-                    int sx = (int)(cx == 0 ? modulx : cx*modulx);
-                    auto cy = ceil((toPos.top - toPos.bottom) / moduly - 0.5);
-                    int sy = (int)(cy == 0 ? moduly : cy*moduly);
+                    const int szpalt_x = pAdd->szpalt_x;
+                    const int szpalt_y = pAdd->szpalt_y;
+                    const int mx = min(pmodulx, (int)modulx);
+                    const int my = -min(pmoduly, (int)moduly);
+                    const int x = (int)(mx * ceil((double)toPos.left / mx - 0.5));
+                    const int y = (int)(my * ceil((double)toPos.bottom / my - 0.5));
+                    const auto cx = ceil((toPos.right - toPos.left) / modulx - 0.5);
+                    const int sx = (int)(cx == 0 ? modulx : cx*modulx);
+                    const auto cy = ceil((toPos.top - toPos.bottom) / moduly - 0.5);
+                    const int sy = (int)(cy == 0 ? moduly : cy*moduly);
                     const CPoint& p = toPos.CenterPoint();
-                    CDrawPage *vPage = ((CDrawDoc*)(pView->GetDocument()))->PageAt(p);
+                    CDrawPage *vPage = pView->GetDocument()->PageAt(p);
                     toPos.SetRect(x, y, x + sx, y + sy);
                     pAdd->SetPosition(&toPos, vPage);
                 } else {
@@ -346,8 +337,8 @@ void CSelectTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
     ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo(pObj ? pObj->info : "");
 
     if (pView->GetCapture() != pView) {
-        if (c_drawShape == DrawShape::select && pView->m_selection.GetCount() == 1) {
-            pObj = (CDrawObj*)pView->m_selection.GetHead();
+        if (c_drawShape == DrawShape::select && pView->m_selection.size() == 1) {
+            pObj = pView->m_selection.front();
             CPoint local = point;
             pView->ClientToDoc(local);
             m_DragHandle = pObj->HitTest(local, pView, TRUE);
@@ -374,10 +365,7 @@ void CSelectTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
     CPoint delta = l - lastPoint;
     lastPoint = l;
 
-    POSITION pos = pView->m_selection.GetHeadPosition();
-    while (pos != NULL) {
-        pObj = (CDrawObj*)pView->m_selection.GetNext(pos);
-
+    for (const auto& pObj : pView->m_selection) {
         if (selectMode == SelectMode::move)
             pObj->MoveTo(pObj->m_position + delta, pView);
         else if (m_DragHandle != 0 && selectMode != SelectMode::dontsize)
@@ -385,7 +373,7 @@ void CSelectTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
     }
 
     if (selectMode == SelectMode::size && c_drawShape == DrawShape::select)
-        SetCursor(((CDrawObj*)pView->m_selection.GetHead())->GetHandleCursor(m_DragHandle));
+        SetCursor(pView->m_selection.front()->GetHandleCursor(m_DragHandle));
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -441,14 +429,13 @@ void CRectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
 
 void CRectTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point)
 {
-    CDrawTool::OnLButtonDblClk(pView, nFlags, point);
 }
 
 void CRectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point)
 {
     if (point == c_down) {
         // Don't create empty objects...
-        auto pObj = (CDrawObj*)pView->m_selection.GetTail();
+        auto pObj = pView->m_selection.back();
         pView->Select(pObj, FALSE);
         pView->GetDocument()->Remove(pObj);
         pObj->Remove();
@@ -540,30 +527,9 @@ void CKolorTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
         ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo((LPCTSTR)_T("ekran"));
 }
 
-
-void CKolorTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point)
-{	//to samo co selecttool
-    if ((nFlags & MK_SHIFT) != 0) {
-        // Shift+DblClk deselects object...
-        CPoint local = point;
-        pView->ClientToDoc(local);
-        CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
-        if (pObj != nullptr)
-            pView->Deselect(pObj);
-    } else {
-        // "Normal" DblClk opens properties, or OLE server...
-        if (pView->m_selection.GetCount() == 1)
-            ((CDrawObj*)pView->m_selection.GetHead())->OnOpen(pView);
-    }
-
-    CDrawTool::OnLButtonDblClk(pView, nFlags, point);
-}
-
-
 void CKolorTool::OnLButtonUp(CDrawView*, UINT, const CPoint&)
 {
 }
-
 
 /// LOCK TOOL
 CLockTool::CLockTool(DrawShape drawShape)
@@ -614,25 +580,6 @@ void CLockTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
         ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo((LPCTSTR)_T("ekran"));
 }
 
-void CLockTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point)
-{   //to samo co selecttool
-
-    if ((nFlags & MK_SHIFT) != 0) {
-        // Shift+DblClk deselects object...
-        CPoint local = point;
-        pView->ClientToDoc(local);
-        CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
-        if (pObj != nullptr)
-            pView->Deselect(pObj);
-    } else {
-        // "Normal" DblClk opens properties, or OLE server...
-        if (pView->m_selection.GetCount() == 1)
-            ((CDrawObj*)pView->m_selection.GetHead())->OnOpen(pView);
-    }
-
-    CDrawTool::OnLButtonDblClk(pView, nFlags, point);
-}
-
 SpaceMode spaceMode = SpaceMode::avail;
 
 CSpaceTool::CSpaceTool(DrawShape dsh)
@@ -673,24 +620,6 @@ void CSpaceTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
     }
 }
 
-void CSpaceTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point)
-{   //to samo co selecttool
-    if ((nFlags & MK_SHIFT) != 0) {
-        // Shift+DblClk deselects object...
-        CPoint local = point;
-        pView->ClientToDoc(local);
-        CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
-        if (pObj != nullptr)
-            pView->Deselect(pObj);
-    } else {
-        // "Normal" DblClk opens properties, or OLE server...
-        if (pView->m_selection.GetCount() == 1)
-            ((CDrawObj*)pView->m_selection.GetHead())->OnOpen(pView);
-    }
-
-    CDrawTool::OnLButtonDblClk(pView, nFlags, point);
-}
-
 void CSpaceTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point)
 {
     if (pView->GetCapture() == pView && point != c_down && spaceMode != SpaceMode::avail) { // czy kliknelismy w to samo miejsce
@@ -707,7 +636,7 @@ void CSpaceTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point)
             rPage = pObj->m_position;
             rPage.NormalizeRect();
             if (rInter.IntersectRect(rPage, rDocSelection)) {
-                auto ilemod = static_cast<size_t>(pObj->szpalt_x * pObj->szpalt_y);
+                const auto ilemod = static_cast<size_t>(pObj->szpalt_x * pObj->szpalt_y);
                 for (size_t module = 0; module < ilemod; ++module) {
                     const CRect& rMod = pObj->GetNormalizedModuleRect(module);
                     if (rInter.IntersectRect(rDocSelection, rMod))

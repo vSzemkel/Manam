@@ -26,76 +26,65 @@ class CDrawDoc;
 
 class CDrawView : public CScrollView
 {
-private:
-    BOOL ModifyMutczas(int n);
-    unsigned char m_pagesPrinted;
-    void OnPrevKolumnaDruk();	// pokazuje preview kolumny przygotowanej do druku
-    static int OnDisableMenuInt(CCmdUI *pCmdUI);
-protected: // create from serialization only
-    CDrawView();
-    void OnChoosePageFont();
-    void OnChooseAddFont();
+  protected: 
     DECLARE_DYNCREATE(CDrawView)
 
-    // Attributes
-public:
-    auto GetDocument() const noexcept { return reinterpret_cast<CDrawDoc*>(m_pDocument); }
-    unsigned char GetPagesPrinted() const { return m_pagesPrinted; }
-    void SetPageSize();
-    CRect GetInitialPosition();
-
     // Operations
-public:
     static DWORD WINAPI DelegateGenEPS(LPVOID pArg);
 
-    void DocToClient(CRect& rect);
-    void DocToClient(CPoint& point);
-    void ClientToDoc(CPoint& point);
-    void ClientToDoc(CRect& rect);
-    void Select(CDrawObj *pObj, BOOL bAdd = FALSE);
-    void SelectWithinRect(CRect rect, BOOL bAdd = FALSE);
-    void Deselect(CDrawObj *pObj);
-    void CloneSelection();
-    void UpdateActiveItem();
-    void InvalObj(CDrawObj *pObj);
-    void Remove(CDrawObj *pObj);
-
-    void Paste(COleDataObject& dataObject);
-
-    void CheckPrintEps(BOOL isprint);	//GN
-// Implementation
-public:
-    virtual ~CDrawView() {};
+    virtual ~CDrawView() noexcept {};
+    virtual void OnDraw(CDC* pDC) override; // overridden to draw this view
+    virtual void OnActivateView(BOOL bActivate, CView* pActiveView, CView* pDeactiveView) override;
+    virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) override;
+    virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo) override;
+    virtual BOOL OnScrollBy(CSize sizeScroll, BOOL bDoScroll) override;
+    virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
+    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam) override;
+    virtual BOOL IsSelected(const CObject* pDocItem) const override;
 #ifdef _DEBUG
     virtual void AssertValid() const override;
     virtual void Dump(CDumpContext& dc) const override;
 #endif
 
-    virtual void OnDraw(CDC *pDC) override; // overridden to draw this view
-    virtual void OnActivateView(BOOL bActivate, CView *pActiveView, CView *pDeactiveView) override;
-    virtual void OnUpdate(CView *pSender, LPARAM lHint, CObject *pHint) override;
-    virtual void OnPrepareDC(CDC *pDC, CPrintInfo *pInfo) override;
-    virtual BOOL OnScrollBy(CSize sizeScroll, BOOL bDoScroll) override;
-    virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam) override;
-    virtual BOOL IsSelected(const CObject *pDocItem) const override;
-
+    auto GetDocument() const noexcept { return reinterpret_cast<CDrawDoc*>(m_pDocument); }
+    void SetPageSize();
+    void DocToClient(CRect& rect);
+    void DocToClient(CPoint& point);
+    void ClientToDoc(CPoint& point);
+    void ClientToDoc(CRect& rect);
+    void Select(CDrawObj* pObj, BOOL bAdd = FALSE);
+    void SelectWithinRect(CRect rect, BOOL bAdd = FALSE);
+    void OpenSelected();
+    void Deselect(CDrawObj* pObj);
+    void CloneSelection();
+    void UpdateActiveItem();
+    void InvalObj(CDrawObj* pObj);
+    void Remove(CDrawObj* pObj);
+    void Paste(COleDataObject& dataObject);
+    void CheckPrintEps(BOOL isprint); //GN
     void OnChooseFont(CFont& m_font, BOOL IsPageFont);
-    int GetZoomFactor() const { return m_zoomNum.cx; };
+    int GetZoomFactor() const noexcept { return m_zoomNum.cx; }
+    unsigned char GetPagesPrinted() const noexcept { return m_pagesPrinted; }
     BOOL SetZoomFactor(CSize zoomNum, CSize zoomDenom);
+    CRect GetInitialPosition();
 
+    // Attributes
     static CLIPFORMAT m_cfDraw; // custom clipboard format
-    CObList m_selection;
+    std::vector<CDrawObj*> m_selection;
     BOOL m_bActive; // is the view active?
 
-protected:
-    virtual void OnInitialUpdate() override; // called first time after construct
+  protected:
+    CDrawView() noexcept; // create from serialization only
 
+    virtual void OnInitialUpdate() override; // called first time after construct
     // Printing support
-    virtual BOOL OnPreparePrinting(CPrintInfo *pInfo) override;
-    virtual void OnBeginPrinting(CDC *pDC, CPrintInfo *pInfo) override;
-    virtual void OnEndPrinting(CDC *pDC, CPrintInfo *pInfo) override;
-    virtual void OnPrint(CDC *pDC, CPrintInfo *pInfo) override;
+    virtual BOOL OnPreparePrinting(CPrintInfo* pInfo) override;
+    virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo) override;
+    virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) override;
+    virtual void OnPrint(CDC* pDC, CPrintInfo* pInfo) override;
+
+    void OnChoosePageFont();
+    void OnChooseAddFont();
     LPDEVMODE SetLandscape();
 
     // zoom factor
@@ -103,43 +92,42 @@ protected:
     CSize m_zoomDenom;
 
     // Generated message map functions
-  protected:
     //{{AFX_MSG(CDrawView)
     afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
-    afx_msg BOOL OnSetCursor(CWnd *pWnd, UINT nHitTest, UINT message);
-    afx_msg BOOL OnEraseBkgnd(CDC *pDC);
+    afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+    afx_msg BOOL OnEraseBkgnd(CDC* pDC);
     afx_msg void OnMouseMove(UINT nFlags, CPoint point);
     afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
     afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
     afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
     afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
-    afx_msg void OnUpdateDrawTool(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateDrawAdd(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateSingleSelect(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateAnySelect(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateViewZoomN(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateViewSpaceLocks(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateImportOpcje(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateEditCopy(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateEditCut(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateEditPaste(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateEditProperties(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateEditSelectAll(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateDrawMakStrony(CCmdUI *pCmdUI);
-    afx_msg void OnDisableMenu(CCmdUI *pCmdUI);
-    afx_msg void OnDisableMenuRDBMS(CCmdUI *pCmdUI);
-    afx_msg void OnDisableMenuLIB(CCmdUI *pCmdUI);
-    afx_msg void OnDisableMenuSTU(CCmdUI *pCmdUI);
-    afx_msg void OnDisableMenuDEAL(CCmdUI *pCmdUI);
-    afx_msg void OnDisableMenuAdSel(CCmdUI *pCmdUI);
-    afx_msg void OnDisableMenuAdSelSTU(CCmdUI *pCmdUI);
-    afx_msg void OnDisableMenuAdSelOPI(CCmdUI *pCmdUI);
-    afx_msg void OnDisableMenuAdPageSel(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateVuCkMakietowanie(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateViewCzasobow(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateViewStudio(CCmdUI *pCmdUI);
+    afx_msg void OnUpdateDrawTool(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateDrawAdd(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateSingleSelect(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateAnySelect(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateViewZoomN(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateViewSpaceLocks(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateImportOpcje(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateEditCopy(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateEditCut(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateEditPaste(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateEditProperties(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateEditSelectAll(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateDrawMakStrony(CCmdUI* pCmdUI);
+    afx_msg void OnDisableMenu(CCmdUI* pCmdUI);
+    afx_msg void OnDisableMenuRDBMS(CCmdUI* pCmdUI);
+    afx_msg void OnDisableMenuLIB(CCmdUI* pCmdUI);
+    afx_msg void OnDisableMenuSTU(CCmdUI* pCmdUI);
+    afx_msg void OnDisableMenuDEAL(CCmdUI* pCmdUI);
+    afx_msg void OnDisableMenuAdSel(CCmdUI* pCmdUI);
+    afx_msg void OnDisableMenuAdSelSTU(CCmdUI* pCmdUI);
+    afx_msg void OnDisableMenuAdSelOPI(CCmdUI* pCmdUI);
+    afx_msg void OnDisableMenuAdPageSel(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateVuCkMakietowanie(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateViewCzasobow(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateViewStudio(CCmdUI* pCmdUI);
     afx_msg void OnSize(UINT nType, int cx, int cy);
-    afx_msg void OnSetFocus(CWnd *pOldWnd);
+    afx_msg void OnSetFocus(CWnd* pOldWnd);
     afx_msg void OnCancelEdit();
     afx_msg void OnDrawTool(UINT tool);
     afx_msg void OnViewZoomN(UINT nID);
@@ -181,4 +169,10 @@ protected:
     afx_msg void OnChangeView();
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
+  private:
+    static int OnDisableMenuInt(CCmdUI* pCmdUI);
+    BOOL ModifyMutczas(int n);
+    void OnPrevKolumnaDruk(); // pokazuje preview kolumny przygotowanej do druku
+
+    unsigned char m_pagesPrinted;
 };

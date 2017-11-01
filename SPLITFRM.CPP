@@ -82,13 +82,12 @@ void CSplitFrame::OnMDIActivate(BOOL bActivate, CWnd *pActivateWnd, CWnd *pDeact
 void CSplitFrame::OnShowDtls()
 {
     auto pView = reinterpret_cast<CDrawView*>(m_Splitter2.GetPane(0, 0));
-    if (pView->m_selection.GetCount() == 1)
-        ((CDrawObj*)pView->m_selection.GetHead())->OnOpen(pView);
+    pView->OpenSelected();
 }
 
 void CSplitFrame::OnUpdateShowDtls(CCmdUI *pCmdUI)
 {
-    pCmdUI->Enable(!disableMenu && ((CDrawView*)m_Splitter2.GetPane(0, 0))->m_selection.GetCount() == 1);
+    pCmdUI->Enable(!disableMenu && ((CDrawView*)m_Splitter2.GetPane(0, 0))->m_selection.size() == 1);
 }
 
 void CSplitFrame::OnSize(UINT nType, int cx, int cy)

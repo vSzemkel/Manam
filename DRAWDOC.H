@@ -41,8 +41,8 @@ class CDrawDoc final : public COleDocument
     friend class CDrawDocDbWriter;
 
     static const TCHAR* asDocTypeExt[3];
-    static int ValidKolor(TCHAR *st);
     static void DrawPageCross(CDC *pDC);
+    static int ValidKolor(const CString& k);
     static CString XmlReadText(IXmlReader *reader);
 
     virtual ~CDrawDoc();
@@ -54,7 +54,7 @@ class CDrawDoc final : public COleDocument
     virtual BOOL CDrawDoc::SaveModified() override; // plik do pliku , baza do bazy
 
     template<class T> T* GetPanelView() const noexcept;
-    const CSize& GetSize() const { return m_size; }
+    const CSize& GetSize() const noexcept { return m_size; }
     float GetDrobneH();
     void ComputeCanvasSize();
     int AddsCount() const noexcept;

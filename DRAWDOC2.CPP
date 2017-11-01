@@ -801,8 +801,8 @@ void CDrawDoc::OnAsideAdds()
 {
     CDrawPage* vPage = nullptr;
     CDrawView *pView = GetPanelView<CDrawView>();
-    if (pView->m_selection.GetCount() == 1)
-        vPage = dynamic_cast<CDrawPage*>(pView->m_selection.GetHead());
+    if (pView->m_selection.size() == 1)
+        vPage = dynamic_cast<CDrawPage*>(pView->m_selection.front());
 
     if (vPage == nullptr) {
         auto pcount = m_pages.size();

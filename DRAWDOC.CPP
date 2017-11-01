@@ -398,8 +398,8 @@ void CDrawDoc::PrintPage(CDC *pDC, CDrawPage *pPage)
     for (const auto& pAdd : pPage->m_adds) {
         pDC->SetWindowOrg(2 * (pPage->m_position.left / CLIENT_SCALE - 5 * vscale) - pAdd->m_position.left / CLIENT_SCALE,
             2 * (pPage->m_position.top / CLIENT_SCALE - 18 * vscale + pmoduly) - pAdd->m_position.top / CLIENT_SCALE + 2 * (pPage->pagina / 51) * pmoduly);
-        CRect rect = pAdd->GetPrintRect();
-        pAdd->DrawDesc(pDC, &rect);
+        const auto& rect = pAdd->GetPrintRect();
+        pAdd->DrawDesc(pDC, rect);
     }
 
     pDC->SetViewportExt(s);
@@ -415,23 +415,23 @@ void CDrawDoc::PrintPage(CDC *pDC, CDrawPage *pPage)
 ////////// CDRAWOBJ _M_OBJECTS LIST ?/////////////////////////////       
 void CDrawDoc::Add(CDrawObj *pObj)
 {
-    m_objects.push_back(pObj);
     pObj->m_pDocument = this;
+    m_objects.push_back(pObj);
     SetModifiedFlag();
 }
 
 void CDrawDoc::AddQue(CDrawAdd *pObj)
 {
     pObj->fizpage = 0;
-    m_addsque.push_back(pObj);
     pObj->m_pDocument = this;
+    m_addsque.push_back(pObj);
     SetModifiedFlag();
 }
 
 void CDrawDoc::RemoveQue(CDrawAdd *pObj)
 {
-    auto pos = std::find(m_addsque.cbegin(), m_addsque.cend(), pObj);
-    if (pos != m_addsque.end()) m_addsque.erase(pos);
+    const auto pos = std::find(m_addsque.cbegin(), m_addsque.cend(), pObj);
+    if (pos != m_addsque.cend()) m_addsque.erase(pos);
     SetModifiedFlag();
 }
 
@@ -441,7 +441,7 @@ void CDrawDoc::Remove(CDrawObj *pObj)
     if (pPage)
         RemovePage(pPage);
     else {
-        auto pos = std::find(m_objects.begin(), m_objects.end(), pObj);
+        const auto pos = std::find(m_objects.begin(), m_objects.end(), pObj);
         if (pos != m_objects.end()) {
             auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
             if (pAdd) {
@@ -502,10 +502,10 @@ CDrawAdd* CDrawDoc::FindAddAt(int i) const
 int CDrawDoc::GetAdPosition(const CDrawAdd *pAdd) const
 {
     int n = 0;
-    auto pos = std::find_if(m_objects.cbegin(), m_objects.cend(), [&](CDrawObj* const & a) -> bool {
-        if (dynamic_cast<CDrawAdd*>(a) != nullptr) {
+    auto pos = std::find_if(m_objects.cbegin(), m_objects.cend(), [&](auto p) -> bool {
+        if (dynamic_cast<CDrawAdd*>(p) != nullptr) {
             ++n;
-            return pAdd == a;
+            return pAdd == p;
         } else
             return false;
     });
@@ -521,12 +521,7 @@ void CDrawDoc::SelectAdd(CDrawAdd *pObj, BOOL multiselect) const
 
 int CDrawDoc::AddsCount() const noexcept
 {
-    int cnt = 0;
-    for (const auto& pObj : m_objects)
-        if (dynamic_cast<CDrawAdd*>(pObj) != nullptr)
-            cnt++;
-
-    return cnt;
+    return (int)std::count_if(std::cbegin(m_objects), std::cend(m_objects), [](auto p){ return dynamic_cast<CDrawAdd*>(p) != nullptr; });
 }
 
 //import i import++
@@ -639,8 +634,8 @@ int CDrawDoc::ComputePageOrderNr(CDrawPage *pObj) const
 void CDrawDoc::MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt)
 {
     ASSERT(iCnt > 0);
-    int iPocz = min(iSrcOrd, iDstOrd);
-    int iKon = min(max(iSrcOrd, iDstOrd) + iCnt, (int)m_pages.size());
+    const int iPocz = min(iSrcOrd, iDstOrd);
+    const int iKon = min(max(iSrcOrd, iDstOrd) + iCnt, (int)m_pages.size());
     ASSERT(0 <= iPocz && iKon <= (int)m_pages.size());
 
     CPoint pNowhere(INT_MAX >> 2, 0);
@@ -884,8 +879,8 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL c
                 i = fizpag;
                 break;
             case fizpag: fizpage = _istdigit(st[0])
-                ? ((_ttoi(st)) << 16) + c_normal
-                : ((CDrawObj::Arabska(st)) << 16) + c_rzym;
+                ? (_ttoi(st) << 16) + c_normal
+                : (CDrawObj::Arabska(st) << 16) + c_rzym;
                 i = pox;
                 break;
             case pox: posx = ((fizpage == 0) ? 0 : (result == 0 ? szpalt_x + 1 - sx : _ttoi(st))); i = poy; break;
@@ -894,7 +889,7 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL c
             case nrep:
             {
                 p_nreps = _ttol(st);
-                p_nreps = (p_nreps == 0) ? -1 : p_nreps;
+                if (p_nreps == 0) p_nreps = -1;
                 i = kolo;
             }
             break;
@@ -943,13 +938,15 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL c
     return TRUE;
 }
 
-int CDrawDoc::ValidKolor(TCHAR *st)
+int CDrawDoc::ValidKolor(const CString& k)
 {
-    auto n = ((CMainFrame*)AfxGetMainWnd())->Spot_Kolor.size(); //w tablicy zawsze duzymi
-    for (size_t i = 1; i < n; i++)
-        if (!((CMainFrame*)AfxGetMainWnd())->Spot_Kolor[i].Find(st))
-            return (int)((i == 1) ? c_full : ((i << 3) + c_spot));
-    return c_brak;
+    const auto& kolory = ((CMainFrame*)AfxGetMainWnd())->Spot_Kolor;
+    const auto iter = std::find(std::begin(kolory), std::end(kolory), k);
+    if (iter == std::end(kolory))
+        return c_brak;
+
+    auto ind = std::distance(std::begin(kolory), iter);
+    return (int)((ind == 1) ? c_full : ((ind << 3) + c_spot));
 }
 
 
@@ -993,8 +990,8 @@ void CDrawDoc::NumberPages()
     int iFirstPageToNumber = 1;
     // dla stron arabskich dopuszczamy przenumerowanie od zadanej
     auto pView = GetPanelView<CDrawView>();
-    if (pView->m_selection.GetCount() == 1) {
-        auto pSelPage = dynamic_cast<CDrawPage*>(pView->m_selection.GetHead());
+    if (pView->m_selection.size() == 1) {
+        auto pSelPage = dynamic_cast<CDrawPage*>(pView->m_selection.front());
         if (pSelPage != nullptr && pSelPage->pagina_type == c_normal) {
             iFirstPageNumber = pSelPage->pagina;
             iFirstPageToNumber = GetIPage(pSelPage);
@@ -1514,7 +1511,7 @@ second_paper:
             xKrt = XmlReadText(reader);
 
             vAdd = AddExists(adno);
-            vAdd2 = DBCreateAdd(xRoz, xNaz, adno, ValidKolor(xKol.GetBuffer()), xStr, xUwa, xKrt, pos);
+            vAdd2 = DBCreateAdd(xRoz, xNaz, adno, ValidKolor(xKol), xStr, xUwa, xKrt, pos);
             if (vAdd2 == nullptr)
                 continue;
 
