@@ -1115,9 +1115,9 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
         }
         if (pmods != pmodcnt) {
             float norm = (float)pmodcnt / pmods;
-            l_modogl = (UINT)floor(((float)l_modogl * norm) + 0.5);
-            l_modred = (UINT)floor(((float)l_modred * norm) + 0.5);
-            l_modrez = (UINT)floor(((float)l_modrez * norm) + 0.5);
+            l_modogl = (UINT)nearbyint((float)l_modogl * norm);
+            l_modred = (UINT)nearbyint((float)l_modred * norm);
+            l_modrez = (UINT)nearbyint((float)l_modrez * norm);
         }
         *m_modogl += l_modogl; *m_modred += l_modred; *m_modrez += l_modrez;
 
@@ -1134,7 +1134,7 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
                 if (vPage->space.GetBit(j) && !vPage->space_red.GetBit(j) && !vPage->space_locked.GetBit(j))
                     l_modogl++;
             if (pmods != pmodcnt)
-                l_modogl = (UINT)floor(((float)l_modogl) * pmodcnt / pmods + 0.5);
+                l_modogl = (UINT)nearbyint((float)(l_modogl * pmodcnt) / pmods);
             *m_modogl += l_modogl;
         }
         vPage->SetBaseKrata(init_szpalt_x, init_szpalt_y, TRUE);
@@ -1147,17 +1147,19 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
 inline float CDrawDoc::PowAdd2Mod(BOOL bQueStat) const
 {
     float pow = 0.0;
+    auto mod_count = [](CDrawAdd* a) -> float { return (float)(a->sizex * a->sizey * pmodcnt) / (a->szpalt_x * a->szpalt_y); };
+
     if (bQueStat) {
         for (const auto& a : m_addsque)
-            pow += (float)a->sizex * a->sizey * pmodcnt / a->szpalt_x / a->szpalt_y;
+            pow += mod_count(a);
     } else {
         for (const auto& pObj : m_objects) {
-            auto vAdd = dynamic_cast<CDrawAdd*>(pObj);
-            if (vAdd)
-                pow += (float)vAdd->sizex*vAdd->sizey*pmodcnt / vAdd->szpalt_x / vAdd->szpalt_y;
+            auto a = dynamic_cast<CDrawAdd*>(pObj);
+            if (a) pow += mod_count(a);
         }
     }
-    return (float)floor(100 * pow + 0.5) / 100;
+
+    return (float)nearbyint(100 * pow) / 100;
 }
 
 void CDrawDoc::OnFileInfo()

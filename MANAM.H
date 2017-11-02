@@ -15,7 +15,7 @@
 
 #define modulx CDrawObj::modx(szpalt_x)
 #define moduly CDrawObj::mody(szpalt_y)
-#define B2MB(x) (int)floor((((double)x) / 1048576) + 0.5)
+#define B2MB(x) (int)nearbyint((float)x / 1048576)
 
 constexpr int CLIENT_SCALE = 20;
 constexpr int PRINT_VOFFSET = -10;

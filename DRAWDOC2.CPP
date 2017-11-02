@@ -630,7 +630,7 @@ CPoint CDrawDoc::GetAsideAddPos(BOOL opening) const
 {
     int addsAsideCnt = opening ? 1 : 1 + (int)std::count_if(cbegin(m_objects), cend(m_objects), [](CDrawObj *pObj) { auto a = dynamic_cast<CDrawAdd*>(pObj); return a && a->posx == 0; });
     int marginPageMinX = (int)(pmodulx*(1 + iPagesInRow / 2 + (pszpalt_x*iPagesInRow)));
-    int marginPageMaxX = (int)(floor(((float)m_size.cx*vscale * 100 / theApp.m_initZoom) / pmodulx + 0.5) - (pszpalt_x + 2))*pmodulx;
+    int marginPageMaxX = (int)(nearbyint((float)(m_size.cx * vscale * 100) / (theApp.m_initZoom * pmodulx)) - (pszpalt_x + 2)) * pmodulx;
     return CPoint(max(marginPageMinX, marginPageMaxX), -pmoduly * addsAsideCnt);
 }
 
