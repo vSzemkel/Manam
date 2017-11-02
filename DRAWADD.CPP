@@ -17,22 +17,22 @@ extern BOOL drawErrorBoxes;
 extern SelectMode selectMode;
 
 constexpr SpadInfo aSpadInfo[16] = {
-    { 0,   0,   1, 1 }, // 0
-    { 0,   0,   0, 1 },
-    { 0,   0,   1, 0 },
-    { 0,   0,   0, 0 },
-    { 1,   0,   0, 1 },
-    { 0.5, 0,   0, 1 }, // 5
-    { 1,   0,   0, 0 },
-    { 0.5, 0,   0, 0 },
-    { 0,   1,   1, 0 },
-    { 0,   1,   0, 0 },
-    { 0,   0.5, 1, 0 }, // 10
-    { 0,   0.5, 0, 0 },
-    { 1,   1,   0, 0 },
-    { 0.5, 1,   0, 0 },
-    { 1,   0.5, 0, 0 },
-    { 0.5, 0.5, 0, 0 }, //15
+    { SpadInfo::bleed_right, SpadInfo::bleed_right, true,  true  }, // 0
+    { SpadInfo::bleed_right, SpadInfo::bleed_right, false, true  },
+    { SpadInfo::bleed_right, SpadInfo::bleed_right, true,  false },
+    { SpadInfo::bleed_right, SpadInfo::bleed_right, false, false },
+    { SpadInfo::bleed_left,  SpadInfo::bleed_right, false, true  },
+    { SpadInfo::just_center, SpadInfo::bleed_right, false, true  }, // 5
+    { SpadInfo::bleed_left,  SpadInfo::bleed_right, false, false },
+    { SpadInfo::just_center, SpadInfo::bleed_right, false, false },
+    { SpadInfo::bleed_right, SpadInfo::bleed_left,  true,  false },
+    { SpadInfo::bleed_right, SpadInfo::bleed_left,  false, false },
+    { SpadInfo::bleed_right, SpadInfo::just_center, true,  false }, // 10
+    { SpadInfo::bleed_right, SpadInfo::just_center, false, false },
+    { SpadInfo::bleed_left,  SpadInfo::bleed_left,  false, false },
+    { SpadInfo::just_center, SpadInfo::bleed_left,  false, false },
+    { SpadInfo::bleed_left,  SpadInfo::just_center, false, false },
+    { SpadInfo::just_center, SpadInfo::just_center, false, false }, // 15
 };
 
 const int CDrawAdd::ciMaxRings = 4;
@@ -691,8 +691,8 @@ void CDrawAdd::SetPosition(int fizp, int px, int py, int sx, int sy)
 
 void CDrawAdd::SetPosition(CRect *m_pos, CDrawPage *pPage)
 {
-    int sx = min((int)ceil(abs(m_pos->right - m_pos->left) / modulx - 0.5), szpalt_x);
-    int sy = min((int)ceil(abs(m_pos->top - m_pos->bottom) / moduly - 0.5), szpalt_y);
+    int sx = min((int)nearbyint(abs(m_pos->right - m_pos->left) / modulx), szpalt_x);
+    int sy = min((int)nearbyint(abs(m_pos->top - m_pos->bottom) / moduly), szpalt_y);
     int px = 0;
     int py = 0;
     BOOL ok = TRUE;
@@ -707,10 +707,10 @@ void CDrawAdd::SetPosition(CRect *m_pos, CDrawPage *pPage)
     }
 
     if (pPage != nullptr) {
-        px = (int)ceil((m_pos->left - pPage->m_position.left) / modulx - 0.5) + 1;
+        px = (int)nearbyint((m_pos->left - pPage->m_position.left) / modulx) + 1;
         auto cx = szpalt_x + 1 - sx;
         if (cx < px) px = cx;
-        py = szpalt_y - sy - (int)ceil((m_pos->bottom - pPage->m_position.bottom) / moduly - 0.5) + 1;
+        py = szpalt_y - sy - (int)nearbyint((m_pos->bottom - pPage->m_position.bottom) / moduly) + 1;
         auto cy = szpalt_y + 1 - sy;
         if (cy < py) py = cy;
         ok = pPage->FindSpace(this, &px, &py, sx, sy);
@@ -1854,12 +1854,12 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
     ::StringCchPrintfA(s, n_size, "beginManamEPS \r\n"); dest->Write(s, (UINT)strlen(s));
     if (pPage->m_typ_pary < 2) {
         // spad zdefiniowany dla krawedzi
-        x += aSpadInfo[spad_flag].fOffX*(gpx - (x2 - x1));
-        y += aSpadInfo[spad_flag].fOffY*(gpy - (y2 - y1));
+        x += aSpadInfo[spad_flag].adjust_x * (gpx - (x2 - x1)) / 2;
+        y += aSpadInfo[spad_flag].adjust_y * (gpy - (y2 - y1)) / 2;
         ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", x, y);  dest->Write(s, (UINT)strlen(s));
         // skalowanie
-        const float scalx = (x2 == x1 || !pRozAdd->scale_it || !aSpadInfo[spad_flag].bScaX) ? 1 : gpx / (x2 - x1);
-        const float scaly = (y2 == y1 || !pRozAdd->scale_it || !aSpadInfo[spad_flag].bScaY) ? 1 : gpy / (y2 - y1);
+        const float scalx = (x2 == x1 || !pRozAdd->scale_it || !aSpadInfo[spad_flag].scale_x) ? 1 : gpx / (x2 - x1);
+        const float scaly = (y2 == y1 || !pRozAdd->scale_it || !aSpadInfo[spad_flag].scale_y) ? 1 : gpy / (y2 - y1);
         if (scalx != 1 || scaly != 1) {
             ::StringCchPrintfA(s, n_size, "%.4f %.4f scale\r\n", scalx, scaly);  dest->Write(s, (UINT)strlen(s));
         }

@@ -124,8 +124,9 @@ private:
 
 struct SpadInfo
 {
-    float fOffX;	// przesuniêcie punktu zaczepienia od lewego dolnego rogu, wyra¿one liczb¹ krawêdzi {0, 0.5, 1}
-    float fOffY;
-    BYTE  bScaX;	// flaga skalowania dla wymiaru
-    BYTE  bScaY;
+    enum SpadOffset { bleed_right = 0, just_center, bleed_left };
+    SpadOffset adjust_x; // przesuniêcie punktu zaczepienia od lewego dolnego rogu
+    SpadOffset adjust_y;
+    bool scale_x; // flaga skalowania dla wymiaru
+    bool scale_y;
 };

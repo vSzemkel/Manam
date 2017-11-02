@@ -881,10 +881,10 @@ void CDrawPage::BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *
             *bx2 = max(*bx2, x + gpx);	*by2 = max(*by2, y + gpy);
         }
     }
-    *bx1 = (int)ceil(*bx1 * mm2pkt - 0.5);
-    *by1 = (int)ceil(*by1 * mm2pkt - 0.5); //-1 zeby nie obcinac u dolu
-    *bx2 = (int)ceil(*bx2 * mm2pkt - 0.5);
-    *by2 = (int)ceil(*by2 * mm2pkt - 0.5) + podpisH;
+    *bx1 = (int)nearbyint(*bx1 * mm2pkt);
+    *by1 = (int)nearbyint(*by1 * mm2pkt); //-1 zeby nie obcinac u dolu
+    *bx2 = (int)nearbyint(*bx2 * mm2pkt);
+    *by2 = (int)nearbyint(*by2 * mm2pkt) + podpisH;
 } // BoundingBox
 
 BOOL CDrawPage::CheckSrcFile(PGENEPSARG pArg)
