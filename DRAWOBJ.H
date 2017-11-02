@@ -29,7 +29,7 @@ class CDrawObj : public CObject
     virtual void MoveTo(const CRect& positon, CDrawView *pView = nullptr);
     virtual void Serialize(CArchive& ar) override;
     virtual BOOL OnOpen(CDrawView *pView);
-    virtual CDrawObj* Clone(CDrawDoc *pDoc = nullptr) const;
+    virtual CDrawObj* Clone(CDrawDoc *pDoc = nullptr) const { return nullptr; };
 
     static double modx(double x);
     static double mody(double y);

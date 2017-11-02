@@ -736,7 +736,7 @@ void CDrawView::OnEditClear()
             }
         }
         
-        const auto tmp = pObj;
+        auto tmp = pObj;
         pObj = nullptr;
         GetDocument()->Remove(tmp); // it removes item from m_selection, so without a copy it would clober iterator 
         delete tmp;
@@ -936,15 +936,19 @@ void CDrawView::OnEditPaste()
     for (const auto& pObj : m_selection) {
         if (dynamic_cast<CDrawPage *>(pObj))
             GetDocument()->AddPage(reinterpret_cast<CDrawPage *>(pObj));
-        else if (dynamic_cast<CDrawOpis *>(pObj)) {
-            auto pOpi = reinterpret_cast<CDrawOpis *>(pObj);
-            pOpi->m_position += CSize(15 * vscale, -15 * vscale);
-            GetDocument()->Add(pOpi);
-        } else { // must be CDrawAdd
-            newAds = true;
-            auto pAdd = reinterpret_cast<CDrawAdd *>(pObj);
-            pAdd->nreps = -1L;
-            GetDocument()->Add(pAdd);
+        else {
+            pObj->m_position += CSize(15 * vscale, -15 * vscale);
+            if (dynamic_cast<CDrawOpis *>(pObj)) {
+                auto pOpi = reinterpret_cast<CDrawOpis *>(pObj);
+                GetDocument()->Add(pOpi);
+            } else { // must be CDrawAdd
+                newAds = true;
+                auto pAdd = reinterpret_cast<CDrawAdd *>(pObj);
+                pAdd->nreps = -1L;
+                pAdd->m_add_xx = 0;
+                pAdd->flags.locked = 0;
+                GetDocument()->Add(pAdd);
+            }
         }
         pObj->Invalidate();
     }

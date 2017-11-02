@@ -320,21 +320,6 @@ void CDrawObj::Invalidate()
     m_pDocument->UpdateAllViews(NULL, HINT_UPDATE_DRAWOBJ, this);
 }
 
-CDrawObj* CDrawObj::Clone(CDrawDoc *pDoc) const
-{
-    ASSERT_VALID(this);
-
-    auto pClone = new CDrawObj(&m_position);
-    pClone->kolor = kolor;
-
-    ASSERT_VALID(pClone);
-
-    if (pDoc != nullptr)
-        pDoc->Add(pClone);
-
-    return pClone;
-}
-
 BOOL CDrawObj::OnOpen(CDrawView*)
 {
     ASSERT_VALID(this);
