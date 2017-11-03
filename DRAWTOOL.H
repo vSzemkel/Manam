@@ -16,7 +16,7 @@
 
 class CDrawView;
 
-enum class DrawShape : BYTE
+enum class DrawShape : uint8_t
 {
     add      = ID_DRAW_ADD,
     red      = ID_DRAW_RED,
@@ -29,7 +29,7 @@ enum class DrawShape : BYTE
     space    = ID_DRAW_SPACELOCKED,
 };
 
-enum class SelectMode : BYTE
+enum class SelectMode : uint8_t
 {
     none,
     size,

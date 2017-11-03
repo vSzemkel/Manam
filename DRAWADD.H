@@ -124,7 +124,7 @@ private:
 
 struct SpadInfo
 {
-    enum SpadOffset { bleed_right = 0, just_center, bleed_left };
+    enum SpadOffset : uint8_t { bleed_right = 0, just_center, bleed_left };
     SpadOffset adjust_x; // przesuniêcie punktu zaczepienia od lewego dolnego rogu
     SpadOffset adjust_y;
     bool scale_x; // flaga skalowania dla wymiaru

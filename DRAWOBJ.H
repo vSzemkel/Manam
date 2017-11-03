@@ -38,7 +38,7 @@ class CDrawObj : public CObject
     static CString RzCyfra(int i, const CString *znaki);
     static void DrawNapis(CDC *pDC, LPCTSTR napis, int cnt, LPRECT r, UINT format, int bkMode);
 
-    enum TrackerState { normal, selected, active };
+    enum TrackerState : uint8_t { normal, selected, active };
     // Attributes
     CRect m_position;
     CDrawDoc *m_pDocument;

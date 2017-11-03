@@ -22,8 +22,8 @@ class CDrawObj;
 class CDrawOpis;
 class CQueView;
 
-enum class DocType : int
-{						// typ wyliczeniowy rodzajów dokumentów
+enum class DocType : uint8_t // typ wyliczeniowy rodzajów dokumentów
+{
     makieta,
     makieta_lib,
     grzbiet_drukowany

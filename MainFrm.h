@@ -5,7 +5,7 @@
 
 #pragma once
 
-enum class ToolbarMode : BYTE
+enum class ToolbarMode : uint8_t
 {
     normal = 0,
     czas_obow,

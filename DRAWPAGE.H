@@ -8,7 +8,7 @@ class CDrawAdd;
 class CDrawPage;
 class CGenEpsInfoDlg;
 
-enum class SpaceMode : BYTE
+enum class SpaceMode : uint8_t
 {
     avail,
     redlock,

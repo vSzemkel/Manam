@@ -24,7 +24,7 @@
 #define		IMG_FILE_LOCAL	2
 #define		IMG_FILE_REMOTE	3
 
-enum class GridSortCol : BYTE
+enum class GridSortCol : uint8_t
 {
     lp = ID_SORT_LP,            // -
     strona = ID_SORT_STR,       // i

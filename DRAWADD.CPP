@@ -791,7 +791,7 @@ BOOL CDrawAdd::PtOnRing(CPoint p) const
 
 int CDrawAdd::FindRing(CPoint p0, BOOL bOuterRing)
 {
-    enum Kierunek { E, S, W, N }; // okresla kierunek ostatnio znalezionego fragmentu obwodnicy
+    enum Kierunek : uint8_t { E, S, W, N }; // okresla kierunek ostatnio znalezionego fragmentu obwodnicy
     Kierunek eKierunek = E;
     int iInitVertexCnt = precelWertexCnt;
     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p0.x*modulx), static_cast<int>(-p0.y*moduly));

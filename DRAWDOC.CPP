@@ -835,7 +835,7 @@ BOOL CDrawDoc::Import(BOOL check_exist) // tu dodaje na koncu do m_objects najwy
 
 BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL check_exist)
 { // tworzenie ogloszen importowanych z pliku tekstowego
-    enum nazcstr
+    enum nazcstr : uint8_t
     {
         kratka,
         fizpag,

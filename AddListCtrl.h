@@ -2,7 +2,7 @@
 
 class CGridFrm;
 
-enum kolejnosc : unsigned char
+enum kolejnosc : uint8_t
 {
     lp,
     logiczna,
