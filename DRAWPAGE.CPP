@@ -28,7 +28,7 @@ CDrawPage::~CDrawPage()
 {
     // ogloszenia spadaja poza makiete
     for (const auto& pAdd : m_adds) {
-        auto px = pszpalt_x*m_pDocument->iPagesInRow + m_pDocument->iPagesInRow / 2 + pAdd->posx;
+        const auto px = pszpalt_x*m_pDocument->iPagesInRow + m_pDocument->iPagesInRow / 2 + pAdd->posx;
         const CRect rect(pmodulx*px, pmoduly*(-1 - pAdd->posy), pmodulx*(px + pAdd->sizex), pmoduly*(-1 - pAdd->posy - pAdd->sizey));
         pAdd->MoveTo(rect);
         pAdd->fizpage = pAdd->posx = pAdd->posy = 0;
@@ -1073,10 +1073,6 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
         }
     }
 
-    CMemFile fPagina;
-    if (pArg->bIsPRN && !StaleElementy(pArg, &fPagina))
-        return FALSE;
-
     CFile externFile;
     CFileException fEx;
     // drobne
@@ -1134,9 +1130,8 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
     }
 
     try {
-        WORD header[15];
-        if (pArg->bIsPreview)
-            dest->Write(header, sizeof(header));
+        if (pArg->bIsPreview) // TIFF header placeholder
+            dest->Seek(28, CFile::begin);
 
         int i = 0;
         while (ok && (fManamEps.ReadString(wThreadBuf, n_size) != NULL)) {
@@ -1182,14 +1177,14 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
     }
 
     if (ok && pArg->bIsPRN) {
-        fPagina.SeekToBegin();
-        ULONGLONG lLen = fPagina.GetLength();
-        while (lLen > 0) {
-            UINT lBR = fPagina.Read(cThreadBuf, bigSize);
-            dest->Write(cThreadBuf, lBR);
-            lLen -= lBR;
-        }
-        fPagina.Close();
+        CMemFile fPagina;
+        if (!StaleElementy(pArg, &fPagina))
+            return FALSE;
+
+        auto len = (UINT)fPagina.GetLength();
+        auto buf = fPagina.Detach();
+        dest->Write(buf, len);
+        free(buf); // CMemFile::Free
     }
 
     // extern
@@ -1311,14 +1306,11 @@ BOOL CDrawPage::PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) co
         try {
             pFile->SendRequestEx(iReqLen);
             pFile->Write(sFormBody, sFormBody.GetLength());
-            //wklej plik
-            pOpiFile->SeekToBegin();
-            ULONGLONG lLen = pOpiFile->GetLength();
-            while (lLen > 0) {
-                UINT lBR = pOpiFile->Read(pArg->cBigBuf, bigSize);
-                pFile->Write(pArg->cBigBuf, lBR);
-                lLen -= lBR;
-            }
+            // wklej plik
+            auto len = (UINT)pOpiFile->GetLength();
+            auto buf = pOpiFile->Detach();
+            pFile->Write(buf, len);
+            free(buf); // CMemFile::Free
             pFile->Write(sOpiLine, sOpiLine.GetLength());
             pFile->EndRequest();
             pFile->ReadString(pArg->cBigBuf, bigSize);
