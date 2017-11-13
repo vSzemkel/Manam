@@ -30,16 +30,16 @@ CManODPNET theManODPNET;
 CManODPNETParms CManODPNET::emptyParm({});
 
 // ODP.NET datatypes for unmanaged code
-const int CManODPNET::DbTypeInt32 = static_cast<int>(OracleDbType::Int32);
-const int CManODPNET::DbTypeDouble = static_cast<int>(OracleDbType::Double);
-const int CManODPNET::DbTypeVarchar2 = static_cast<int>(OracleDbType::Varchar2);
-const int CManODPNET::DbTypeRefCursor = static_cast<int>(OracleDbType::RefCursor);
+constexpr int CManODPNET::DbTypeInt32 = static_cast<int>(OracleDbType::Int32);
+constexpr int CManODPNET::DbTypeDouble = static_cast<int>(OracleDbType::Double);
+constexpr int CManODPNET::DbTypeVarchar2 = static_cast<int>(OracleDbType::Varchar2);
+constexpr int CManODPNET::DbTypeRefCursor = static_cast<int>(OracleDbType::RefCursor);
 
 // ODP.NET parameter directions for unmanaged code
-const int CManODPNET::ParameterIn = static_cast<int>(ParameterDirection::Input);			// 1
-const int CManODPNET::ParameterOut = static_cast<int>(ParameterDirection::Output);			// 2
-const int CManODPNET::ParameterInOut = static_cast<int>(ParameterDirection::InputOutput);	// 3
-const int CManODPNET::ReturnValue = static_cast<int>(ParameterDirection::ReturnValue);		// 6
+constexpr int CManODPNET::ParameterIn = static_cast<int>(ParameterDirection::Input);          // 1
+constexpr int CManODPNET::ParameterOut = static_cast<int>(ParameterDirection::Output);        // 2
+constexpr int CManODPNET::ParameterInOut = static_cast<int>(ParameterDirection::InputOutput); // 3
+constexpr int CManODPNET::ReturnValue = static_cast<int>(ParameterDirection::ReturnValue);    // 6
 
 struct OdpHelper final
 {
