@@ -2767,7 +2767,7 @@ void COstWer::AppendAdd(CDrawAdd *pAdd, int status)
     ::StringCchPrintf(theApp.bigBuf, n_size, _T("%iX%i "), pAdd->sizex, pAdd->sizey);
     m_adds.SetItemText(i, 2, theApp.bigBuf);
     m_adds.SetItemText(i, 3, pAdd->nazwa);
-    ::StringCchPrintf(theApp.bigBuf, n_size, _T("%i"), pAdd->fizpage >> 3);
+    ::StringCchPrintf(theApp.bigBuf, n_size, _T("%i"), pAdd->fizpage >> 16);
     m_adds.SetItemText(i, 4, theApp.bigBuf);
     if (pAdd->kolor != c_brak) {
         if (pAdd->kolor == c_full)

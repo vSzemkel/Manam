@@ -942,10 +942,10 @@ int CDrawDoc::ValidKolor(const CString& k)
 {
     const auto& kolory = ((CMainFrame*)AfxGetMainWnd())->Spot_Kolor;
     const auto iter = std::find(std::begin(kolory), std::end(kolory), k);
-    if (iter == std::end(kolory))
+    const auto ind = std::distance(std::begin(kolory), iter);
+    if (ind == 0 || iter == std::end(kolory))
         return c_brak;
 
-    auto ind = std::distance(std::begin(kolory), iter);
     return (int)((ind == 1) ? c_full : ((ind << 3) + c_spot));
 }
 
