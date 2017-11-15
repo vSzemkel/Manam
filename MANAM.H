@@ -39,8 +39,8 @@ constexpr __time64_t POWTSEED_1 = 946598400; // 31/12/1999 01:00 data, w stosunk
 constexpr int c_brak = 1;
 constexpr int c_spot = 2;
 constexpr int c_full = 4;
-constexpr TCHAR* BRAK = _T("(brak)");
-constexpr TCHAR* FULL = _T("(full)");
+constexpr auto BRAK = _T("(brak)");
+constexpr auto FULL = _T("(full)");
 constexpr COLORREF BIALY = RGB(255, 255, 255);
 // numeracja - odpowiada PK s³ownika TYP_NUMERACJI z bazy
 constexpr int c_normal = 1;

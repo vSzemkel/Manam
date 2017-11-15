@@ -6,8 +6,6 @@
 #include "Manam.h"
 #include "drawdoc.h"
 
-#pragma once
-
 const int CAtexKrat::DIM_LIMIT = 16;
 const int CAtexKrat::ADJUST_LEVEL = 6;
 const int CAtexKrat::KRATA_PASKOWA = 10;
@@ -216,7 +214,7 @@ void CKratCalc::Calculate()
             m_x = j;
             m_y = l;
             m_kra_sym.Format(_T("%ix%i"), i, k);
-            s.Format(_T("%ix%i na %s (%.1fx%.1f)"), j, l, m_kra_sym, (j * (w + lightx) - lightx) / 10, (l * (h + lighty) - lighty) / 10 - (pkt2mm * podpisH));
+            s.Format(_T("%ix%i na %s (%.1fx%.1f)"), j, l, (LPCTSTR)m_kra_sym, (j * (w + lightx) - lightx) / 10, (l * (h + lighty) - lighty) / 10 - (pkt2mm * podpisH));
             bFound = TRUE;
         } else
             s.Format(_T("%ix# na %ix#"), j, i);

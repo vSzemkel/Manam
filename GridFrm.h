@@ -46,7 +46,6 @@ protected:
     // Form Data
 private:
     BOOL isLandscape;
-    BYTE m_PagesCount;
     BOOL m_bEventLockout;
     BOOL m_bInitialized;
     CAddListCtrl lcPubList;

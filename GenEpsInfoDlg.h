@@ -29,7 +29,7 @@ public:
     static CGenEpsInfoDlg* GetGenEpsInfoDlg(BOOL bIsGen);			// inicjalizacja okna dialogowego
     static void ReleaseGenEpsInfoDlg(CGenEpsInfoDlg *pDlg);         // zwolnienie okna
     static int GetCpuCnt();											// ile mamy procesorów 
-    static INT_PTR CALLBACK CGenEpsInfoDlg::DialogProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
+    static INT_PTR CALLBACK DialogProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 
     BOOL cancelGenEPS;				// flaga przerwania przetwarzania
     BOOL m_bIsGen;					// flaga okreœlaj¹ca, czy dialog jest w trybie generowania/sprawdzania 

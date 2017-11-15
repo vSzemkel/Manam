@@ -21,13 +21,12 @@ CDrawObj::CDrawObj(const CRect& position) noexcept : CDrawObj::CDrawObj()
 
 void CDrawObj::DrawNapis(CDC *pDC, LPCTSTR napis, int cnt, LPRECT r, UINT format, int bkMode)
 {
-    int saved = pDC->SetBkMode(bkMode);
-    if (vscale == 1) {
+    auto saved = pDC->SetBkMode(bkMode);
+    if (vscale == 1) 
         pDC->DrawText(napis, cnt, r, format);
-        return;
-    } else {
-        CSize& initExt = pDC->SetWindowExt(CSize(100, -100));
+    else {
         CRect lRect = r;
+        const CSize& initExt = pDC->SetWindowExt(CSize(100, -100));
         lRect.top /= vscale; lRect.bottom /= vscale; lRect.left /= vscale; lRect.right /= vscale;
         pDC->DrawText(napis, cnt, lRect, format);
         pDC->SetWindowExt(initExt);
@@ -448,7 +447,7 @@ double CDrawObj::mody(double y)
 }
 
 #ifdef _DEBUG
-void CDrawObj::AssertValid()
+void CDrawObj::AssertValid() const
 {
     ASSERT(m_position.left <= m_position.right);
     ASSERT(m_position.bottom <= m_position.top);

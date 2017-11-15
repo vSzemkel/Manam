@@ -51,7 +51,7 @@ class CDrawDoc final : public COleDocument
     virtual void OnCloseDocument() override;
     virtual HMENU GetDefaultMenu() override;        // dla grzbietu zmien menu
     virtual void Serialize(CArchive& ar) override;  // overridden for document i/o
-    virtual BOOL CDrawDoc::SaveModified() override; // plik do pliku , baza do bazy
+    virtual BOOL SaveModified() override;           // plik do pliku , baza do bazy
 
     template<class T> T* GetPanelView() const noexcept;
     const CSize& GetSize() const noexcept { return m_size; }
@@ -143,8 +143,8 @@ class CDrawDoc final : public COleDocument
     const CRozm* GetCRozm(PGENEPSARG pArg, int s_x, int s_y, int typ_xx = 0);
 
 #ifdef _DEBUG
-    virtual void AssertValid() const;
-    virtual void Dump(CDumpContext& dc) const;
+    virtual void AssertValid() const override;
+    virtual void Dump(CDumpContext& dc) const override;
 #endif
 
     int m_mak_xx;				// ident makiety

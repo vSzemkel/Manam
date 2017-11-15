@@ -38,7 +38,7 @@ void CManSock::OnReceive(int nErrorCode)
     TCHAR *msg = message;
 
     int charLen = Receive(msg, MSG_LEN) / sizeof(TCHAR);
-    if (msg[0] == 0xfffe) { // java string
+    if (static_cast<WORD>(msg[0]) == 0xfffe) { // java string
         charLen -= 1;
         msg += 1;
         for (int i = 0; i < charLen; ++i)

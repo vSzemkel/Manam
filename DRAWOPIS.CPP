@@ -40,9 +40,9 @@ void CDrawOpis::DrawInternal(CDC *pDC, CRect& rect) const
     pDC->RoundRect(rect, static_cast<int>(m_Scale) > 5 || pDC->IsPrinting() ? printrogi : drawrogi);
 
     if (m_Scale != 1) {
-        auto scale = m_Scale / vscale;
+        const auto scale = m_Scale / vscale;
+        const auto& initExt = pDC->GetWindowExt();
         auto edge = reinterpret_cast<LONG*>(&rect);
-        auto& initExt = pDC->GetWindowExt();
         pDC->SetWindowExt((int)(initExt.cx * scale), (int)(initExt.cy * scale));
         for (size_t i = 0; i < 4; ++i, edge++)
             *edge = (LONG)(*edge * scale);
