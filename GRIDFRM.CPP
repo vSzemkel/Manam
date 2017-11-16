@@ -184,7 +184,7 @@ void CGridFrm::Select(CDrawAdd *pObj, int i)
 
 int CGridFrm::FindRow(DWORD_PTR key) const
 {
-    int rc = lcPubList.GetItemCount();
+    const int rc = lcPubList.GetItemCount();
     for (int n = 0; n < rc; n++)
         if (lcPubList.GetItemData(n) == key)
             return n;

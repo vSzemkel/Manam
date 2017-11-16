@@ -95,7 +95,7 @@ void CDrawObj::DrawTracker(CDC *pDC, TrackerState state) const
         case selected:
         case active:
         {
-            int nHandleCount = GetHandleCount();
+            const int nHandleCount = GetHandleCount();
             for (int nHandle = 1; nHandle <= nHandleCount; ++nHandle) {
                 const int scale = 18;
                 CPoint handle = GetHandle(nHandle);
@@ -139,7 +139,7 @@ int CDrawObj::HitTest(const CPoint& point, CDrawView *pView, BOOL bSelected) con
     ASSERT(pView != nullptr);
 
     if (bSelected) {
-        int nHandleCount = GetHandleCount();
+        const int nHandleCount = GetHandleCount();
         for (int nHandle = 1; nHandle <= nHandleCount; ++nHandle) {
             // GetHandleRect returns in logical coords
             CRect rc = GetHandleRect(nHandle, pView);

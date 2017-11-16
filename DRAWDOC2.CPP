@@ -221,8 +221,8 @@ void CDrawDoc::ZmianaSpotow(int n)
     int m = DBReadSpot(n);
     if (m_spot_makiety.size() == m) return;
     for (const auto& p : m_pages) {
-        int e1 = p->kolor & c_spot;
-        int e2 = p->kolor >> 3;
+        const int e1 = p->kolor & c_spot;
+        const int e2 = p->kolor >> 3;
         if ((e1 == c_spot) && (e2 >= m))
             p->ChangeKolor(c_brak);
     }
@@ -493,7 +493,7 @@ void CDrawDoc::MakietujStrone(CDrawPage *pPage)
     }), pPage->m_adds.end());
 
     // posortuj liste pod wzgledem kryteriow rozmieszczenia ogloszenia - {skomplikowane == poczatek listy}
-    int vAddsCount = (int)vAdds.GetSize();
+    const int vAddsCount = (int)vAdds.GetSize();
     for (i = 0; i < vAddsCount - 1; ++i) {
         k = -1;
         auto viAdd = (CDrawAdd*)vAdds.GetAt(i);
@@ -628,16 +628,16 @@ void CDrawDoc::AsideAdds()
 
 CPoint CDrawDoc::GetAsideAddPos(BOOL opening) const
 {
-    int addsAsideCnt = opening ? 1 : 1 + (int)std::count_if(cbegin(m_objects), cend(m_objects), [](CDrawObj *pObj) { auto a = dynamic_cast<CDrawAdd*>(pObj); return a && a->posx == 0; });
-    int marginPageMinX = (int)(pmodulx*(1 + iPagesInRow / 2 + (pszpalt_x*iPagesInRow)));
-    int marginPageMaxX = (int)(nearbyint((float)(m_size.cx * vscale * 100) / (theApp.m_initZoom * pmodulx)) - (pszpalt_x + 2)) * pmodulx;
+    const int addsAsideCnt = opening ? 1 : 1 + (int)std::count_if(cbegin(m_objects), cend(m_objects), [](CDrawObj *pObj) { auto a = dynamic_cast<CDrawAdd*>(pObj); return a && a->posx == 0; });
+    const int marginPageMinX = (int)(pmodulx*(1 + iPagesInRow / 2 + (pszpalt_x*iPagesInRow)));
+    const int marginPageMaxX = (int)(nearbyint((float)(m_size.cx * vscale * 100) / (theApp.m_initZoom * pmodulx)) - (pszpalt_x + 2)) * pmodulx;
     return CPoint(max(marginPageMinX, marginPageMaxX), -pmoduly * addsAsideCnt);
 }
 
 void CDrawDoc::ArrangeQue()
 {
     CPoint vPoint(pmodulx, -pmoduly);
-    int iPageWidth = (int)(pszpalt_x * CDrawObj::modx(pszpalt_x));
+    const int iPageWidth = (int)(pszpalt_x * CDrawObj::modx(pszpalt_x));
 
     for (const auto& a : m_addsque) {
         a->m_position.SetRect(vPoint.x, vPoint.y, vPoint.x + (int)(a->sizex * CDrawObj::modx(a->szpalt_x)), (int)(vPoint.y - a->sizey * CDrawObj::mody(a->szpalt_y)));

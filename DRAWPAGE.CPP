@@ -232,7 +232,7 @@ void CDrawPage::DrawReserved(CDC *pDC)
     const CFlag& vspace = GetReservedFlag();
     if (vspace.IsSet()) {
         pDC->SelectStockObject((pagina_type == c_rzym ? LTGRAY_BRUSH : GRAY_BRUSH));
-        auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
+        const auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
         for (size_t module = 0; module < ilemod; ++module)
             if (vspace.GetBit(module) > 0)
                 pDC->Rectangle(GetNormalizedModuleRect(module));
@@ -245,7 +245,7 @@ void CDrawPage::DrawGrid(CDC *pDC)
     if (((CMainFrame*)AfxGetMainWnd())->show_spacelocks && (space_red || space_locked)) {
         auto pOldBrush = reinterpret_cast<CBrush*>(pDC->SelectStockObject(WHITE_BRUSH));
         auto pOldPen = reinterpret_cast<CPen*>(pDC->SelectStockObject(NULL_PEN));
-        auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
+        const auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
         for (size_t module = 0; module < ilemod; ++module) {
             CRect& rect = GetNormalizedModuleRect(module);
             if (space_locked.GetBit(module) > 0) {
@@ -793,10 +793,10 @@ void CDrawPage::SetBaseKrata(int s_x, int s_y, BOOL refresh)
             auto& kn = m_kraty_niebazowe.back();
             CFlag& lastred = kn.m_space_red;
             CFlag& lastlocked = kn.m_space_locked;
-            auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
+            const auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
             for (size_t module = 0; module < ilemod; ++module) {
-                bool isRed = lastred.GetBit(module) > 0;
-                bool isLock = lastlocked.GetBit(module) > 0;
+                const bool isRed = lastred.GetBit(module) > 0;
+                const bool isLock = lastlocked.GetBit(module) > 0;
                 if (isRed || isLock) {
                     CRect intsec, dst;
                     const CRect& src = GetNormalizedModuleRect(module);
@@ -840,7 +840,7 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
             SetBaseKrata(kn.m_szpalt_x, kn.m_szpalt_y, FALSE);
             CFlag& space_mark2 = mode == SpaceMode::spacelock ? space_locked : space_red;
 
-            auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
+            const auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
             for (size_t m = 0; m < ilemod; ++m) {
                 const CRect& dst = GetNormalizedModuleRect(m);
                 if (intsec.IntersectRect(src, dst))
@@ -1026,7 +1026,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
 
     CString dest_name;
     BOOL isDrobEPS = name.Find(_T("DR")) > -1;
-    BOOL fileWarn = GetDestName(pArg, num, dest_name);
+    const BOOL fileWarn = GetDestName(pArg, num, dest_name);
     CString sUid;
     sUid.Format(_T(" guid: %s"), GenerateGUIDString());
     const char *tofind[] = { "%!PS-Adobe-3.1 EPSF-3.0", "%%BoundingBox:", "%%Creator:", "%%Title:", "%%CreationDate:", "%%Copyright:", "%%DocumentProcessColors:", "MIEJSCE_NA_EPS" };
@@ -1203,7 +1203,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
                     for (j = 0; j <= i; j++)
                         if (dervSpace.GetBit(j) > 0) break;
                     externAdd.sizey = szpalt_y - j / szpalt_x - externAdd.posy + 1;
-                    int endy = externAdd.posy + externAdd.sizey - 1;
+                    const int endy = externAdd.posy + externAdd.sizey - 1;
                     for (i = 1; i <= szpalt_x; i++)
                         for (j = externAdd.posy; j <= endy; j++)
                             if (dervSpace.GetBit(szpalt_x*(szpalt_y - j + 1) - i) > 0) goto foundposx;
@@ -1343,10 +1343,10 @@ void CDrawPage::Preview(PGENEPSARG pArg, CFile *dest, int bx1, int by1, int bx2,
     header[3] = (DWORD)0;
     header[4] = (DWORD)0;
     header[5] = (DWORD)dest->GetLength(); // pozycja tifa
-    int x = (int)ceil(bx1 / pkt_10m - 0.5);
-    int y = (int)ceil(by1 / pkt_10m - 0.5);
-    int dx = (int)ceil((bx2 - bx1) / pkt_10m - 0.5);
-    int dy = 2 + (int)ceil((by2 - by1 - podpisH) / pkt_10m - 0.5);
+    const int x = (int)ceil(bx1 / pkt_10m - 0.5);
+    const int y = (int)ceil(by1 / pkt_10m - 0.5);
+    const int dx = (int)ceil((bx2 - bx1) / pkt_10m - 0.5);
+    const int dy = 2 + (int)ceil((by2 - by1 - podpisH) / pkt_10m - 0.5);
     div_t szer_t = div(dx, 8);
     int szer = szer_t.quot + min(szer_t.rem, 1);
     int p_size = (int)(dy*szer * sizeof(BYTE));

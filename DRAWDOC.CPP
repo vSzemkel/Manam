@@ -148,7 +148,7 @@ BOOL CDrawDoc::OnNewDocument()
     if (!COleDocument::OnNewDocument()) return FALSE;
 
     CString bf;
-    int n = theApp.GetProfileInt(_T("General"), _T("IloscKolumn"), 44);
+    const int n = theApp.GetProfileInt(_T("General"), _T("IloscKolumn"), 44);
     bf.Format(_T("%i"), n < 4 ? 44 : (n & 0xFC));
 
     if (!theApp.isRDBMS) return Add4Pages();
@@ -1322,7 +1322,7 @@ void CDrawDoc::OnFileInfo()
         }
 
         // propagacja deadline'u
-        auto pc = m_pages.size();
+        const auto pc = m_pages.size();
         if (pc > 1 && (dlg.m_set_deadline || dlg.m_set_kraty || dlg.m_set_papier)) {
             CDrawPage *pPage = m_pages[1];
             CTime& dt = pPage->m_deadline;
@@ -1393,10 +1393,10 @@ void CDrawDoc::PrintInfo(CDC *pDC, int max_n, int wspol_na_str)  //wspol_na_str 
     m_addfont.GetLogFont(&lf);
     lf.lfHeight = -8;
     lf.lfOrientation = lf.lfEscapement = 900;
-    BOOL vertOK = m_vertfont.CreateFontIndirect(&lf);
+    const BOOL vertOK = m_vertfont.CreateFontIndirect(&lf);
 
     CRect rect;
-    int iHorizScale = iPagesInRow * pmodulx;
+    const int iHorizScale = iPagesInRow * pmodulx;
     for (int i = 1; i <= max_n; ++i) {
         rect.SetRect(pmodulx, (i - 1)*(wspol_na_str * 40 + 2)*(-pmoduly), (int)(5.5*iHorizScale), ((i - 1)*(wspol_na_str * 40 + 2) + 1)*(-pmoduly));
         pDC->FillRect(rect, (CBrush*)pDC->SelectStockObject(WHITE_BRUSH));

@@ -427,7 +427,7 @@ UINT CMainFrame::GetKolor(int ile_spotow) const // kolejnoœæ na liscie: spoty, b
 
 CBrush* CMainFrame::GetSpotBrush(int i) const
 {
-    return i >= (int)Spot_Brush.size() || i < 0 ? reinterpret_cast<CBrush*>(::GetStockObject(BLACK_BRUSH)) : Spot_Brush[i];
+    return i >= (int)Spot_Brush.size() || i < 0 ? static_cast<CBrush*>(::GetStockObject(BLACK_BRUSH)) : Spot_Brush[i];
 }
 
 int CMainFrame::GetIdxfromSpotID(UINT spot_id) const

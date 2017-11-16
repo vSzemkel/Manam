@@ -89,11 +89,11 @@ struct OdpHelper final
 
         switch (p.m_odptype) {
             case CManODPNET::DbTypeInt32:
-                return *reinterpret_cast<int*>(p.m_value);
+                return *static_cast<int*>(p.m_value);
             case CManODPNET::DbTypeDouble:
-                return *reinterpret_cast<double*>(p.m_value);
+                return *static_cast<double*>(p.m_value);
             case CManODPNET::DbTypeVarchar2:
-                return gcnew String(reinterpret_cast<CString*>(p.m_value)->GetBuffer());
+                return gcnew String(static_cast<CString*>(p.m_value)->GetBuffer());
             default:
                 return System::DBNull::Value;
         }
@@ -103,12 +103,12 @@ struct OdpHelper final
     {
         switch (p->m_odptype) {
             case CManODPNET::DbTypeInt32:
-                *reinterpret_cast<int*>(p->m_value) = op->Value->GetType() == OracleDecimal::typeid
+                *static_cast<int*>(p->m_value) = op->Value->GetType() == OracleDecimal::typeid
                     ? static_cast<int>(IntegerValue(op))
                     : Convert::ToInt32(op->Value);
                 break;
             case CManODPNET::DbTypeDouble:
-                *reinterpret_cast<double*>(p->m_value) = op->Value->GetType() == OracleDecimal::typeid
+                *static_cast<double*>(p->m_value) = op->Value->GetType() == OracleDecimal::typeid
                     ? static_cast<OracleDecimal^>(op->Value)->ToDouble()
                     : static_cast<double>(IntegerValue(op));
                 break;
@@ -116,7 +116,7 @@ struct OdpHelper final
                 String^ ret = Convert::ToString(op->Value);
                 if (!String::CompareOrdinal(ret, DbNull))
                     ret = String::Empty;
-                String2CString(ret, *reinterpret_cast<CString*>(p->m_value));
+                String2CString(ret, *static_cast<CString*>(p->m_value));
                 break;
         }
     }
@@ -128,7 +128,7 @@ struct OdpHelper final
             switch (dir) {
                 case ParameterDirection::Output:
                     if (p.m_odptype == CManODPNET::DbTypeVarchar2) {
-                        cmd->Parameters->Add(String::Empty, static_cast<OracleDbType>(p.m_odptype), reinterpret_cast<CString*>(p.m_value)->GetLength(), nullptr, dir)->Value = PrepareOdpParam(p);
+                        cmd->Parameters->Add(String::Empty, static_cast<OracleDbType>(p.m_odptype), static_cast<CString*>(p.m_value)->GetLength(), nullptr, dir)->Value = PrepareOdpParam(p);
                         break;
                     } /* else do not break */
                 case ParameterDirection::Input:
@@ -238,7 +238,7 @@ BOOL CDrawDocDbReader::OpenManamDoc()
     }
 
     m_doc->m_pages.resize(m_objetosc);
-    auto ro = static_cast<int8_t>(OdpHelper::IntegerValue(par[3]));
+    const auto ro = static_cast<int8_t>(OdpHelper::IntegerValue(par[3]));
     m_doc->isRO = ((m_doc->isGRB && ro == -1) ? 0 : ro);
     if (!m_doc->isRO && !String::IsNullOrEmpty(openStatus)) {
         if (DialogResult::Cancel == MessageBox::Show(nullptr, openStatus + L".\nCzy chcesz otworzyæ j¹ w trybie tylko do odczytu?", L"Manam", MessageBoxButtons::OKCancel, MessageBoxIcon::Information)) {

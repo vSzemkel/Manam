@@ -29,9 +29,8 @@ CAtexKrat::~CAtexKrat()
 
 BOOL CAtexKrat::CompX(int *sizex, int *s_x) const
 {
-    float tmpsizex;
     for (*s_x = 1; *s_x < DIM_LIMIT; (*s_x)++) {
-        tmpsizex = (float)xcol / szpalt_x * (float)*s_x;
+        const auto tmpsizex = (float)xcol / szpalt_x * (float)*s_x;
         *sizex = (int)nearbyint(tmpsizex);
         if (fabs(tmpsizex - *sizex) < *sizex*TOLERANCE)
             return TRUE;
@@ -41,9 +40,8 @@ BOOL CAtexKrat::CompX(int *sizex, int *s_x) const
 
 BOOL CAtexKrat::CompY(int *sizey, int *s_y) const
 {
-    float tmpsizey;
     for (*s_y = 1; *s_y < DIM_LIMIT; (*s_y)++) {
-        tmpsizey = (float)ymm / (float)dy * (float)*s_y;
+        const auto tmpsizey = (float)ymm / (float)dy * (float)*s_y;
         *sizey = (int)nearbyint(tmpsizey);
         if (fabs(tmpsizey - *sizey) < *sizey * TOLERANCE)
             return TRUE;
@@ -146,7 +144,7 @@ BOOL CKratCalc::OnInitDialog()
 void CKratCalc::OnDeltaposSpin(UINT spinCtrlId, NMHDR *pNMHDR, LRESULT *pResult)
 {
     CString sn;
-    auto idc_edit = spinCtrlId == IDC_SPINX ? IDC_SIZEX : IDC_SIZEY;
+    const auto idc_edit = spinCtrlId == IDC_SPINX ? IDC_SIZEX : IDC_SIZEY;
     GetDlgItem(idc_edit)->GetWindowText(sn);
     sn.Format(_T("%i"), _ttoi(sn) - reinterpret_cast<LPNMUPDOWN>(pNMHDR)->iDelta);
     if (sn[0] != _T('-')) GetDlgItem(idc_edit)->SetWindowText(sn);
@@ -173,10 +171,10 @@ void CKratCalc::Calculate()
     CString s;
     UpdateData(TRUE);
     BOOL bFound = FALSE;
-    double addx = _ttof(m_sizex) * 10;
-    double addy = _ttof(m_sizey) * 10;
-    double lightx = m_lightx;
-    double lighty = m_lighty;
+    const double lightx = m_lightx;
+    const double lighty = m_lighty;
+    const double addx = _ttof(m_sizex) * 10;
+    const double addy = _ttof(m_sizey) * 10;
 
     if (stronax <= 0 || stronay <= 0 || addx <= 0 || addy <= 0) {
         m_wynik.SetWindowText(_T("Z³e dane"));
@@ -184,8 +182,8 @@ void CKratCalc::Calculate()
     }
 
     int i = 0, j = 0, k = 0, l = 0;
-    double w, h;				//rozmiar modu³u
-    double modw = 0, modh = 0;	//rozmiar ogloszenia pasuj¹cego do kraty
+    double w, h;				// rozmiar modu³u
+    double modw = 0, modh = 0;	// rozmiar ogloszenia pasuj¹cego do kraty
 
     for (i = 1; i < CAtexKrat::DIM_LIMIT; ++i) {
         w = (stronax - (i - 1) * lightx) / i;

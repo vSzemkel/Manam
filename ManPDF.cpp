@@ -243,7 +243,7 @@ void CManPDF::EmbedSection(const char *str, BOOL innerOnly)
         p = pdftok(nullptr);
         a.push_back(p);
         if (!strcmp(p, "R")) {
-            unsigned int srcObjNr = atoi(a[a.size() - 3]);
+            const unsigned int srcObjNr = atoi(a[a.size() - 3]);
             auto it = renumMap.find(srcObjNr);
             if (it == renumMap.end()) {
                 renumMap[srcObjNr] = nextObjNr;

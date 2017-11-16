@@ -121,9 +121,9 @@ void CSpacerDlg::DoDataExchange(CDataExchange *pDX)
     DDX_Text(pDX, IDC_SPACER, m_spacer);
     DDX_Control(pDX, IDC_MUTACJA, m_ollist);
 
-    int base = queDeal ? 0 : 1;
-    int ax = m_szpalt_x - m_sizex + 1;
-    int ay = m_szpalt_y - m_sizey + 1;
+    const int base = queDeal ? 0 : 1;
+    const int ax = m_szpalt_x - m_sizex + 1;
+    const int ay = m_szpalt_y - m_sizey + 1;
     DDV_MinMaxInt(pDX, m_posx, base, ax);
     DDV_MinMaxInt(pDX, m_posy, base, ay);
     //}}AFX_DATA_MAP

@@ -1365,7 +1365,7 @@ void CDrzDlg::SelectDrzewo(const CTime& t)
 BOOL CDrzDlg::OnInitDialog()
 {
     if (!CDialog::OnInitDialog()) return FALSE;
-    int maxObj = theApp.GetProfileInt(_T("Settings"), _T("MaxObj"), 256);
+    const int maxObj = theApp.GetProfileInt(_T("Settings"), _T("MaxObj"), 256);
     CString fstr;
     m_kol_combo.AddString(_T("2"));
     for (int i = 4; i <= maxObj; i += 4) {
@@ -1559,7 +1559,7 @@ void CDBOpenDlg::OnOK()
     if (m_mutacja.IsEmpty()) m_mutacja = _T(" ");
     if (!IsDlgButtonChecked(IDC_LIB))
         m_dt = m_dtime.Format(c_ctimeData);
-    BOOL ignoreSel = m_date_combo.GetSelCount() == 0;
+    const BOOL ignoreSel = m_date_combo.GetSelCount() == 0;
     for (int i = 0; i < m_date_combo.GetCount(); i++)
         if (ignoreSel || m_date_combo.GetSel(i)) {
             m_date_combo.GetText(i, s);
@@ -1567,7 +1567,7 @@ void CDBOpenDlg::OnOK()
             s.SetAt(5, _T('-'));
             m_arrDaty.emplace_back(m_tytul + _T(" ") + m_mutacja + _T("_") + s);
             if (IsDlgButtonChecked(IDC_MEMSTAT)) {
-                BOOL ignoreSelMut = m_mutacja_combo.GetSelCount() == 0;
+                const BOOL ignoreSelMut = m_mutacja_combo.GetSelCount() == 0;
                 for (int j = 0; j < m_mutacja_combo.GetCount(); j++)
                     if (ignoreSelMut || m_mutacja_combo.GetSel(j)) {
                         m_mutacja_combo.GetText(j, m);
@@ -1577,7 +1577,7 @@ void CDBOpenDlg::OnOK()
         }
 
     if (m_date_combo.GetCount() == 0 && IsDlgButtonChecked(IDC_MEMSTAT)) {
-        BOOL ignoreSelMut = m_mutacja_combo.GetSelCount() == 0;
+        const BOOL ignoreSelMut = m_mutacja_combo.GetSelCount() == 0;
         m_dt.SetAt(2, _T('-'));
         m_dt.SetAt(5, _T('-'));
         for (int j = 0; j < m_mutacja_combo.GetCount(); j++)

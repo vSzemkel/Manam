@@ -231,7 +231,7 @@ void CDrawAdd::Draw(CDC *pDC)
         int retCkPageLocation = 0;
         if (m_pDocument->swCZV == 0 && drawErrorBoxes)
             retCkPageLocation = CkPageLocation(fizpage);
-        bool simpleCase = (m_pDocument->swCZV == 1 && flags.zagroz) || (m_pDocument->swCZV == 2 && flags.showeps);
+        const bool simpleCase = (m_pDocument->swCZV == 1 && flags.zagroz) || (m_pDocument->swCZV == 2 && flags.showeps);
         if (simpleCase || retCkPageLocation > 0) {
             pDC->MoveTo(rect.left, rect.top);
             pDC->LineTo(rect.right, rect.bottom);
@@ -708,10 +708,10 @@ void CDrawAdd::SetPosition(CRect *m_pos, CDrawPage *pPage)
 
     if (pPage != nullptr) {
         px = (int)nearbyint((m_pos->left - pPage->m_position.left) / modulx) + 1;
-        auto cx = szpalt_x + 1 - sx;
+        const auto cx = szpalt_x + 1 - sx;
         if (cx < px) px = cx;
         py = szpalt_y - sy - (int)nearbyint((m_pos->bottom - pPage->m_position.bottom) / moduly) + 1;
-        auto cy = szpalt_y + 1 - sy;
+        const auto cy = szpalt_y + 1 - sy;
         if (cy < py) py = cy;
         ok = pPage->FindSpace(this, &px, &py, sx, sy);
     }
@@ -793,7 +793,7 @@ int CDrawAdd::FindRing(CPoint p0, BOOL bOuterRing)
 {
     enum Kierunek : uint8_t { E, S, W, N }; // okresla kierunek ostatnio znalezionego fragmentu obwodnicy
     Kierunek eKierunek = E;
-    int iInitVertexCnt = precelWertexCnt;
+    const int iInitVertexCnt = precelWertexCnt;
     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p0.x*modulx), static_cast<int>(-p0.y*moduly));
     CPoint p(p0.x + 1, p0.y);
     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
@@ -908,10 +908,9 @@ void CDrawAdd::InitPrecel(const CString& sPrecelFlag)
         }
 
     // wyrownanie do kraty	
-    int iRightBound = static_cast<int>(sizex * modulx);
+    const int iRightBound = static_cast<int>(sizex * modulx);
     for (int i = 0; i < precelWertexCnt; ++i) {
         if (aPrecelWertex[i].x == iRightBound) aPrecelWertex[i].x -= 11;
-        //if (aPrecelWertex[i].y == sizey*moduly) aPrecelWertex[i].y+=3;
     }
     // dosun mape precla do prawej krawedzi strony
     space.Reverse(szpalt_x * sizey);
@@ -1172,7 +1171,7 @@ int CDrawAdd::CkPageLocation(int vFizPage)
     }
 
     //jest na dobrej stronie, ale czy w dobrym miejscu?
-    int hashpos = logpage.ReverseFind(_T('#'));
+    const int hashpos = logpage.ReverseFind(_T('#'));
     if (hashpos >= 0) {
         int j, k = 0;
         TCHAR tail[20];
@@ -1284,7 +1283,7 @@ BOOL CDrawAdd::SetPagePosition(CRect *pRect, CDrawPage *vPage) //vu
     dirty = TRUE;
     BOOL mozna = FALSE;
     TCHAR tail[20];
-    int hashpos = logpage.ReverseFind('#');
+    const int hashpos = logpage.ReverseFind('#');
     for (j = hashpos + 1; j < logpage.GetLength(); j++)
         if (isupper((int)logpage[j])) tail[k++] = logpage[j];
     tail[k] = '\0';
@@ -1497,7 +1496,7 @@ BOOL CDrawAdd::CheckSrcFile(PGENEPSARG pArg)
     int iSearchTypXX = typ_xx;
 dajWymiarKraty:
     // szukaj wymiarów w cachu
-    auto pR = std::find_if(m_pDocument->m_Rozm.cbegin(), m_pDocument->m_Rozm.cend(), [=](const CRozm& r) {
+    const auto pR = std::find_if(m_pDocument->m_Rozm.cbegin(), m_pDocument->m_Rozm.cend(), [=](const CRozm& r) {
         return (!iSearchTypXX && szpalt_x == r.szpalt_x && szpalt_y == r.szpalt_y) || (iSearchTypXX && iSearchTypXX == r.typ_xx);
     });
 
@@ -1648,7 +1647,7 @@ BOOL CDrawAdd::LocatePreview(CFile& fEps, unsigned long *lOffset, unsigned long 
 CString CDrawAdd::EpsName(int format, BOOL copyOldEPS, BOOL bModifTest)
 {
     static const TCHAR* aExt[] = { _T(".eps"), _T(".ps"), _T(".pdf") };
-    bool czy_zajawka = wersja.Find(_T("z")) >= 0;
+    const bool czy_zajawka = wersja.Find(_T("z")) >= 0;
     if (nreps == -1 && !czy_zajawka) return CString(_T("brak nr atexa"));
     theApp.SetRegistryBase(_T("GenEPS"));
 
@@ -1723,7 +1722,7 @@ CString CDrawAdd::EpsName(int format, BOOL copyOldEPS, BOOL bModifTest)
     } else {
         CString zera;
         int poIle = theApp.GetInt(_T("Hashing"), 2);
-        int numlen = num.GetLength();
+        const int numlen = num.GetLength();
         if (numlen == 7) poIle--;
         zera = CString('0', max(0, numlen - poIle));
 
@@ -1767,12 +1766,12 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
     CDrawAdd *pLeftAdd = this;
     unsigned long lOffset = 0, lSize = 0;
     auto pPage = m_pDocument->GetPage(fizpage);
-    bool bLewaStrona = (m_pDocument->GetIPage(pPage) & 1) == 0;
-    auto pRozAdd = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, spad_flag ? 0 : typ_xx);	// gdy zaznaczono spad, to montuj do kraty
-    auto pRozKraty = typ_xx ? m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, 0) : pRozAdd;	// pobierz rozmiar kraty, jeœli dotychczas nie jest znany
+    const bool bLewaStrona = (m_pDocument->GetIPage(pPage) & 1) == 0;
+    const auto pRozAdd = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, spad_flag ? 0 : typ_xx);	// gdy zaznaczono spad, to montuj do kraty
+    const auto pRozKraty = typ_xx ? m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, 0) : pRozAdd;	// pobierz rozmiar kraty, jeœli dotychczas nie jest znany
 
     theApp.SetRegistryBase(_T("GenEPS"));
-    BOOL copyEps = theApp.GetInt(_T("CopyOldEPS"), 0);
+    const BOOL copyEps = theApp.GetInt(_T("CopyOldEPS"), 0);
     pArg->pDlg->OglInfo(pArg->iChannelId, CString(_T("kopiowanie powtorki")));
     if (pPage->m_typ_pary == 2 && !bLewaStrona) { // prawa strona rozkladowki
         CDrawPage *pPrevPage = fizpage > 15 ? m_pDocument->GetPage(fizpage - 8) : m_pDocument->m_pages[0];
@@ -1955,8 +1954,8 @@ BOOL CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile *dest)
     auto pRoz = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, typ_xx);
 
     float scaly, x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
-    float x = (float)((posx - 1)*(pRoz->w + pRoz->sw)*mm2pkt);
-    float y = (float)((szpalt_y + 1 - posy - sizey)*(pRoz->h + pRoz->sh)*mm2pkt);
+    const float x = (float)((posx - 1)*(pRoz->w + pRoz->sw)*mm2pkt);
+    const float y = (float)((szpalt_y + 1 - posy - sizey)*(pRoz->h + pRoz->sh)*mm2pkt);
 
     if (theApp.isOpiMode)
         nazwa.Format(_T("%s%s%03i.eps"), m_pDocument->gazeta.Left(3), m_pDocument->gazeta.Mid(4, 2), txtposx);

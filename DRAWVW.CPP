@@ -998,7 +998,7 @@ LPDEVMODE CDrawView::SetLandscape()
 BOOL CDrawView::OnPreparePrinting(CPrintInfo *pInfo)
 {
     // default preparation
-    int format = theApp.colsPerPage == 1 ? A4 : A3;
+    const int format = theApp.colsPerPage == 1 ? A4 : A3;
     switch (m_pagesPrinted) {
         case PRINT_PAGE:
             pInfo->SetMaxPage((UINT)GetDocument()->m_pages.size());
@@ -1207,7 +1207,7 @@ void CDrawView::OnViewZoomN(UINT nID)
 void CDrawView::OnUpdateViewZoomN(CCmdUI *pCmdUI)
 {
     if (pCmdUI->m_nID != ID_VIEW_ZOOMCUSTOM) {
-        int iZoomFactor = rgiZoomFactor[pCmdUI->m_nID - ID_VIEW_ZOOM100];
+        const int iZoomFactor = rgiZoomFactor[pCmdUI->m_nID - ID_VIEW_ZOOM100];
 
         if (iZoomFactor == m_zoomNum.cx && iZoomFactor == m_zoomNum.cy) {
             if (!OnDisableMenuInt(pCmdUI)) pCmdUI->SetCheck(TRUE);
@@ -1319,7 +1319,7 @@ void CDrawView::OnAsideAdds() { GetDocument()->OnAsideAdds(); }
 DWORD WINAPI CDrawView::DelegateGenEPS(LPVOID pArg)
 {
     BOOL bStatus = TRUE;
-    PGENEPSARG pA = reinterpret_cast<PGENEPSARG>(pArg);
+    PGENEPSARG pA = static_cast<PGENEPSARG>(pArg);
     CDrawPage *pPage = pA->pPage;
     if (pA->pDlg->m_bIsGen) {
         bStatus = pPage->GenEPS(pA);
@@ -1455,7 +1455,7 @@ subseterr:
     if (d.m_bPotokowe) {
         iCpuCnt = CGenEpsInfoDlg::GetCpuCnt();
         pDlg->SetChannelCount(iCpuCnt);
-        int iIleStron = wyborStron.GetBitCnt(1);
+        const int iIleStron = wyborStron.GetBitCnt(1);
         if (iIleStron < iCpuCnt)
             iCpuCnt = iIleStron;
 

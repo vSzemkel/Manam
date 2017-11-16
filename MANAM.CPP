@@ -69,7 +69,7 @@ CDrawApp NEAR theApp;
 
 CDrawApp::CDrawApp() : activeDoc(nullptr), m_InternetSession(APP_NAME)
 {
-    BYTE i, *p = reinterpret_cast<BYTE*>(::LockResource(::LoadResource(NULL, ::FindResource(NULL, (LPCTSTR)VS_VERSION_INFO, RT_VERSION))));
+    BYTE i, *p = static_cast<BYTE*>(::LockResource(::LoadResource(NULL, ::FindResource(NULL, (LPCTSTR)VS_VERSION_INFO, RT_VERSION))));
     for (i = 0, p += 36; *((WORD*)p) == 0 && i < 4; p += 2, i++); // 36 == 3*WORD + sizeof(L"VS_VERSION_INFO")
     auto ffi = reinterpret_cast<VS_FIXEDFILEINFO*>(p);
     m_app_version.Format(_T(" %u.%u.%u.%u"), (ffi->dwFileVersionMS & 0xffff0000) >> 16, (ffi->dwFileVersionMS & 0x0000ffff), (ffi->dwFileVersionLS & 0xffff0000) >> 16, (ffi->dwFileVersionLS & 0x0000ffff));
@@ -124,7 +124,7 @@ BOOL CDrawApp::InitInstance()
     pMainFrame->ShowWindow(m_nCmdShow);
 
     // wielki bufor tekstowy 
-    bigBuf = reinterpret_cast<TCHAR*>(::VirtualAlloc(NULL, bigSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
+    bigBuf = static_cast<TCHAR*>(::VirtualAlloc(NULL, bigSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
     if (!bigBuf) {
         AfxMessageBox(_T("Zbyt ma³o pamiêci do uruchomienia aplikacji"), MB_ICONSTOP);
         return FALSE;
@@ -320,7 +320,7 @@ void CDrawApp::InitKratyDrukarnie()
                 szpalt_yarr.push_back(sy);
             }
     } else {
-        int cc = GetProfileInt(_T("Kraty"), _T("Amount"), 0);
+        const int cc = GetProfileInt(_T("Kraty"), _T("Amount"), 0);
         for (int i = 1; i <= cc; i++) {
             bf.Format(_T("%i"), i);
             kraty.emplace_back(GetProfileString(_T("Kraty"), _T("Krata") + bf, _T("brak")));
@@ -339,7 +339,7 @@ void CDrawApp::InitKratyDrukarnie()
         wydawcy.clear();
         theManODPNET.FillArr(&wydawcy, "select to_char(xx,'fm000')||sym||' '||nazwa from space_reservation.wydawca where wydaje=1 order by sym", CManODPNET::emptyParm);
     } else {
-        int cc = GetProfileInt(_T("Drukarnie"), _T("Amount"), 0);
+        const int cc = GetProfileInt(_T("Drukarnie"), _T("Amount"), 0);
         for (int i = 1; i <= cc; ++i) {
             bf.Format(_T("%i"), i);
             drukarnie.emplace_back(GetProfileString(_T("Drukarnie"), _T("Drukarnia") + bf, _T("brak")));
