@@ -97,11 +97,9 @@ void CDrawAdd::Serialize(CArchive& ar)
         ar << (WORD)spad_flag;
         ar << (WORD)precelWertexCnt;
         if (precelWertexCnt) {
-            for (int i = 0; i < precelWertexCnt; ++i)
-                ar << this->aPrecelWertex[i];
             ar << (WORD)precelRingCnt;
-            for (int i = 0; i < precelRingCnt; ++i)
-                ar << aRingWertexCnt[i];
+            ar.Write(aPrecelWertex.get(), static_cast<UINT>(precelWertexCnt * sizeof(CPoint)));
+            ar.Write(aRingWertexCnt, static_cast<UINT>(precelRingCnt * sizeof(int)));
         }
         space.Serialize(ar);
     } else {
@@ -131,14 +129,11 @@ void CDrawAdd::Serialize(CArchive& ar)
         ar >> wTemp; spad_flag = (BYTE)wTemp;
         ar >> wTemp; precelWertexCnt = wTemp;
         if (precelWertexCnt) {
-            aPrecelWertex = std::make_unique<CPoint[]>(precelWertexCnt + 2); // na koñcu int[4]
-            aRingWertexCnt = reinterpret_cast<int*>(&aPrecelWertex[precelWertexCnt]);
-            for (int i = 0; i < precelWertexCnt; ++i)
-                ar >> aPrecelWertex[i];
             ar >> wTemp; precelRingCnt = wTemp;
             ASSERT(precelRingCnt <= ciMaxRings);
-            for (int i = 0; i < precelRingCnt; ++i)
-                ar >> aRingWertexCnt[i];
+            aPrecelWertex = std::make_unique<CPoint[]>(precelWertexCnt + 2); // na koñcu int[ciMaxRings]
+            aRingWertexCnt = reinterpret_cast<int*>(&aPrecelWertex[precelWertexCnt]);
+            ar.Read(aPrecelWertex.get(), precelWertexCnt * sizeof(CPoint) + precelRingCnt * sizeof(int));
         }
         space.Serialize(ar);
         SetSpaceAndPosition(wTemp0, wTemp1, wTemp2);
@@ -885,9 +880,9 @@ void CDrawAdd::InitPrecel(const CString& sPrecelFlag)
     m_precel_flag = sPrecelFlag;
     precelWertexCnt = precelRingCnt = 0;
     // zarzadanie pamiecia
-    size_t wertexCnt = (sizex + 1)*(sizey + 1);
-    aPrecelWertex = std::make_unique<CPoint[]>(wertexCnt + 2); // na koñcu int[4]
-    aRingWertexCnt = reinterpret_cast<int*>(&aPrecelWertex[wertexCnt]);
+    const size_t maxWertexCnt = (sizex + 1) * (sizey + 1);
+    aPrecelWertex = std::make_unique<CPoint[]>(maxWertexCnt + 2); // na koñcu int[4]
+    aRingWertexCnt = reinterpret_cast<int*>(&aPrecelWertex[maxWertexCnt]);
     // poczatkowo precel jest rowny jego otoczeniu i trzeba wylaczyc niektore moduly
     space = CFlag(sizex, sizey, szpalt_x, szpalt_y);
     // zera do ró¿nicy d³ugoœci + (zera do pe³nych 32 bitów + bity flagi)
@@ -1306,7 +1301,7 @@ BOOL CDrawAdd::SetPagePosition(CRect *pRect, CDrawPage *vPage) //vu
     return mozna;
 }
 
-BOOL CDrawAdd::SetStrictDescPos(TCHAR *description, CRect *pRect, CDrawPage *pPage) //vu  
+BOOL CDrawAdd::SetStrictDescPos(LPCTSTR description, CRect *pRect, CDrawPage *pPage) //vu  
 {
     /* vu : Jako description - opis polozenia ogloszenia na stronie podaje sie
             jeden ze skrotow in ('P','L','G','D','GL','GP','DL','DP')

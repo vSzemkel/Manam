@@ -116,8 +116,8 @@ private:
     static const int ciMaxRings; // maksymalna iloœæ obwodnic precla
     CString m_precel_flag;  // flaga precla, przechowywana po to, by niepotrzebnie nie liczyæ obwodnic po OnOpen
     std::unique_ptr<CPoint[]> aPrecelWertex;	// tablica wierzcho³ków precla
-    int *aRingWertexCnt;	// tablica iloœci wierzcho³ków na poszczególnych obwornicach
-    BOOL SetStrictDescPos(TCHAR *description, CRect *vRect, CDrawPage *pPage);
+    int *aRingWertexCnt;    // tablica iloœci wierzcho³ków na poszczególnych obwodnicach, w³asciciel pamiêci: aPrecelWertex
+    BOOL SetStrictDescPos(LPCTSTR description, CRect *vRect, CDrawPage *pPage);
     BOOL PtOnRing(CPoint p) const; // stwierdza, czy krawêdŸ (px,py)->(px+1,py) jest na dotychczas znalezionej obwodnicy precla
     int FindRing(CPoint p0, BOOL bOuterRing); // znajduje obwodnicê precla rozpoczynaj¹c¹ siê od p0 w kierunku E, zwraca liczbê wierzcho³ków
 };
