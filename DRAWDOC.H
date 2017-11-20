@@ -89,7 +89,7 @@ class CDrawDoc final : public COleDocument
 
     void SelectAdd(CDrawAdd *pObj, BOOL multiselect = FALSE) const;
 
-    int ComputePageOrderNr(CDrawPage *pObj) const;               // oblicza numer porz¹dkowy strony na podstawie po³o¿enia
+    int ComputePageOrderNr(const CRect& position) const;         // oblicza numer porz¹dkowy strony na podstawie po³o¿enia
     void SetPageRectFromOrd(CDrawPage *pObj, size_t iOrd) const; // pozycjonuje stronê na podstawie numeru porz¹dkowego
     void MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt);   // przesuwa ci¹g³y blok stron w obrêbie makiety
 

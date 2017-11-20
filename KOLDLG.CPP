@@ -637,10 +637,10 @@ void CAddDlg::OnEnChangeWersja()
     CString sWersja;
     CWnd *wWer = GetDlgItem(IDC_WERSJA);
     wWer->GetWindowText(sWersja);
-    BOOL bZajwMode = sWersja.Find(_T("z")) >= 0 && m_add_xx == -1;
-    m_zajawkacombo.ShowWindow(bZajwMode ? SW_SHOW : SW_HIDE);
-    GetDlgItem(IDC_NAZWA)->ShowWindow(bZajwMode ? SW_HIDE : SW_SHOW);
-    if (bZajwMode && m_zajawkacombo.GetCount() == 0) {
+    const auto isZajwMode = sWersja.Find(_T("z")) >= 0 && m_add_xx == -1;
+    m_zajawkacombo.ShowWindow(isZajwMode ? SW_SHOW : SW_HIDE);
+    GetDlgItem(IDC_NAZWA)->ShowWindow(isZajwMode ? SW_HIDE : SW_SHOW);
+    if (isZajwMode && m_zajawkacombo.GetCount() == 0) {
         GetDlgItem(IDC_KRATKA)->GetWindowText(sWersja);
         CManODPNETParms orapar {
             { CManODPNET::DbTypeInt32, &theApp.activeDoc->m_mak_xx },
@@ -2860,7 +2860,7 @@ void COstWer::OnOk()
                     theApp.activeDoc->Remove(pAdd);
                     to_del.push_back(pAdd);
                 } else {
-                    long adno = pAdd->nreps;
+                    const long adno = pAdd->nreps;
                     for (const auto& a : *m_aOldAdds)
                         if (a->nreps == adno) {
                             theApp.activeDoc->Remove(a);

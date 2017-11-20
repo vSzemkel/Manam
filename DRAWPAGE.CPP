@@ -791,8 +791,8 @@ void CDrawPage::SetBaseKrata(int s_x, int s_y, BOOL refresh)
         space = space_locked = space_red = CFlag(0, 0, s_x, s_y);
         if (refresh) { // ustaw moduly na nowej kracie, przeniesienie info o red i lock
             auto& kn = m_kraty_niebazowe.back();
-            CFlag& lastred = kn.m_space_red;
-            CFlag& lastlocked = kn.m_space_locked;
+            const auto& lastred = kn.m_space_red;
+            const auto& lastlocked = kn.m_space_locked;
             const auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
             for (size_t module = 0; module < ilemod; ++module) {
                 const bool isRed = lastred.GetBit(module) > 0;

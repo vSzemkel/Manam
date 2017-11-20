@@ -1769,7 +1769,7 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
     const BOOL copyEps = theApp.GetInt(_T("CopyOldEPS"), 0);
     pArg->pDlg->OglInfo(pArg->iChannelId, CString(_T("kopiowanie powtorki")));
     if (pPage->m_typ_pary == 2 && !bLewaStrona) { // prawa strona rozkladowki
-        CDrawPage *pPrevPage = fizpage > 15 ? m_pDocument->GetPage(fizpage - 8) : m_pDocument->m_pages[0];
+        CDrawPage *pPrevPage = fizpage > 0xffff ? m_pDocument->GetPage(fizpage - 0x10000) : m_pDocument->m_pages[0];
         if (pPrevPage->m_adds.empty()) {
             ::MessageBox(pArg->pDlg->m_hWnd, _T("Na lewej stronie rozkladówki nie ma og³oszenia"), _T("Brak og³oszenia"), MB_ICONSTOP);
             return FALSE;
@@ -1878,7 +1878,7 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
         CStringA sReklama(uReklama);
         if (!sTrans.IsEmpty()) {
             if (pPage->m_typ_pary == 2) {
-                float fMargDoGrb = (float)dMargDoGrb;
+                const auto fMargDoGrb = (float)dMargDoGrb;
                 if (bLewaStrona)
                     x += fMargDoGrb - 0.5f*(x2 - x1) + gpx;
                 else

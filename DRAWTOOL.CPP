@@ -199,7 +199,7 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
                     int prev_pos = pDoc->GetIPage(pPage);
                     while (prev_pos > 0 && pView->IsSelected(pDoc->m_pages[prev_pos - 1]))
                         pPage = pDoc->m_pages[--prev_pos];
-                    const int new_pos = pDoc->ComputePageOrderNr(pPage);
+                    const int new_pos = pDoc->ComputePageOrderNr(pPage->m_position);
                     if (prev_pos == new_pos)
                         pDoc->SetPageRectFromOrd(pPage, prev_pos);
                     else {

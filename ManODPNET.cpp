@@ -318,12 +318,11 @@ void CDrawDocDbReader::OpenSpot()
 
 void CDrawDocDbReader::OpenOpis(OracleDataReader^ opiCur)
 {
-    int l, r, t, b;
     while (opiCur->Read()) {
-        t = opiCur->GetInt32(1);
-        l = opiCur->GetInt32(2);
-        b = opiCur->GetInt32(3);
-        r = opiCur->GetInt32(4);
+        const auto t = opiCur->GetInt32(1);
+        const auto l = opiCur->GetInt32(2);
+        const auto b = opiCur->GetInt32(3);
+        const auto r = opiCur->GetInt32(4);
         CRect rc(l*vscale, t*vscale, r*vscale, b*vscale);
         auto pOpis = new CDrawOpis(rc, OdpHelper::ReadOdrString(opiCur, 5));
         pOpis->m_opi_xx = opiCur->GetInt32(0);
@@ -685,7 +684,7 @@ void CDrawDocDbWriter::SaveOpisyMakiety(OracleConnection^ conn, BOOL isSaveAs)
     for (const auto& pObj : m_doc->m_objects) {
         auto pOpis = dynamic_cast<CDrawOpis*>(pObj);
         if (pOpis && pOpis->dirty) {
-            bool isInsert = isSaveAs || pOpis->m_opi_xx == -1;
+            const auto isInsert = isSaveAs || pOpis->m_opi_xx == -1;
             cmd->CommandText = String::Format("begin {0}_spacer_opis{1}(:opi_xx,:mak_xx,:top,:left,:bottom,:right,:tekst,:skala,:kolor); end;", isInsert ? "insert" : "update", m_doc->isLIB ? "_lib" : "");
             op->Value = pOpis->m_opi_xx;
             par[2]->Value = pOpis->m_position.top / vscale;

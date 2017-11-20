@@ -464,7 +464,7 @@ void CDrawDoc::Remove(CDrawObj *pObj)
 
 CDrawObj* CDrawDoc::ObjectAt(const CPoint& point) const
 {
-    auto coll = const_cast<std::vector<CDrawObj*>*>(&m_objects);
+    auto coll = const_cast<std::vector<CDrawObj*>*>(&m_objects); // use span<CDrawObj*> in C++ 20
 check:
     auto found = std::find_if(std::rbegin(*coll), std::rend(*coll), [&point](const auto& p) {return p->Contains(point); });
     if (found != std::rend(*coll))
@@ -621,12 +621,12 @@ void CDrawDoc::SetPageRectFromOrd(CDrawPage *pObj, size_t iOrd) const
     pObj->MoveTo(&pObj->m_position);
 }
 
-int CDrawDoc::ComputePageOrderNr(CDrawPage *pObj) const
+int CDrawDoc::ComputePageOrderNr(const CRect& position) const
 {
     int i = 0, j = 0;
-    while (pmoduly*(i + 1)*(-8) >= pObj->m_position.top)
+    while (pmoduly*(i + 1)*(-8) >= position.top)
         i++;
-    while (j < iPagesInRow && pmodulx*((int)(1 + floor((float)j / 2) + pszpalt_x*(j + 0.5))) < pObj->m_position.left)
+    while (j < iPagesInRow && pmodulx*((int)(1 + floor((float)j / 2) + pszpalt_x*(j + 0.5))) < position.left)
         j++;
     return min((int)m_pages.size() - 1, i * iPagesInRow + j);
 }
@@ -1056,7 +1056,7 @@ BOOL CDrawDoc::Add4Pages()
     for (size_t i = last; i < last + n; ++i) {
         auto pNewPage = new CDrawPage(r);
         if (last > 1) {
-            auto pJedynka = m_pages[1];
+            const auto pJedynka = m_pages[1];
             pNewPage->m_drukarnie = pJedynka->m_drukarnie;
             pNewPage->m_deadline = pJedynka->m_deadline;
             pNewPage->wyd_xx = pJedynka->wyd_xx;
@@ -1085,7 +1085,7 @@ BOOL CDrawDoc::AddDrz4Pages(LPCTSTR ile_kolumn)
 
     CRect r { 0 };
     int n = _ttoi(dlg.m_ile_kolumn);
-    int last = (int)m_pages.size();
+    const auto last = (int)m_pages.size();
     for (int i = last; i < last + n; ++i) {
         auto pNewPage = new CDrawPage(r);
         AddPageAt(i, pNewPage);
@@ -1114,7 +1114,7 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
             else if (vPage->space.GetBit(j)) l_modogl++;
         }
         if (pmods != pmodcnt) {
-            float norm = (float)pmodcnt / pmods;
+            const auto norm = (float)pmodcnt / pmods;
             l_modogl = (UINT)nearbyint((float)l_modogl * norm);
             l_modred = (UINT)nearbyint((float)l_modred * norm);
             l_modrez = (UINT)nearbyint((float)l_modrez * norm);
@@ -1147,7 +1147,7 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
 inline float CDrawDoc::PowAdd2Mod(BOOL bQueStat) const
 {
     float pow = 0.0;
-    auto mod_count = [](CDrawAdd* a) -> float { return (float)(a->sizex * a->sizey * pmodcnt) / (a->szpalt_x * a->szpalt_y); };
+    auto mod_count = [](const CDrawAdd* a) noexcept -> float { return (float)(a->sizex * a->sizey * pmodcnt) / (a->szpalt_x * a->szpalt_y); };
 
     if (bQueStat) {
         for (const auto& a : m_addsque)
@@ -1295,7 +1295,7 @@ void CDrawDoc::OnFileInfo()
 
             CString newGazeta = gazeta.Left(4) + dlg.m_grzbiet;
             CString oldTitle = GetTitle();
-            int pos = oldTitle.Find(gazeta);
+            const int pos = oldTitle.Find(gazeta);
             SetTitle(oldTitle.Left(pos) + newGazeta + oldTitle.Mid(pos + gazeta.GetLength()));
             gazeta = newGazeta;
             theApp.FileRefresh(this);
@@ -1304,7 +1304,7 @@ void CDrawDoc::OnFileInfo()
 
         data_w.Format(c_formatCzasu, dlg.m_data_wykupu.GetDay(), dlg.m_data_wykupu.GetMonth(), dlg.m_data_wykupu.GetYear(), dlg.m_godz_wykupu.GetHour(), dlg.m_godz_wykupu.GetMinute());
         dlg.m_data_studio.GetYear() < 2000 ? data_s.Empty() : data_s.Format(c_formatCzasu, dlg.m_data_studio.GetDay(), dlg.m_data_studio.GetMonth(), dlg.m_data_studio.GetYear(), dlg.m_godz_studio.GetHour(), dlg.m_godz_studio.GetMinute());
-        CTime dataZamknieciaOld = dataZamkniecia;
+        const auto dataZamknieciaOld = dataZamkniecia;
         dataZamkniecia = CTime(dlg.m_data_zamkniecia.GetYear(), dlg.m_data_zamkniecia.GetMonth(), dlg.m_data_zamkniecia.GetDay(), dlg.m_godz_zamkniecia.GetHour(), dlg.m_godz_zamkniecia.GetMinute(), 0);
         //zmiana daty wykupu rezerwacji - czyli zamkniêcia makiety
         //dla DGW obowi¹zuje czas na podstawie daty wykupu
@@ -1325,10 +1325,10 @@ void CDrawDoc::OnFileInfo()
         const auto pc = m_pages.size();
         if (pc > 1 && (dlg.m_set_deadline || dlg.m_set_kraty || dlg.m_set_papier)) {
             CDrawPage *pPage = m_pages[1];
-            CTime& dt = pPage->m_deadline;
-            long druk = pPage->m_drukarnie;
-            int s_x1 = pPage->szpalt_x;
-            int s_y1 = pPage->szpalt_y;
+            const auto& dt = pPage->m_deadline;
+            const auto druk = pPage->m_drukarnie;
+            const auto s_x1 = pPage->szpalt_x;
+            const auto s_y1 = pPage->szpalt_y;
 
             for (const auto& p : m_pages) {
                 if (dlg.m_set_deadline && p->m_dervlvl != DERV_FIXD) {
@@ -1900,11 +1900,10 @@ void CDrawDoc::OnSyncDrv()
 
 void CDrawDoc::OnSetPagina()
 {
-    int newnum;
-    int mask = c_rzym | c_normal;
+    const auto mask = c_rzym | c_normal;
     for (const auto& pPage : m_pages) {
         pPage->SetDirty();
-        newnum = pPage->nr ^= mask;
+        const auto newnum = pPage->nr ^= mask;
         for (const auto& pAdd : pPage->m_adds) {
             pAdd->fizpage = newnum;
             pAdd->SetDirty();

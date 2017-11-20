@@ -693,7 +693,7 @@ void CSpacerDlg::OnOK()
                 m_emisjelist.InsertString(i, errText);
                 m_emisjelist.SetItemData(i, mak_xx);
 
-                CSize w = pDC->GetTextExtent(errText);
+                const auto& w = pDC->GetTextExtent(errText);
                 if (w.cx > maxwidth) maxwidth = w.cx;
             }
             m_emisjelist.SetHorizontalExtent(maxwidth);
@@ -797,10 +797,10 @@ void CSpacerDlg::OnBnClickedMutacje()
 
     CString mut, kiedy;
     EnableMultiCond(TRUE);
-    auto olArr = reinterpret_cast<LPINT>(theApp.bigBuf);
-    auto olCnt = m_ollist.GetSelItems(0x40, olArr);
-    auto emArr = reinterpret_cast<LPINT>(theApp.bigBuf + 0x0100);
-    auto emCnt = m_emisjelist.GetSelItems(0x40, emArr);
+    const auto olArr = reinterpret_cast<LPINT>(theApp.bigBuf);
+    const auto olCnt = m_ollist.GetSelItems(0x40, olArr);
+    const auto emArr = reinterpret_cast<LPINT>(theApp.bigBuf + 0x0100);
+    const auto emCnt = m_emisjelist.GetSelItems(0x40, emArr);
 
     for (int i = 0; i < olCnt; ++i) {
         m_ollist.GetText(olArr[i], mut);

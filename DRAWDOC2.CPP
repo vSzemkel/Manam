@@ -805,7 +805,7 @@ void CDrawDoc::OnAsideAdds()
         vPage = dynamic_cast<CDrawPage*>(pView->m_selection.front());
 
     if (vPage == nullptr) {
-        auto pcount = m_pages.size();
+        const auto pcount = m_pages.size();
         for (size_t i = 0; i < pcount; i++)
             if (!(m_pages[i])->niemakietuj) {
                 vPage = m_pages[i];

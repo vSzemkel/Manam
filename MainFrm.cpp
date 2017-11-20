@@ -290,7 +290,7 @@ void CMainFrame::IniKolorTable()
 void CMainFrame::InsComboNrSpotow(int new_i)
 {
     if (theApp.swCZV & 2) return;
-    int old_i = m_KolorBox->GetCount() - (int)Spot_Kolor.size();
+    const auto old_i = m_KolorBox->GetCount() - (int)Spot_Kolor.size();
     if (old_i > new_i)
         for (int i = old_i - 1; i >= new_i; i--)
             m_KolorBox->DeleteString(i);
@@ -354,7 +354,7 @@ DWORD CMainFrame::GetCaptionDataItem(int ind) const
 void CMainFrame::IniCaptionCombo(BOOL iscaption)
 {
     CString tx = (iscaption) ? _T("Caption") : _T("StrLog");
-    int max_col = theApp.GetProfileInt(tx, _T("Amount"), 0);
+    const int max_col = theApp.GetProfileInt(tx, _T("Amount"), 0);
     TCHAR bf[3];
     m_CaptionBox->ResetContent();
     m_CaptionBox->AddString(_T(""));
@@ -369,11 +369,11 @@ void CMainFrame::IniCaptionCombo(BOOL iscaption)
 BOOL CMainFrame::DBIniCaptionCombo(BOOL iscaption, int id_drw)
 {
     // nie odœwie¿aj niepotrzebnie
-    int checksum = (iscaption << 24) + (theApp.swCZV << 16) + id_drw;
+    const auto checksum = (iscaption << 24) + (theApp.swCZV << 16) + id_drw;
     if (lastCapToolBar == checksum) return TRUE;
     lastCapToolBar = checksum;
 
-    bool czyListaPagin = theApp.swCZV == 2;
+    const auto czyListaPagin = theApp.swCZV == 2;
     auto sql = reinterpret_cast<char*>(theApp.bigBuf);
     StringCchPrintfA(sql, bigSize, "select %s drw_xx=:xx order by 1",
         czyListaPagin ? "text,xx from spacer_naglowki_prn where"
