@@ -940,15 +940,13 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL c
 
 int CDrawDoc::ValidKolor(const CString& k)
 {
-    const auto& kolory = ((CMainFrame*)AfxGetMainWnd())->Spot_Kolor;
-    const auto iter = std::find(std::begin(kolory), std::end(kolory), k);
-    const auto ind = std::distance(std::begin(kolory), iter);
-    if (ind == 0 || iter == std::end(kolory))
-        return c_brak;
+    const auto& kolory = static_cast<CMainFrame*>(AfxGetMainWnd())->Spot_Kolor;
+    for (auto i = 1; i < kolory.size(); ++i)
+        if (kolory[i].Find(k) == 0)
+            return (i == 1) ? c_full : (i << 3) + c_spot;
 
-    return (int)((ind == 1) ? c_full : ((ind << 3) + c_spot));
+    return c_brak;
 }
-
 
 void CDrawDoc::SetSpotKolor(UINT idx_m_spot_makiety, UINT idx_Spot_Kolor)
 {
