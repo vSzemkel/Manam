@@ -941,7 +941,8 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL c
 int CDrawDoc::ValidKolor(const CString& k)
 {
     const auto& kolory = static_cast<CMainFrame*>(AfxGetMainWnd())->Spot_Kolor;
-    for (auto i = 1; i < kolory.size(); ++i)
+    const auto len = kolory.size();
+    for (auto i = 1; i < len; ++i)
         if (kolory[i].Find(k) == 0)
             return (i == 1) ? c_full : (i << 3) + c_spot;
 
