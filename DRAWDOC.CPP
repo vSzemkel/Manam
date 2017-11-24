@@ -958,6 +958,11 @@ int CDrawDoc::ValidKolor(const CString& k) noexcept
     return c_brak;
 }
 
+CBrush* CDrawDoc::GetSpotBrush(int i) noexcept
+{
+    return i >= (int)brushe.size() || i < 0 ? static_cast<CBrush*>(::GetStockObject(BLACK_BRUSH)) : brushe[i];
+}
+
 void CDrawDoc::SetSpotKolor(UINT idx_m_spot_makiety, UINT idx_Spot_Kolor)
 {
     m_spot_makiety[idx_m_spot_makiety] = (m_spot_makiety[idx_m_spot_makiety] == idx_Spot_Kolor) ? 0 : idx_Spot_Kolor;

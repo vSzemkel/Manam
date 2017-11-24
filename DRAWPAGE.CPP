@@ -336,7 +336,7 @@ void CDrawPage::DrawKolor(CDC *pDC, const CRect& pos) const
         CBrush* pOldBrush;
         CPen* pOldPen = reinterpret_cast<CPen*>(pDC->SelectStockObject(NULL_PEN));
         if (m_pDocument->isGRB) pOldBrush = reinterpret_cast<CBrush*>(pDC->SelectStockObject(LTGRAY_BRUSH));
-        else pOldBrush = pDC->SelectObject(((CMainFrame*)AfxGetMainWnd())->GetSpotBrush(m_pDocument->m_spot_makiety[kolor >> 3]));
+        else pOldBrush = pDC->SelectObject(CDrawDoc::GetSpotBrush(m_pDocument->m_spot_makiety[kolor >> 3]));
         COLORREF bk = pDC->SetBkColor(BIALY);
         pDC->Rectangle(r1);
         DrawNapis(pDC, Rzymska(((kolor >> 3) + 1)), Rzymska(((kolor >> 3) + 1)).GetLength(), r1, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP, OPAQUE);

@@ -29,7 +29,6 @@ private:
 public:
     void SetStatusBarInfo(LPCTSTR tx);
     UINT GetKolor(int ile_spotow) const;   //zwraca kolor z (-) gdy konkretny spot kolor
-    CBrush* GetSpotBrush(int i) const;
     CString GetCaption() const;
     CString GetCaption(int i) const;
     CString GetCapStrFromData(DWORD w) const;

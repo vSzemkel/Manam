@@ -49,6 +49,7 @@ class CDrawDoc final : public COleDocument
     static void DrawPageCross(CDC *pDC);
     static int ValidKolor(const CString& k) noexcept;
     static int GetIdxfromSpotID(UINT spot_id) noexcept;
+    static CBrush* GetSpotBrush(int i) noexcept;
     static CString XmlReadText(IXmlReader *reader);
 
     virtual ~CDrawDoc();

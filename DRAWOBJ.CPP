@@ -345,7 +345,7 @@ void CDrawObj::DrawKolor(CDC *pDC, const CRect& pos) const
         pDC->FillRect(r3, &(((CMainFrame*)AfxGetMainWnd())->yellow));
     } else {
         r1 = CRect(pos.left + 1, pos.top - 1, pos.right - 1, pos.bottom + 1);
-        pDC->FillRect(r1, ((CMainFrame*)AfxGetMainWnd())->GetSpotBrush((kolor >> 3))); // 0 brak Spot_Kolor,Spot_Brush 0-brak, 1 full
+        pDC->FillRect(r1, CDrawDoc::GetSpotBrush(kolor >> 3)); // 0 brak Spot_Kolor,Spot_Brush 0-brak, 1 full
     }
 }
 

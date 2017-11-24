@@ -29,7 +29,7 @@ void CDrawOpis::DrawInternal(CDC *pDC, CRect& rect) const
     auto pOldFont = pDC->SelectObject(&m_pDocument->m_pagefont);
 
     bool coloured = kolor > 7;
-    auto pOldBrush = ((CMainFrame*)AfxGetMainWnd())->GetSpotBrush(coloured ? kolor >> 3 : 1);
+    auto pOldBrush = CDrawDoc::GetSpotBrush(coloured ? kolor >> 3 : 1);
     if (coloured) {
         LOGBRUSH lb;
         pOldBrush->GetLogBrush(&lb);

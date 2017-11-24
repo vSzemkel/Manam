@@ -406,11 +406,6 @@ UINT CMainFrame::GetKolor(int ile_spotow) const // kolejnoœæ na liscie: spoty, b
     return ((k - ile_spotow) << 3); // gdy nie jest ustawiony spot bit
 }
 
-CBrush* CMainFrame::GetSpotBrush(int i) const
-{
-    return i >= (int)CDrawDoc::brushe.size() || i < 0 ? static_cast<CBrush*>(::GetStockObject(BLACK_BRUSH)) : CDrawDoc::brushe[i];
-}
-
 ////////////////////////////////// naglowek
 CString CMainFrame::GetCaption() const
 {

@@ -146,7 +146,7 @@ void CDrawAdd::Draw(CDC *pDC)
     ASSERT_VALID(this);
 
     auto mainWnd = reinterpret_cast<CMainFrame*>(AfxGetMainWnd());
-    CBrush* pOldBrush = pDC->SelectObject(mainWnd->GetSpotBrush((kolor >> 3)));
+    CBrush* pOldBrush = pDC->SelectObject(CDrawDoc::GetSpotBrush(kolor >> 3));
     CPen* pOldPen = pDC->SelectObject(&(mainWnd->pen));
 
     int iClipRegions = 1;
@@ -182,7 +182,7 @@ void CDrawAdd::Draw(CDC *pDC)
                         pDC->FillRect(r1, &mainWnd->magenta);
                         break;
                     default: // 'WER'
-                        pDC->FillRect(r1, mainWnd->GetSpotBrush(0));
+                        pDC->FillRect(r1, CDrawDoc::GetSpotBrush(0));
                 }
                 break;
             case 2:
@@ -190,7 +190,7 @@ void CDrawAdd::Draw(CDC *pDC)
                 int iKolInd = ((CMainFrame*)AfxGetMainWnd())->GetKolorInd(wersja.Right(wersja.GetLength() - wersja.Find(_T(".")) - 1));
                 if (iKolInd == -1)
                     iKolInd = 0;
-                pDC->FillRect(r1, mainWnd->GetSpotBrush(iKolInd ? (iKolInd + 1) % CDrawDoc::brushe.size() : 0));
+                pDC->FillRect(r1, CDrawDoc::GetSpotBrush(iKolInd ? (iKolInd + 1) % CDrawDoc::brushe.size() : 0));
         }
         if (aRectClip)
             pDC->SelectClipRgn(NULL);
@@ -344,7 +344,7 @@ void CDrawAdd::Print(CDC *pDC)
 {
     ASSERT_VALID(this);
 
-    CBrush* pOldBrush = pDC->SelectObject(((CMainFrame*)AfxGetMainWnd())->GetSpotBrush(kolor >> 3));
+    CBrush* pOldBrush = pDC->SelectObject(CDrawDoc::GetSpotBrush(kolor >> 3));
     CPen* pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
 
     CRgn rgn;
