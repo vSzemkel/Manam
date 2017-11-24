@@ -15,6 +15,10 @@ extern BOOL drawErrorBoxes;
 extern BOOL disableMenu;
 
 const TCHAR* CDrawDoc::asDocTypeExt[3] = { _T(".DB"), _T(".LIB"), _T(".GRB") }; // rozszerzenie poszczeglnych typów dokumentow opisanych w eDocType
+std::vector<UINT> CDrawDoc::spoty;
+std::vector<CString> CDrawDoc::kolory;
+std::vector<CBrush*> CDrawDoc::brushe;
+
 /////////////////////////////////////////////////////////////////////////////
 // CDrawDoc
 IMPLEMENT_DYNCREATE(CDrawDoc, COleDocument)
@@ -673,6 +677,12 @@ void CDrawDoc::MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt)
     UpdateAllViews(NULL);
 }
 
+int CDrawDoc::GetIdxfromSpotID(UINT spot_id) noexcept
+{
+    auto pos = std::find(begin(spoty), end(spoty), spot_id);
+    return pos == end(spoty) ? 0 : (int)std::distance(begin(spoty), pos);
+}
+
 CDrawPage* CDrawDoc::GetPage(int n) const
 {
     for (const auto& p : m_pages)
@@ -938,9 +948,8 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL c
     return TRUE;
 }
 
-int CDrawDoc::ValidKolor(const CString& k)
+int CDrawDoc::ValidKolor(const CString& k) noexcept
 {
-    const auto& kolory = static_cast<CMainFrame*>(AfxGetMainWnd())->Spot_Kolor;
     const auto len = kolory.size();
     for (auto i = 1; i < len; ++i)
         if (kolory[i].Find(k) == 0)

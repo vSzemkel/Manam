@@ -536,7 +536,7 @@ BOOL CAddDlg::OnInitDialog()
     m_spad_bottom = (m_spad & 8) > 0;
 
     CDialog::OnInitDialog();
-    for (const auto& k : ((CMainFrame*)AfxGetMainWnd())->Spot_Kolor)
+    for (const auto& k : CDrawDoc::kolory)
         m_kolorcombo.AddString(k);
 
     // TODO: Add extra initialization here
@@ -601,8 +601,7 @@ BOOL CAddDlg::OnInitDialog()
 
     // inicjuj date powtorki
     int d, m, r;
-    vActiveDoc = theApp.activeDoc;
-    if (_stscanf_s(vActiveDoc->data, c_formatDaty, &d, &m, &r) == 3) {
+    if (_stscanf_s(theApp.activeDoc->data, c_formatDaty, &d, &m, &r) == 3) {
         COleDateTime pocz;
         pocz.SetStatus(COleDateTime::null);
         COleDateTime kon(r, m, d, 23, 59, 59);
@@ -2773,7 +2772,7 @@ void COstWer::AppendAdd(CDrawAdd *pAdd, int status)
         if (pAdd->kolor == c_full)
             ::StringCchCopy(theApp.bigBuf, n_size, FULL);
         else
-            ::StringCchCopy(theApp.bigBuf, n_size, ((CMainFrame*)AfxGetMainWnd())->Spot_Kolor[pAdd->kolor >> 3]);
+            ::StringCchCopy(theApp.bigBuf, n_size, CDrawDoc::kolory[pAdd->kolor >> 3]);
     } else ::StringCchCopy(theApp.bigBuf, n_size, BRAK);
     m_adds.SetItemText(i, 5, theApp.bigBuf);
     m_adds.SetItemText(i, 6, pAdd->remarks_atex);

@@ -307,7 +307,7 @@ void CDrawDocDbReader::OpenSpot()
         conn->Open();
         auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
         while (odr->Read())
-            m_doc->m_spot_makiety.push_back(((UINT)((CMainFrame*)AfxGetMainWnd())->GetIdxfromSpotID(odr->GetInt32(0))));
+            m_doc->m_spot_makiety.push_back((UINT)m_doc->GetIdxfromSpotID(odr->GetInt32(0)));
         odr->Close();
     } catch (OracleException^ oex) {
         OdpHelper::ShowErrMsgDlg(oex->Message);
@@ -351,7 +351,7 @@ void CDrawDocDbReader::OpenQued(OracleDataReader^ queCur)
         pAdd->remarks = OdpHelper::ReadOdrString(queCur, 8); // uwagi
         pAdd->wersja = OdpHelper::ReadOdrString(queCur, 9); // wersja
         pAdd->czaskto = OdpHelper::ReadOdrString(queCur, 12); // czaskto
-        pAdd->kolor = ((UINT)((CMainFrame*)AfxGetMainWnd())->GetIdxfromSpotID(queCur->GetInt32(11))); // spo_xx
+        pAdd->kolor = ((UINT)m_doc->GetIdxfromSpotID(queCur->GetInt32(11))); // spo_xx
         pAdd->kolor = (UINT)(((pAdd->kolor) << 3) + queCur->GetInt32(10));
         pAdd->SetClean();
         pAdd->UpdateInfo();
@@ -442,7 +442,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
                 pAdd->remarks = OdpHelper::ReadOdrString(pubCur, 15);
                 pAdd->remarks_atex = OdpHelper::ReadOdrString(pubCur, 36);
                 ivar = pubCur->GetInt32(17); // spo_xx
-                pAdd->kolor = 8 * ((UINT)((CMainFrame*)AfxGetMainWnd())->GetIdxfromSpotID(ivar));
+                pAdd->kolor = 8 * ((UINT)m_doc->GetIdxfromSpotID(ivar));
                 pAdd->kolor += pubCur->GetInt32(16); // ile_kol
                 pAdd->txtposx = pubCur->GetInt32(26); // txtposx
                 pAdd->txtposy = pubCur->GetInt32(27); // txtposy
@@ -720,7 +720,7 @@ void CDrawDocDbWriter::SaveSpotyMakiety(OracleConnection^ conn)
     for (size_t i = 0; i < cnt; ++i) // update spotow;
         if (spot_makiety[i] != 0) {
             par[1]->Value = i + 1;
-            par[2]->Value = ((CMainFrame*)AfxGetMainWnd())->Spot_ID[(spot_makiety[i])];
+            par[2]->Value = CDrawDoc::spoty[(spot_makiety[i])];
             cmd->ExecuteNonQuery();
         }
 }
@@ -925,7 +925,7 @@ void CDrawDocDbWriter::SaveOgloszenie(OracleCommand^ cmd, CDrawAdd *pAdd)
     par[13]->Value = gcnew String(pAdd->wersja);
     par[14]->Value = gcnew String(pAdd->remarks);
     par[15]->Value = pAdd->kolor & 0x07;
-    par[16]->Value = ((CMainFrame*)AfxGetMainWnd())->Spot_ID[pAdd->kolor >> 3];
+    par[16]->Value = CDrawDoc::spoty[pAdd->kolor >> 3];
     TCHAR op_zew[2], op_sekcji[2], op_pl[2], sekcja[30], pl[2], poz_na_str[10];
     int nr_w_sekcji = 0, nr_pl = 0;
     pAdd->ParseLogpage(op_zew, sekcja, op_sekcji, &nr_w_sekcji, pl, op_pl, &nr_pl, poz_na_str);
@@ -1250,27 +1250,24 @@ BOOL CManODPNET::FillNiekratowe(CAddDlg* dlg)
     return FillNiekratoweInternal(dlg->m_szpalt_x, dlg->m_szpalt_y, dlg->m_typ_xx, &dlg->m_typ_ogl_combo, &dlg->m_typ_ogl_arr, &dlg->m_typ_sizex_arr, &dlg->m_typ_sizey_arr, &dlg->m_typ_precel_arr);
 }
 
-BOOL CManODPNET::IniKolorTable(CMainFrame* mf)
+BOOL CManODPNET::IniKolorTable()
 {
-    int i;
-    for (const auto& b : mf->Spot_Brush)
+    for (const auto& b : CDrawDoc::brushe)
         delete b;
-    mf->Spot_Kolor.clear(); mf->Spot_Brush.clear(); mf->Spot_ID.clear();
-    mf->Spot_Kolor.emplace_back(BRAK);  mf->Spot_Brush.push_back(new CBrush(RGB(190, 190, 190)));  mf->Spot_ID.push_back(0);
-    mf->Spot_Kolor.emplace_back(FULL);  mf->Spot_Brush.push_back(new CBrush(BIALY));  mf->Spot_ID.push_back(0);
+    CDrawDoc::kolory.clear(); CDrawDoc::brushe.clear(); CDrawDoc::spoty.clear();
+    CDrawDoc::kolory.emplace_back(BRAK); CDrawDoc::brushe.push_back(new CBrush(RGB(190, 190, 190))); CDrawDoc::spoty.push_back(0);
+    CDrawDoc::kolory.emplace_back(FULL); CDrawDoc::brushe.push_back(new CBrush(BIALY)); CDrawDoc::spoty.push_back(0);
 
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();
-    cmd->CommandText = gcnew String("select xx,nazwa,to_number(rgb,'XXXXXX') from kolory_spotu order by 2");
+    cmd->CommandText = gcnew String("select xx,to_number(rgb,'XXXXXX'),nazwa from kolory_spotu order by 3");
     try {
         conn->Open();
         auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
         while (odr->Read()) {
-            i = odr->GetInt32(0);
-            mf->Spot_ID.push_back(i);
-            mf->Spot_Kolor.emplace_back(OdpHelper::ReadOdrString(odr, 1));
-            i = odr->GetInt32(2);
-            mf->Spot_Brush.push_back(new CBrush(i));
+            CDrawDoc::spoty.push_back(odr->GetInt32(0));
+            CDrawDoc::brushe.push_back(new CBrush(odr->GetInt32(1)));
+            CDrawDoc::kolory.emplace_back(OdpHelper::ReadOdrString(odr, 2));
         }
         odr->Close();
         m_lastErrorMsg.Empty();

@@ -236,7 +236,7 @@ void CGridFrm::RefreshRow(int nRow, CDrawAdd *vAdd)
         if (vAdd->kolor == c_full)
             ::StringCchCopy(bf, 64, FULL);
         else
-            ::StringCchCopy(bf, 64, ((CMainFrame*)theApp.GetMainWnd())->Spot_Kolor[vAdd->kolor >> 3]);
+            ::StringCchCopy(bf, 64, CDrawDoc::kolory[vAdd->kolor >> 3]);
     } else ::StringCchCopy(bf, 64, BRAK);
     lcPubList.SetItemText(nRow, kolorek, bf);
     lcPubList.SetItemText(nRow, uwagi, vAdd->remarks.IsEmpty() ? vAdd->remarks_atex : vAdd->remarks);

@@ -159,7 +159,7 @@ BOOL CSpacerDlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
 
-    for (const auto& k : ((CMainFrame*)AfxGetMainWnd())->Spot_Kolor)
+    for (const auto& k : theApp.activeDoc->kolory)
         m_kolorcombo.AddString(k);
 
     // TODO: Add extra initialization here
@@ -509,7 +509,7 @@ void CSpacerDlg::OnQue()
     }
 
     int ile_kol = (((pub->kolor & c_full) == c_full) ? c_full : (((pub->kolor & c_brak) == c_brak) ? c_brak : c_spot));
-    int spo_xx = (int)((CMainFrame*)AfxGetMainWnd())->Spot_ID[pub->kolor >> 3];
+    int spo_xx = (int)CDrawDoc::spoty[pub->kolor >> 3];
     if (IsDlgButtonChecked(IDC_DEALAPPEND))
         m_add_xx = GetDlgItemInt(IDC_SPACER);
     else if (firstSearch) {
@@ -625,7 +625,7 @@ void CSpacerDlg::OnOK()
     CString czas_kto(' ', 32);
     int qf = GetQueryFlag();
     int ile_kol = ((pub->kolor & c_full) == c_full) ? c_full : (((pub->kolor & c_brak) == c_brak) ? c_brak : c_spot);
-    int spo_xx = (int)((CMainFrame*)AfxGetMainWnd())->Spot_ID[pub->kolor >> 3];
+    int spo_xx = (int)CDrawDoc::spoty[pub->kolor >> 3];
 
     CManODPNETParms orapar {
         { CManODPNET::DbTypeInt32, &m_mak_xx },	// 0

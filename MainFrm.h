@@ -33,27 +33,19 @@ public:
     CString GetCaption() const;
     CString GetCaption(int i) const;
     CString GetCapStrFromData(DWORD w) const;
-    int GetIdxfromSpotID(UINT spot_id) const;
     int GetCaptionBoxSize() const;
     void SetToolbarBitmap(ToolbarMode bPrevMode, ToolbarMode bNewMode);
 
-    int GetKolorInd(CString text) const;
+    int GetKolorInd(const CString& text) const noexcept;
     DWORD GetCaptionDataItem(int ind) const;
-    CString GetKolorText() const;
+    CString GetKolorText() const noexcept;
     void InsKolorBox();
     void InsComboNrSpotow(int new_i);
-    void IniKolorTable();
     void LoadKolorCombo();
 
     void IniCaptionBox(int id_drw, int new_id_drw);
     void IniCaptionCombo(BOOL iscaption);
     BOOL DBIniCaptionCombo(BOOL iscaption, int id_drw);
-
-    //naglowki i strlog sa tylko w comboboxie - bo lokalne dla drzewa
-
-    std::vector<UINT> Spot_ID;
-    std::vector<CString> Spot_Kolor;
-    std::vector<CBrush*> Spot_Brush;
 
     CPen pen;
     CBrush cyjan, magenta, yellow, rzym, robgcolor;

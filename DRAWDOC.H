@@ -41,8 +41,14 @@ class CDrawDoc final : public COleDocument
     friend class CDrawDocDbWriter;
 
     static const TCHAR* asDocTypeExt[3];
+    static std::vector<UINT> spoty;                 // numer na liœcie kolorów -> bazodanowy identyfikator koloru
+    static std::vector<CString> kolory;             // dopuszczalne kolory og³oszeñ i stron
+    static std::vector<CBrush*> brushe;             // cache pêdzli u¿ywanych w widoku makiety
+
+    static void IniKolorTable();
     static void DrawPageCross(CDC *pDC);
-    static int ValidKolor(const CString& k);
+    static int ValidKolor(const CString& k) noexcept;
+    static int GetIdxfromSpotID(UINT spot_id) noexcept;
     static CString XmlReadText(IXmlReader *reader);
 
     virtual ~CDrawDoc();
@@ -172,7 +178,7 @@ class CDrawDoc final : public COleDocument
     std::vector<CDrawPage*> m_pages;   // uporz¹dkowana kolekcja stron dokumentu; ostatnia strona ma index 0
     std::vector<CDrawAdd*>  m_addsque; // lista og³oszeñ czekaj¹cych w kolejce makiety
     std::vector<delobj_t>   m_del_obj; // obiekty usuniête z dokumentu, do usuniêcia w bazie
-    std::vector<CRozm>		m_Rozm;	   // tablica rozmiarów krat i formatów niestandardowych dokumentu
+    std::vector<CRozm>   m_Rozm;       // tablica rozmiarów krat i formatów niestandardowych dokumentu
 
     CFont m_pagefont;
     CFont m_addfont;

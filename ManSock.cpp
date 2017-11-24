@@ -127,12 +127,7 @@ void CManSock::HandleSysMsg1(TCHAR *sysmsg) const
     p = _tcstok(NULL, septok);
     int ivar = _ttoi(p);
     UINT arrVal = _ttoi(_tcstok(NULL, septok));
-    auto aKolory = &pMainWnd->Spot_ID;
-    for (unsigned int i = 0; i < aKolory->size(); ++i)
-        if ((*aKolory)[i] == arrVal) {
-            arrVal = i;
-            break;
-        }
+    arrVal = CDrawDoc::GetIdxfromSpotID(arrVal);
     pAdd->kolor = (arrVal << 3) + ivar;
     pAdd->remarks = _tcstok(NULL, septok);
     pAdd->wersja = _tcstok(NULL, septok);

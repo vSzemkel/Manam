@@ -602,7 +602,7 @@ void CDrawPage::UpdateInfo()
     info.Format(_T("Strona %s %s"), GetNrPaginy(), caption);
     if (!name.IsEmpty()) info.AppendFormat(_T(" - %s"), name);
     if (!m_pDocument->isGRB && (kolor & c_spot) > 0)
-        info.AppendFormat(_T(" | %s"), ((CMainFrame*)AfxGetMainWnd())->Spot_Kolor[m_pDocument->m_spot_makiety[(kolor >> 3)]]); //w SPOT_kOlorach 0-brak, 1==full
+        info.AppendFormat(_T(" | %s"), CDrawDoc::kolory[m_pDocument->m_spot_makiety[kolor >> 3]]); // w kolory 0-brak, 1==full
     info.AppendFormat(_T(" | %s"), m_deadline.Format(c_ctimeCzas));
     if (!m_dervinfo.IsEmpty())
         info.AppendFormat(_T(" | %s"), m_dervinfo);

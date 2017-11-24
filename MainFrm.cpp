@@ -48,8 +48,6 @@ CMainFrame::~CMainFrame()
     rzym.DeleteObject();
     robgcolor.DeleteObject();
     pen.DeleteObject();
-    for (const auto& b : Spot_Brush)
-        delete b;
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -269,28 +267,11 @@ void CMainFrame::SetRoleStatus()
     m_wndStatusBar.SetPaneText(3, role);
 }
 
-////////////////////////////////////////////// ini kolory
-
-void CMainFrame::IniKolorTable()
-{
-    int max_col = theApp.GetProfileInt(_T("SpotColors"), _T("Amount"), 0);
-    Spot_Kolor.resize(max_col + 2);
-    Spot_Brush.resize(max_col + 2);
-    Spot_Kolor[0] = BRAK; Spot_Brush[0] = new CBrush(RGB(190, 190, 190));
-    Spot_Kolor[1] = FULL; Spot_Brush[1] = new CBrush(BIALY);
-    CString bf;
-    for (int i = 1; i <= max_col; ++i) {
-        bf.Format(_T("%i"), i);
-        Spot_Kolor[i + 1] = theApp.GetProfileString(_T("SpotColors"), _T("Spot") + bf, _T("nie ma")).MakeUpper();
-        Spot_Brush[i + 1] = new CBrush(theApp.GetProfileInt(_T("SpotColors"), _T("Color") + bf, BIALY));
-    }
-}
-
 //////////////// ini spoty o ile sa
 void CMainFrame::InsComboNrSpotow(int new_i)
 {
     if (theApp.swCZV & 2) return;
-    const auto old_i = m_KolorBox->GetCount() - (int)Spot_Kolor.size();
+    const auto old_i = m_KolorBox->GetCount() - (int)CDrawDoc::kolory.size();
     if (old_i > new_i)
         for (int i = old_i - 1; i >= new_i; i--)
             m_KolorBox->DeleteString(i);
@@ -310,10 +291,10 @@ void CMainFrame::LoadKolorCombo()
         m_KolorBox->ResetContent();
         m_KolorBox->AddString(_T(""));
         theManODPNET.FillCombo(m_KolorBox, "select wersja from spacer_wersje_eps order by 1", CManODPNET::emptyParm);
-    } else if (m_KolorBox->GetCount() != Spot_Kolor.size()) {
+    } else if (m_KolorBox->GetCount() != CDrawDoc::kolory.size()) {
         m_KolorBox->ResetContent();
         // kolory
-        for (const auto& k : Spot_Kolor)
+        for (const auto& k : CDrawDoc::kolory)
             m_KolorBox->AddString(k);
         m_KolorBox->SelectString(CB_ERR, m_LastSessionKolor);
         // spoty
@@ -325,7 +306,7 @@ void CMainFrame::LoadKolorCombo()
 
 void CMainFrame::InsKolorBox()
 {
-    theApp.isRDBMS ? theManODPNET.IniKolorTable(this) : IniKolorTable();
+    theApp.isRDBMS ? theManODPNET.IniKolorTable() : CDrawDoc::IniKolorTable();
     LoadKolorCombo();
 }
 
@@ -394,7 +375,7 @@ BOOL CMainFrame::DBIniCaptionCombo(BOOL iscaption, int id_drw)
 }
 
 //////////////////////////////// wyciaganie danych z tablic
-CString CMainFrame::GetKolorText() const
+CString CMainFrame::GetKolorText() const noexcept
 {
     CString s;
     int sel = m_KolorBox->GetCurSel();
@@ -404,7 +385,7 @@ CString CMainFrame::GetKolorText() const
     return s;
 }
 
-int CMainFrame::GetKolorInd(CString text) const
+int CMainFrame::GetKolorInd(const CString& text) const noexcept
 {
     int ind = m_KolorBox->FindString(0, text);
     return ind == CB_ERR ? -1 : ind;
@@ -427,15 +408,7 @@ UINT CMainFrame::GetKolor(int ile_spotow) const // kolejnoœæ na liscie: spoty, b
 
 CBrush* CMainFrame::GetSpotBrush(int i) const
 {
-    return i >= (int)Spot_Brush.size() || i < 0 ? static_cast<CBrush*>(::GetStockObject(BLACK_BRUSH)) : Spot_Brush[i];
-}
-
-int CMainFrame::GetIdxfromSpotID(UINT spot_id) const
-{
-    for (unsigned int i = 0; i < Spot_ID.size(); i++)
-        if (spot_id == Spot_ID[i])
-            return i;
-    return 0;
+    return i >= (int)CDrawDoc::brushe.size() || i < 0 ? static_cast<CBrush*>(::GetStockObject(BLACK_BRUSH)) : CDrawDoc::brushe[i];
 }
 
 ////////////////////////////////// naglowek

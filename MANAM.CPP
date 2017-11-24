@@ -184,6 +184,9 @@ int CDrawApp::ExitInstance()
     WriteInt(_T("OpiMode"), (int)isOpiMode);
     WriteInt(_T("ParallelGen"), (int)isParalellGen);
 
+    for (const auto& b : CDrawDoc::brushe)
+        delete b;
+
     return CWinAppEx::ExitInstance();
 }
 

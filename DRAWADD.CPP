@@ -190,7 +190,7 @@ void CDrawAdd::Draw(CDC *pDC)
                 int iKolInd = ((CMainFrame*)AfxGetMainWnd())->GetKolorInd(wersja.Right(wersja.GetLength() - wersja.Find(_T(".")) - 1));
                 if (iKolInd == -1)
                     iKolInd = 0;
-                pDC->FillRect(r1, mainWnd->GetSpotBrush(iKolInd ? (iKolInd + 1) % mainWnd->Spot_Brush.size() : 0));
+                pDC->FillRect(r1, mainWnd->GetSpotBrush(iKolInd ? (iKolInd + 1) % CDrawDoc::brushe.size() : 0));
         }
         if (aRectClip)
             pDC->SelectClipRgn(NULL);
@@ -456,7 +456,7 @@ void CDrawAdd::UpdateInfo()
     if (m_add_xx > 0) info.AppendFormat(_T(" | Spacer: %i"), m_add_xx);
     if (!logpage.IsEmpty()) info.AppendFormat(_T(" | %s"), logpage);
     if (!remarks.IsEmpty() || !remarks_atex.IsEmpty()) info.AppendFormat(_T(" | %s"), remarks.IsEmpty() ? remarks_atex : remarks);
-    info.AppendFormat(_T(" | %s"), (kolor == c_full) ? FULL : ((CMainFrame*)theApp.m_pMainWnd)->Spot_Kolor[(kolor >> 3)]);
+    info.AppendFormat(_T(" | %s"), (kolor == c_full) ? FULL : CDrawDoc::kolory[kolor >> 3]);
     if (fizpage) info.AppendFormat(_T(" | na str: %s (%i,%i)"), m_pDocument->GetPage(fizpage)->GetNrPaginy(), posx, posy);
 }
 
@@ -475,7 +475,7 @@ CString CDrawAdd::PrepareBuf(TCHAR *ch) const
     bufor.AppendFormat(_T("%s%i%s%i%s%s%s"), ch, posx, ch, posy, ch, nazwa, ch);
     if (nreps > -1)
         bufor.AppendFormat(_T("%i"), nreps);
-    bufor.AppendFormat(_T("%s%s%s%s%s%s%s%s\n"), ch, ((CMainFrame*)AfxGetMainWnd())->Spot_Kolor[kolor == c_full ? 1 : kolor >> 3], ch, logpage, ch, remarks, ch, wersja);
+    bufor.AppendFormat(_T("%s%s%s%s%s%s%s%s\n"), ch, CDrawDoc::kolory[kolor == c_full ? 1 : kolor >> 3], ch, logpage, ch, remarks, ch, wersja);
 
     return bufor;
 }
@@ -586,7 +586,7 @@ BOOL CDrawAdd::OnOpen(CDrawView *pView)
     if (!dlg.m_fromQue && (((theApp.grupa&R_DEA) > 0) || (theApp.grupa&R_KIE && m_pDocument->isRO)))
         if (m_add_xx > 0) {
             int eok = this->flags.epsok;
-            int nrs = (int)((CMainFrame*)AfxGetMainWnd())->Spot_ID[((this->kolor) >> 3)];
+            int nrs = (int)CDrawDoc::spoty[this->kolor >> 3];
             int powt = (int)(this->powtorka == 0 ? 0 : (this->powtorka - CTime(POWTSEED_0)).GetDays());
             int ik = ((this->kolor) & c_full) == c_full ? c_full : (((this->kolor) & c_brak) == c_brak ? c_brak : c_spot);
             CString czk = this->flags.reserv == 1 ? _T("") : this->czaskto;
