@@ -69,7 +69,4 @@ class CDrawObj : public CObject
     CRect GetPrintRect() const;
     BOOL Intersects(const CRect& rect) const;
     BOOL Contains(const CPoint& point) const;
-#ifdef _DEBUG
-    void AssertValid() const override;
-#endif
 };

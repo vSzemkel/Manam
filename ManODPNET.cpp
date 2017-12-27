@@ -166,7 +166,7 @@ struct OdpHelper final
         }
     }
 
-    static BOOL __clrcall InitRozmInternal(OracleCommand^ cmd, std::vector<CRozm>* roz)
+    static BOOL __clrcall InitRozmInternal(OracleCommand^ cmd, std::vector<CRozm>& roz)
     {
         auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
         BOOL found = odr->HasRows;
@@ -179,7 +179,7 @@ struct OdpHelper final
             int i6 = odr->GetInt32(5);
             int i7 = odr->GetInt32(6);
             int i8 = odr->GetInt32(7);
-            roz->emplace_back(i1, i2, i3, i4, i5, i6, i7, i8);
+            roz.emplace_back(i1, i2, i3, i4, i5, i6, i7, i8); // serialize this
         }
 
         odr->Close();
@@ -1250,7 +1250,7 @@ BOOL CManODPNET::FillNiekratowe(CAddDlg* dlg)
     return FillNiekratoweInternal(dlg->m_szpalt_x, dlg->m_szpalt_y, dlg->m_typ_xx, &dlg->m_typ_ogl_combo, &dlg->m_typ_ogl_arr, &dlg->m_typ_sizex_arr, &dlg->m_typ_sizey_arr, &dlg->m_typ_precel_arr);
 }
 
-BOOL CManODPNET::IniKolorTable()
+void CManODPNET::IniKolorTable()
 {
     for (const auto& b : CDrawDoc::brushe)
         delete b;
@@ -1271,10 +1271,8 @@ BOOL CManODPNET::IniKolorTable()
         }
         odr->Close();
         m_lastErrorMsg.Empty();
-        return TRUE;
     } catch (OracleException^) {
         OdpHelper::ShowErrMsgDlg(L"Pobranie s³ownika z bazy nie powiod³o siê");
-        return FALSE;
     } finally {
         conn->Close();
     }
@@ -1538,7 +1536,7 @@ BOOL CManODPNET::InitRozm(CDrawDoc* doc)
 
     try {
         conn->Open();
-        OdpHelper::InitRozmInternal(cmd, &doc->m_Rozm);
+        OdpHelper::InitRozmInternal(cmd, doc->m_Rozm);
     } catch (OracleException^ oex) {
         OdpHelper::ShowErrMsgDlg(oex->Message);
         return FALSE;
@@ -1549,7 +1547,7 @@ BOOL CManODPNET::InitRozm(CDrawDoc* doc)
     return TRUE;
 }
 
-CRozm* CManODPNET::AddRozmTypu(std::vector<CRozm>* roz, int typ_xx)
+const CRozm* CManODPNET::AddRozmTypu(std::vector<CRozm>& roz, int typ_xx)
 {
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();
@@ -1559,7 +1557,7 @@ CRozm* CManODPNET::AddRozmTypu(std::vector<CRozm>* roz, int typ_xx)
     try {
         conn->Open();
         if (OdpHelper::InitRozmInternal(cmd, roz))
-            return &roz->back();
+            return &roz.back();
     } catch (OracleException^ oex) {
         OdpHelper::ShowErrMsgDlg(oex->Message);
     } finally {

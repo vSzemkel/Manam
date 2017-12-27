@@ -31,8 +31,8 @@ public:
     BOOL CkAccess(LPCTSTR tytul, LPCTSTR mutacja, LPCTSTR rights, BOOL szczekaj = TRUE);
     BOOL CkAccess(LPCTSTR gazeta, LPCTSTR rights);
 
+    void IniKolorTable();
     BOOL GetManamEps();                                               // pobiera z bazy plik z definicj¹ postscriptu
-    BOOL IniKolorTable();
     BOOL FillArr(std::vector<CString>* arr, LPCSTR sql, CManODPNETParms& ps, BOOL comboArray = FALSE);
     BOOL FillListArr(CListBox* list, LPCSTR sql, CManODPNETParms& ps, BOOL comboArray = FALSE);
     BOOL FillList(CListBox *list, LPCSTR sql, CManODPNETParms& ps, int indexPos = -1);
@@ -47,11 +47,11 @@ public:
     BOOL F4(CDrawDoc *doc, CListCtrl *list, BOOL initialize);
     BOOL ReadAcDeadlines(CDrawDoc* doc);
     BOOL InitRozm(CDrawDoc* doc);
-    CRozm* AddRozmTypu(std::vector<CRozm>* roz, int typ_xx);
     BOOL GetAcceptStatus(int grb_xx, CString& ldrz, CString& cdrz, CString& org);
     BOOL SpacerMulti(const std::vector<int>& mak_xxArr, std::vector<CString>& arr, CManODPNETParms& ps);
     BOOL Zapora(std::vector<int> *pub_xxArr);
     BOOL Deploy(const CString& filepath);
+    const CRozm* AddRozmTypu(std::vector<CRozm>& roz, int typ_xx);
     CString GetProdInfo(int pub_xx, LPTSTR kolor, int *ileMat);
     CString AdnoDlaZajawki(int *p, int *o);
     CString GetHttpSource(const CString& gazeta, const CString& kiedy, int *s);

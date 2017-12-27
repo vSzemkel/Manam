@@ -445,11 +445,3 @@ double CDrawObj::mody(double y)
 {
     return ((double)phight / y);
 }
-
-#ifdef _DEBUG
-void CDrawObj::AssertValid() const
-{
-    ASSERT(m_position.left <= m_position.right);
-    ASSERT(m_position.bottom <= m_position.top);
-}
-#endif
