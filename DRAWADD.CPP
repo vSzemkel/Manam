@@ -85,7 +85,7 @@ void CDrawAdd::Serialize(CArchive& ar)
         ar << (WORD)szpalt_y;
         ar << (WORD)sizex;
         ar << (WORD)sizey;
-        ar << (WORD)fizpage;
+        ar << (DWORD)fizpage;
         ar << (WORD)posx;
         ar << (WORD)posy;
         ar << (WORD)txtposx;
@@ -104,7 +104,8 @@ void CDrawAdd::Serialize(CArchive& ar)
         space.Serialize(ar);
     } else {
         ar >> m_add_xx;
-        WORD wTemp, wTemp0, wTemp1, wTemp2;
+        DWORD wTemp0;
+        WORD wTemp, wTemp1, wTemp2;
         ar >> wTemp; typ_xx = wTemp;
         ar >> nazwa;
         ar >> logpage;

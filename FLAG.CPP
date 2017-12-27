@@ -462,13 +462,17 @@ void CFlag::Reverse(size_t len) noexcept
 void CFlag::Serialize(CArchive& ar)
 {
     if (ar.IsStoring()) {
-        ar << (WORD)size;
+        ar << (WORD)(size >> 2);
         ar.Write(GetRawFlag(), (UINT)size);
     } else {
-        WORD w;
-        ar >> w;
-        SetSize(w);
-        ar.Read(GetRawFlag(), (UINT)size);
+        WORD sizeinfo;
+        ar >> sizeinfo;
+        if (sizeinfo > 2) /* dynamic, inconclusive test || (sizeinfo == 2 && size == 4) */
+            SetSize(sizeinfo << 2);
+        UINT sizeToRead = (sizeinfo == 1 && size == 8) ? 4 : (UINT)size; // truncate read
+        ar.Read(GetRawFlag(), sizeToRead);
+        if (sizeinfo == 2 && size == 4) // compensate read
+            ar.Read(&sizeToRead, 4);
     }
 }
 
