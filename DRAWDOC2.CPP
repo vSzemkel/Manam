@@ -868,18 +868,18 @@ void CDrawDoc::IniRozm()
     m_Rozm.emplace_back(); // krata 5x6
     theApp.SetRegistryBase(_T("EPSKratka"));
     int i, n = theApp.GetInt(_T("Amount"), 0);
-    TCHAR bf[10];
+    CString bf;
     for (i = 1; i <= n; ++i) {
-        _itot_s(i, bf, 10, 10); // tylko kraty inne niz 5x6
-        m_Rozm.emplace_back(theApp.GetInt(_T("w") + CString(bf), 0), theApp.GetInt(_T("h") + CString(bf), 0),
-            theApp.GetInt(_T("sw") + CString(bf), 0), theApp.GetInt(_T("sh") + CString(bf), 0),
-            theApp.GetInt(_T("szpalt_x") + CString(bf), 0), theApp.GetInt(_T("szpalt_y") + CString(bf), 0), 0, FALSE);
+        bf.Format(_T("%i"), i); // tylko kraty inne niz 5x6
+        m_Rozm.emplace_back(theApp.GetInt(_T("w") + bf, 0), theApp.GetInt(_T("h") + bf, 0),
+            theApp.GetInt(_T("sw") + bf, 0), theApp.GetInt(_T("sh") + bf, 0),
+            theApp.GetInt(_T("szpalt_x") + bf, 0), theApp.GetInt(_T("szpalt_y") + bf, 0), 0, FALSE);
     }
     n = theApp.GetProfileInt(_T("EPSNiekratowe"), _T("Amount"), 0);
     for (i = 1; i <= n; ++i) {
-        _itot_s(i, bf, 10, 10);
-        m_Rozm.emplace_back(theApp.GetProfileInt(_T("EPSNiekratowe"), _T("w") + CString(bf), 0), theApp.GetProfileInt(_T("Niekratowe"), _T("h") + CString(bf), 0), 0, 0, 0, 0,
-            theApp.GetProfileInt(_T("EPSNiekratowe"), _T("typ_xx") + CString(bf), 0), FALSE);
+        bf.Format(_T("%i"), i);
+        m_Rozm.emplace_back(theApp.GetProfileInt(_T("EPSNiekratowe"), _T("w") + bf, 0), theApp.GetProfileInt(_T("Niekratowe"), _T("h") + bf, 0), 0, 0, 0, 0,
+            theApp.GetProfileInt(_T("EPSNiekratowe"), _T("typ_xx") + bf, 0), FALSE);
     }
 } // IniRozm
 

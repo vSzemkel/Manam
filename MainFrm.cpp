@@ -334,14 +334,13 @@ DWORD CMainFrame::GetCaptionDataItem(int ind) const
 
 void CMainFrame::IniCaptionCombo(BOOL iscaption)
 {
-    CString tx = (iscaption) ? _T("Caption") : _T("StrLog");
+    CString bf, tx = (iscaption) ? _T("Caption") : _T("StrLog");
     const int max_col = theApp.GetProfileInt(tx, _T("Amount"), 0);
-    TCHAR bf[3];
     m_CaptionBox->ResetContent();
     m_CaptionBox->AddString(_T(""));
     for (int i = 1; i <= max_col; ++i) {
-        _itot_s(i, bf, 3, 10);
-        m_CaptionBox->AddString(theApp.GetProfileString(tx, tx + CString(bf), _T("")));
+        bf.Format(_T("%i"), i);
+        m_CaptionBox->AddString(theApp.GetProfileString(tx, tx + bf, _T("")));
     }
     m_CaptionBox->SetCurSel(0);
     m_CaptionBox->Invalidate();

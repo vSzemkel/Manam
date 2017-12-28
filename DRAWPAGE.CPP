@@ -83,18 +83,20 @@ void CDrawPage::Serialize(CArchive& ar)
         ar >> caption_alt;
         BYTE bTemp;
         ar >> bTemp; niemakietuj = bTemp;
+        space_locked = space_red = CFlag(0, 0, szpalt_x, szpalt_y);
         space_locked.Serialize(ar);
         space_red.Serialize(ar);
         space = space_locked | space_red;
         ar >> wTemp;
         for (WORD i = 0; i < wTemp; ++i) {
             int sx, sy;
-            CFlag sp, sp_l, sp_r;
             ar >> sx;
             ar >> sy;
+            CFlag sp_l(0, 0, sx, sy);
+            CFlag sp_r = sp_l;
             sp_l.Serialize(ar);
             sp_r.Serialize(ar);
-            sp = sp_l | sp_r;
+            CFlag sp = sp_l | sp_r;
             m_kraty_niebazowe.emplace_back(sx, sy, std::move(sp), std::move(sp_l), std::move(sp_r));
         }
         ar >> wTemp; prn_mak_xx = wTemp;

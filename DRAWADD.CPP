@@ -136,6 +136,7 @@ void CDrawAdd::Serialize(CArchive& ar)
             aRingWertexCnt = reinterpret_cast<int*>(&aPrecelWertex[precelWertexCnt]);
             ar.Read(aPrecelWertex.get(), precelWertexCnt * sizeof(CPoint) + precelRingCnt * sizeof(int));
         }
+        space = CFlag(0, 0, szpalt_x, szpalt_y);
         space.Serialize(ar);
         SetSpaceAndPosition(wTemp0, wTemp1, wTemp2);
     }
