@@ -17,7 +17,7 @@ public:
     static const unsigned long ulNotFound;
     static const char* memstr(const char *str, const char *sub, size_t len);
     CManPDF(PGENEPSARG pArg);
-    virtual ~CManPDF();
+    virtual ~CManPDF() = default;
     unsigned long GetMediaBox(const TCHAR *fpath, float *x1, float *y1, float *x2, float *y2, HANDLE hFile = 0);
     unsigned long SearchPattern(CFile& f, const char *pat) const;
     BOOL CreatePDF(CDrawPage *page, const TCHAR *trgName);

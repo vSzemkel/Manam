@@ -383,7 +383,7 @@ void CDrawPage::Print(CDC *pDC)
     ASSERT_VALID(this);
 
     CBrush* pOldBrush;
-    if ((pagina_type == c_rzym))
+    if (pagina_type == c_rzym)
         pOldBrush = pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->rzym));
     else
         pOldBrush = (CBrush*)pDC->SelectStockObject(WHITE_BRUSH);

@@ -2702,10 +2702,6 @@ CAccGrbDlg::CAccGrbDlg(CWnd *pParent /*=NULL*/)
     m_ckporg = m_ckpcdrz = m_ckpldrz = FALSE;
 }
 
-CAccGrbDlg::~CAccGrbDlg()
-{
-}
-
 BOOL CAccGrbDlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
@@ -2743,8 +2739,6 @@ COstWer::COstWer(std::vector<CDrawAdd*> *aNewAdds, std::vector<CDrawAdd*> *aOldA
     m_aDelAdds = aDelAdds;
     m_bBankOnly = bBankOnly;
 }
-
-//COstWer::~COstWer() {}
 
 void COstWer::DoDataExchange(CDataExchange *pDX)
 {
@@ -2904,10 +2898,6 @@ void COstWer::OnSelectAll()
 IMPLEMENT_DYNAMIC(CAcDeadDlg, CDialog)
 
 CAcDeadDlg::CAcDeadDlg(CWnd *pParent /*=NULL*/) : CDialog(CAcDeadDlg::IDD, pParent)
-{
-}
-
-CAcDeadDlg::~CAcDeadDlg()
 {
 }
 

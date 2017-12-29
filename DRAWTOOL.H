@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "drawobj.h"
+#include "DrawObj.h"
 
 class CDrawView;
 

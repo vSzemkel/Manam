@@ -22,7 +22,7 @@ public:
     static CDrawAdd* GetSelectedAdd() { return selected_add; }
     // Implementation
 protected:
-    virtual ~CQueView();
+    virtual ~CQueView() = default;
     virtual void OnDraw(CDC *pDC) override; // overridden to draw this view
     virtual void OnPrepareDC(CDC *pDC, CPrintInfo *pInfo) override;
     virtual void OnUpdate(CView *pSender, LPARAM lHint, CObject *pHint) override;

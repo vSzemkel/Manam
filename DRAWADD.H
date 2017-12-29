@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "drawobj.h"
+#include "DrawObj.h"
 #include "DrawPage.h"
 #include "Flag.h"
 

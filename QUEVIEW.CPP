@@ -20,10 +20,6 @@ CQueView::CQueView() : moving(FALSE)
 {
 }
 
-CQueView::~CQueView()
-{
-}
-
 BEGIN_MESSAGE_MAP(CQueView, CScrollView)
     //{{AFX_MSG_MAP(CQueView)
     ON_WM_MOUSEMOVE()

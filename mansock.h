@@ -7,8 +7,8 @@ class CManSock : public CSocket
 {
     // Operations
 public:
-    CManSock();
-    virtual ~CManSock();
+    CManSock() = default;
+    virtual ~CManSock() = default;
 
     // Overrides
 public:

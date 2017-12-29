@@ -27,7 +27,7 @@ public:
 
     // Implementation
 protected:
-    virtual ~CSplitFrame();
+    virtual ~CSplitFrame() = default;
     virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext *pContext) override;
 
     // Generated message map functions

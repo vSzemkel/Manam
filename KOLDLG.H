@@ -7,7 +7,7 @@
 #include "afxcmn.h"
 #include "afxdtctl.h"
 
-#include "drawobj.h"
+#include "DrawObj.h"
 
 // podpisy og³oszeñ maj¹ wspó³rzêdne z zakresu [-TXTSHIFT, TXTSHIFT]
 const int TXTSHIFT = 20;
@@ -1037,7 +1037,7 @@ class CAccGrbDlg final : public CDialog
 
 public:
     CAccGrbDlg(CWnd *pParent = nullptr);   // standard constructor
-    virtual ~CAccGrbDlg();
+    virtual ~CAccGrbDlg() = default;
 
     // Dialog Data
     enum { IDD = IDD_ACCGRB };
@@ -1098,7 +1098,7 @@ public:
     CTime m_kol;
 
     CAcDeadDlg(CWnd *pParent = nullptr);   // standard constructor
-    virtual ~CAcDeadDlg();
+    virtual ~CAcDeadDlg() = default;
 
     // Dialog Data
     enum { IDD = IDD_ACDEAD };

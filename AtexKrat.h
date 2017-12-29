@@ -11,7 +11,7 @@ class CAtexKrat
     // Construction
 public:
     CAtexKrat(const TCHAR* atexKratInfo, CDrawDoc* vDoc);
-    virtual ~CAtexKrat();
+    virtual ~CAtexKrat() = default;
     // Implementation
 public:
     BOOL isValid;	// flaga poprawnosci parsowania napisu w konstruktorze

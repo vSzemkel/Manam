@@ -20,10 +20,6 @@ CAtexKrat::CAtexKrat(const TCHAR *atexKretInfo, CDrawDoc *vDoc)
     isToSmall = FALSE;
 }
 
-CAtexKrat::~CAtexKrat()
-{
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CAtexKrat message handlers
 

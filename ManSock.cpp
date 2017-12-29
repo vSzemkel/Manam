@@ -10,18 +10,6 @@
 
 static const int MSG_LEN = 1024;
 
-/////////////////////////////////////////////////////////////////////////////
-// CManSock
-
-CManSock::CManSock()
-{
-}
-
-CManSock::~CManSock()
-{
-}
-
-// Do not edit the following lines, which are needed by ClassWizard.
 #if 0
 BEGIN_MESSAGE_MAP(CManSock, CSocket)
     //{{AFX_MSG_MAP(CManSock)

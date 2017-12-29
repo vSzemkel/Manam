@@ -28,10 +28,6 @@ CSplitFrame::CSplitFrame()
     bInitialized = FALSE;
 }
 
-CSplitFrame::~CSplitFrame()
-{
-}
-
 BOOL CSplitFrame::OnCreateClient(LPCREATESTRUCT cs, CCreateContext* pContext)
 {
     BOOL bSuccess;

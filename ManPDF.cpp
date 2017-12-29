@@ -34,8 +34,6 @@ CManPDF::CManPDF(PGENEPSARG pArg)
     nextObjNr = 7;
 }
 
-CManPDF::~CManPDF() {}
-
 /////////////////////////////////////////////////////////////////////////////
 // CManPDF message handlers
 
