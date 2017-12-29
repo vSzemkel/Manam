@@ -1,10 +1,10 @@
 
-#include "stdafx.h"
-#include "drawdoc.h"
-#include "drawvw.h"
-#include "koldlg.h"
-#include "mainfrm.h"
-#include "manam.h"
+#include "StdAfx.h"
+#include "DrawDoc.h"
+#include "DrawView.h"
+#include "KolDlg.h"
+#include "MainFrm.h"
+#include "Manam.h"
 
 extern BOOL drawErrorBoxes;
 

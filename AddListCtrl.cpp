@@ -1,9 +1,9 @@
 
-#include "stdafx.h"
-#include "addlistctrl.h"
-#include "drawadd.h"
-#include "drawdoc.h"
-#include "gridfrm.h"
+#include "StdAfx.h"
+#include "AddListCtrl.h"
+#include "DrawAdd.h"
+#include "DrawDoc.h"
+#include "GridFrm.h"
 
 const int CAddListCtrl::iWheelUnitY = 3 * ROWHEIGHT;
 

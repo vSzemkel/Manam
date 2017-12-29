@@ -1,12 +1,12 @@
 
-#include "stdafx.h"
-#include "drawadd.h"
-#include "drawdoc.h"
-#include "drawpage.h"
-#include "mainfrm.h"
-#include "manam.h"
-#include "queview.h"
-#include "spacer.h"
+#include "StdAfx.h"
+#include "DrawAdd.h"
+#include "DrawDoc.h"
+#include "DrawPage.h"
+#include "MainFrm.h"
+#include "Manam.h"
+#include "QueView.h"
+#include "Spacer.h"
 
 const int CSpacerDlg::narrowcx = 333;
 const int CSpacerDlg::widecx = 475;

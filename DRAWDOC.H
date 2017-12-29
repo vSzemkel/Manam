@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "drawpage.h"
+#include "DrawPage.h"
 
 #define A4 (5 * theApp.activeDoc->iPagesInRow)
 #define A3 (10 * theApp.activeDoc->iPagesInRow)

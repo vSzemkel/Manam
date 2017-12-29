@@ -1,13 +1,13 @@
 // ManPDF.cpp : implementation file
 //
 
-#include "stdafx.h"
-#include "drawadd.h"
-#include "drawdoc.h"
-#include "genepsinfodlg.h"
-#include "koldlg.h"
-#include "manam.h"
-#include "manpdf.h"
+#include "StdAfx.h"
+#include "DrawAdd.h"
+#include "DrawDoc.h"
+#include "GenEpsInfoDlg.h"
+#include "KolDlg.h"
+#include "Manam.h"
+#include "ManPDF.h"
 
 #include "zlib.h"
 

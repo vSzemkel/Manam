@@ -1,14 +1,14 @@
 // koldlg.cpp : implementation file
 
-#include "stdafx.h"
-#include "drawadd.h"
-#include "drawdoc.h"
-#include "drawpage.h"
-#include "genepsinfodlg.h"
-#include "koldlg.h"
-#include "mainfrm.h"
-#include "manam.h"
-#include "queview.h"
+#include "StdAfx.h"
+#include "DrawAdd.h"
+#include "DrawDoc.h"
+#include "DrawPage.h"
+#include "GenEpsInfoDlg.h"
+#include "KolDlg.h"
+#include "MainFrm.h"
+#include "Manam.h"
+#include "QueView.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CConnDlg dialog

@@ -4,8 +4,8 @@
 **	Pole danych obiektu CFlag jest 8*size bitowe
 */
 
-#include "stdafx.h"
-#include "flag.h"
+#include "StdAfx.h"
+#include "Flag.h"
 
 CFlag::CFlag(const CFlag& f)
 {
@@ -469,7 +469,7 @@ void CFlag::Serialize(CArchive& ar)
         ar >> storedSize;
         const auto sizeToRead = (UINT)min(size, storedSize); // truncate read
         ar.Read(GetRawFlag(), sizeToRead);
-        const int pad = storedSize - (int)sizeToRead;
+        const auto pad = storedSize - (int)sizeToRead;
         if (pad > 0) { // compensate read
             QWORD devnull;
             ar.Read(&devnull, (UINT)pad);

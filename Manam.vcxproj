@@ -240,20 +240,20 @@
   <ItemGroup>
     <ClCompile Include="AddListCtrl.cpp" />
     <ClCompile Include="AtexKrat.cpp" />
-    <ClCompile Include="DRAWADD.CPP" />
-    <ClCompile Include="DRAWDOC.CPP" />
-    <ClCompile Include="DRAWDOC2.CPP" />
-    <ClCompile Include="DRAWOBJ.CPP" />
-    <ClCompile Include="DRAWOPIS.CPP" />
-    <ClCompile Include="DRAWPAGE.CPP" />
-    <ClCompile Include="DRAWTOOL.CPP" />
-    <ClCompile Include="DRAWVW.CPP" />
-    <ClCompile Include="FLAG.CPP" />
+    <ClCompile Include="DrawAdd.cpp" />
+    <ClCompile Include="DrawDoc.cpp" />
+    <ClCompile Include="DrawDoc2.cpp" />
+    <ClCompile Include="DrawObj.cpp" />
+    <ClCompile Include="DrawOpis.cpp" />
+    <ClCompile Include="DrawPage.cpp" />
+    <ClCompile Include="DrawTool.cpp" />
+    <ClCompile Include="DrawView.cpp" />
+    <ClCompile Include="Flag.cpp" />
     <ClCompile Include="GenEpsInfoDlg.cpp" />
-    <ClCompile Include="GRIDFRM.CPP" />
-    <ClCompile Include="KOLDLG.CPP" />
+    <ClCompile Include="GridFrm.cpp" />
+    <ClCompile Include="KolDlg.cpp" />
     <ClCompile Include="MainFrm.cpp" />
-    <ClCompile Include="MANAM.CPP" />
+    <ClCompile Include="Manam.cpp" />
     <ClCompile Include="ManODPNET.cpp">
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <CompileAsManaged>true</CompileAsManaged>
@@ -262,9 +262,9 @@
     </ClCompile>
     <ClCompile Include="ManPDF.cpp" />
     <ClCompile Include="ManSock.cpp" />
-    <ClCompile Include="QUEVIEW.CPP" />
+    <ClCompile Include="QueView.cpp" />
     <ClCompile Include="Spacer.cpp" />
-    <ClCompile Include="SPLITFRM.CPP" />
+    <ClCompile Include="SplitFrm.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -275,26 +275,26 @@
   <ItemGroup>
     <ClInclude Include="AddListCtrl.h" />
     <ClInclude Include="AtexKrat.h" />
-    <ClInclude Include="DRAWADD.H" />
-    <ClInclude Include="DRAWDOC.H" />
-    <ClInclude Include="DRAWOBJ.H" />
-    <ClInclude Include="DRAWOPIS.H" />
-    <ClInclude Include="DRAWPAGE.H" />
-    <ClInclude Include="DRAWTOOL.H" />
-    <ClInclude Include="DRAWVW.H" />
-    <ClInclude Include="FLAG.H" />
+    <ClInclude Include="DrawAdd.h" />
+    <ClInclude Include="DrawDoc.h" />
+    <ClInclude Include="DrawObj.h" />
+    <ClInclude Include="DrawOpis.h" />
+    <ClInclude Include="DrawPage.h" />
+    <ClInclude Include="DrawTool.h" />
+    <ClInclude Include="DrawView.h" />
+    <ClInclude Include="Flag.h" />
     <ClInclude Include="GenEpsInfoDlg.h" />
     <ClInclude Include="GridFrm.h" />
-    <ClInclude Include="KOLDLG.H" />
+    <ClInclude Include="KolDlg.h" />
     <ClInclude Include="MainFrm.h" />
-    <ClInclude Include="MANAM.H" />
+    <ClInclude Include="Manam.h" />
     <ClInclude Include="ManODPNET.h" />
     <ClInclude Include="ManPDF.h" />
     <ClInclude Include="ManSock.h" />
-    <ClInclude Include="QUEVIEW.H" />
+    <ClInclude Include="QueView.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="spacer.h" />
-    <ClInclude Include="SPLITFRM.H" />
+    <ClInclude Include="Spacer.h" />
+    <ClInclude Include="SplitFrm.h" />
     <ClInclude Include="StdAfx.h" />
   </ItemGroup>
   <ItemGroup>

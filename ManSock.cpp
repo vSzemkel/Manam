@@ -1,12 +1,12 @@
 // ManSock.cpp : implementation file
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
+#include "DrawAdd.h"
+#include "DrawDoc.h"
+#include "MainFrm.h"
+#include "Manam.h"
 #include "ManSock.h"
-#include "drawadd.h"
-#include "drawdoc.h"
-#include "mainfrm.h"
-#include "manam.h"
 
 static const int MSG_LEN = 1024;
 

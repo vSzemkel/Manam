@@ -15,102 +15,105 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddListCtrl.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
     <ClCompile Include="AtexKrat.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="DRAWADD.CPP">
+    <ClCompile Include="DrawAdd.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="DRAWDOC.CPP">
+    <ClCompile Include="DrawDoc.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="DRAWDOC2.CPP">
+    <ClCompile Include="DrawDoc2.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="DRAWOBJ.CPP">
+    <ClCompile Include="DrawObj.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="DRAWOPIS.CPP">
+    <ClCompile Include="DrawOpis.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="DRAWPAGE.CPP">
+    <ClCompile Include="DrawPage.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="DRAWTOOL.CPP">
+    <ClCompile Include="DrawTool.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="DRAWVW.CPP">
+    <ClCompile Include="DrawView.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="FLAG.CPP">
+    <ClCompile Include="Flag.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="GenEpsInfoDlg.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="GRIDFRM.CPP">
+    <ClCompile Include="GridFrm.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="KOLDLG.CPP">
+    <ClCompile Include="KolDlg.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="MainFrm.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="MANAM.CPP">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="StdAfx.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="SPLITFRM.CPP">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="QUEVIEW.CPP">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ManPDF.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Spacer.cpp">
+    <ClCompile Include="Manam.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="ManODPNET.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="ManPDF.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
     <ClCompile Include="ManSock.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="AddListCtrl.cpp">
+    <ClCompile Include="QueView.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Spacer.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SplitFrm.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddListCtrl.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
     <ClInclude Include="AtexKrat.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="DRAWADD.H">
+    <ClInclude Include="DrawAdd.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="DRAWDOC.H">
+    <ClInclude Include="DrawDoc.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="DRAWOBJ.H">
+    <ClInclude Include="DrawObj.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="DRAWOPIS.H">
+    <ClInclude Include="DrawOpis.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="DRAWPAGE.H">
+    <ClInclude Include="DrawPage.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="DRAWTOOL.H">
+    <ClInclude Include="DrawTool.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="DRAWVW.H">
+    <ClInclude Include="DrawView.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="FLAG.H">
+    <ClInclude Include="Flag.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="GenEpsInfoDlg.h">
@@ -119,13 +122,16 @@
     <ClInclude Include="GridFrm.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="KOLDLG.H">
+    <ClInclude Include="KolDlg.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="MainFrm.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="MANAM.H">
+    <ClInclude Include="Manam.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ManODPNET.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="ManPDF.h">
@@ -134,25 +140,19 @@
     <ClInclude Include="ManSock.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="QUEVIEW.H">
+    <ClInclude Include="QueView.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="spacer.h">
+    <ClInclude Include="Spacer.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="SPLITFRM.H">
+    <ClInclude Include="SplitFrm.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="StdAfx.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="ManODPNET.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="AddListCtrl.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,18 +1,18 @@
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "ManPDF.h"
-#include "drawadd.h"
-#include "drawdoc.h"
-#include "drawopis.h"
-#include "drawpage.h"
-#include "drawtool.h"
-#include "drawvw.h"
-#include "genepsinfodlg.h"
-#include "gridfrm.h"
-#include "koldlg.h"
-#include "mainfrm.h"
-#include "manam.h"
-#include "queview.h"
+#include "DrawAdd.h"
+#include "DrawDoc.h"
+#include "DrawOpis.h"
+#include "DrawPage.h"
+#include "DrawTool.h"
+#include "DrawView.h"
+#include "GenEpsInfoDlg.h"
+#include "GridFrm.h"
+#include "KolDlg.h"
+#include "MainFrm.h"
+#include "Manam.h"
+#include "QueView.h"
 
 extern BOOL disableMenu;
 extern BOOL drawErrorBoxes;
@@ -399,7 +399,7 @@ void CDrawView::OnCancelEdit()
 {
     // deactivate any in-place active item on this view!
     COleClientItem *pActiveItem = GetDocument()->GetInPlaceActiveItem(this);
-    if (pActiveItem != NULL) {
+    if (pActiveItem != nullptr) {
         // if we found one, deactivate it
         pActiveItem->Close();
     }
@@ -418,11 +418,11 @@ void CDrawView::OnCancelEdit()
 void CDrawView::OnSetFocus(CWnd *pOldWnd)
 {
     COleClientItem *pActiveItem = GetDocument()->GetInPlaceActiveItem(this);
-    if (pActiveItem != NULL &&
+    if (pActiveItem != nullptr &&
         pActiveItem->GetItemState() == COleClientItem::activeUIState) {
         // need to set focus to this item if it is in the same view
         CWnd *pWnd = pActiveItem->GetInPlaceWindow();
-        if (pWnd != NULL) {
+        if (pWnd != nullptr) {
             pWnd->SetFocus();
             return;
         }
@@ -543,7 +543,7 @@ void CDrawView::CloneSelection()
 void CDrawView::UpdateActiveItem()
 {
     COleClientItem *pActiveItem = GetDocument()->GetInPlaceActiveItem(this);
-    if (pActiveItem != NULL &&
+    if (pActiveItem != nullptr &&
         pActiveItem->GetItemState() == COleClientItem::activeUIState) {
         // this will update the item rectangles by calling
         //  OnGetPosRect & OnGetClipRect.
@@ -629,9 +629,9 @@ void CDrawView::OnDestroy()
 
     // deactivate the inplace active item on this view
     COleClientItem *pActiveItem = GetDocument()->GetInPlaceActiveItem(this);
-    if (pActiveItem != NULL && pActiveItem->GetActiveView() == this) {
+    if (pActiveItem != nullptr && pActiveItem->GetActiveView() == this) {
         pActiveItem->Deactivate();
-        ASSERT(GetDocument()->GetInPlaceActiveItem(this) == NULL);
+        ASSERT(GetDocument()->GetInPlaceActiveItem(this) == nullptr);
     }
 }
 

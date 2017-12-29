@@ -1,10 +1,10 @@
 // AtexKrat.cpp : implementation file
 // p.xsize*pg.colwidth # p.ysizemm # p.xsize #	pg.columns # pg.height
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "AtexKrat.h"
 #include "Manam.h"
-#include "drawdoc.h"
+#include "DrawDoc.h"
 
 const int CAtexKrat::DIM_LIMIT = 16;
 const int CAtexKrat::ADJUST_LEVEL = 6;

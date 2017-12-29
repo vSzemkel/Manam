@@ -1,13 +1,12 @@
 
-#include "stdafx.h"
-
-#include "drawdoc.h"
-#include "drawvw.h"
-#include "genepsinfodlg.h"
-#include "koldlg.h"
-#include "mainfrm.h"
-#include "manam.h"
-#include "splitfrm.h"
+#include "StdAfx.h"
+#include "DrawDoc.h"
+#include "DrawView.h"
+#include "GenEpsInfoDlg.h"
+#include "KolDlg.h"
+#include "MainFrm.h"
+#include "Manam.h"
+#include "SplitFrm.h"
 
 #pragma once
 

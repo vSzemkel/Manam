@@ -1,11 +1,11 @@
 
-#include "stdafx.h"
-#include "drawdoc.h"
-#include "drawvw.h"
-#include "gridfrm.h"
-#include "manam.h"
-#include "queview.h"
-#include "splitfrm.h"
+#include "StdAfx.h"
+#include "DrawDoc.h"
+#include "DrawView.h"
+#include "GridFrm.h"
+#include "Manam.h"
+#include "QueView.h"
+#include "SplitFrm.h"
 
 extern BOOL disableMenu;
 

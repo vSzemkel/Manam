@@ -1,15 +1,15 @@
 
-#include "stdafx.h"
-#include "atexkrat.h"
-#include "drawadd.h"
-#include "drawdoc.h"
-#include "drawopis.h"
-#include "drawpage.h"
-#include "drawvw.h"
-#include "koldlg.h"
-#include "mainfrm.h"
-#include "manam.h"
-#include "queview.h"
+#include "StdAfx.h"
+#include "AtexKrat.h"
+#include "DrawAdd.h"
+#include "DrawDoc.h"
+#include "DrawOpis.h"
+#include "DrawPage.h"
+#include "DrawView.h"
+#include "KolDlg.h"
+#include "MainFrm.h"
+#include "Manam.h"
+#include "QueView.h"
 
 extern BOOL drawErrorBoxes;
 extern BOOL disableMenu;

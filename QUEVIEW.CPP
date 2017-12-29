@@ -1,11 +1,11 @@
 
-#include "stdafx.h"
-#include "drawadd.h"
-#include "drawdoc.h"
-#include "drawvw.h"
-#include "mainfrm.h"
-#include "manam.h"
-#include "queview.h"
+#include "StdAfx.h"
+#include "DrawAdd.h"
+#include "DrawDoc.h"
+#include "DrawView.h"
+#include "MainFrm.h"
+#include "Manam.h"
+#include "QueView.h"
 
 #define MARGIN 4
 

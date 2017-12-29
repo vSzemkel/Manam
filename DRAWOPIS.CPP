@@ -1,11 +1,11 @@
 
-#include "stdafx.h"
-#include "drawdoc.h"
-#include "drawopis.h"
-#include "drawvw.h"
-#include "koldlg.h"
-#include "mainfrm.h"
-#include "manam.h"
+#include "StdAfx.h"
+#include "DrawDoc.h"
+#include "DrawOpis.h"
+#include "DrawView.h"
+#include "KolDlg.h"
+#include "MainFrm.h"
+#include "Manam.h"
 
 IMPLEMENT_SERIAL(CDrawOpis, CDrawObj, 0)
 

@@ -1,11 +1,11 @@
 
-#include "stdafx.h"
-#include "addlistctrl.h"
-#include "drawadd.h"
-#include "drawdoc.h"
-#include "drawvw.h"
-#include "gridfrm.h"
-#include "mainfrm.h"
+#include "StdAfx.h"
+#include "AddListCtrl.h"
+#include "DrawAdd.h"
+#include "DrawDoc.h"
+#include "DrawView.h"
+#include "GridFrm.h"
+#include "MainFrm.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CGridFrm

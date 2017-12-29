@@ -2,8 +2,8 @@
 #pragma once
 
 #include "drawobj.h"
-#include "drawpage.h"
-#include "flag.h"
+#include "DrawPage.h"
+#include "Flag.h"
 
 class CGenEpsInfoDlg;
 class CDrawPage;

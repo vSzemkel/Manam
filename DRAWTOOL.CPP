@@ -1,15 +1,15 @@
 
-#include "stdafx.h"
-#include "drawadd.h"
-#include "drawdoc.h"
-#include "drawopis.h"
-#include "drawpage.h"
-#include "drawtool.h"
-#include "drawvw.h"
-#include "mainfrm.h"
-#include "manam.h"
-#include "queview.h"
-#include "spacer.h"
+#include "StdAfx.h"
+#include "DrawAdd.h"
+#include "DrawDoc.h"
+#include "DrawOpis.h"
+#include "DrawPage.h"
+#include "DrawTool.h"
+#include "DrawView.h"
+#include "MainFrm.h"
+#include "Manam.h"
+#include "QueView.h"
+#include "Spacer.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDrawTool implementation

@@ -1,6 +1,6 @@
 
-#include "stdafx.h"
-#include "genepsinfodlg.h"
+#include "StdAfx.h"
+#include "GenEpsInfoDlg.h"
 
 IMPLEMENT_DYNAMIC(CGenEpsInfoDlg, CDialog)
 
