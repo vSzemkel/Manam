@@ -286,12 +286,11 @@ void CDrawView::OnPrepareDC(CDC *pDC, CPrintInfo *pInfo)
     pDC->SetViewportExt(m_zoomNum);
     pDC->SetWindowExt(m_zoomDenom);
     if (pInfo) {
-        int i, l;
-        i = (int)floor((float)pDC->GetDeviceCaps(HORZRES) / 6 / GetDocument()->iPagesInRow);
-        l = (int)floor((float)pDC->GetDeviceCaps(VERTRES) / (theApp.colsPerPage * 40 + 2)); //40 - inaczej wchodza nastepne strony - 2 na naglowek
-        pDC->SetViewportOrg(2 * i, 0);
+        const auto deviceModuleWidth = (int)nearbyintf((float)pDC->GetDeviceCaps(HORZRES) / (6 * GetDocument()->iPagesInRow));
+        const auto deviceModuleHeigth = (int)nearbyintf((float)pDC->GetDeviceCaps(VERTRES) / (theApp.colsPerPage * 40 + 2)); // 40 - inaczej wchodza nastepne strony - 2 na naglowek
+        pDC->SetViewportOrg(2 * deviceModuleWidth, 0);
         pDC->SetWindowOrg(0, (pInfo->m_nCurPage - 1) * (-(theApp.colsPerPage * 40 + 2)) * (pmoduly)+(int)floor((float)pmoduly / 3));
-        pDC->SetViewportExt(i, l);
+        pDC->SetViewportExt(deviceModuleWidth, deviceModuleHeigth);
         pDC->SetWindowExt(pmodulx, -pmoduly);
     }
 }

@@ -1128,9 +1128,9 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
         }
         if (pmods != pmodcnt) {
             const auto norm = (float)pmodcnt / pmods;
-            l_modogl = (UINT)nearbyint((float)l_modogl * norm);
-            l_modred = (UINT)nearbyint((float)l_modred * norm);
-            l_modrez = (UINT)nearbyint((float)l_modrez * norm);
+            l_modogl = (UINT)nearbyintf((float)l_modogl * norm);
+            l_modred = (UINT)nearbyintf((float)l_modred * norm);
+            l_modrez = (UINT)nearbyintf((float)l_modrez * norm);
         }
         *m_modogl += l_modogl; *m_modred += l_modred; *m_modrez += l_modrez;
 
@@ -1147,7 +1147,7 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
                 if (vPage->space.GetBit(j) && !vPage->space_red.GetBit(j) && !vPage->space_locked.GetBit(j))
                     l_modogl++;
             if (pmods != pmodcnt)
-                l_modogl = (UINT)nearbyint((float)(l_modogl * pmodcnt) / pmods);
+                l_modogl = (UINT)nearbyintf((float)(l_modogl * pmodcnt) / pmods);
             *m_modogl += l_modogl;
         }
         vPage->SetBaseKrata(init_szpalt_x, init_szpalt_y, TRUE);
@@ -1172,7 +1172,7 @@ inline float CDrawDoc::PowAdd2Mod(BOOL bQueStat) const
         }
     }
 
-    return (float)nearbyint(100 * pow) / 100;
+    return nearbyintf(100 * pow) / 100;
 }
 
 void CDrawDoc::OnFileInfo()
