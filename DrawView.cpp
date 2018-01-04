@@ -286,8 +286,8 @@ void CDrawView::OnPrepareDC(CDC *pDC, CPrintInfo *pInfo)
     pDC->SetViewportExt(m_zoomNum);
     pDC->SetWindowExt(m_zoomDenom);
     if (pInfo) {
-        const auto deviceModuleWidth = (int)nearbyintf((float)pDC->GetDeviceCaps(HORZRES) / (6 * GetDocument()->iPagesInRow));
-        const auto deviceModuleHeigth = (int)nearbyintf((float)pDC->GetDeviceCaps(VERTRES) / (theApp.colsPerPage * 40 + 2)); // 40 - inaczej wchodza nastepne strony - 2 na naglowek
+        const auto deviceModuleWidth = pDC->GetDeviceCaps(HORZRES) / (6 * GetDocument()->iPagesInRow);
+        const auto deviceModuleHeigth = pDC->GetDeviceCaps(VERTRES) / (theApp.colsPerPage * 40 + 2); // 40 - inaczej wchodza nastepne strony - 2 na naglowek
         pDC->SetViewportOrg(2 * deviceModuleWidth, 0);
         pDC->SetWindowOrg(0, (pInfo->m_nCurPage - 1) * (-(theApp.colsPerPage * 40 + 2)) * (pmoduly)+(int)floor((float)pmoduly / 3));
         pDC->SetViewportExt(deviceModuleWidth, deviceModuleHeigth);
@@ -973,23 +973,23 @@ void CDrawView::OnUpdateEditPaste(CCmdUI *pCmdUI)
 // CDrawView printing methods
 LPDEVMODE CDrawView::SetLandscape()
 {
-    //nazwa drukarki domyœlnej
+    // nazwa drukarki domyœlnej
     DWORD lSize = n_size;
     if (!::GetDefaultPrinter(theApp.bigBuf, &lSize))
-        return NULL;
-    //otwórz
+        return nullptr;
+    // otwórz
     HANDLE hPrinter;
     if (!::OpenPrinter(theApp.bigBuf, &hPrinter, NULL))
-        return NULL;
-    //pobierz ustawienia
+        return nullptr;
+    // pobierz ustawienia
     DWORD dwNeeded = DocumentProperties(this->m_hWnd, hPrinter, theApp.bigBuf, NULL, NULL, 0);
     PDEVMODE dm = (PDEVMODE)LocalAlloc(LMEM_FIXED, dwNeeded);
-    //zmieñ
+    // zmieñ
     DocumentProperties(this->m_hWnd, hPrinter, theApp.bigBuf, dm, NULL, DM_OUT_BUFFER);
     if (dm && dm->dmFields & DM_ORIENTATION)
         dm->dmOrientation = DMORIENT_LANDSCAPE;
     DocumentProperties(this->m_hWnd, hPrinter, theApp.bigBuf, dm, dm, DM_IN_BUFFER | DM_OUT_BUFFER);
-    //zamknij
+    // zamknij
     ::ClosePrinter(hPrinter);
     return dm;
 }

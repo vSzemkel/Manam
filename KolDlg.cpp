@@ -2929,7 +2929,7 @@ CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 
     char procId[48];
     GetProcId(procId);
-    CString sProcInfo = CString(procId);
+    CString sProcInfo(procId);
     if (sProcInfo.IsEmpty())
         sProcInfo = _T("Procesor < Pentium 4");
     else

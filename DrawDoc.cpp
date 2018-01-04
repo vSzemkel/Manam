@@ -303,7 +303,7 @@ void CDrawDoc::Draw(CDC *pDC, CDrawView *pView)
             p->DrawTracker(pDC, CDrawObj::selected);
     }
 
-    auto psize = m_pages.size();
+    const auto psize = m_pages.size();
     if (psize > 0 && ((psize & 1) == 0)) { // makieta ma rozkladowke
         CDrawPage *pPage = m_pages[psize / 2];
         CRect& pRozkl = pPage->m_position;
@@ -396,8 +396,8 @@ void CDrawDoc::PrintPage(CDC *pDC, CDrawPage *pPage)
         if (pOpi && pPage->Intersects(pOpi->m_position)) pOpi->Print(pDC);
     }
 
-    CPoint p = pDC->GetWindowOrg();
-    CSize s = pDC->ScaleViewportExt(1, 2, 1, 2);
+    const CPoint p = pDC->GetWindowOrg();
+    const CSize s = pDC->ScaleViewportExt(1, 2, 1, 2);
 
     for (const auto& pAdd : pPage->m_adds) {
         pDC->SetWindowOrg(2 * (pPage->m_position.left / CLIENT_SCALE - 5 * vscale) - pAdd->m_position.left / CLIENT_SCALE,

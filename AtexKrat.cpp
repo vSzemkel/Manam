@@ -27,7 +27,7 @@ BOOL CAtexKrat::CompX(int *sizex, int *s_x) const
 {
     for (*s_x = 1; *s_x < DIM_LIMIT; (*s_x)++) {
         const auto tmpsizex = (float)xcol / szpalt_x * (float)*s_x;
-        *sizex = (int)nearbyint(tmpsizex);
+        *sizex = (int)nearbyintf(tmpsizex);
         if (fabs(tmpsizex - *sizex) < *sizex*TOLERANCE)
             return TRUE;
     }
@@ -38,7 +38,7 @@ BOOL CAtexKrat::CompY(int *sizey, int *s_y) const
 {
     for (*s_y = 1; *s_y < DIM_LIMIT; (*s_y)++) {
         const auto tmpsizey = (float)ymm / (float)dy * (float)*s_y;
-        *sizey = (int)nearbyint(tmpsizey);
+        *sizey = (int)nearbyintf(tmpsizey);
         if (fabs(tmpsizey - *sizey) < *sizey * TOLERANCE)
             return TRUE;
     }

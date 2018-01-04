@@ -15,7 +15,7 @@
 
 #define modulx CDrawObj::modx(szpalt_x)
 #define moduly CDrawObj::mody(szpalt_y)
-#define B2MB(x) (int)nearbyint((float)x / 1048576)
+#define B2MB(x) (int)nearbyintf((float)x / 1048576)
 
 constexpr int CLIENT_SCALE = 20;
 constexpr int PRINT_VOFFSET = -10;
@@ -69,9 +69,9 @@ constexpr int STUDIO_SEND = 5;
 constexpr int STUDIO_FILTR = 6;
 constexpr int STUDIO_MSG = 7;
 // gen eps
-constexpr float mm2pkt = 0.2835; // 1mm = 2.835pt
-constexpr float pkt2mm = 0.3527; // 1pt = 0.3527mm
-constexpr float pkt_10m = 2.835;
+constexpr float mm2pkt = 0.2835f; // 1mm = 2.835pt
+constexpr float pkt2mm = 0.3527f; // 1pt = 0.3527mm
+constexpr float pkt_10m = 2.835f;
 constexpr int podpisH = 6; // 2.1162 [mm]
 constexpr int preview_offset = 30;
 // format materialu
