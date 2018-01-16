@@ -10,8 +10,8 @@
 .vscode/
 ipch/
 
-/x64/
-/x86/
+/**/x64
+/**/x86
 /Manam.VC.db
 /Manam.VC.VC.opendb
 /Oracle.ManagedDataAccess.dll

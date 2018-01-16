@@ -62,13 +62,12 @@ CFlag::CFlag(int sx, int sy, int szpalt_x, int szpalt_y)
     }
 }
 
-CFlag::CFlag(const char *raw)
+CFlag::CFlag(const char *raw) : size(CRITICAL_SIZE)
 {
     size_t len = strlen(raw);
-    if (len == 0) {
-        size = CRITICAL_SIZE;
+    if (len == 0)
         return;
-    }
+
     if (!(len & 7) && strspn(raw, "0123456789ABCDEFabcdef") == len) { // ciag 4n dwuznakowych batow
         size = len >> 1;
 #ifdef _WIN64
