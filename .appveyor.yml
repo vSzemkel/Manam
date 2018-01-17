@@ -15,7 +15,9 @@ platform: x64
 before_build:
 - cmd: >-
     nuget restore
+
     nuget install Oracle.ManagedDataAccess -version 12.2.1100
+
     copy Oracle.ManagedDataAccess.12.2.1100\lib\net40\Oracle.ManagedDataAccess.dll .
 
 build:
