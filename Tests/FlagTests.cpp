@@ -11,3 +11,18 @@ TEST(FlagTests, DefaultLattice) {
     EXPECT_TRUE(flag.GetBit(11) == 0) << L"Nieprawid³owy bit";
     EXPECT_STREQ(L"00000400", (LPCTSTR)flag.ToRaw()) << L"Zaburzona flaga";
 }
+
+TEST(FlagTests, BitMaskInvert) {
+    CFlag flag{ 1, 1, 10, 30 };
+
+    ASSERT_EQ(40, flag.GetSize()) << L"Nieprawid³owy rozmiar kraty bazowej";
+    flag |= 0x33333333;
+    auto p = flag.Print();
+    EXPECT_STREQ(p.Right(8), CString("00110011"));
+    CFlag flag2{ flag };
+    flag2 ^= 0xCCCCCCCC; // "11001100"
+    p = flag2.Print();
+    EXPECT_STREQ(p.Right(8), CString("11111111"));
+    flag2.Invert();
+    ASSERT_TRUE(flag2.IsZero());
+}
