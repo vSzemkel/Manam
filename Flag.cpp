@@ -153,7 +153,7 @@ const CFlag& CFlag::operator= (CFlag&& f) noexcept
 CFlag CFlag::operator& (const CFlag& f) const noexcept
 {
     ASSERT(size == f.size);
-    CFlag ret(size);
+    CFlag ret{size};
     if (size > CRITICAL_SIZE) {
         auto src1 = (uintptr_t*)flag;
         auto src2 = (uintptr_t*)f.flag;
@@ -170,7 +170,7 @@ CFlag CFlag::operator& (const CFlag& f) const noexcept
 CFlag CFlag::operator| (const CFlag& f) const noexcept
 {
     ASSERT(size == f.size);
-    CFlag ret(size);
+    CFlag ret{size};
     if (size > CRITICAL_SIZE) {
         auto src1 = (uintptr_t*)flag;
         auto src2 = (uintptr_t*)f.flag;
@@ -187,7 +187,7 @@ CFlag CFlag::operator| (const CFlag& f) const noexcept
 CFlag CFlag::operator^ (const CFlag& f) const noexcept
 {
     ASSERT(size == f.size);
-    CFlag ret(size);
+    CFlag ret{size};
     if (size > CRITICAL_SIZE) {
         auto src1 = (uintptr_t*)flag;
         auto src2 = (uintptr_t*)f.flag;
@@ -479,7 +479,8 @@ void CFlag::Serialize(CArchive& ar)
 int CFlag::GetBitCnt(unsigned char val) const noexcept
 {
     int iIle = 0;
-    for (size_t i = 0; i < 8 * size; ++i)
+    const auto bit_cnt = 8 * size;
+    for (size_t i = 0; i < bit_cnt; ++i)
         if ((GetBit(i) > 0) == (val > 0))
             iIle++;
     return iIle;
@@ -503,12 +504,14 @@ void CFlag::SetBit(size_t pos, unsigned char bit) noexcept
 
 CString CFlag::Print() const
 {
-    CString display('\0', (int)size * 8);
-    for (int i = 0; i < (int)size; ++i)
-        for (int j = 0; j < 8; ++j)
-            display.SetAt(8 * i + j, (GetBit(8 * i + j) ? '1' : '0'));
-    display.MakeReverse();
-    return display;
+    const int bit_cnt = (int)size * 8;
+    CString display{'0', bit_cnt};
+
+    for (auto i = 0; i < bit_cnt; ++i)
+        if (GetBit(i) != 0)
+            display.SetAt(i, '1');
+
+    return display.MakeReverse();
 }
 
 CString CFlag::ToRaw() const

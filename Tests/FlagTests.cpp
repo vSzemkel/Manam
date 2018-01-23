@@ -26,3 +26,17 @@ TEST(FlagTests, BitMaskInvert) {
     flag2.Invert();
     ASSERT_TRUE(flag2.IsZero());
 }
+
+TEST(FlagTests, BitCount) {
+    CFlag flag{"A580BD51C580BDAF"};
+
+    auto zero_cnt = flag.GetBitCnt(0);
+    auto one_cnt = flag.GetBitCnt(1);
+    ASSERT_EQ(zero_cnt + one_cnt, 8 * flag.GetSize()) << L"New kind of bit invented!";
+
+    std::wstring p{flag.Print()};
+    auto char0_cnt = std::count(p.begin(), p.end(), '0');
+    auto char1_cnt = std::count(p.begin(), p.end(), '1');
+    EXPECT_EQ(char0_cnt, zero_cnt);
+    EXPECT_EQ(char1_cnt, one_cnt);
+}
