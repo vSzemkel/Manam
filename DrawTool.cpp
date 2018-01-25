@@ -213,10 +213,6 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
                     if (pAdd) {
                         const int szpalt_x = pAdd->szpalt_x;
                         const int szpalt_y = pAdd->szpalt_y;
-                        const int mx = min(pmodulx, (int)modulx);
-                        const int my = -min(pmoduly, (int)moduly);
-                        const int x = (int)(mx*ceil((double)pAdd->m_position.left / mx - 0.5));
-                        const int y = (int)(my*ceil((double)pAdd->m_position.top / my - 0.5));
                         const auto adCentr = pAdd->m_position.CenterPoint();
                         const auto srcPage = pDoc->GetPage(pAdd->fizpage);
 
@@ -234,14 +230,22 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
                                 pAdd->SetSpaceAndPosition(pAdd->fizpage, pAdd->posx, pAdd->posy);
                                 toPos = pAdd->m_position;
                             } else {
-                                toPos.SetRect(x, y, x + pAdd->m_position.Width(), y + pAdd->m_position.Height());
+                                if (dstPage)
+                                    toPos = pAdd->m_position;
+                                else {
+                                    const int mx = min(pmodulx, (int)modulx);
+                                    const int my = -min(pmoduly, (int)moduly);
+                                    const int x = (int)(mx * nearbyint((double)pAdd->m_position.left / mx));
+                                    const int y = (int)(my * nearbyint((double)pAdd->m_position.top / my));
+                                    toPos.SetRect(x, y, x + pAdd->m_position.Width(), y + pAdd->m_position.Height());
+                                }
                                 pAdd->SetPosition(&toPos, dstPage);
                             }
                             pAdd->MoveTo(toPos, pView);
                         }
 
                         if (pAdd == CQueView::selected_add) { // z kolejki mo¿na ustawiæ tylko na stronê
-                            int xx = pAdd->m_pub_xx;
+                            const int xx = pAdd->m_pub_xx;
                             pAdd->m_pub_xx *= -1;
                             selectMode = SelectMode::none;
                             CDrawTool::OnLButtonUp(pView, nFlags, point);

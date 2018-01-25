@@ -40,3 +40,18 @@ TEST(FlagTests, BitCount) {
     EXPECT_EQ(char0_cnt, zero_cnt);
     EXPECT_EQ(char1_cnt, one_cnt);
 }
+
+TEST(FlagTests, MaskShift) {
+    CFlag flag{100};
+    const auto block_cnt = flag.GetSize() / sizeof(intptr_t);
+
+    flag |= 1;
+    ASSERT_EQ(flag.GetBitCnt(1), block_cnt) << L"New kind of bit invented!";
+    flag <<= 6;
+    EXPECT_EQ(flag.GetBitCnt(1), block_cnt);
+
+    flag.SetZero();
+    flag.SetBit(0);
+    flag <<= 300;
+    EXPECT_EQ(flag.GetBitCnt(1), 1);
+}

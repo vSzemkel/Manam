@@ -688,7 +688,7 @@ BOOL CDrawPage::FindSpace(CDrawAdd *pObj, int *px, int *py, int sx, int sy) cons
 
     // zwolnij miejsce zajmowane poprzednio jezeli przesuniecie w obrebie strony
     // const CFlag& sp = (interPage) ? space ^ pObj->GetPlacementFlag() : space; kompiluje sie fatalnie
-    CFlag sp(space);
+    CFlag sp{space};
     if (interPage)
         sp ^= pObj->GetPlacementFlag();
 
@@ -733,7 +733,7 @@ BOOL CDrawPage::CheckSpace(const CDrawAdd *pObj, int px, int py) const
     if (px < 1 || px + pObj->sizex - 1 > szpalt_x || py < 1 || py + pObj->sizey - 1 > szpalt_y) return FALSE;
 
     // zwolnij miejsce zajmowane poprzednio jezeli przesuniecie w obrebie strony
-    CFlag sp(space);
+    CFlag sp{space};
     if (nr == pObj->fizpage)
         sp ^= pObj->GetPlacementFlag();
 
@@ -761,7 +761,7 @@ BOOL CDrawPage::CheckSpaceDiffKraty(const CDrawAdd *pObj, int x, int y, int sx, 
                     if ((sp & mask).IsSet()) {
                         CRect inter, dst(m_position.left + (int)(CDrawObj::modx(s_x)*(l - 1)), m_position.bottom + (int)(CDrawObj::mody(s_y)*(s_y - k)),
                             /* normalized */m_position.left + (int)(CDrawObj::modx(s_x)*l), m_position.bottom + (int)(CDrawObj::mody(s_y)*(s_y - k + 1)));
-                        if (inter.IntersectRect(dstRect, dst)) 
+                        if (inter.IntersectRect(dstRect, dst))
                             return FALSE;
                     }
         }
