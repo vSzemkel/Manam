@@ -752,16 +752,16 @@ BOOL CDrawPage::CheckSpaceDiffKraty(const CDrawAdd *pObj, int x, int y, int sx, 
     // dla wielokratowych stron dziedziczonych
     if (m_dervlvl != DERV_NONE) {
         for (const auto& kn : m_kraty_niebazowe) {
-            int s_x = kn.m_szpalt_x, s_y = kn.m_szpalt_y;
-            auto sp = &kn.m_space;
-            CFlag mask(sp->GetSize());
-            mask |= 1;
+            const int s_x = kn.m_szpalt_x, s_y = kn.m_szpalt_y;
+            const auto& sp = kn.m_space;
+            CFlag mask{sp.GetSize()};
+            mask.SetBit(0);
             for (int k = s_y; k > 0; k--)
                 for (int l = s_x; l > 0; l--, mask <<= 1)
-                    if ((*sp & mask).IsSet()) {
+                    if ((sp & mask).IsSet()) {
                         CRect inter, dst(m_position.left + (int)(CDrawObj::modx(s_x)*(l - 1)), m_position.bottom + (int)(CDrawObj::mody(s_y)*(s_y - k)),
                             /* normalized */m_position.left + (int)(CDrawObj::modx(s_x)*l), m_position.bottom + (int)(CDrawObj::mody(s_y)*(s_y - k + 1)));
-                        if (inter.IntersectRect(dstRect, dst))
+                        if (inter.IntersectRect(dstRect, dst)) 
                             return FALSE;
                     }
         }
