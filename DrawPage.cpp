@@ -293,12 +293,12 @@ void CDrawPage::DrawGrid(CDC *pDC)
 
     int k;
     for (k = 1; k <= szpalt_y; k++) {
-        pDC->MoveTo(m_position.left, m_position.bottom + (int)(k*mody(szpalt_y)));
-        pDC->LineTo(m_position.right, m_position.bottom + (int)(k*mody(szpalt_y)));
+        pDC->MoveTo(m_position.left, m_position.bottom + (int)(k * mody(szpalt_y)));
+        pDC->LineTo(m_position.right, m_position.bottom + (int)(k * mody(szpalt_y)));
     }
     for (k = 1; k < szpalt_x; k++) {
-        pDC->MoveTo(m_position.left + (int)(k*modx(szpalt_x)), m_position.bottom);
-        pDC->LineTo(m_position.left + (int)(k*modx(szpalt_x)), m_position.bottom + (int)(mody(szpalt_y)*szpalt_y));
+        pDC->MoveTo(m_position.left + (int)(k * modx(szpalt_x)), m_position.bottom);
+        pDC->LineTo(m_position.left + (int)(k * modx(szpalt_x)), m_position.bottom + (int)(mody(szpalt_y) * szpalt_y));
     }
 }
 
@@ -310,7 +310,7 @@ CRect CDrawPage::GetNormalizedModuleRect(size_t module) const
     const auto tmp = div((int)module, szpalt_x);
     const auto posx = szpalt_x - tmp.rem;
     const auto posy = szpalt_y - tmp.quot;
-    return CRect(m_position.left + (int)(modulx*(posx - 1)), m_position.bottom + (int)(moduly*(szpalt_y - posy)), m_position.left + (int)(modulx*posx), m_position.bottom + (int)(moduly*(szpalt_y - posy + 1)));
+    return CRect(m_position.left + (int)(modulx * (posx - 1)), m_position.bottom + (int)(moduly * (szpalt_y - posy)), m_position.left + (int)(modulx * posx), m_position.bottom + (int)(moduly * (szpalt_y - posy + 1)));
 }
 
 void CDrawPage::SetSpotKolor(UINT spot_kolor) // spot kolor to index spotkoloru w tablicy Spot_Kolor
@@ -674,7 +674,7 @@ void CDrawPage::RealizeSpace(const CDrawAdd *pObj)
     dirty = TRUE;
 }
 
-BOOL CDrawPage::FindSpace(CDrawAdd *pObj, int *px, int *py, int sx, int sy) const
+BOOL CDrawPage::FindSpace(CDrawAdd *pObj, int *px, int *py, const int sx, const int sy) const
 {
     BOOL ret = FALSE;
     if (m_dervlvl == DERV_FIXD || m_dervlvl == DERV_PROH) return FALSE;
@@ -701,7 +701,7 @@ BOOL CDrawPage::FindSpace(CDrawAdd *pObj, int *px, int *py, int sx, int sy) cons
     }
 
     // sprawdz moduly na kracie bazowej
-    if (!(sp & pObj->GetPlacementFlag(*px, *py)) && CheckSpaceDiffKraty(pObj, *px, *py, sx, sy)) {
+    if (!(sp & pObj->GetPlacementFlag(*px, *py)) && CheckSpaceDiffKraty(pObj, *px, *py)) {
         ret = TRUE;
         goto restoreShape;
     }
@@ -709,9 +709,9 @@ BOOL CDrawPage::FindSpace(CDrawAdd *pObj, int *px, int *py, int sx, int sy) cons
         goto restoreShape;
 
     // szukaj innego miejsca na stronie docelowej
-    for (int y = (szpalt_y + 1 - sy); y > 0; y--)
-        for (int x = (szpalt_x + 1 - sx); x > 0; x--)
-            if (!(sp & pObj->GetPlacementFlag(x, y)) && CheckSpaceDiffKraty(pObj, x, y, sx, sy)) {
+    for (int y = (szpalt_y + 1 - sy); y > 0; --y)
+        for (int x = (szpalt_x + 1 - sx); x > 0; --x)
+            if (!(sp & pObj->GetPlacementFlag(x, y)) && CheckSpaceDiffKraty(pObj, x, y)) {
                 *px = x; *py = y;
                 ret = TRUE;
                 goto restoreShape;
@@ -727,7 +727,7 @@ restoreShape:
     return ret;
 }
 
-BOOL CDrawPage::CheckSpace(const CDrawAdd *pObj, int px, int py) const
+BOOL CDrawPage::CheckSpace(const CDrawAdd *pObj, const int px, const int py) const
 {
     /* vu : Sprawdza czy dane ogloszenie mozna postawic we wspolrzednych px i py na stronie		end vu */
     if (px < 1 || px + pObj->sizex - 1 > szpalt_x || py < 1 || py + pObj->sizey - 1 > szpalt_y) return FALSE;
@@ -740,11 +740,11 @@ BOOL CDrawPage::CheckSpace(const CDrawAdd *pObj, int px, int py) const
     return (sp & pObj->GetPlacementFlag(px, py)).IsZero();
 }
 
-BOOL CDrawPage::CheckSpaceDiffKraty(const CDrawAdd *pObj, int x, int y, int sx, int sy) const
+BOOL CDrawPage::CheckSpaceDiffKraty(const CDrawAdd *pObj, const int x, const int y) const
 {
     if (m_kraty_niebazowe.empty()) return TRUE;
     // sprawdz przecinanie z innymi kratami
-    CRect dstRect(m_position.left + (int)(modulx*(x - 1)), m_position.bottom + (int)(moduly*(szpalt_y - y - sy + 1)), m_position.left + (int)(modulx*(x + sx - 1)), m_position.bottom + (int)(moduly*(szpalt_y - y + 1)));
+    CRect dstRect(m_position.left + (int)(modulx * (x - 1)), m_position.bottom + (int)(moduly * (szpalt_y - y - pObj->sizey + 1)), m_position.left + (int)(modulx * (x + pObj->sizex - 1)), m_position.bottom + (int)(moduly * (szpalt_y - y + 1)));
     for (const auto& pAdd : m_adds)
         if ((pAdd->szpalt_x != pObj->szpalt_x || pAdd->szpalt_y != pObj->szpalt_y) && pAdd->precelWertexCnt == 0 && pAdd->Intersects(dstRect))
             return FALSE;
@@ -752,13 +752,12 @@ BOOL CDrawPage::CheckSpaceDiffKraty(const CDrawAdd *pObj, int x, int y, int sx, 
     // dla wielokratowych stron dziedziczonych
     if (m_dervlvl != DERV_NONE) {
         for (const auto& kn : m_kraty_niebazowe) {
-            const int s_x = kn.m_szpalt_x, s_y = kn.m_szpalt_y;
+            auto bit = 0;
             const auto& sp = kn.m_space;
-            CFlag mask{sp.GetSize()};
-            mask.SetBit(0);
-            for (int k = s_y; k > 0; k--)
-                for (int l = s_x; l > 0; l--, mask <<= 1)
-                    if ((sp & mask).IsSet()) {
+            const int s_x = kn.m_szpalt_x, s_y = kn.m_szpalt_y;
+            for (int k = s_y; k > 0; --k)
+                for (int l = s_x; l > 0; --l, ++bit)
+                    if (sp.GetBit(bit) != 0) {
                         CRect inter, dst(m_position.left + (int)(CDrawObj::modx(s_x)*(l - 1)), m_position.bottom + (int)(CDrawObj::mody(s_y)*(s_y - k)),
                             /* normalized */m_position.left + (int)(CDrawObj::modx(s_x)*l), m_position.bottom + (int)(CDrawObj::mody(s_y)*(s_y - k + 1)));
                         if (inter.IntersectRect(dstRect, dst))
