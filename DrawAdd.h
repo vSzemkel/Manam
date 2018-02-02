@@ -119,7 +119,7 @@ private:
     int *aRingWertexCnt;    // tablica iloœci wierzcho³ków na poszczególnych obwodnicach, w³asciciel pamiêci: aPrecelWertex
     BOOL SetStrictDescPos(LPCTSTR description, CRect *vRect, CDrawPage *pPage);
     BOOL PtOnRing(CPoint p) const; // stwierdza, czy krawêdŸ (px,py)->(px+1,py) jest na dotychczas znalezionej obwodnicy precla
-    int FindRing(CPoint p0, BOOL bOuterRing); // znajduje obwodnicê precla rozpoczynaj¹c¹ siê od p0 w kierunku E, zwraca liczbê wierzcho³ków
+    int FindRing(CPoint p0, bool bOuterRing); // znajduje obwodnicê precla rozpoczynaj¹c¹ siê od p0 w kierunku E, zwraca liczbê wierzcho³ków
 };
 
 struct SpadInfo

@@ -1,5 +1,5 @@
 // *****************************************************
-// Copyright (C) 1999-2017 Marcin Buchwald dla Agora SA
+// Copyright (C) 1999-2018 Marcin Buchwald dla Agora SA
 // All rights reserved.
 // *****************************************************
 
@@ -15,7 +15,6 @@
 
 #define modulx CDrawObj::modx(szpalt_x)
 #define moduly CDrawObj::mody(szpalt_y)
-#define B2MB(x) (int)nearbyintf((float)x / 1048576)
 
 constexpr int CLIENT_SCALE = 20;
 constexpr int PRINT_VOFFSET = -10;

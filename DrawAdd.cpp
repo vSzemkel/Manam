@@ -786,7 +786,7 @@ BOOL CDrawAdd::PtOnRing(CPoint p) const
     return FALSE;
 }
 
-int CDrawAdd::FindRing(CPoint p0, BOOL bOuterRing)
+int CDrawAdd::FindRing(CPoint p0, bool bOuterRing)
 {
     enum Kierunek : uint8_t { E, S, W, N }; // okresla kierunek ostatnio znalezionego fragmentu obwodnicy
     Kierunek eKierunek = E;
@@ -800,11 +800,11 @@ int CDrawAdd::FindRing(CPoint p0, BOOL bOuterRing)
     while (p != p0) {
         switch (eKierunek) {
             case E:
-                if (p.y > 0 && p.x < szpalt_x && space.GetBit((p.y - 1)*szpalt_x + p.x)>0 == bOuterRing) {
+                if (p.y > 0 && p.x < szpalt_x && space[(p.y - 1)*szpalt_x + p.x] == bOuterRing) {
                     p.y--;
                     eKierunek = N;
                     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
-                } else if (p.x < sizex && p.y < szpalt_y && space.GetBit(p.y*szpalt_x + p.x)>0 == bOuterRing) {
+                } else if (p.x < sizex && p.y < szpalt_y && space[p.y*szpalt_x + p.x] == bOuterRing) {
                     p.x++;
                     if (aPrecelWertex[precelWertexCnt - 2].y == -p.y*moduly)
                         aPrecelWertex[precelWertexCnt - 1] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
@@ -818,11 +818,11 @@ int CDrawAdd::FindRing(CPoint p0, BOOL bOuterRing)
                 }
                 break;
             case S:
-                if (p.x < sizex && p.y < sizey && space.GetBit(p.y*szpalt_x + p.x)>0 == bOuterRing) {
+                if (p.x < sizex && p.y < sizey && space[p.y*szpalt_x + p.x] == bOuterRing) {
                     p.x++;
                     eKierunek = E;
                     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
-                } else if (p.y < sizey && space.GetBit(p.y*szpalt_x + p.x - 1)>0 == bOuterRing) {
+                } else if (p.y < sizey && space[p.y*szpalt_x + p.x - 1] == bOuterRing) {
                     p.y++;
                     if (aPrecelWertex[precelWertexCnt - 2].x == p.x*modulx)
                         aPrecelWertex[precelWertexCnt - 1] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
@@ -836,11 +836,11 @@ int CDrawAdd::FindRing(CPoint p0, BOOL bOuterRing)
                 }
                 break;
             case W:
-                if (p.x > 0 && p.y < sizey && space.GetBit(p.y*szpalt_x + p.x - 1)>0 == bOuterRing) {
+                if (p.x > 0 && p.y < sizey && space[p.y*szpalt_x + p.x - 1] == bOuterRing) {
                     p.y++;
                     eKierunek = S;
                     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
-                } else if (p.x > 0 && p.y > 0 && space.GetBit((p.y - 1)*szpalt_x + p.x - 1) > 0 == bOuterRing) {
+                } else if (p.x > 0 && p.y > 0 && space[(p.y - 1)*szpalt_x + p.x - 1] == bOuterRing) {
                     p.x--;
                     if (aPrecelWertex[precelWertexCnt - 2].y == -p.y*moduly)
                         aPrecelWertex[precelWertexCnt - 1] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
@@ -854,11 +854,11 @@ int CDrawAdd::FindRing(CPoint p0, BOOL bOuterRing)
                 }
                 break;
             case N:
-                if (p.x > 0 && p.y > 0 && space.GetBit((p.y - 1)*szpalt_x + p.x - 1) > 0 == bOuterRing) {
+                if (p.x > 0 && p.y > 0 && space[(p.y - 1)*szpalt_x + p.x - 1] == bOuterRing) {
                     p.x--;
                     eKierunek = W;
                     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
-                } else if (p.y > 0 && space.GetBit((p.y - 1)*szpalt_x + p.x) > 0 == bOuterRing) {
+                } else if (p.y > 0 && space[(p.y - 1)*szpalt_x + p.x] == bOuterRing) {
                     p.y--;
                     if (aPrecelWertex[precelWertexCnt - 2].x == p.x*modulx)
                         aPrecelWertex[precelWertexCnt - 1] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
@@ -892,16 +892,16 @@ void CDrawAdd::InitPrecel(const CString& sPrecelFlag)
 
     // skanuj flagê w poszukiwaniu obwodnic
     for (int x = 0; x < sizex; x++)
-        if (space.GetBit(x) && !PtOnRing(CPoint(static_cast<int>(x*modulx), 0)))
-            aRingWertexCnt[precelRingCnt++] = FindRing(CPoint(x, 0), TRUE);
-    for (int y = 1; y < sizey; y++)
-        for (int x = 0; x < sizex; x++) {
-            if (space.GetBit((y - 1)*szpalt_x + x) == 0 && space.GetBit(y*szpalt_x + x) > 0 && !PtOnRing(CPoint(static_cast<int>(x*modulx), static_cast<int>(-y*moduly)))) {
-                aRingWertexCnt[precelRingCnt++] = FindRing(CPoint(x, y), TRUE);
+        if (space[x] && !PtOnRing(CPoint(static_cast<int>(x * modulx), 0)))
+            aRingWertexCnt[precelRingCnt++] = FindRing(CPoint(x, 0), true);
+    for (int y = 1; y < sizey; ++y)
+        for (int x = 0; x < sizex; ++x) {
+            if (!space[(y - 1)*szpalt_x + x] && space[y*szpalt_x + x] && !PtOnRing(CPoint(static_cast<int>(x*modulx), static_cast<int>(-y*moduly)))) {
+                aRingWertexCnt[precelRingCnt++] = FindRing(CPoint(x, y), true);
                 continue;
             }
-            if (space.GetBit((y - 1)*szpalt_x + x) > 0 && space.GetBit(y*szpalt_x + x) == 0 && !PtOnRing(CPoint(static_cast<int>(x*modulx), static_cast<int>(-y*moduly))))
-                aRingWertexCnt[precelRingCnt++] = FindRing(CPoint(x, y), FALSE);
+            if (space[(y - 1)*szpalt_x + x] && !space[y*szpalt_x + x] && !PtOnRing(CPoint(static_cast<int>(x*modulx), static_cast<int>(-y*moduly))))
+                aRingWertexCnt[precelRingCnt++] = FindRing(CPoint(x, y), false);
         }
 
     // wyrownanie do kraty	

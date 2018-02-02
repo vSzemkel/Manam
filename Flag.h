@@ -43,6 +43,7 @@ public:
     void   operator^= (uintptr_t mask) noexcept;
     int operator== (const CFlag& f) const noexcept;
     int operator!= (const CFlag& f) const noexcept;
+    bool operator[](size_t pos) const noexcept;
     bool   IsZero() const noexcept;
     bool   IsSet() const noexcept;
     size_t GetSize() const noexcept;
@@ -53,9 +54,8 @@ public:
     void   Serialize(CArchive& ar);
     CString Print() const;
     CString ToRaw() const;
-    int GetBitCnt(unsigned char val) const noexcept;
-    unsigned char GetBit(size_t pos) const noexcept; // bity numerowane w porz¹dku [8*size-1..0]
-    void SetBit(size_t pos, unsigned char bit = 1) noexcept;
+    int GetBitCnt(bool val) const noexcept;
+    void SetBit(size_t pos, bool val = true) noexcept;
 
 protected:
     void SetSize(size_t s);                                 // okreœla rozmiar flagi, zarz¹dza pamiêci¹

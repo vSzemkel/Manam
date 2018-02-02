@@ -202,8 +202,8 @@ private:
     void OpenSpot();
     void OpenOpis(OracleDataReader^ opiCur);
     void OpenQued(OracleDataReader^ queCur);
-    void OpenMultiKraty(OracleCommand^ cmd, CFlag* multiKraty);
-    BOOL OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubCur, CFlag* multiKraty, CPoint& pos);
+    void OpenMultiKraty(OracleCommand^ cmd, const CFlag& multiKraty);
+    BOOL OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubCur, CFlag& multiKraty, CPoint& pos);
 };
 
 BOOL CDrawDocDbReader::OpenManamDoc()
@@ -358,7 +358,7 @@ void CDrawDocDbReader::OpenQued(OracleDataReader^ queCur)
     }
 }
 
-BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubCur, CFlag* multiKraty, CPoint& pos)
+BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubCur, CFlag& multiKraty, CPoint& pos)
 {
     BOOL ogloszenieNaNastepnaStrone = FALSE;
     CString op_zew, sekcja, op_sek, pl, op_pl, poz_na_str;
@@ -377,7 +377,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
         ivar = strCur->GetInt32(3); // num_xx
         if (ivar < 0) {
             ivar *= -1;
-            multiKraty->SetBit(ind);
+            multiKraty.SetBit(ind);
         }
         pPage->pagina_type = ivar;
         ivar = strCur->GetInt32(4); // ile_kol
@@ -497,7 +497,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
     return TRUE;
 }
 
-void CDrawDocDbReader::OpenMultiKraty(OracleCommand^ cmd, CFlag* multiKraty)
+void CDrawDocDbReader::OpenMultiKraty(OracleCommand^ cmd, const CFlag& multiKraty)
 {
     // :mak_xx
     auto par = cmd->Parameters;
@@ -506,7 +506,7 @@ void CDrawDocDbReader::OpenMultiKraty(OracleCommand^ cmd, CFlag* multiKraty)
     cmd->CommandText = String::Format("begin {0}open_kra_str{1}(:mak_xx,:str_xx,:retCur); end;", m_doc->isGRB ? "grb." : String::Empty, m_doc->isLIB ? "_lib" : String::Empty);
 
     for (int i = 0; i < (int)m_objetosc; ++i) {
-        if (!multiKraty->GetBit(i)) continue;
+        if (!multiKraty[i]) continue;
         auto pPage = m_doc->m_pages[i];
         int s_x = pPage->szpalt_x;
         int s_y = pPage->szpalt_y;
@@ -514,8 +514,8 @@ void CDrawDocDbReader::OpenMultiKraty(OracleCommand^ cmd, CFlag* multiKraty)
         par[1]->Value = pPage->id_str;
         auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
         while (odr->Read()) {
-            int ivx = odr->GetInt32(0); // szpalt_x
-            int ivy = odr->GetInt32(1); // szpalt_y
+            const int ivx = odr->GetInt32(0); // szpalt_x
+            const int ivy = odr->GetInt32(1); // szpalt_y
             pPage->SetBaseKrata(ivx, ivy, FALSE);
             pin_ptr<const wchar_t> p = PtrToStringChars(odr->GetString(2));
             pPage->space = CFlag(p);
@@ -551,7 +551,7 @@ BOOL CDrawDocDbReader::OpenDocContent()
         pubCur = static_cast<OracleRefCursor^>(par[2]->Value)->GetDataReader();
         opiCur = static_cast<OracleRefCursor^>(par[3]->Value)->GetDataReader();
 
-        if (!OpenPage(strCur, pubCur, &multiKraty, m_doc->GetAsideAddPos(TRUE)))
+        if (!OpenPage(strCur, pubCur, multiKraty, m_doc->GetAsideAddPos(TRUE)))
             return FALSE;
 
         OpenOpis(opiCur);
@@ -562,7 +562,7 @@ BOOL CDrawDocDbReader::OpenDocContent()
         }
 
         if (multiKraty.IsSet())
-            OpenMultiKraty(cmd, &multiKraty);
+            OpenMultiKraty(cmd, multiKraty);
     } catch (OracleException^ oex) {
         OdpHelper::ShowErrMsgDlg(oex->Message);
         return FALSE;

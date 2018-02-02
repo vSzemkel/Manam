@@ -253,7 +253,7 @@ void CPageDlg::SetFunListBox(BOOL setDefaults)
         if (setDefaults && m_prn_fun.GetItemData(i)) {
             m_prn_fun.SetSel(i);
             m_prn_flag.SetBit(i);
-        } else if (m_prn_flag.GetBit(i))
+        } else if (m_prn_flag[i])
             m_prn_fun.SetSel(i);
 }
 
@@ -2935,7 +2935,7 @@ CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
     else
         sProcInfo.Trim().Replace(_T("  "), _T(" "));
 
-    m_memstat.Format(_T("Zu¿ycie pamiêci: %d/%d %d/%d [MB]\n%s"), B2MB(ms.ullTotalPhys - ms.ullAvailPhys), B2MB(ms.ullTotalPhys), B2MB(ms.ullTotalPageFile - ms.ullAvailPageFile), B2MB(ms.ullTotalPageFile), sProcInfo);
+    m_memstat.Format(_T("Zu¿ycie pamiêci: %d/%d [MB]\n%s"), (ms.ullTotalPhys - ms.ullAvailPhys)/0x100000, ms.ullTotalPhys / 0x100000, sProcInfo);
 }
 
 void CAboutDlg::DoDataExchange(CDataExchange *pDX)

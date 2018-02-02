@@ -1122,9 +1122,9 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
         l_modogl = l_modred = l_modrez = 0;
         int pmods = vPage->szpalt_x * vPage->szpalt_y;
         for (int j = 0; j < pmods; j++) {
-            if (vPage->space_red.GetBit(j)) l_modred++;
-            else if (vPage->space_locked.GetBit(j)) l_modrez++;
-            else if (vPage->space.GetBit(j)) l_modogl++;
+            if (vPage->space_red[j]) l_modred++;
+            else if (vPage->space_locked[j]) l_modrez++;
+            else if (vPage->space[j]) l_modogl++;
         }
         if (pmods != pmodcnt) {
             const auto norm = (float)pmodcnt / pmods;
@@ -1144,7 +1144,7 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
             l_modogl = l_modred = l_modrez = 0;
             pmods = sx * sy;
             for (int j = 0; j < pmods; j++)
-                if (vPage->space.GetBit(j) && !vPage->space_red.GetBit(j) && !vPage->space_locked.GetBit(j))
+                if (vPage->space[j] && !vPage->space_red[j] && !vPage->space_locked[j])
                     l_modogl++;
             if (pmods != pmodcnt)
                 l_modogl = (UINT)nearbyintf((float)(l_modogl * pmodcnt) / pmods);

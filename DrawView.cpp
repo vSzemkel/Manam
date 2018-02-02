@@ -1491,7 +1491,7 @@ subseterr:
     pDoc->ovEPS = FALSE;
 
     for (int i = 0; !pDlg->cancelGenEPS && i < pc; ++i) {
-        if (wyborStron.GetBit(i) > 0) {
+        if (wyborStron[i]) {
             pPage = pDoc->m_pages[i];
             int dl = pPage->m_dervlvl;
             if (dl == DERV_FIXD || dl == DERV_PROH || (d.m_exclude_emptypages && pPage->m_adds.empty() && pPage->name.Find(_T("DROB")) == -1))
@@ -1549,7 +1549,7 @@ subseterr:
         pDlg->ShowWindow(SW_HIDE);
         CString msg;
         for (int i = 0; i < pc; i++)
-            if (wyborStron.GetBit(i) > 0)
+            if (wyborStron[i])
                 msg += pDoc->m_pages[i]->f5_errInfo;
         ::MessageBox(theApp.GetMainWnd()->m_hWnd, msg.IsEmpty() ? _T("Nie ma b³êdów") : msg, _T("Raport sprawdzenia EPS"), MB_OK);
         if (theApp.autoMark && theApp.activeDoc) pDoc->UpdateAllViews(NULL);

@@ -302,7 +302,7 @@ CFlag CFlag::operator >> (size_t shift) const noexcept
         else {
             size_t i;
             for (i = 0; i < 8 * size - shift; ++i)
-                ret.SetBit(i, GetBit(i + shift));
+                ret.SetBit(i, operator[](i + shift));
             for (i = 0; i < shift; ++i)
                 ret.SetBit(8 * size - 1 - i, 0);
         }
@@ -320,7 +320,7 @@ CFlag CFlag::operator<< (size_t shift) const noexcept
         else {
             size_t i;
             for (i = 8 * size - 1 - shift; i != (size_t)-1; --i)
-                ret.SetBit(i + shift, GetBit(i));
+                ret.SetBit(i + shift, operator[](i));
             for (i = 0; i < shift; i++)
                 ret.SetBit(i, 0);
         }
@@ -337,7 +337,7 @@ CFlag& CFlag::operator>>= (size_t shift) noexcept
         else {
             size_t i;
             for (i = 0; i < 8 * size - shift; ++i)
-                SetBit(i, GetBit(i + shift));
+                SetBit(i, operator[](i + shift));
             for (i = 0; i < shift; ++i)
                 SetBit(8 * size - 1 - i, 0);
         }
@@ -354,7 +354,7 @@ CFlag& CFlag::operator<<= (size_t shift) noexcept
         else {
             size_t i;
             for (i = 8 * size - 1 - shift; i != (size_t)-1; --i)
-                SetBit(i + shift, GetBit(i));
+                SetBit(i + shift, operator[](i));
             for (i = 0; i < shift; ++i)
                 SetBit(i, 0);
         }
@@ -452,8 +452,8 @@ void CFlag::Reverse(size_t len) noexcept
 {
     if (len <= 8 * size)
         for (size_t i = 0; i < len / 2; ++i) {
-            unsigned char bit = GetBit(i);
-            SetBit(i, GetBit(len - i - 1));
+            auto bit = operator[](i);
+            SetBit(i, operator[](len - i - 1));
             SetBit(len - i - 1, bit);
         }
 }
@@ -476,30 +476,31 @@ void CFlag::Serialize(CArchive& ar)
     }
 }
 
-int CFlag::GetBitCnt(unsigned char val) const noexcept
+int CFlag::GetBitCnt(bool val) const noexcept
 {
     int iIle = 0;
     const auto bit_cnt = 8 * size;
     for (size_t i = 0; i < bit_cnt; ++i)
-        if ((GetBit(i) > 0) == (val > 0))
+        if (operator[](i) == val)
             iIle++;
     return iIle;
 }
 
-unsigned char CFlag::GetBit(size_t pos) const noexcept
+bool CFlag::operator[](size_t pos) const noexcept
 {
+    ASSERT(0 <= pos && pos < 8 * size);
     const unsigned char mask = (1 << (pos % 8));
     char *str = GetRawFlag();
     str += (pos / 8);
     return *str & mask;
 }
 
-void CFlag::SetBit(size_t pos, unsigned char bit) noexcept
+void CFlag::SetBit(size_t pos, bool val) noexcept
 {
     const unsigned char mask = (1 << (pos % 8));
     char *str = GetRawFlag();
     str += (pos / 8);
-    *str = (bit ? *str | mask : *str & (0xff - mask));
+    *str = (val ? *str | mask : *str & (0xff - mask));
 }
 
 CString CFlag::Print() const
@@ -508,7 +509,7 @@ CString CFlag::Print() const
     CString display{'0', bit_cnt};
 
     for (auto i = 0; i < bit_cnt; ++i)
-        if (GetBit(i) != 0)
+        if (operator[](i))
             display.SetAt(i, '1');
 
     return display.MakeReverse();

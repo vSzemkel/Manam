@@ -236,7 +236,7 @@ void CDrawPage::DrawReserved(CDC *pDC)
         pDC->SelectStockObject((pagina_type == c_rzym ? LTGRAY_BRUSH : GRAY_BRUSH));
         const auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
         for (size_t module = 0; module < ilemod; ++module)
-            if (vspace.GetBit(module) > 0)
+            if (vspace[module])
                 pDC->Rectangle(GetNormalizedModuleRect(module));
         pDC->SelectStockObject(WHITE_BRUSH);
     }
@@ -250,10 +250,10 @@ void CDrawPage::DrawGrid(CDC *pDC)
         const auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
         for (size_t module = 0; module < ilemod; ++module) {
             CRect& rect = GetNormalizedModuleRect(module);
-            if (space_locked.GetBit(module) > 0) {
+            if (space_locked[module]) {
                 pDC->SelectStockObject(DKGRAY_BRUSH);
                 pDC->Rectangle(rect);
-            } else if (space_red.GetBit(module) > 0) {
+            } else if (space_red[module]) {
                 if (pagina_type == c_rzym)
                     pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->rzym));
                 else
@@ -757,7 +757,7 @@ BOOL CDrawPage::CheckSpaceDiffKraty(const CDrawAdd *pObj, const int x, const int
             const int s_x = kn.m_szpalt_x, s_y = kn.m_szpalt_y;
             for (int k = s_y; k > 0; --k)
                 for (int l = s_x; l > 0; --l, ++bit)
-                    if (sp.GetBit(bit) != 0) {
+                    if (sp[bit]) {
                         CRect inter, dst(m_position.left + (int)(CDrawObj::modx(s_x)*(l - 1)), m_position.bottom + (int)(CDrawObj::mody(s_y)*(s_y - k)),
                             /* normalized */m_position.left + (int)(CDrawObj::modx(s_x)*l), m_position.bottom + (int)(CDrawObj::mody(s_y)*(s_y - k + 1)));
                         if (inter.IntersectRect(dstRect, dst))
@@ -796,8 +796,8 @@ void CDrawPage::SetBaseKrata(int s_x, int s_y, BOOL refresh)
             const auto& lastlocked = kn.m_space_locked;
             const auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
             for (size_t module = 0; module < ilemod; ++module) {
-                const bool isRed = lastred.GetBit(module) > 0;
-                const bool isLock = lastlocked.GetBit(module) > 0;
+                const bool isRed = lastred[module];
+                const bool isLock = lastlocked[module];
                 if (isRed || isLock) {
                     CRect intsec, dst;
                     const CRect& src = GetNormalizedModuleRect(module);
@@ -807,7 +807,7 @@ void CDrawPage::SetBaseKrata(int s_x, int s_y, BOOL refresh)
                                 m_position.left + (int)(CDrawObj::modx(s_x)*k), m_position.bottom + (int)(CDrawObj::mody(s_y)*(s_y - l + 1))); // normalized
                             if (intsec.IntersectRect(src, dst)) {
                                 int outerBit = (s_y - l)*s_x + s_x - k;
-                                if (space.GetBit(outerBit) > 0) continue;
+                                if (space[outerBit]) continue;
                                 space.SetBit(outerBit);
                                 if (isRed) space_red.SetBit(outerBit);
                                 else space_locked.SetBit(outerBit);
@@ -829,8 +829,8 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
     if (m_dervlvl == DERV_FIXD) return;
 
     CFlag& space_mark = mode == SpaceMode::spacelock ? space_locked : space_red;
-    int bitToSet = space_mark.GetBit(module) > 0 ? 0 : 1;
-    if (bitToSet > 0 && space.GetBit(module) > 0) // stoi ogloszenie lub inny marker
+    bool bitToSet = !space_mark[module];
+    if (bitToSet && space[module]) // stoi ogloszenie lub inny marker
         return;
 
     if (!m_kraty_niebazowe.empty()) {
@@ -845,7 +845,7 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
             for (size_t m = 0; m < ilemod; ++m) {
                 const CRect& dst = GetNormalizedModuleRect(m);
                 if (intsec.IntersectRect(src, dst))
-                    if ((space.GetBit(m) > 0 ? 1 : 0) != bitToSet && (space_mark2.GetBit(m) > 0 ? 1 : 0) != bitToSet) {
+                    if (space[m] != bitToSet && space_mark2[m] != bitToSet) {
                         space.SetBit(m, bitToSet);
                         space_mark2.SetBit(m, bitToSet);
                     } else if (intsec == dst)
@@ -1194,25 +1194,25 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
         externAdd.m_pDocument = m_pDocument;
         externAdd.typ_xx = 0;
         if (isUzupEPS) {
-            CFlag dervSpace = GetReservedFlag();
+            const CFlag dervSpace = GetReservedFlag();
             if (dervSpace.IsSet()) { //ustal posx,posy,sizex,sizey
                 int i, j;
                 for (i = szpalt_x*szpalt_y - 1; i >= 0; i--)
-                    if (dervSpace.GetBit(i) > 0) break;
+                    if (dervSpace[i]) break;
                 if (i >= 0) {
                     externAdd.posy = szpalt_y - i / szpalt_x;
                     for (j = 0; j <= i; j++)
-                        if (dervSpace.GetBit(j) > 0) break;
+                        if (dervSpace[j]) break;
                     externAdd.sizey = szpalt_y - j / szpalt_x - externAdd.posy + 1;
                     const int endy = externAdd.posy + externAdd.sizey - 1;
                     for (i = 1; i <= szpalt_x; i++)
                         for (j = externAdd.posy; j <= endy; j++)
-                            if (dervSpace.GetBit(szpalt_x*(szpalt_y - j + 1) - i) > 0) goto foundposx;
+                            if (dervSpace[szpalt_x*(szpalt_y - j + 1) - i]) goto foundposx;
 foundposx:
                     externAdd.posx = i;
                     for (i = szpalt_x; i > 0; i--)
                         for (j = externAdd.posy; j <= endy; j++)
-                            if (dervSpace.GetBit(szpalt_x*(szpalt_y - j + 1) - i) > 0) goto foundsizex;
+                            if (dervSpace[szpalt_x*(szpalt_y - j + 1) - i]) goto foundsizex;
 foundsizex:
                     externAdd.sizex = i - externAdd.posx + 1;
                     externAdd.szpalt_x = szpalt_x;
