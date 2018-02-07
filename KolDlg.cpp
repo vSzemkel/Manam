@@ -437,6 +437,7 @@ CAddDlg::CAddDlg(CWnd *pParent /*=NULL*/)
     m_powt = 0;
     //}}AFX_DATA_INIT
     c_height = 470; c_narrow = 340; c_wide = 500;
+    vActiveDoc = theApp.activeDoc;
 }
 
 void CAddDlg::DoDataExchange(CDataExchange *pDX)
