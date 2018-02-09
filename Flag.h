@@ -18,15 +18,15 @@ public:
     CFlag(CFlag&& f) noexcept;                          // move constructor
     explicit CFlag(size_t s = CRITICAL_SIZE);           // default constructor, how many bytes to store
     CFlag(int sx, int sy, int szpalt_x, int szpalt_y);  // SetSpace constructor, how many modules to store
-    CFlag(const char *raw);                             // Oracle RAW hexadecimal format
-    CFlag(const wchar_t *raw) : CFlag(CStringA(raw)){}; // Oracle RAW hexadecimal format unicode encoded
-    CFlag(CByteArray& bArr);
+    explicit CFlag(const char *raw);                             // Oracle RAW hexadecimal format
+    explicit CFlag(const wchar_t *raw) : CFlag(CStringA(raw)){}; // Oracle RAW hexadecimal format unicode encoded
+    explicit CFlag(const CByteArray& bArr);
     ~CFlag();
     const CFlag& operator= (const CFlag& f);
     const CFlag& operator= (CFlag&& f) noexcept;        // move assignment
     CFlag& operator>>=(size_t shift) noexcept;
     CFlag& operator<<=(size_t shift) noexcept;
-    CFlag  operator >> (size_t shift) const noexcept;
+    CFlag  operator>> (size_t shift) const noexcept;
     CFlag  operator<< (size_t shift) const noexcept;
     CFlag operator| (const CFlag& f) const noexcept;
     CFlag operator& (const CFlag& f) const noexcept;

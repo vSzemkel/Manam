@@ -454,7 +454,7 @@ void CDrawAdd::UpdateInfo()
     info.Format(_T("Og³: %ix%i"), sizex, sizey);
     if (typ_xx) info += _T(" niestandardowe");
     if (!nazwa.IsEmpty()) info.AppendFormat(_T(" | %s"), nazwa);
-    if (nreps > 0) info.AppendFormat(_T(" | %i%s"), nreps, wersja);
+    if (nreps > 0) info.AppendFormat(_T(" | %li%s"), nreps, wersja);
     if (m_add_xx > 0) info.AppendFormat(_T(" | Spacer: %i"), m_add_xx);
     if (!logpage.IsEmpty()) info.AppendFormat(_T(" | %s"), logpage);
     if (!remarks.IsEmpty() || !remarks_atex.IsEmpty()) info.AppendFormat(_T(" | %s"), remarks.IsEmpty() ? remarks_atex : remarks);
@@ -476,7 +476,7 @@ CString CDrawAdd::PrepareBuf(TCHAR *ch) const
 
     bufor.AppendFormat(_T("%s%i%s%i%s%s%s"), ch, posx, ch, posy, ch, nazwa, ch);
     if (nreps > -1)
-        bufor.AppendFormat(_T("%i"), nreps);
+        bufor.AppendFormat(_T("%li"), nreps);
     bufor.AppendFormat(_T("%s%s%s%s%s%s%s%s\n"), ch, CDrawDoc::kolory[kolor == c_full ? 1 : kolor >> 3], ch, logpage, ch, remarks, ch, wersja);
 
     return bufor;

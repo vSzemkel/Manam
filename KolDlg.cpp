@@ -424,7 +424,7 @@ BOOL CPageDlg::OnInitDialog()
 BOOL CAddDlg::matchingOldAdnoUpdate = FALSE;
 // CAddDlg dialog
 CAddDlg::CAddDlg(CWnd *pParent /*=NULL*/)
-    : CDialog(CAddDlg::IDD, pParent)
+    : CDialog(CAddDlg::IDD, pParent), vActiveDoc(theApp.activeDoc)
 {
     //{{AFX_DATA_INIT(CAddDlg)
     m_kolor = c_brak;
@@ -437,15 +437,14 @@ CAddDlg::CAddDlg(CWnd *pParent /*=NULL*/)
     m_powt = 0;
     //}}AFX_DATA_INIT
     c_height = 470; c_narrow = 340; c_wide = 500;
-    vActiveDoc = theApp.activeDoc;
 }
 
 void CAddDlg::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);
-    int base = m_fizpage ? 1 : 0;
-    int ax = m_szpalt_x - m_sizex + 1;
-    int ay = m_szpalt_y - m_sizey + 1;
+    const int base = m_fizpage ? 1 : 0;
+    const int ax = m_szpalt_x - m_sizex + 1;
+    const int ay = m_szpalt_y - m_sizey + 1;
     //{{AFX_DATA_MAP(CAddDlg)
     DDX_Control(pDX, IDC_POWT, m_powtctrl);
     DDX_Control(pDX, IDC_EMISJE, m_emisjelist);

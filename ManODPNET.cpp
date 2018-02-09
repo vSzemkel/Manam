@@ -1423,7 +1423,7 @@ BOOL CManODPNET::F4(CDrawDoc* doc, CListCtrl* list, BOOL initialize)
             while (odr->Read()) {
                 id = odr->GetInt32(0);
                 if (vAdd = doc->AddExists(id)) {
-                    cs.Format(_T("%li"), id);
+                    cs.Format(_T("%i"), id);
                     list->InsertItem(rc, cs, 2);
                     list->SetCheck(rc, FALSE);
                     list->SetItemData(rc, 0L);
@@ -1432,10 +1432,10 @@ BOOL CManODPNET::F4(CDrawDoc* doc, CListCtrl* list, BOOL initialize)
                         cs += _T("rom");
                     list->SetItemText(rc, 1, cs);
                     vAdd->iFileId = odr->GetInt32(1);
-                    cs.Format(_T("%li"), vAdd->iFileId);
+                    cs.Format(_T("%i"), vAdd->iFileId);
                     list->SetItemText(rc, 2, cs);
                     id = odr->GetInt32(2);
-                    cs.Format(_T("%li"), id);
+                    cs.Format(_T("%i"), id);
                     list->SetItemText(rc, 3, cs);
                     if (id != 0 && vAdd->iFileId != id) { // podmiana
                         list->SetItem(rc, 0, LVIF_IMAGE, _T(""), 1, LVIF_IMAGE, LVIF_IMAGE, 1);

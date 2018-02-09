@@ -199,7 +199,7 @@ BOOL CDrawView::OnSetCursor(CWnd *pWnd, UINT nHitTest, UINT message)
     else if (CDrawTool::c_drawShape == DrawShape::color)
         cursor = IDC_KOLOR;
     else if (CDrawTool::c_drawShape == DrawShape::lock)
-        cursor = GetDocument()->swCZV & 1 ? IDC_FLAG : IDC_LOCK;
+        cursor = (GetDocument()->swCZV & 1) ? IDC_FLAG : IDC_LOCK;
     else if (CDrawTool::c_drawShape == DrawShape::deadline)
         cursor = IDC_DEADLINE;
     else if (CDrawTool::c_drawShape == DrawShape::space)
@@ -729,7 +729,7 @@ void CDrawView::OnEditClear()
             if (pPage) {
                 if (pPage->m_dervlvl == DERV_ADDS && !pPage->m_adds.empty())
                     continue;
-                if (std::any_of(pPage->m_adds.cbegin(), pPage->m_adds.cend(), [](CDrawAdd *const &pAdd) { return pAdd->flags.derived; }))
+                if (std::any_of(pPage->m_adds.cbegin(), pPage->m_adds.cend(), [](auto pAdd) { return pAdd->flags.derived > 0; }))
                     continue;
                 to_tell = TRUE;
             }
@@ -1681,7 +1681,6 @@ void CDrawView::OnPrevDig()
         return;
     }
 
-    UINT iXmlLen = 0;
     CString dataSepia = GetDocument()->data;
     auto buf = reinterpret_cast<char *>(theApp.bigBuf);
     dataSepia = dataSepia.Mid(6) + "-" + dataSepia.Mid(3, 2) + "-" + dataSepia.Mid(0, 2);
@@ -1689,7 +1688,7 @@ void CDrawView::OnPrevDig()
     sURL.Format(sUrlTemplate, pAdd->nreps, dataSepia);
     auto pFile = theApp.OpenURL(5, sURL);
     if (pFile) {
-        iXmlLen = pFile->Read(buf, bigSize);
+        auto iXmlLen = pFile->Read(buf, bigSize);
         pFile->Close();
         if (iXmlLen == bigSize) {
             AfxMessageBox(_T("Plik z dodatkow¹ treœci¹ jest za du¿y"));

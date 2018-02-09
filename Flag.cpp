@@ -92,7 +92,7 @@ CFlag::CFlag(const char *raw) : size(CRITICAL_SIZE)
     }
 }
 
-CFlag::CFlag(CByteArray& bArr)
+CFlag::CFlag(const CByteArray& bArr)
 {
     size = bArr.GetSize();
     if (size > CRITICAL_SIZE) {

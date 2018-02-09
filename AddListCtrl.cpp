@@ -49,11 +49,11 @@ int CAddListCtrl::OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn)
     const auto a2 = reinterpret_cast<CDrawAdd*>(lParam2);
 
     switch (iColumn)
-		case lp:
     {
-        CGridFrm::eLastOrder = GridSortCol::lp;
-        bResult = a1->m_pDocument->GetAdPosition(a1) < a1->m_pDocument->GetAdPosition(a2);
-        break;
+        case lp:
+            CGridFrm::eLastOrder = GridSortCol::lp;
+            bResult = a1->m_pDocument->GetAdPosition(a1) < a1->m_pDocument->GetAdPosition(a2);
+            break;
         case logiczna:
             CGridFrm::eLastOrder = GridSortCol::logiczna;
             return _tcsicmp(a1->logpage, a2->logpage);
