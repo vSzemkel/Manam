@@ -1,0 +1,8 @@
+# git clone https://github.com/Microsoft/vcpkg.git .
+# .\bootstrap-vcpkg.bat
+
+vcpkg install gtest:x86-windows
+vcpkg install zlib:x86-windows-static
+vcpkg install zlib:x64-windows-static
+
+vcpkg integrate install

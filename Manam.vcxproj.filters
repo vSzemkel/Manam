@@ -219,7 +219,6 @@
     <None Include="Res\toolbar_main.bmp">
       <Filter>Resources</Filter>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Manam.rc">

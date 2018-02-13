@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Manam", "Manam.vcxproj", "{61EA1643-896C-42C9-B085-DB883BBEBC57}"
 EndProject
@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{A96AD5
 		.appveyor.yml = .appveyor.yml
 		.clang-format = .clang-format
 		.gitignore = .gitignore
+		.vcpkg = .vcpkg
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sql", "Sql", "{871D3535-E22A-468C-B441-03DB4E32E391}"

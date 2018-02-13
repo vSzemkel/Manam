@@ -57,8 +57,13 @@ void CConnDlg::OnChangePasswd()
 void CConnDlg::OnOK()
 {
     CDialog::OnOK();
-    theApp.BeginWaitCursor();
     CString& tns = theApp.m_tnsname;
+
+    if (::PathFileExistsW(_T(".\\Oracle.ManagedDataAccess.dll")) == FALSE) {
+        AfxMessageBox(_T("Nie odnaleziono klienta Oracle"), MB_ICONSTOP);
+        EndDialog(IDABORT);
+        return;
+    };
 
     if (m_dbtest) {
         AfxMessageBox(_T("Logujesz siê do bazy testowej. Efekty Twojej pracy zostan¹ utracone"), MB_ICONINFORMATION);
@@ -69,6 +74,7 @@ void CConnDlg::OnOK()
         if (tns.IsEmpty()) tns.LoadString(IDS_DB_PD);
     }
 
+    theApp.BeginWaitCursor();
     if (!theManODPNET.PrepareConnectionString(m_loginname, m_passwd, tns)) {
         AfxMessageBox(theManODPNET.m_lastErrorMsg, MB_OK | MB_ICONINFORMATION);
         EndDialog(IDABORT);

@@ -14,7 +14,11 @@ platform: x64
 
 before_build:
 - cmd: >-
-    nuget restore
+    vcpkg install gtest:x64-windows
+
+    vcpkg install zlib:x64-windows-static
+
+    vcpkg integrate install
 
     nuget install Oracle.ManagedDataAccess -version 12.2.1100
 
