@@ -24,7 +24,7 @@ class CAddListCtrl sealed : public CMFCListCtrl
     DECLARE_DYNAMIC(CAddListCtrl)
 public:
     CAddListCtrl(CGridFrm *pView);
-    virtual ~CAddListCtrl() {};
+    virtual ~CAddListCtrl() = default;
 
     afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 protected:

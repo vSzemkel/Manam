@@ -82,7 +82,7 @@ protected:
 
 // Implementation
 protected:
-    virtual ~CGridFrm() {};
+    virtual ~CGridFrm() = default;
 #ifdef _DEBUG
     virtual void AssertValid() const override;
     virtual void Dump(CDumpContext& dc) const override;

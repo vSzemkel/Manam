@@ -101,10 +101,6 @@ CKratCalc::CKratCalc(CWnd *pParent /*=NULL*/) : CDialog(CKratCalc::IDD, pParent)
     m_userdef_sizex = m_userdef_sizey = 1;
 }
 
-CKratCalc::~CKratCalc()
-{
-}
-
 void CKratCalc::DoDataExchange(CDataExchange *pDX)
 {
     CDialog::DoDataExchange(pDX);

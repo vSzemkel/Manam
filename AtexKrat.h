@@ -41,7 +41,7 @@ class CKratCalc : public CDialog
 
 public:
     CKratCalc(CWnd *pParent = nullptr);   // standard constructor
-    virtual ~CKratCalc();
+    virtual ~CKratCalc() = default;
 
     // Dialog Data
     enum { IDD = IDD_KRATCALC };

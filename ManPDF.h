@@ -66,7 +66,7 @@ class CManPDFExc
 {
 public:
     CManPDFExc(const TCHAR *msg) { errMsg = CString(msg); }
-    ~CManPDFExc() {};
+    ~CManPDFExc() = default;
     const TCHAR *ShowReason() const { return errMsg; }
 private:
     CString errMsg;

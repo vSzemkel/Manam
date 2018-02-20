@@ -1064,7 +1064,7 @@ class COstWer final : public CDialog
 public:
     COstWer(CWnd *pParent = nullptr);   // standard constructor
     COstWer(std::vector<CDrawAdd*> *aNewAdds, std::vector<CDrawAdd*> *aOldAdds, std::vector<CDrawAdd*> *aModifAdds, std::vector<CDrawAdd*> *aDelAdds, BOOL bBankOnly);
-    virtual ~COstWer() {};
+    virtual ~COstWer() = default;
 
     // Dialog Data
     enum { IDD = IDD_ATEXADDS };

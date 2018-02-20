@@ -21,7 +21,7 @@ class CDrawObj : public CObject
     CDrawObj() noexcept;
     CDrawObj(const CRect& position) noexcept;
 
-    virtual ~CDrawObj() {};
+    virtual ~CDrawObj() = default;
     virtual void Draw(CDC *pDC);
     virtual void Print(CDC *pDC) { Draw(pDC); }
     virtual void UpdateInfo() {}
