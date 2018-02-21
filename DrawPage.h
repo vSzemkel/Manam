@@ -8,13 +8,6 @@ class CDrawAdd;
 class CDrawPage;
 class CGenEpsInfoDlg;
 
-enum class SpaceMode : uint8_t
-{
-    avail,
-    redlock,
-    spacelock,
-};
-
 typedef struct _GENEPSARG
 {
     int  iChannelId;

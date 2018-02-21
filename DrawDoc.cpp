@@ -106,9 +106,8 @@ void CDrawDoc::OnDisableGrbNotSaved(CCmdUI *pCmdUI)
 // CDrawDoc construction/destruction
 
 CDrawDoc::CDrawDoc() :
-    drobneH(0), m_mak_xx(-1), id_drw(-2),
-    isRO(0), isSIG(0), isGRB(0), isLIB(0), swCZV(0), isACD(0),
-    data(CTime::GetCurrentTime().Format(c_ctimeData)), iDocType(DocType::makieta)
+    drobneH(0), m_mak_xx(-1), id_drw(-2),isRO(0), isSIG(0), isGRB(0), isLIB(0), isACD(0),
+    data(CTime::GetCurrentTime().Format(c_ctimeData)), iDocType(DocType::makieta), swCZV(ToolbarMode::normal)
 {
     iPagesInRow = 10 + 2 * theApp.GetProfileInt(_T("General"), _T("PagesInRow"), 0);
     // font
@@ -727,7 +726,7 @@ BOOL CDrawDoc::OnOpenDocument(LPCTSTR pszPathName)
     }
     if (isGRB || isLIB || _tcsstr(pszPathName, _T(".DB\0"))) {
         TCHAR makieta[MAX_PATH];
-        swCZV = theApp.OPENCZV;
+        swCZV = theApp.initCZV;
         ::StringCchCopy(makieta, MAX_PATH, pszPathName);
         return DBOpenDoc(makieta);
     }

@@ -16,29 +16,6 @@
 
 class CDrawView;
 
-enum class DrawShape : uint8_t
-{
-    add      = ID_DRAW_ADD,
-    red      = ID_DRAW_RED,
-    lock     = ID_DRAW_LOCK,
-    opis     = ID_DRAW_OPIS,
-    color    = ID_DRAW_KOLOR,
-    select   = ID_DRAW_SELECT,
-    caption  = ID_DRAW_CAPTION,
-    deadline = ID_DRAW_DEADLINE,
-    space    = ID_DRAW_SPACELOCKED,
-};
-
-enum class SelectMode : uint8_t
-{
-    none,
-    size,
-    move,
-    dontmove, // bo zablokowane - ale nie zmieniaj selekcji
-    dontsize, // bo niekratowe lub zablokowane
-    netSelect,
-};
-
 class CDrawTool
 {
     // Constructors

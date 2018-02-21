@@ -5,12 +5,7 @@
 
 #pragma once
 
-enum class ToolbarMode : uint8_t
-{
-    normal = 0,
-    czas_obow,
-    tryb_studia,
-};
+#include "ManConst.h"
 
 class CMainFrame : public CMDIFrameWndEx
 {
@@ -31,7 +26,7 @@ public:
     UINT GetKolor(int ile_spotow) const;   //zwraca kolor z (-) gdy konkretny spot kolor
     CString GetCaption() const;
     CString GetCaption(int i) const;
-    CString GetCapStrFromData(DWORD w) const;
+    CString GetCapStrFromData(const DWORD_PTR captionId) const;
     int GetCaptionBoxSize() const;
     void SetToolbarBitmap(ToolbarMode bPrevMode, ToolbarMode bNewMode);
 
@@ -50,8 +45,8 @@ public:
     CBrush cyjan, magenta, yellow, rzym, robgcolor;
     BOOL show_spacelocks;
 
-    int lastCapToolBar;	// 0==combo zawiera nag³ówki_eps; >0==id_drw
-    int lastColToolBar;	// 0==combo zawiera wersje_eps; >0==id_drw
+    int lastCapToolBar;  // 0==combo zawiera nag³ówki_eps; >0==id_drw
+    bool lastColToolBar; // czy combo zawiera kolory
 // Implementation
 public:
     void SetLogonStatus(LPCTSTR t);

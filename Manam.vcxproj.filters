@@ -131,6 +131,9 @@
     <ClInclude Include="Manam.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="ManConst.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
     <ClInclude Include="ManODPNET.h">
       <Filter>Headers</Filter>
     </ClInclude>

@@ -87,9 +87,9 @@ class CDrawAdd final : public CDrawObj
     void DrawPadlock(CDC *pDC, const CRect& rect) const;
     CString PrepareBuf(TCHAR *ch) const;
 
-    BOOL Lock();
     CFlag GetPlacementFlag() const;					// mapa modu堯w zaj皻ych na stronie przez to og這szenie
     CFlag GetPlacementFlag(int px, int py) const;	// mapa modu堯w zaj皻ych na stronie przez to og這szenie, gdyby mia這 wsp馧rz璠ne (posx, posy)
+    void Lock();
     void SetPosition(CRect *m_pos, CDrawPage *pPage);
     void SetPosition(int fizp, int px, int py, int sx, int sy);
     void SetSpaceSize(int sx, int sy);				// og這szenie w ustalonej kracie zmienia rozmiar

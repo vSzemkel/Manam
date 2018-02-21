@@ -167,7 +167,7 @@ void CDrawPage::Draw(CDC *pDC)
 
     const bool isRoman = (pagina_type & c_rzym) > 0;
     const CString& cnr = GetNrPaginy();
-    const CString& cap = theApp.swCZV & 2 ? ((CMainFrame*)AfxGetMainWnd())->GetCapStrFromData((WORD)(prn_mak_xx - (pagina & 1))) : caption;
+    const CString& cap = (theApp.swCZV == ToolbarMode::tryb_studia) ? ((CMainFrame*)AfxGetMainWnd())->GetCapStrFromData((DWORD_PTR)(prn_mak_xx - (pagina & 1))) : caption;
     CRect r(rect.left + 2 * vscale, rect.top - vscale, rect.right - 2 * vscale, rect.top - pmoduly + vscale);
     if ((!isRoman && (pagina & 1) == 0) || (isRoman && (pagina & 1) == 1)) { // lewe arabskie i prawe rzymskie
         DrawNapis(pDC, cap, cap.GetLength(), r, DT_RIGHT | DT_VCENTER | DT_SINGLELINE, OPAQUE);
@@ -547,14 +547,14 @@ BOOL CDrawPage::OnOpen(CDrawView*)
     m_deadline = dlg.m_deadline;
     m_dervinfo = dlg.m_dervinfo;
 
-    if (theApp.swCZV == 2)
+    if (theApp.swCZV == ToolbarMode::tryb_studia)
         prn_mak_xx = dlg.m_prn_mak_xx;
     pom_nr = m_pDocument->GetIPage(this);
     i = dlg.m_topage;
     while (--i) {
         auto vPage = m_pDocument->m_pages[div(i + pom_nr, pc).rem];
         if (vPage->m_dervlvl != DERV_FIXD && vPage->m_dervlvl != DERV_PROH) {
-            if (theApp.swCZV == 2)
+            if (theApp.swCZV == ToolbarMode::tryb_studia)
                 vPage->prn_mak_xx = dlg.m_prn_mak_xx + ((i + pom_nr) & 1) - (pom_nr & 1);
             else {
                 vPage->wyd_xx = dlg.m_wyd_xx;
@@ -1247,8 +1247,8 @@ foundsizex:
         }
     }
 
-    UINT br;
     try {
+        UINT br;
         while (ok && (br = fManamEps.Read(cThreadBuf, n_size)) > 0)
             dest->Write(cThreadBuf, br);
         dest->Write("\r\n", 2);

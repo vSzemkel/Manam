@@ -281,6 +281,7 @@
     <ClInclude Include="KolDlg.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Manam.h" />
+    <ClInclude Include="ManConst.h" />
     <ClInclude Include="ManODPNET.h" />
     <ClInclude Include="ManPDF.h" />
     <ClInclude Include="ManSock.h" />

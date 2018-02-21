@@ -22,13 +22,6 @@ class CDrawObj;
 class CDrawOpis;
 class CQueView;
 
-enum class DocType : uint8_t // typ wyliczeniowy rodzajów dokumentów
-{
-    makieta,
-    makieta_lib,
-    grzbiet_drukowany
-};
-
 class CDrawDoc final : public COleDocument
 {
     DECLARE_DYNCREATE(CDrawDoc)
@@ -154,40 +147,40 @@ class CDrawDoc final : public COleDocument
     virtual void Dump(CDumpContext& dc) const override;
 #endif
 
-    int m_mak_xx;				// ident makiety
-    int id_drw; 			// ident drzewa
-    int iPagesInRow;		// ile stron rysyje siê w wierszu
-    BYTE ovEPS : 1;		// nadpisuj EPS'y przy generacji
-    BYTE isRO : 1;		// otwarty tylko do odczytu
-    BYTE isSIG : 1;		// makieta podpisana przez kierownika 
-    BYTE isGRB : 1;		// grzbiet
-    BYTE isLIB : 1;		// makieta biblioteczna
-    BYTE isRED : 1;		// czy pokazuj¹ siê nag³ówki redakcyjne
-    BYTE swCZV : 2;		// prze³¹cznik widoku: 0==standard; 1==czas_obow; 2==studio;
-    BYTE isACD : 1;		// czy wczytano ju¿ dane o deadlinach dla czasopism
-    CString gazeta;			// tytul i mutacja - ust przy wyborze dzewa
-    CString data;			// ust przy save'owaniu
-    CString opis;			// ustalana w Rejkodzie dzienna nazwa produktu
-    CString dayws;			// do przekazywania parametrów w web serwisów
-    CString daydir;			// do generowania ps z katalogów dniowych
-    CString docmutred;		// lista dopuszczalnych mutacji redakcyjnych
-    CString sOpiServerUrl;	// adres serwera OPI, do którego bêd¹ wysy³ane kolumny
-    DocType iDocType;		// typ dokumentu na podstawie eDocType
-    std::vector<UINT>		m_spot_makiety;
+    int m_mak_xx;          // ident makiety
+    int id_drw;            // ident drzewa
+    int iPagesInRow;       // ile stron rysyje siê w wierszu
+    BYTE ovEPS : 1;        // nadpisuj EPS'y przy generacji
+    BYTE isRO : 1;         // otwarty tylko do odczytu
+    BYTE isSIG : 1;        // makieta podpisana przez kierownika 
+    BYTE isGRB : 1;        // grzbiet
+    BYTE isLIB : 1;        // makieta biblioteczna
+    BYTE isRED : 1;        // czy pokazuj¹ siê nag³ówki redakcyjne
+    BYTE isACD : 1;        // czy wczytano ju¿ dane o deadlinach dla czasopism
+    CString gazeta;        // tytul i mutacja - ust przy wyborze dzewa
+    CString data;          // ust przy save'owaniu
+    CString opis;          // ustalana w Rejkodzie dzienna nazwa produktu
+    CString dayws;         // do przekazywania parametrów w web serwisów
+    CString daydir;        // do generowania ps z katalogów dniowych
+    CString docmutred;     // lista dopuszczalnych mutacji redakcyjnych
+    CString sOpiServerUrl; // adres serwera OPI, do którego bêd¹ wysy³ane kolumny
+    DocType iDocType;      // typ dokumentu na podstawie eDocType
+    ToolbarMode swCZV;     // prze³¹cznik widoku: 0==standard; 1==czas_obow; 2==studio;
 
+    std::vector<UINT> m_spot_makiety;  // lista uzywanych kolorow spotowych
     std::vector<CDrawObj*>  m_objects; // lista og³oszeñ i opisów nale¿¹cych do dokumentu, og³oszenia przed opisami
     std::vector<CDrawPage*> m_pages;   // uporz¹dkowana kolekcja stron dokumentu; ostatnia strona ma index 0
     std::vector<CDrawAdd*>  m_addsque; // lista og³oszeñ czekaj¹cych w kolejce makiety
     std::vector<delobj_t>   m_del_obj; // obiekty usuniête z dokumentu, do usuniêcia w bazie
-    std::vector<CRozm>   m_Rozm;       // tablica rozmiarów krat i formatów niestandardowych dokumentu
+    std::vector<CRozm>      m_Rozm;    // tablica rozmiarów krat i formatów niestandardowych dokumentu
 
     CFont m_pagefont;
     CFont m_addfont;
 
     CString prowadzacy1;
     CString prowadzacy2;
-    CString sekretarz;		// dla makiet bibliotecznych zawiera opis
-    CString symWydawcy;		// dwuliterowy symbol dzia³u zsy³aj¹cego
+    CString sekretarz;      // dla makiet bibliotecznych zawiera opis
+    CString symWydawcy;     // dwuliterowy symbol dzia³u zsy³aj¹cego
 
 protected:
     CSize m_size;

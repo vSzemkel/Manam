@@ -34,10 +34,8 @@ static UINT BASED_CODE indicators[] =
 /////////////////////////////////////////////////////////////////////////////
 // CMainFrame construction/destruction
 
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() : lastCapToolBar(0), lastColToolBar(false)
 {
-    lastCapToolBar = 0;
-    lastColToolBar = -1;
 }
 
 CMainFrame::~CMainFrame()
@@ -179,7 +177,7 @@ LRESULT CMainFrame::OnToolBarReset(WPARAM wp, LPARAM)
 
             StoreComboHandlers();
             if (theApp.isRDBMS) {
-                lastColToolBar = -1;
+                lastColToolBar = false;
                 InsKolorBox();
             }
 
@@ -270,7 +268,7 @@ void CMainFrame::SetRoleStatus()
 //////////////// ini spoty o ile sa
 void CMainFrame::InsComboNrSpotow(int new_i)
 {
-    if (theApp.swCZV & 2) return;
+    if (theApp.swCZV == ToolbarMode::tryb_studia) return;
     const auto old_i = m_KolorBox->GetCount() - (int)CDrawDoc::kolory.size();
     if (old_i > new_i)
         for (int i = old_i - 1; i >= new_i; i--)
@@ -283,11 +281,11 @@ void CMainFrame::InsComboNrSpotow(int new_i)
 
 void CMainFrame::LoadKolorCombo()
 {
-    if (!lastColToolBar && theApp.swCZV & 2) 	// ostatnio odœwie¿ono wersje
+    const bool isStudio = theApp.swCZV == ToolbarMode::tryb_studia;
+    if (!lastColToolBar && isStudio) // ostatnio odœwie¿ono wersje
         return;
-    lastColToolBar = theApp.swCZV & 2 ? 0 : 1;
 
-    if (theApp.swCZV & 2) {
+    if (isStudio) {
         m_KolorBox->ResetContent();
         m_KolorBox->AddString(_T(""));
         theManODPNET.FillCombo(m_KolorBox, "select wersja from spacer_wersje_eps order by 1", CManODPNET::emptyParm);
@@ -302,6 +300,7 @@ void CMainFrame::LoadKolorCombo()
             InsComboNrSpotow(theApp.activeDoc->DBReadSpot((int)theApp.activeDoc->m_pages.size()));
     }
     m_KolorBox->Invalidate();
+    lastColToolBar = !isStudio;
 }
 
 void CMainFrame::InsKolorBox()
@@ -349,11 +348,11 @@ void CMainFrame::IniCaptionCombo(BOOL iscaption)
 BOOL CMainFrame::DBIniCaptionCombo(BOOL iscaption, int id_drw)
 {
     // nie odœwie¿aj niepotrzebnie
-    const auto checksum = (iscaption << 24) + (theApp.swCZV << 16) + id_drw;
+    const auto checksum = (iscaption << 24) + ((int)theApp.swCZV << 16) + id_drw;
     if (lastCapToolBar == checksum) return TRUE;
     lastCapToolBar = checksum;
 
-    const auto czyListaPagin = theApp.swCZV == 2;
+    const auto czyListaPagin = theApp.swCZV == ToolbarMode::tryb_studia;
     auto sql = reinterpret_cast<char*>(theApp.bigBuf);
     StringCchPrintfA(sql, bigSize, "select %s drw_xx=:xx order by 1",
         czyListaPagin ? "text,xx from spacer_naglowki_prn where"
@@ -420,11 +419,13 @@ CString CMainFrame::GetCaption(int i) const
     return rs;
 }
 
-CString CMainFrame::GetCapStrFromData(DWORD w) const
+CString CMainFrame::GetCapStrFromData(const DWORD_PTR captionId) const
 {
     CString cap;
-    for (int i = 0; i < m_CaptionBox->GetCount(); i++)
-        if (m_CaptionBox->GetItemData(i) == w)
+    const int captionCnt = m_CaptionBox->GetCount();
+
+    for (int i = 0; i < captionCnt; ++i)
+        if (m_CaptionBox->GetItemData(i) == captionId)
             m_CaptionBox->GetLBText(i, cap);
 
     return cap;

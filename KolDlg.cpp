@@ -140,7 +140,7 @@ CPageDlg::CPageDlg(CWnd *pParent /*=NULL*/)
 
 void CPageDlg::OnOK()
 {
-    if (theApp.swCZV & 2 && m_prn_mak.GetCount()) {
+    if (theApp.swCZV == ToolbarMode::tryb_studia && m_prn_mak.GetCount()) {
         int prn_flag = 0L;
         long lBit = 1L;
         for (int i = 0; i < m_prn_fun.GetCount(); i++, lBit <<= 1)
@@ -240,7 +240,7 @@ END_MESSAGE_MAP()
 
 void CPageDlg::GiveOutStrLog()
 {
-    if (theApp.swCZV & 2) return;
+    if (theApp.swCZV == ToolbarMode::tryb_studia) return;
     m_namecombo.GetLBText(m_namecombo.GetCurSel(), m_name);
     m_caption = m_name.Right(m_name.GetLength() - m_name.ReverseFind(_T('/')) - 1);
     SetDlgItemText(IDC_CAPTION, m_caption);
@@ -254,7 +254,7 @@ void CPageDlg::SetFunListBox(BOOL setDefaults)
     theManODPNET.FillList(&m_prn_fun, "select opis,deflag from makfun where mak_xx=:mak_xx", orapar, 1);
 
     if (setDefaults) m_prn_flag.SetZero();
-    int rc = m_prn_fun.GetCount();
+    const int rc = m_prn_fun.GetCount();
     for (int i = 0; i < rc; ++i)
         if (setDefaults && m_prn_fun.GetItemData(i)) {
             m_prn_fun.SetSel(i);
@@ -318,9 +318,9 @@ BOOL CPageDlg::OnInitDialog()
     else
         m_kolorcombo.SetCurSel(m_kolor >> 3);
 
-    //captions
+    // captions
     CComboBox *vCB = m_iscaption ? &m_captioncombo : &m_namecombo;
-    if (theApp.swCZV != 2 && theApp.activeDoc->isRED == (BOOL)(((CDrawApp*)AfxGetApp())->GetProfileInt(_T("General"), _T("Captions"), 1)))
+    if (theApp.swCZV != ToolbarMode::tryb_studia && theApp.activeDoc->isRED == (BOOL)(theApp.GetProfileInt(_T("General"), _T("Captions"), 1)))
         for (j = 0; j < ((CMainFrame*)AfxGetMainWnd())->GetCaptionBoxSize(); j++) {
             vCB->AddString(((CMainFrame*)AfxGetMainWnd())->GetCaption(j));
             vCB->SetItemData(j, ((CMainFrame*)AfxGetMainWnd())->GetCaptionDataItem(j));
@@ -366,7 +366,7 @@ BOOL CPageDlg::OnInitDialog()
             m_wydawcycombo.SetCurSel(j);
     }
 
-    if (theApp.swCZV == 2 && theApp.isRDBMS && ((theApp.grupa&R_STU) || (theApp.grupa&R_MAS))) {
+    if (theApp.swCZV == ToolbarMode::tryb_studia && theApp.isRDBMS && ((theApp.grupa&R_STU) || (theApp.grupa&R_MAS))) {
         // odczytaj ustawienia strony
         int prn_flag;
         CManODPNETParms orapar {

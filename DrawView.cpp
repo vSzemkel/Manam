@@ -179,9 +179,9 @@ void CDrawView::OnActivateView(BOOL bActivate, CView *pActiveView, CView *pDeact
 
     if (bActivate) {
         if (pActiveView && theApp.activeDoc->swCZV != theApp.swCZV) {
-            BYTE bPrevMode = theApp.swCZV;
+            auto bPrevMode = theApp.swCZV;
             theApp.swCZV = ((CDrawDoc *)pActiveView->GetDocument())->swCZV;
-            ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap((ToolbarMode)bPrevMode, (ToolbarMode)theApp.swCZV);
+            ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap(bPrevMode, theApp.swCZV);
         }
         ((CMainFrame *)AfxGetMainWnd())->SetOpenStatus(GetDocument()->isRO ? _T("READ") : _T("WRITE"));
     }
@@ -199,7 +199,7 @@ BOOL CDrawView::OnSetCursor(CWnd *pWnd, UINT nHitTest, UINT message)
     else if (CDrawTool::c_drawShape == DrawShape::color)
         cursor = IDC_KOLOR;
     else if (CDrawTool::c_drawShape == DrawShape::lock)
-        cursor = (GetDocument()->swCZV & 1) ? IDC_FLAG : IDC_LOCK;
+        cursor = (GetDocument()->swCZV == ToolbarMode::czas_obow) ? IDC_FLAG : IDC_LOCK;
     else if (CDrawTool::c_drawShape == DrawShape::deadline)
         cursor = IDC_DEADLINE;
     else if (CDrawTool::c_drawShape == DrawShape::space)
@@ -1279,37 +1279,38 @@ void CDrawView::OnDrawOpcje() { GetDocument()->OnDrawOpcje(); }
 void CDrawView::OnUpdateViewCzasobow(CCmdUI *pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI))
-        pCmdUI->SetCheck(GetDocument()->swCZV & 1);
-}
-
-void CDrawView::OnViewCzasobow()
-{
-    BYTE bPrevMode = theApp.swCZV;
-    theApp.swCZV = GetDocument()->swCZV = (GetDocument()->swCZV - 1) * (GetDocument()->swCZV - 1); //f(x) = (x-1)^2
-    ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap((ToolbarMode)bPrevMode, (ToolbarMode)theApp.swCZV);
-    Invalidate(FALSE);
-}
-
-void CDrawView::OnChangeView()
-{
-    BYTE bPrevMode = theApp.swCZV;
-    theApp.swCZV = GetDocument()->swCZV = (GetDocument()->swCZV + 1) % 3;
-    ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap((ToolbarMode)bPrevMode, (ToolbarMode)theApp.swCZV);
-    Invalidate(FALSE);
-}
-
-void CDrawView::OnViewStudio()
-{
-    BYTE bPrevMode = theApp.swCZV;
-    theApp.swCZV = GetDocument()->swCZV = 2 - (GetDocument()->swCZV & 2); //f(x) = 2-(x&2)
-    ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap((ToolbarMode)bPrevMode, (ToolbarMode)theApp.swCZV);
-    Invalidate(FALSE);
+        pCmdUI->SetCheck(GetDocument()->swCZV == ToolbarMode::czas_obow);
 }
 
 void CDrawView::OnUpdateViewStudio(CCmdUI *pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI))
-        pCmdUI->SetCheck((GetDocument()->swCZV & 2) > 0 ? 1 : 0);
+        pCmdUI->SetCheck(GetDocument()->swCZV == ToolbarMode::tryb_studia);
+}
+
+void CDrawView::OnViewCzasobow()
+{
+    const auto bPrevMode = theApp.swCZV;
+    const auto tmp = (uint8_t)GetDocument()->swCZV - 1;
+    theApp.swCZV = GetDocument()->swCZV = (ToolbarMode)(tmp * tmp); // f(x) = (x-1)^2
+    ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap(bPrevMode, theApp.swCZV);
+    Invalidate(FALSE);
+}
+
+void CDrawView::OnChangeView()
+{
+    const auto bPrevMode = theApp.swCZV;
+    theApp.swCZV = GetDocument()->swCZV = (ToolbarMode)(((uint8_t)GetDocument()->swCZV + 1) % 3);
+    ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap(bPrevMode, theApp.swCZV);
+    Invalidate(FALSE);
+}
+
+void CDrawView::OnViewStudio()
+{
+    const auto bPrevMode = theApp.swCZV;
+    theApp.swCZV = GetDocument()->swCZV = (ToolbarMode)(2 - ((uint8_t)GetDocument()->swCZV & 2)); // f(x) = 2-(x&2)
+    ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap(bPrevMode, theApp.swCZV);
+    Invalidate(FALSE);
 }
 
 void CDrawView::OnAsideAdds() { GetDocument()->OnAsideAdds(); }

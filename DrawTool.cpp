@@ -486,7 +486,7 @@ void CKolorTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poin
             else
                 pPage->SetSpotKolor(kolorek >> 3);
         } else { // CDrawAdd   czyli nic nie robimy gdy wybrany kolor np.spot I
-            if (theApp.swCZV & 2 && pAdd != nullptr) { //wersje_eps
+            if (theApp.swCZV == ToolbarMode::tryb_studia && pAdd != nullptr) { //wersje_eps
                 if (pAdd->wersja.IsEmpty() || pAdd->wersja == _T(" "))
                     pAdd->wersja = ("." + frame->GetKolorText());
                 else {
@@ -500,7 +500,7 @@ void CKolorTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poin
                     pObj->ChangeKolor(((kolorek == c_full) ? c_full : ((kolorek == c_brak) ? c_brak : (kolorek + c_spot))));
         }
     } else  // caption tool
-        if (theApp.swCZV & 2 && pPage != nullptr) { // naglowki_prn
+        if (theApp.swCZV == ToolbarMode::tryb_studia && pPage != nullptr) { // naglowki_prn
             pPage->prn_mak_xx = (int)frame->GetCaptionDataItem(-1) + (pPage->pagina & 1);
             CManODPNETParms orapar {
                 { CManODPNET::DbTypeInt32, &pPage->m_pDocument->m_mak_xx },

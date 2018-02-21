@@ -441,7 +441,7 @@ void CDrawApp::FileRefresh(CDrawDoc *refreshDoc)
         }
         if (vDoc->m_mak_xx > 0 || !vDoc->GetPathName().IsEmpty()) {
             aIsRO.Add((BOOL)vDoc->isRO);
-            aSwCZV.Add((BOOL)vDoc->swCZV);
+            aSwCZV.Add((BYTE)vDoc->swCZV);
             CString d(vDoc->data);
             if (!vDoc->isLIB) {
                 d.SetAt(2, '-'); d.SetAt(5, '-');
@@ -458,11 +458,12 @@ void CDrawApp::FileRefresh(CDrawDoc *refreshDoc)
     // otwórz ponownie w odwrotnej kolejnoœci
     for (int i = (int)doce.size() - 1; i >= 0; i--) {
         OPENRO = aIsRO[i];
-        OPENCZV = aSwCZV[i];
+        initCZV = (ToolbarMode)aSwCZV[i];
         if (OpenDocumentFile(doce[i]))
             theApp.activeDoc->SetTitle(tytuly[i]);
     }
-    OPENRO = OPENCZV = FALSE;
+    OPENRO = FALSE;
+    initCZV = ToolbarMode::normal;
     (grupa&R_DEA) ? ((CMDIFrameWnd*)m_pMainWnd)->MDICascade() : ((CMDIFrameWnd*)m_pMainWnd)->MDITile(MDITILE_HORIZONTAL);
 }
 

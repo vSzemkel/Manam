@@ -223,12 +223,12 @@ void CDrawAdd::Draw(CDC *pDC)
 
     if (selectMode != SelectMode::move) {
         DrawDesc(pDC, &m_position);
-        if ((!(m_pDocument->swCZV & 1) && flags.locked) || (m_pDocument->swCZV & 1 && flags.reserv))
+        if ((m_pDocument->swCZV != ToolbarMode::czas_obow && flags.locked) || (m_pDocument->swCZV == ToolbarMode::czas_obow && flags.reserv))
             DrawPadlock(pDC, &m_position);
         int retCkPageLocation = 0;
-        if (m_pDocument->swCZV == 0 && drawErrorBoxes)
+        if (m_pDocument->swCZV == ToolbarMode::normal && drawErrorBoxes)
             retCkPageLocation = CkPageLocation(fizpage);
-        const bool simpleCase = (m_pDocument->swCZV == 1 && flags.zagroz) || (m_pDocument->swCZV == 2 && flags.showeps);
+        const bool simpleCase = (m_pDocument->swCZV == ToolbarMode::czas_obow && flags.zagroz) || (m_pDocument->swCZV == ToolbarMode::tryb_studia && flags.showeps);
         if (simpleCase || retCkPageLocation > 0) {
             pDC->MoveTo(rect.left, rect.top);
             pDC->LineTo(rect.right, rect.bottom);
@@ -323,7 +323,7 @@ void CDrawAdd::DrawPadlock(CDC *pDC, const CRect& rect) const
     CBrush* pOldBrush = (CBrush*)pDC->SelectStockObject(BLACK_BRUSH);
     CPen* pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
 
-    if (!(m_pDocument->swCZV & 1)) { // k³ódka
+    if (m_pDocument->swCZV != ToolbarMode::czas_obow) { // k³ódka
         CRect r(rect.right - 4 * vscale, rect.bottom + 4 * vscale, rect.right, rect.bottom);
         pDC->Rectangle(r);
         (CBrush*)pDC->SelectStockObject(NULL_BRUSH);
@@ -438,15 +438,16 @@ void CDrawAdd::PrintPadlock(CDC *pDC, const CRect& rect)
     pDC->SelectObject(pOldPen);
 }
 
-BOOL CDrawAdd::Lock()
+void CDrawAdd::Lock()
 {
     if (fizpage != 0) {
-        if (m_pDocument->swCZV & 1) flags.reserv = !flags.reserv;
-        else flags.locked = !flags.locked;
+        if (m_pDocument->swCZV == ToolbarMode::czas_obow)
+            flags.reserv = !flags.reserv;
+        else 
+            flags.locked = !flags.locked;
         SetDirty();
     }
     Invalidate();
-    return flags.locked;
 }
 
 void CDrawAdd::UpdateInfo()
