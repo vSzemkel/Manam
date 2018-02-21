@@ -29,13 +29,6 @@ constexpr COLORREF BIALY = RGB(255, 255, 255);
 // numeracja - odpowiada PK s³ownika TYP_NUMERACJI z bazy
 constexpr int c_normal = 1;
 constexpr int c_rzym = 2;
-// typy obiektow
-constexpr int c_page = 0;
-constexpr int c_add = 1;
-constexpr int c_opis = 2;
-constexpr int c_addque = 3;
-constexpr int c_page_lib = 4;
-constexpr int c_opis_lib = 5;
 // grupy
 constexpr int R_DEA = 1;
 constexpr int R_RED = 2;
@@ -62,18 +55,10 @@ constexpr int preview_offset = 30;
 constexpr int F_EPS = 0;
 constexpr int F_PS = 1;
 constexpr int F_PDF = 2;
-// dziedziczenie
-constexpr int DERV_NONE = 0;
-constexpr int DERV_ADDS = 1;
-constexpr int DERV_TMPL = 2;
-constexpr int DERV_FIXD = 3;
-constexpr int DERV_PROH = 4;
-constexpr int DERV_DRUK = 5;
-constexpr int DERV_COLO = 6;
+
 constexpr auto DERV_TMPL_WER = "$c";
 constexpr auto OPI_TAG = "%%MANAM-OPI ";
 constexpr auto APP_NAME = _T("Manam");
-
 constexpr int bigSize = 0x8000;   // 32kB
 constexpr size_t n_size = 0x7FFF; // (bigSize-1)
 
@@ -119,4 +104,25 @@ enum class SpaceMode : uint8_t
     avail,
     redlock,
     spacelock,
+};
+
+enum class DervType : uint8_t
+{
+    none = 0,
+    adds = 1,
+    tmpl = 2,
+    fixd = 3,
+    proh = 4,
+    druk = 5,
+    colo = 6
+};
+
+enum class EntityType : uint8_t // typy obiektow
+{
+    page = 0,
+    add = 1,
+    opis = 2,
+    addque = 3,
+    page_lib = 4,
+    opis_lib = 5
 };

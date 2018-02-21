@@ -403,7 +403,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
         p = PtrToStringChars(strCur->GetString(16));
         if (swscanf_s(p, c_formatCzasu, &d, &m, &r, &g, &min) == 5 && r > 1900)
             pPage->m_deadline = CTime(r, m, d, g, min, 0);
-        pPage->m_dervlvl = strCur->IsDBNull(17) ? 0 : strCur->GetInt32(17); // dervlvl
+        pPage->m_dervlvl = (DervType)(strCur->IsDBNull(17) ? 0 : strCur->GetInt32(17)); // dervlvl
         pPage->m_dervinfo = OdpHelper::ReadOdrString(strCur, 18);
         pPage->mutred = OdpHelper::ReadOdrString(strCur, 19);
         // 20 - pap_xx, obsolete
@@ -656,12 +656,12 @@ void CDrawDocDbWriter::RemoveDeletedObj(OracleConnection^ conn, BOOL delAdds)
     cmd->CommandText = "begin delete_spacer_object(:mak_xx,:typ,:xx); end;";
     auto par = cmd->Parameters;
     par->Add("mak_xx", OracleDbType::Int32)->Value = m_doc->m_mak_xx;
-    par->Add("typ", OracleDbType::Int16);
+    par->Add("typ", OracleDbType::Byte);
     par->Add("obj", OracleDbType::Int32);
 
     for (const auto& del : m_doc->m_del_obj) {
-        if ((delAdds && del.second != c_add) || (!delAdds && del.second == c_add)) continue;
-        par[1]->Value = del.second;
+        if ((delAdds && del.second != EntityType::add) || (!delAdds && del.second == EntityType::add)) continue;
+        par[1]->Value = (uint8_t)del.second;
         par[2]->Value = del.first;
         cmd->ExecuteNonQuery();
     }

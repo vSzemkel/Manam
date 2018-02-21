@@ -400,7 +400,7 @@ void CRectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
         {
             auto pDoc = pView->GetDocument();
             auto pPage = pDoc->PageAt(local);
-            if (pPage && pPage->m_dervlvl == DERV_PROH) {
+            if (pPage && pPage->m_dervlvl == DervType::proh) {
                 pView->Select(NULL);
                 return;
             }
@@ -471,7 +471,7 @@ void CKolorTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poin
     auto frame = (CMainFrame*)AfxGetMainWnd();
     auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
     auto pPage = dynamic_cast<CDrawPage*>(pObj);
-    if (pPage != nullptr && pPage->m_dervlvl == DERV_FIXD) return;
+    if (pPage != nullptr && pPage->m_dervlvl == DervType::fixd) return;
     if (pAdd != nullptr && pAdd->flags.derived) return;
     pView->GetDocument()->SetModifiedFlag();
     pObj->dirty = TRUE;

@@ -17,7 +17,7 @@ IMPLEMENT_SERIAL(CDrawPage, CDrawObj, 0)
 CDrawPage::CDrawPage(const CRect& position) noexcept :
     CDrawObj(position), id_str(-1), szpalt_x(pszpalt_x), szpalt_y(pszpalt_y),
     nr(c_normal), prn_mak_xx(0), wyd_xx(-1), m_typ_pary(0), space(), space_locked(), space_red(),
-    niemakietuj(0), m_dervlvl(0), m_mutczas(1), m_drukarnie(0), m_deadline(CTime::GetCurrentTime()),
+    niemakietuj(0), m_mutczas(1), m_drukarnie(0), m_deadline(CTime::GetCurrentTime()), m_dervlvl(DervType::none),
     m_ac_red(0), m_ac_fot(0), m_ac_kol(0)
 {
     ASSERT_VALID(this);
@@ -100,7 +100,7 @@ void CDrawPage::Serialize(CArchive& ar)
             m_kraty_niebazowe.emplace_back(sx, sy, std::move(sp), std::move(sp_l), std::move(sp_r));
         }
         ar >> wTemp; prn_mak_xx = wTemp;
-        ar >> wTemp; m_dervlvl = wTemp;
+        ar >> wTemp; m_dervlvl = (DervType)wTemp;
         ar >> wTemp; m_mutczas = wTemp;
         DWORD dwTemp;
         ar >> dwTemp; m_drukarnie = dwTemp;
@@ -274,17 +274,17 @@ void CDrawPage::DrawGrid(CDC *pDC)
         pDC->SelectObject(pOldBrush);
     }
 
-    if (m_dervlvl != DERV_NONE) {
+    if (m_dervlvl != DervType::none) {
         COLORREF bkColor = 0, oldBkColor = pDC->GetBkColor();
         switch (m_dervlvl) {
-            case DERV_ADDS: bkColor = 0xFF64BC; break; // fioletowy
-            case DERV_TMPL: bkColor = 0x43C1FB; break; // pomaranczowy
-            case DERV_FIXD: bkColor = 0x7B78F1; break; // czerwony
-            case DERV_PROH: bkColor = 0x6EC27C; break; // zielony
-            case DERV_COLO: bkColor = 0x111111; break; // czarny
-            case DERV_DRUK: bkColor = 0xCAA71C;		   // granatowy
+            case DervType::adds: bkColor = 0xFF64BC; break; // fioletowy
+            case DervType::tmpl: bkColor = 0x43C1FB; break; // pomaranczowy
+            case DervType::fixd: bkColor = 0x7B78F1; break; // czerwony
+            case DervType::proh: bkColor = 0x6EC27C; break; // zielony
+            case DervType::colo: bkColor = 0x111111; break; // czarny
+            case DervType::druk: bkColor = 0xCAA71C;        // granatowy
         }
-        if (m_dervlvl == DERV_PROH)
+        if (m_dervlvl == DervType::proh)
             pDC->FillSolidRect(m_position.left, m_position.top, m_position.Width(), m_position.Height() - 3 * vscale, bkColor);
         else
             pDC->FillSolidRect(m_position.left, m_position.bottom, m_position.Width(), -3 * vscale, bkColor);
@@ -513,7 +513,7 @@ BOOL CDrawPage::OnOpen(CDrawView*)
         pPage->m_drukarnie = m_drukarnie;
         pPage->SetDirty();
         pPage = m_pDocument->m_pages[(obj - nr_porz + 1) % obj];
-        if (pPage->m_dervlvl != DERV_FIXD) pPage->m_drukarnie = m_drukarnie;
+        if (pPage->m_dervlvl != DervType::fixd) pPage->m_drukarnie = m_drukarnie;
         pPage->SetDirty();
     }
 
@@ -553,7 +553,7 @@ BOOL CDrawPage::OnOpen(CDrawView*)
     i = dlg.m_topage;
     while (--i) {
         auto vPage = m_pDocument->m_pages[div(i + pom_nr, pc).rem];
-        if (vPage->m_dervlvl != DERV_FIXD && vPage->m_dervlvl != DERV_PROH) {
+        if (vPage->m_dervlvl != DervType::fixd && vPage->m_dervlvl != DervType::proh) {
             if (theApp.swCZV == ToolbarMode::tryb_studia)
                 vPage->prn_mak_xx = dlg.m_prn_mak_xx + ((i + pom_nr) & 1) - (pom_nr & 1);
             else {
@@ -677,7 +677,7 @@ void CDrawPage::RealizeSpace(const CDrawAdd *pObj)
 BOOL CDrawPage::FindSpace(CDrawAdd *pObj, int *px, int *py, const int sx, const int sy) const
 {
     BOOL ret = FALSE;
-    if (m_dervlvl == DERV_FIXD || m_dervlvl == DERV_PROH) return FALSE;
+    if (m_dervlvl == DervType::fixd || m_dervlvl == DervType::proh) return FALSE;
 
     if (*px <= 0) *px = 1;
     if (*py <= 0) *py = 1;
@@ -750,7 +750,7 @@ BOOL CDrawPage::CheckSpaceDiffKraty(const CDrawAdd *pObj, const int x, const int
             return FALSE;
 
     // dla wielokratowych stron dziedziczonych
-    if (m_dervlvl != DERV_NONE) {
+    if (m_dervlvl != DervType::none) {
         for (const auto& kn : m_kraty_niebazowe) {
             auto bit = 0;
             const auto& sp = kn.m_space;
@@ -826,7 +826,7 @@ void CDrawPage::SetBaseKrata(int s_x, int s_y, BOOL refresh)
 
 void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
 {
-    if (m_dervlvl == DERV_FIXD) return;
+    if (m_dervlvl == DervType::fixd) return;
 
     CFlag& space_mark = mode == SpaceMode::spacelock ? space_locked : space_red;
     bool bitToSet = !space_mark[module];
@@ -1096,7 +1096,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
     // uzupelnienie dziedziczenia
     BOOL isUzupEPS = FALSE;
     CString uzupEpsPath;
-    if (this->m_dervlvl == DERV_TMPL) {
+    if (this->m_dervlvl == DervType::tmpl) {
         uzupEpsPath = theApp.GetProfileString(_T("GenEPS"), _T("EpsUzupel"), _T(""));
         if (!uzupEpsPath.IsEmpty()) {
             int dervNum;

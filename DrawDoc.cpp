@@ -449,11 +449,11 @@ void CDrawDoc::Remove(CDrawObj *pObj)
             auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
             if (pAdd) {
                 if (pAdd->m_pub_xx != -1 && pObj != CQueView::selected_add)
-                    m_del_obj.emplace_back(pAdd->m_pub_xx, c_add);
+                    m_del_obj.emplace_back(pAdd->m_pub_xx, EntityType::add);
             } else {
                 auto pOpis = dynamic_cast<CDrawOpis*>(pObj);
                 if (pOpis && pOpis->m_opi_xx != -1)
-                    m_del_obj.emplace_back(pOpis->m_opi_xx, isLIB ? c_opis_lib : c_opis);
+                    m_del_obj.emplace_back(pOpis->m_opi_xx, isLIB ? EntityType::opis_lib : EntityType::opis);
             }
             m_objects.erase(pos);
         }
@@ -585,7 +585,7 @@ void CDrawDoc::RemovePage(CDrawPage *pObj)
         m_pages[ii]->MoveTo(&m_pages[ii - 1]->m_position);
 
     if (pObj->id_str != -1)
-        m_del_obj.emplace_back(std::make_pair(pObj->id_str, isLIB ? c_page_lib : c_page));
+        m_del_obj.emplace_back(std::make_pair(pObj->id_str, isLIB ? EntityType::page_lib : EntityType::page));
     m_pages.erase(m_pages.cbegin() + i);
     SetModifiedFlag();
 
@@ -1116,7 +1116,7 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
     UINT l_modogl, l_modred, l_modrez;
     *m_modogl = *m_modred = *m_modrez = 0;
     for (const auto& vPage : m_pages) {
-        if (vPage->m_dervlvl == DERV_PROH)
+        if (vPage->m_dervlvl == DervType::proh)
             continue;
         l_modogl = l_modred = l_modrez = 0;
         int pmods = vPage->szpalt_x * vPage->szpalt_y;
@@ -1343,7 +1343,7 @@ void CDrawDoc::OnFileInfo()
             const auto s_y1 = pPage->szpalt_y;
 
             for (const auto& p : m_pages) {
-                if (dlg.m_set_deadline && p->m_dervlvl != DERV_FIXD) {
+                if (dlg.m_set_deadline && p->m_dervlvl != DervType::fixd) {
                     p->m_deadline = dt;
                     p->m_drukarnie = druk;
                 }

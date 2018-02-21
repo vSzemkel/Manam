@@ -80,13 +80,13 @@ class CDrawPage final : public CDrawObj
     std::vector<CDrawAdd*> m_adds;	// og³oszenia przypisane do danej strony
     std::vector<CKrataNiebazowa> m_kraty_niebazowe;	// kraty niebazowe
 
-    int m_dervlvl;			// poziom dziedziczenia
     int m_mutczas;			// numer mutacji czasowej (tylko grzbiet)
     long m_drukarnie;		// flaga bitowa drukarni
     CTime m_deadline;		// najwczesniejszy deadline
     CString m_dervinfo;		// informacja o dziedziczeniu
     CString f5_errInfo;		// komunikat o b³êdzie dotycz¹cym materia³u, wygenerowany przez funkcjê F5
     CStringA sBoundingBox;	// postscriptowy BB
+    DervType m_dervlvl;		// poziom dziedziczenia
 
     CTime m_ac_red;			// deadline redakcyjny dla czasopism
     CTime m_ac_fot;			// deadline na zdjêcia dla czasopism

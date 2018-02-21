@@ -179,7 +179,7 @@ void CDrawView::OnActivateView(BOOL bActivate, CView *pActiveView, CView *pDeact
 
     if (bActivate) {
         if (pActiveView && theApp.activeDoc->swCZV != theApp.swCZV) {
-            auto bPrevMode = theApp.swCZV;
+            const auto bPrevMode = theApp.swCZV;
             theApp.swCZV = ((CDrawDoc *)pActiveView->GetDocument())->swCZV;
             ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap(bPrevMode, theApp.swCZV);
         }
@@ -727,7 +727,7 @@ void CDrawView::OnEditClear()
         } else {
             CDrawPage *pPage = dynamic_cast<CDrawPage *>(pObj);
             if (pPage) {
-                if (pPage->m_dervlvl == DERV_ADDS && !pPage->m_adds.empty())
+                if (pPage->m_dervlvl == DervType::adds && !pPage->m_adds.empty())
                     continue;
                 if (std::any_of(pPage->m_adds.cbegin(), pPage->m_adds.cend(), [](auto pAdd) { return pAdd->flags.derived > 0; }))
                     continue;
@@ -1290,26 +1290,28 @@ void CDrawView::OnUpdateViewStudio(CCmdUI *pCmdUI)
 
 void CDrawView::OnViewCzasobow()
 {
-    const auto bPrevMode = theApp.swCZV;
     const auto tmp = (uint8_t)GetDocument()->swCZV - 1;
-    theApp.swCZV = GetDocument()->swCZV = (ToolbarMode)(tmp * tmp); // f(x) = (x-1)^2
-    ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap(bPrevMode, theApp.swCZV);
-    Invalidate(FALSE);
+    const auto newMode = (ToolbarMode)(tmp * tmp); // f(x) = (x-1)^2
+    UpdateToolbar(newMode);
 }
 
 void CDrawView::OnChangeView()
 {
-    const auto bPrevMode = theApp.swCZV;
-    theApp.swCZV = GetDocument()->swCZV = (ToolbarMode)(((uint8_t)GetDocument()->swCZV + 1) % 3);
-    ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap(bPrevMode, theApp.swCZV);
-    Invalidate(FALSE);
+    const auto newMode = (ToolbarMode)(((uint8_t)GetDocument()->swCZV + 1) % 3);
+    UpdateToolbar(newMode);
 }
 
 void CDrawView::OnViewStudio()
 {
-    const auto bPrevMode = theApp.swCZV;
-    theApp.swCZV = GetDocument()->swCZV = (ToolbarMode)(2 - ((uint8_t)GetDocument()->swCZV & 2)); // f(x) = 2-(x&2)
-    ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap(bPrevMode, theApp.swCZV);
+    const auto newMode = (ToolbarMode)(2 - ((uint8_t)GetDocument()->swCZV & 2)); // f(x) = 2-(x&2)
+    UpdateToolbar(newMode);
+}
+
+void CDrawView::UpdateToolbar(ToolbarMode newMode)
+{
+    const auto prevMode = theApp.swCZV;
+    theApp.swCZV = GetDocument()->swCZV = newMode;
+    ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap(prevMode, newMode);
     Invalidate(FALSE);
 }
 
@@ -1494,8 +1496,8 @@ subseterr:
     for (int i = 0; !pDlg->cancelGenEPS && i < pc; ++i) {
         if (wyborStron[i]) {
             pPage = pDoc->m_pages[i];
-            int dl = pPage->m_dervlvl;
-            if (dl == DERV_FIXD || dl == DERV_PROH || (d.m_exclude_emptypages && pPage->m_adds.empty() && pPage->name.Find(_T("DROB")) == -1))
+            const auto dl = pPage->m_dervlvl;
+            if (dl == DervType::fixd || dl == DervType::proh || (d.m_exclude_emptypages && pPage->m_adds.empty() && pPage->name.Find(_T("DROB")) == -1))
                 continue;
 
             if (isprint) { // generate

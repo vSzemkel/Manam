@@ -7,7 +7,7 @@
 class CDrawView;
 class CDrawDoc;
 
-using delobj_t = std::pair<int, short>;
+using delobj_t = std::pair<int, EntityType>;
 
 /////////////////////////////////////////////////////////////////////////////
 // CDrawObj - base class for all 'drawable objects'

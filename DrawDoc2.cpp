@@ -919,9 +919,9 @@ void CDrawDoc::DerivePages(CDrawPage *pPage)
         dlg.m_nr = nr_porz ? nr_porz : npages;
         if (dlg.DoModal() == IDOK) {
             if (dlg.m_direction == 0) {
-                if (pPage->m_dervlvl == DERV_NONE && dlg.m_idervlvl == DERV_NONE)
+                if (pPage->m_dervlvl == DervType::none && dlg.m_idervlvl == DervType::none)
                     return;
-                if (dlg.m_idervlvl != DERV_NONE && dlg.m_idervlvl != DERV_PROH && dlg.m_idervlvl != DERV_DRUK)
+                if (dlg.m_idervlvl != DervType::none && dlg.m_idervlvl != DervType::proh && dlg.m_idervlvl != DervType::druk)
                     for (int i = 0; i < dlg.m_ilekol; i++)
                         if (!(m_pages[(dlg.m_nr + i) % npages])->m_adds.empty()) {
                             AfxMessageBox(_T("Przed dziedziczeniem nale¿y zdj¹æ og³oszenia ze zmienianych stron"), MB_ICONEXCLAMATION);
@@ -960,7 +960,7 @@ DerivePages_loop:
                     theManODPNET.EI(sql, orapar);
                 }
                 if (derv != addressof(dlg.m_derv_del)) {
-                    dlg.m_idervlvl = 0;
+                    dlg.m_idervlvl = DervType::none;
                     derv = &dlg.m_derv_del;
                     goto DerivePages_loop;
                 }

@@ -87,16 +87,16 @@ public:
     CPageDlg(CWnd *pParent = nullptr);	// standard constructor
     void OnOK() override;
     int m_id_str;
-    int m_dervlvl;
     int m_szpalt_x;
     int m_szpalt_y;
     int m_prn_mak_xx;
     int m_wyd_xx;					// wydawca strony
     int m_mak_xx;
     BOOL m_sztywna_kratka;
-    CString m_docmutred;
-    CString m_mutred;
     CFlag m_prn_flag;
+    CString m_mutred;
+    CString m_docmutred;
+    DervType m_dervlvl;
     // Dialog Data
         //{{AFX_DATA(CPageDlg)
     enum { IDD = IDD_PAGE };
@@ -959,10 +959,10 @@ public:
     int m_ilekol;
     int m_nr;
     int m_base_nr;
-    int	m_idervlvl;
-    //}}AFX_DATA
     int m_mak_xx;
     int m_drw_xx;
+    DervType m_idervlvl;
+    //}}AFX_DATA
     std::vector<int> m_derv_add; // które mutacje maja zaczac dziedziczyc z tej strony
     std::vector<int> m_derv_del; // które mutacje maja przestac dziedziczyc z tej strony
     // Overrides

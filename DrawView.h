@@ -171,8 +171,9 @@ class CDrawView : public CScrollView
     DECLARE_MESSAGE_MAP()
   private:
     static int OnDisableMenuInt(CCmdUI* pCmdUI);
-    BOOL ModifyMutczas(int n);
-    void OnPrevKolumnaDruk(); // pokazuje preview kolumny przygotowanej do druku
-
     unsigned char m_pagesPrinted;
+
+    BOOL ModifyMutczas(int n);
+    void OnPrevKolumnaDruk();                // pokazuje preview kolumny przygotowanej do druku
+    void UpdateToolbar(ToolbarMode newMode); // wyswietla obrazki na toolbarze adekwatnie do trybu pracy
 };

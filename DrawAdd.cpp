@@ -1130,7 +1130,7 @@ int CDrawAdd::CkPageLocation(int vFizPage)
         if ((kolor & 7) > (vPage->kolor & 7) ||
             ((kolor&c_spot) && (vPage->kolor&c_spot) && (kolor >> 3) != m_pDocument->m_spot_makiety[(vPage->kolor >> 3)] && m_pDocument->m_spot_makiety[(vPage->kolor >> 3)])) return 2;
         //na stronach z dziedziczeniem koloru tylko czarne og³oszenia
-        if (vPage->m_dervlvl == DERV_COLO && kolor != c_brak) return 2;
+        if (vPage->m_dervlvl == DervType::colo && kolor != c_brak) return 2;
         //nie na sciezce
         if (sekcja[0] && !_tcsstr(vStrLog, sekcja)) return 2;
         //lewa - nieparzysty numer

@@ -133,7 +133,8 @@ CPageDlg::CPageDlg(CWnd *pParent /*=NULL*/)
     //{{AFX_DATA_INIT(CPageDlg)
     m_topage = 1;
     m_kolor = c_brak;
-    m_deadline = m_typ_pary = m_drukarnie = m_ile_spotow = m_nr = m_dervlvl = 0;
+    m_deadline = m_typ_pary = m_drukarnie = m_ile_spotow = m_nr = 0;
+    m_dervlvl = DervType::none;
     m_rzymska = m_iscaption = m_sztywna_kratka = m_niemakietuj = FALSE;
     //}}AFX_DATA_INIT
 }
@@ -416,7 +417,7 @@ BOOL CPageDlg::OnInitDialog()
                 m_drukarniecombo.SetSel(i);
     }
 
-    if (m_dervlvl == DERV_FIXD || theApp.activeDoc->isGRB) {
+    if (m_dervlvl == DervType::fixd || theApp.activeDoc->isGRB) {
         GetDlgItem(IDOK)->EnableWindow(FALSE);
         GetDlgItem(IDC_PRINTHOUSE)->EnableWindow(FALSE);
     }
@@ -2513,7 +2514,7 @@ END_MESSAGE_MAP()
 BOOL CPageDerv::OnInitDialog()
 {
     if (!theApp.isRDBMS || !CDialog::OnInitDialog()) return FALSE;
-    ((CComboBox*)GetDlgItem(IDC_DERVLVL))->SetCurSel(m_idervlvl);
+    ((CComboBox*)GetDlgItem(IDC_DERVLVL))->SetCurSel((int)m_idervlvl);
 
     m_drw_xx = m_mak_xx;
     m_base_nr = m_nr;
@@ -2532,7 +2533,7 @@ BOOL CPageDerv::OnInitDialog()
 
 void CPageDerv::OnOK()
 {
-    if (m_idervlvl == DERV_FIXD) {
+    if (m_idervlvl == DervType::fixd) {
         UpdateData(TRUE);
         if ((m_base_nr - m_nr) & 1) {
             AfxMessageBox(_T("Pe³ne dziedziczenie musi zachowywaæ parzystoœæ stron"));
@@ -2566,8 +2567,8 @@ void CPageDerv::OnOK()
 
 void CPageDerv::OnSelchangeDervlvl()
 {
-    m_idervlvl = ((CComboBox*)GetDlgItem(IDC_DERVLVL))->GetCurSel();
-    const BOOL isEnabled = ((m_idervlvl != 0 || m_direction == 1) && m_idervlvl != 4 && m_idervlvl != 5);
+    m_idervlvl = (DervType)((CComboBox*)GetDlgItem(IDC_DERVLVL))->GetCurSel();
+    const BOOL isEnabled = ((m_idervlvl != DervType::none || m_direction == 1) && m_idervlvl != DervType::proh && m_idervlvl != DervType::druk);
     GetDlgItem(IDC_TYTMUT)->EnableWindow(isEnabled);
     GetDlgItem(IDC_BASE_NR)->EnableWindow(isEnabled);
 }
