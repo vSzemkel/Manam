@@ -265,7 +265,7 @@ void CDrawAdd::DrawDesc(CDC *pDC, const CRect& rect) const
             DrawTx(pDC, rect, remarks, TRUE);
             break;
         case TEXT_STUDIO:
-            DrawTx(pDC, rect, CGridFrm::studioStats[this->flags.studio], TRUE);
+            DrawTx(pDC, rect, CGridFrm::studioStats[(uint8_t)this->flags.studio], TRUE);
             break;
         case TEXT_EPS:
             if (nreps > -1L) {
@@ -291,7 +291,7 @@ void CDrawAdd::DrawDesc(CDC *pDC, const CRect& rect) const
             DrawTx(pDC, rect, remarks, FALSE);
             break;
         case TEXT_STUDIO:
-            DrawTx(pDC, rect, CGridFrm::studioStats[this->flags.studio], FALSE);
+            DrawTx(pDC, rect, CGridFrm::studioStats[(uint8_t)this->flags.studio], FALSE);
             break;
         case TEXT_EPS:
             if (nreps > -1L) {
@@ -356,7 +356,7 @@ void CDrawAdd::Print(CDC *pDC)
     switch (precelRingCnt) {
         case 0:
             pDC->Rectangle(rect);
-            if (kolor == c_full)
+            if (kolor == ColorId::full)
                 DrawKolor(pDC, &rect);
             break;
         case 1:
@@ -459,7 +459,7 @@ void CDrawAdd::UpdateInfo()
     if (m_add_xx > 0) info.AppendFormat(_T(" | Spacer: %i"), m_add_xx);
     if (!logpage.IsEmpty()) info.AppendFormat(_T(" | %s"), logpage);
     if (!remarks.IsEmpty() || !remarks_atex.IsEmpty()) info.AppendFormat(_T(" | %s"), remarks.IsEmpty() ? remarks_atex : remarks);
-    info.AppendFormat(_T(" | %s"), (kolor == c_full) ? FULL : CDrawDoc::kolory[kolor >> 3]);
+    info.AppendFormat(_T(" | %s"), (kolor == ColorId::full) ? FULL : CDrawDoc::kolory[kolor >> 3]);
     if (fizpage) info.AppendFormat(_T(" | na str: %s (%i,%i)"), m_pDocument->GetPage(fizpage)->GetNrPaginy(), posx, posy);
 }
 
@@ -470,7 +470,7 @@ CString CDrawAdd::PrepareBuf(TCHAR *ch) const
     if (theApp.includeKratka)
         bufor.AppendFormat(_T("%ix%i%s"), szpalt_x, szpalt_y, ch);
 
-    if ((fizpage & c_rzym) == c_rzym)
+    if ((fizpage & PaginaType::roman) == PaginaType::roman)
         bufor.Append(CDrawObj::Rzymska(fizpage >> 16));
     else
         bufor.AppendFormat(_T("%i"), fizpage >> 16);
@@ -478,7 +478,7 @@ CString CDrawAdd::PrepareBuf(TCHAR *ch) const
     bufor.AppendFormat(_T("%s%i%s%i%s%s%s"), ch, posx, ch, posy, ch, nazwa, ch);
     if (nreps > -1)
         bufor.AppendFormat(_T("%li"), nreps);
-    bufor.AppendFormat(_T("%s%s%s%s%s%s%s%s\n"), ch, CDrawDoc::kolory[kolor == c_full ? 1 : kolor >> 3], ch, logpage, ch, remarks, ch, wersja);
+    bufor.AppendFormat(_T("%s%s%s%s%s%s%s%s\n"), ch, CDrawDoc::kolory[kolor == ColorId::full ? 1 : kolor >> 3], ch, logpage, ch, remarks, ch, wersja);
 
     return bufor;
 }
@@ -499,7 +499,7 @@ BOOL CDrawAdd::OnOpen(CDrawView *pView)
     dlg.m_logpage = logpage;
     dlg.m_remarks = remarks;
     dlg.m_uwagi_atex = remarks_atex;
-    dlg.m_rzymnum = ((fizpage & c_rzym) == c_rzym);
+    dlg.m_rzymnum = ((fizpage & PaginaType::roman) == PaginaType::roman);
     dlg.m_fizpage = (fizpage >> 16);
     dlg.m_posx = posx;
     dlg.m_posy = posy;
@@ -526,7 +526,7 @@ BOOL CDrawAdd::OnOpen(CDrawView *pView)
     dlg.m_digital = flags.digital;
     dlg.m_powt = powtorka;
     dlg.m_oldadno = oldAdno > -1 ? oldAdno : nreps;
-    dlg.m_studio = flags.studio;
+    dlg.m_studio = (int)flags.studio;
     dlg.m_derived = flags.derived;
     dlg.m_spad = spad_flag;
     dlg.m_nag_xx = nag_xx;
@@ -556,9 +556,9 @@ BOOL CDrawAdd::OnOpen(CDrawView *pView)
     if (dlg.m_epsok < 2) flags.showeps = dlg.m_epsok;
     flags.reserv = dlg.m_flaga_rezerw;
     flags.locked = (fizpage ? dlg.m_locked : FALSE);
-    flags.studio = dlg.m_studio;
+    flags.studio = (StudioStatus)dlg.m_studio;
     dlg.m_always ? czaskto.Format(_T("# [%s]"), (LPCTSTR)dlg.m_sprzedal) : czaskto.Format(_T("%s %s [%s]"), dlg.m_data_czob.Format(c_ctimeData), dlg.m_godz_czob.Format(_T("%H:%M")), (LPCTSTR)dlg.m_sprzedal);
-    int pom_fizpage = ((dlg.m_fizpage << 16) + ((dlg.m_rzymnum) ? c_rzym : c_normal));
+    const int pom_fizpage = ((dlg.m_fizpage << 16) + ((dlg.m_rzymnum) ? PaginaType::roman : PaginaType::arabic));
     SetPosition(pom_fizpage, dlg.m_posx, dlg.m_posy, dlg.m_sizex, dlg.m_sizey); // robi updateinfo
     if (!dlg.m_precel_flag.IsEmpty() && dlg.m_precel_flag != m_precel_flag) {
         m_precel_flag = dlg.m_precel_flag;
@@ -586,12 +586,12 @@ BOOL CDrawAdd::OnOpen(CDrawView *pView)
         CRect vPos(m_position.left, m_position.top, m_position.left + (int)(sizex*modulx), m_position.top - (int)(sizey*moduly));
         MoveTo(vPos);
     }
-    if (!dlg.m_fromQue && (((theApp.grupa&R_DEA) > 0) || (theApp.grupa&R_KIE && m_pDocument->isRO)))
+    if (!dlg.m_fromQue && (((theApp.grupa&UserRole::dea) > 0) || (theApp.grupa&UserRole::kie && m_pDocument->isRO)))
         if (m_add_xx > 0) {
             int eok = this->flags.epsok;
             int nrs = (int)CDrawDoc::spoty[this->kolor >> 3];
             int powt = (int)(this->powtorka == 0 ? 0 : (this->powtorka - CTime(POWTSEED_0)).GetDays());
-            int ik = ((this->kolor) & c_full) == c_full ? c_full : (((this->kolor) & c_brak) == c_brak ? c_brak : c_spot);
+            int ik = ((this->kolor) & ColorId::full) == ColorId::full ? ColorId::full : (((this->kolor) & ColorId::brak) == ColorId::brak ? ColorId::brak : ColorId::spot);
             CString czk = this->flags.reserv == 1 ? _T("") : this->czaskto;
 
             CManODPNETParms orapar {
@@ -1111,33 +1111,33 @@ int CDrawAdd::CkPageLocation(int vFizPage)
     int pc, nr_sek, nr_pl, nr_off, vnr_sek = 0;
     TCHAR op_zew[2], op_sekcji[2], op_pl[2], sekcja[30], pl[2];
 
-    //gdy nie stoi na ¿adnej stronie, to dobrze
+    // gdy nie stoi na ¿adnej stronie, to dobrze
     if (!vFizPage) return 0;
-    //parsuj napis i ustaw zmienne 
+    // parsuj napis i ustaw zmienne 
     ParseLogpage(op_zew, sekcja, op_sekcji, &nr_sek, pl, op_pl, &nr_pl);
-    //przejdz liste stron w dokumencie, zeby zapamietac jaki numer ma strona w danej sekcji 
+    // przejdz liste stron w dokumencie, zeby zapamietac jaki numer ma strona w danej sekcji 
     pc = (int)m_pDocument->m_pages.size();
     for (int j = 1; j <= pc; j++) {
         vPage = m_pDocument->m_pages[j % pc];
         CString vStrLog(vPage->name);
         vStrLog.MakeUpper();
-        //zliczaj strony z odpowiedni¹ sekcj¹
+        // zliczaj strony z odpowiedni¹ sekcj¹
         if (_tcsstr(vStrLog, sekcja))
             vnr_sek++;
-        //czy to jest testowana strona ? otherwise nie ma co sprawedzac
+        // czy to jest testowana strona ? otherwise nie ma co sprawedzac
         if (vPage->nr != vFizPage) continue;
-        //nie zgodne kolory - kolor strony 2 oznacza spot anonimowy
+        // niezgodne kolory - kolor strony 2 oznacza spot anonimowy
         if ((kolor & 7) > (vPage->kolor & 7) ||
-            ((kolor&c_spot) && (vPage->kolor&c_spot) && (kolor >> 3) != m_pDocument->m_spot_makiety[(vPage->kolor >> 3)] && m_pDocument->m_spot_makiety[(vPage->kolor >> 3)])) return 2;
-        //na stronach z dziedziczeniem koloru tylko czarne og³oszenia
-        if (vPage->m_dervlvl == DervType::colo && kolor != c_brak) return 2;
-        //nie na sciezce
+            ((kolor&ColorId::spot) && (vPage->kolor&ColorId::spot) && (kolor >> 3) != m_pDocument->m_spot_makiety[(vPage->kolor >> 3)] && m_pDocument->m_spot_makiety[(vPage->kolor >> 3)])) return 2;
+        // na stronach z dziedziczeniem koloru tylko czarne og³oszenia
+        if (vPage->m_dervlvl == DervType::colo && kolor != ColorId::brak) return 2;
+        // nie na sciezce
         if (sekcja[0] && !_tcsstr(vStrLog, sekcja)) return 2;
-        //lewa - nieparzysty numer
+        // lewa - nieparzysty numer
         if (!_tcscmp(pl, _T("L")) && (vPage->pagina % 2)) return 2;
-        //prawa - parzysty numer
+        // prawa - parzysty numer
         if (!_tcscmp(pl, _T("P")) && !(vPage->pagina % 2)) return 2;
-        //polozenie pl
+        // polozenie pl
         if (pl[0] && op_pl[0]) {
             //brak numeru
             if (nr_pl < 1) return 2;
@@ -1145,30 +1145,30 @@ int CDrawAdd::CkPageLocation(int vFizPage)
                 nr_off = (sekcja[0] ? ((vPage->pagina % 2) ? vnr_sek - 1 : vnr_sek + 1) : vPage->pagina); //czy numer odnosi sie do sekcji czy do gazety
             else
                 nr_off = (sekcja[0] ? vnr_sek : vPage->pagina); //czy numer odnosi sie do sekcji czy do gazety
-            //inna strona prawa/lewa niz zadano
+            // inna strona prawa/lewa niz zadano
             if (!_tcscmp(op_pl, _T("=")) && !_tcscmp(pl, _T("P")) && nr_off != 2 * nr_pl - 1) return 2;
             if (!_tcscmp(op_pl, _T("=")) && !_tcscmp(pl, _T("L")) && nr_off != 2 * nr_pl) return 2;
-            //strona prawa/lewa o mniejszym numerze niz zadano
+            // strona prawa/lewa o mniejszym numerze niz zadano
             if (!_tcscmp(op_pl, _T(">")) && !_tcscmp(pl, _T("P")) && nr_off <= 2 * nr_pl - 1) return 2;
             if (!_tcscmp(op_pl, _T(">")) && !_tcscmp(pl, _T("L")) && nr_off <= 2 * nr_pl) return 2;
-            //strona prawa/lewa o wiekszym numerze niz zadano
+            // strona prawa/lewa o wiekszym numerze niz zadano
             if (!_tcscmp(op_pl, _T("<")) && !_tcscmp(pl, _T("P")) && nr_off >= 2 * nr_pl - 1) return 2;
             if (!_tcscmp(op_pl, _T("<")) && !_tcscmp(pl, _T("L")) && nr_off >= 2 * nr_pl) return 2;
         }
-        //polozenie w sekcji
+        // polozenie w sekcji
         if (sekcja[0] && op_sekcji[0]) {
-            //brak numeru
+            // brak numeru
             if (nr_sek < 1) return 2;
-            //inna strona w sekcji niz zadano
+            // inna strona w sekcji niz zadano
             if (!_tcscmp(op_sekcji, _T("=")) && vnr_sek != nr_sek) return 2;
-            //strona o mniejszym numerze w sekcji niz zadano
+            // strona o mniejszym numerze w sekcji niz zadano
             if (!_tcscmp(op_sekcji, _T(">")) && vnr_sek <= nr_sek) return 2;
-            //strona o wiekszym numerze w sekcji niz zadano
+            // strona o wiekszym numerze w sekcji niz zadano
             if (!_tcscmp(op_sekcji, _T("<")) && vnr_sek >= nr_sek) return 2;
         }
     }
 
-    //jest na dobrej stronie, ale czy w dobrym miejscu?
+    // jest na dobrej stronie, ale czy w dobrym miejscu?
     const int hashpos = logpage.ReverseFind(_T('#'));
     if (hashpos >= 0) {
         int j, k = 0;
@@ -1194,7 +1194,7 @@ int CDrawAdd::CkPageLocation(int vFizPage)
             if (posx + sizex - 1 < szpalt_x || posy + sizey - 1 < szpalt_y) return 1;
     }
 
-    return 0;	//wszystko w porz¹dku
+    return 0; // wszystko w porz¹dku
 }
 
 void CDrawAdd::SetEstPagePos(TCHAR *description, CRect *vRect, CDrawPage *pPage) //vu  
@@ -1514,11 +1514,11 @@ dajWymiarKraty:
         if (!GetProdInfo(pArg, cKolor, &x1, &y1, &x2, &y2, &ileMat))
             return FALSE;
 
-        if (this->kolor == c_full && cKolor[0] == _T('-')) {
+        if (this->kolor == ColorId::full && cKolor[0] == _T('-')) {
             msg.Format(_T("%li materia³ jest prawdopodobnie Black, "), nreps);
             f5_errInfo += msg;
         }
-        if (this->kolor == c_brak && cKolor[0] == _T('F')) { // czy kolorowy material nie jest zadeklarowany jako Black
+        if (this->kolor == ColorId::brak && cKolor[0] == _T('F')) { // czy kolorowy material nie jest zadeklarowany jako Black
             msg.Format(_T("%li nie jest Black, "), nreps);
             f5_errInfo += msg;
         }

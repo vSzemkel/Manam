@@ -1,9 +1,7 @@
 
 #pragma once
 
-#include "DrawObj.h"
 #include "DrawPage.h"
-#include "Flag.h"
 
 class CGenEpsInfoDlg;
 class CDrawPage;
@@ -43,20 +41,20 @@ class CDrawAdd final : public CDrawObj
     int sizey;
     int posx;
     int posy;
-    int fizpage;     //fizpage &c_rzym == c_rzym to jest rzymska paginacja
+    int fizpage;     //fizpage & PaginaType::roman == PaginaType::roman to jest rzymska paginacja
     struct
     {
-        BYTE epsok : 2;  // akceptacja sprzeda¿y (0-NIE,1-TAK,2-NIE WIEM)
-        BYTE showeps : 1;// kolor gridu (F5 - bialy, zolty)
-        BYTE locked : 1; // blokada miejsca
-        BYTE reserv : 1; // flaga rezerwacji
-        BYTE weryf : 1; // weryfikacja produkcyjna
-        BYTE zagroz : 2; // zagro¿ona emisja
-        BYTE isok : 2; // spacer-status
-        BYTE studio : 3; // status dla studia
-        BYTE derived : 1; // flaga dziedziczenia
-        BYTE reksbtl : 1; // czy pod og³oszeniem w podpisie wydrukowaæ napis REKLAMA	
-        BYTE digital : 1; // czy og³oszenie ma treœæ cyfrow¹
+        BYTE epsok : 2;          // akceptacja sprzeda¿y (0-NIE,1-TAK,2-NIE WIEM)
+        BYTE showeps : 1;        // kolor gridu (F5 - bialy, zolty)
+        BYTE locked : 1;         // blokada miejsca
+        BYTE reserv : 1;         // flaga rezerwacji
+        BYTE weryf : 1;          // weryfikacja produkcyjna
+        BYTE zagroz : 2;         // zagro¿ona emisja
+        BYTE isok : 2;           // spacer-status
+        BYTE derived : 1;        // flaga dziedziczenia
+        BYTE reksbtl : 1;        // czy pod og³oszeniem w podpisie wydrukowaæ napis REKLAMA	
+        BYTE digital : 1;        // czy og³oszenie ma treœæ cyfrow¹
+        StudioStatus studio : 3; // status dla studia
     } flags;
     struct
     {				// BANK OG£OSZEÑ

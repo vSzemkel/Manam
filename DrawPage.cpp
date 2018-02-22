@@ -16,12 +16,12 @@ IMPLEMENT_SERIAL(CDrawPage, CDrawObj, 0)
 
 CDrawPage::CDrawPage(const CRect& position) noexcept :
     CDrawObj(position), id_str(-1), szpalt_x(pszpalt_x), szpalt_y(pszpalt_y),
-    nr(c_normal), prn_mak_xx(0), wyd_xx(-1), m_typ_pary(0), space(), space_locked(), space_red(),
+    nr(PaginaType::arabic), prn_mak_xx(0), wyd_xx(-1), m_typ_pary(0), space(), space_locked(), space_red(),
     niemakietuj(0), m_mutczas(1), m_drukarnie(0), m_deadline(CTime::GetCurrentTime()), m_dervlvl(DervType::none),
     m_ac_red(0), m_ac_fot(0), m_ac_kol(0)
 {
     ASSERT_VALID(this);
-    kolor = c_full;
+    kolor = ColorId::full;
 }
 
 CDrawPage::~CDrawPage()
@@ -129,7 +129,7 @@ inline CString CDrawPage::GenerateGUIDString()
 
 CString CDrawPage::GetNrPaginy() const
 {
-    if (pagina_type == c_rzym)
+    if (pagina_type == PaginaType::roman)
         return CDrawObj::Rzymska(pagina);
 
     CString paginacja;
@@ -143,7 +143,7 @@ void CDrawPage::Draw(CDC *pDC)
     ASSERT_VALID(this);
 
     CBrush* pOldBrush;
-    if (pagina_type == c_rzym) {
+    if (pagina_type == PaginaType::roman) {
         pOldBrush = pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->rzym));
         pDC->SetBkColor(RGB(135, 135, 135));
     } else {
@@ -165,7 +165,7 @@ void CDrawPage::Draw(CDC *pDC)
         pDC->LineTo(rect.right, rect.top + 4 * vscale);
     }
 
-    const bool isRoman = (pagina_type & c_rzym) > 0;
+    const bool isRoman = (pagina_type & PaginaType::roman) > 0;
     const CString& cnr = GetNrPaginy();
     const CString& cap = (theApp.swCZV == ToolbarMode::tryb_studia) ? ((CMainFrame*)AfxGetMainWnd())->GetCapStrFromData((DWORD_PTR)(prn_mak_xx - (pagina & 1))) : caption;
     CRect r(rect.left + 2 * vscale, rect.top - vscale, rect.right - 2 * vscale, rect.top - pmoduly + vscale);
@@ -233,7 +233,7 @@ void CDrawPage::DrawReserved(CDC *pDC)
              ogloszeniami dziedziczonymi	end vu */
     const CFlag& vspace = GetReservedFlag();
     if (vspace.IsSet()) {
-        pDC->SelectStockObject((pagina_type == c_rzym ? LTGRAY_BRUSH : GRAY_BRUSH));
+        pDC->SelectStockObject((pagina_type == PaginaType::roman ? LTGRAY_BRUSH : GRAY_BRUSH));
         const auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
         for (size_t module = 0; module < ilemod; ++module)
             if (vspace[module])
@@ -254,7 +254,7 @@ void CDrawPage::DrawGrid(CDC *pDC)
                 pDC->SelectStockObject(DKGRAY_BRUSH);
                 pDC->Rectangle(rect);
             } else if (space_red[module]) {
-                if (pagina_type == c_rzym)
+                if (pagina_type == PaginaType::roman)
                     pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->rzym));
                 else
                     pDC->SelectStockObject(WHITE_BRUSH);
@@ -315,7 +315,7 @@ CRect CDrawPage::GetNormalizedModuleRect(size_t module) const
 
 void CDrawPage::SetSpotKolor(UINT spot_kolor) // spot kolor to index spotkoloru w tablicy Spot_Kolor
 {
-    if ((kolor & c_spot) == c_spot) {
+    if ((kolor & ColorId::spot) == ColorId::spot) {
         dirty = TRUE;
         m_pDocument->SetSpotKolor((kolor >> 3), spot_kolor);
     }
@@ -323,10 +323,10 @@ void CDrawPage::SetSpotKolor(UINT spot_kolor) // spot kolor to index spotkoloru 
 
 void CDrawPage::DrawKolor(CDC *pDC, const CRect& pos) const
 {
-    if (kolor == c_brak)
+    if (kolor == ColorId::brak)
         return;
 
-    if (kolor == c_full) {
+    if (kolor == ColorId::full) {
         const auto r1 = CRect(pos.left, pos.top + 3 * vscale, pos.left + (int)floor(szpalt_x*modulx / 3), pos.top);
         const auto r2 = CRect(pos.left + (int)floor(szpalt_x*modulx / 3), pos.top + 3 * vscale, pos.right - (int)floor(szpalt_x*modulx / 3), pos.top);
         const auto r3 = CRect(pos.right - (int)floor(szpalt_x*modulx / 3), pos.top + 3 * vscale, pos.right, pos.top);
@@ -383,7 +383,7 @@ void CDrawPage::Print(CDC *pDC)
     ASSERT_VALID(this);
 
     CBrush* pOldBrush;
-    if (pagina_type == c_rzym)
+    if (pagina_type == PaginaType::roman)
         pOldBrush = pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->rzym));
     else
         pOldBrush = (CBrush*)pDC->SelectStockObject(WHITE_BRUSH);
@@ -473,7 +473,7 @@ BOOL CDrawPage::OnOpen(CDrawView*)
     dlg.m_caption = caption;
     dlg.m_iscaption = m_pDocument->isRED;
     dlg.m_nr = pagina;
-    dlg.m_rzymska = (pagina_type == c_rzym);
+    dlg.m_rzymska = (pagina_type == PaginaType::roman);
     dlg.m_szpalt_x = szpalt_x;
     dlg.m_szpalt_y = szpalt_y;
     dlg.m_niemakietuj = niemakietuj;
@@ -527,7 +527,7 @@ BOOL CDrawPage::OnOpen(CDrawView*)
 
     SetBaseKrata(dlg.m_szpalt_x, dlg.m_szpalt_y);
 
-    int i, pom_nr = (dlg.m_nr << 16) + (dlg.m_rzymska ? c_rzym : c_normal);
+    int i, pom_nr = (dlg.m_nr << 16) + (dlg.m_rzymska ? PaginaType::roman : PaginaType::arabic);
     int pc = (int)m_pDocument->m_pages.size();
     if (nr != pom_nr) {
         // sprawdz czy istnieje juz taka strona - bo numer/typ_num nie moze sie powtarzac
@@ -603,7 +603,7 @@ void CDrawPage::UpdateInfo()
 {
     info.Format(_T("Strona %s %s"), GetNrPaginy(), caption);
     if (!name.IsEmpty()) info.AppendFormat(_T(" - %s"), name);
-    if (!m_pDocument->isGRB && (kolor & c_spot) > 0)
+    if (!m_pDocument->isGRB && (kolor & ColorId::spot) > 0)
         info.AppendFormat(_T(" | %s"), CDrawDoc::kolory[m_pDocument->m_spot_makiety[kolor >> 3]]); // w kolory 0-brak, 1==full
     info.AppendFormat(_T(" | %s"), m_deadline.Format(c_ctimeCzas));
     if (!m_dervinfo.IsEmpty())
@@ -902,15 +902,15 @@ BOOL CDrawPage::CheckSrcFile(PGENEPSARG pArg)
         for (const auto& pAdd : m_adds) {
             if (pAdd->CheckSrcFile(pArg)) {
                 if (theApp.autoMark) pAdd->flags.showeps = TRUE;
-                if (pAdd->flags.studio == STUDIO_BRAK) {
-                    pAdd->flags.studio = STUDIO_JEST;
+                if (pAdd->flags.studio == StudioStatus::brak) {
+                    pAdd->flags.studio = StudioStatus::jest;
                     pAdd->SetDirty();
                 }
             } else {
                 isOK = FALSE;
                 if (theApp.autoMark) pAdd->flags.showeps = FALSE;
-                if (pAdd->flags.studio == STUDIO_JEST) {
-                    pAdd->flags.studio = STUDIO_BRAK;
+                if (pAdd->flags.studio == StudioStatus::jest) {
+                    pAdd->flags.studio = StudioStatus::brak;
                     pAdd->SetDirty();
                 }
             }
@@ -1023,7 +1023,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
         int lnr_porz = m_pDocument->GetIPage(this);
         num.Format(_T("%03i"), lnr_porz ? lnr_porz : (int)m_pDocument->m_pages.size());
     } else
-        (pagina_type == c_rzym) ? num = Rzymska(pagina) : num.Format(_T("%03i"), pagina);
+        (pagina_type == PaginaType::roman) ? num = Rzymska(pagina) : num.Format(_T("%03i"), pagina);
 
     CString dest_name;
     BOOL isDrobEPS = name.Find(_T("DR")) > -1;
@@ -1224,7 +1224,7 @@ foundsizex:
             }
         }
         if (isDrobEPS) {
-            externAdd.txtposx = std::any_of(std::cbegin(m_pDocument->m_pages), std::cend(m_pDocument->m_pages), [](const CDrawPage* p) { return p->pagina_type == c_rzym; }) ? pagina : m_pDocument->GetIPage(this);
+            externAdd.txtposx = std::any_of(std::cbegin(m_pDocument->m_pages), std::cend(m_pDocument->m_pages), [](const CDrawPage* p) { return p->pagina_type == PaginaType::roman; }) ? pagina : m_pDocument->GetIPage(this);
             if (externAdd.txtposx == 0) externAdd.txtposx = (int)m_pDocument->m_pages.size();
             externAdd.posx = externAdd.posy = 1;
             externAdd.sizex = externAdd.szpalt_x = pszpalt_x;

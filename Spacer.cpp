@@ -27,7 +27,7 @@ BOOL CSpacerDlg::Deal(CDrawAdd *vAdd)
 {
     // Aby zrobic rezerwacje ogloszenie musi byc nowe, stac na konkretnej stronie,
     // makieta musi byc zapisana w bazie a uzytkownik musi miec stosowne uprawnienia
-    if (vAdd->m_pub_xx > 0 || vAdd->m_pDocument->m_mak_xx < 0 || !(theApp.grupa&R_DEA))
+    if (vAdd->m_pub_xx > 0 || vAdd->m_pDocument->m_mak_xx < 0 || !(theApp.grupa&UserRole::dea))
         return FALSE;
 
     // Sprawdz uprawnienia do sprzedazy
@@ -164,10 +164,10 @@ BOOL CSpacerDlg::OnInitDialog()
 
     // TODO: Add extra initialization here
     switch (m_kolor) {
-        case c_brak:
+        case ColorId::brak:
             m_kolorcombo.SetCurSel(0);
             break;
-        case c_full:
+        case ColorId::full:
             m_kolorcombo.SetCurSel(1);
             break;
         default:
@@ -499,16 +499,16 @@ void CSpacerDlg::OnQue()
     // ustaw m_kolor
     switch (m_kolorcombo.GetCurSel()) {
         case 0:
-            pub->kolor = c_brak;
+            pub->kolor = ColorId::brak;
             break;
         case 1:
-            pub->kolor = c_full;
+            pub->kolor = ColorId::full;
             break;
         default:
-            pub->kolor = (m_kolorcombo.GetCurSel() * 8 + c_spot);
+            pub->kolor = (m_kolorcombo.GetCurSel() * 8 + ColorId::spot);
     }
 
-    int ile_kol = (((pub->kolor & c_full) == c_full) ? c_full : (((pub->kolor & c_brak) == c_brak) ? c_brak : c_spot));
+    int ile_kol = (((pub->kolor & ColorId::full) == ColorId::full) ? ColorId::full : (((pub->kolor & ColorId::brak) == ColorId::brak) ? ColorId::brak : ColorId::spot));
     int spo_xx = (int)CDrawDoc::spoty[pub->kolor >> 3];
     if (IsDlgButtonChecked(IDC_DEALAPPEND))
         m_add_xx = GetDlgItemInt(IDC_SPACER);
@@ -605,13 +605,13 @@ void CSpacerDlg::OnOK()
     // ustaw m_kolor
     switch (m_kolorcombo.GetCurSel()) {
         case 0:
-            pub->kolor = c_brak;
+            pub->kolor = ColorId::brak;
             break;
         case 1:
-            pub->kolor = c_full;
+            pub->kolor = ColorId::full;
             break;
         default:
-            pub->kolor = (m_kolorcombo.GetCurSel() * 8 + c_spot);
+            pub->kolor = (m_kolorcombo.GetCurSel() * 8 + ColorId::spot);
     }
 
     if (IsDlgButtonChecked(IDC_DEALAPPEND))
@@ -624,7 +624,7 @@ void CSpacerDlg::OnOK()
 
     CString czas_kto(' ', 32);
     int qf = GetQueryFlag();
-    int ile_kol = ((pub->kolor & c_full) == c_full) ? c_full : (((pub->kolor & c_brak) == c_brak) ? c_brak : c_spot);
+    int ile_kol = ((pub->kolor & ColorId::full) == ColorId::full) ? ColorId::full : (((pub->kolor & ColorId::brak) == ColorId::brak) ? ColorId::brak : ColorId::spot);
     int spo_xx = (int)CDrawDoc::spoty[pub->kolor >> 3];
 
     CManODPNETParms orapar {

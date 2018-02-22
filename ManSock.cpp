@@ -169,7 +169,7 @@ BOOL CSendDlg::OnInitDialog()
 
     CDialog::OnInitDialog();
 
-    GetDlgItem(IDC_ALLTYT)->EnableWindow(theApp.grupa&R_MAS);
+    GetDlgItem(IDC_ALLTYT)->EnableWindow(theApp.grupa&UserRole::mas);
 
     return TRUE;
 }

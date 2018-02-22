@@ -382,7 +382,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
         pPage->pagina_type = ivar;
         ivar = strCur->GetInt32(4); // ile_kol
         pPage->kolor = ivar;
-        if (pPage->kolor == c_spot) {
+        if (pPage->kolor == ColorId::spot) {
             ivar = strCur->GetInt32(5); // spot
             pPage->kolor += ((ivar - 1) << 3);
         }
@@ -455,7 +455,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
                 ivar = pubCur->GetInt32(32); // powtorka
                 pAdd->powtorka = ivar ? POWTSEED_1 + ivar * ONEDAY : 0;
                 pAdd->oldAdno = pubCur->GetInt32(33); // powtórka z numeru
-                pAdd->flags.studio = pubCur->GetByte(34); // studio
+                pAdd->flags.studio = (StudioStatus)pubCur->GetByte(34); // studio
                 pAdd->flags.derived = pubCur->GetByte(35); // derived
                 pAdd->spad_flag = pubCur->GetByte(37); // krawedzie na spad
                 pAdd->flags.reksbtl = pubCur->GetByte(41); // podpis REKLAMA
@@ -761,7 +761,7 @@ void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, BOOL isSaveAs, BOOL do
     par->Add("czaskto", OracleDbType::Varchar2);
     par->Add("powtorka", OracleDbType::Int32);
     par->Add("old_adno", OracleDbType::Int32);
-    par->Add("studio", OracleDbType::Int32);
+    par->Add("studio", OracleDbType::Byte);
     par->Add("uwagi_atex", OracleDbType::Varchar2);
     par->Add("eps_present", OracleDbType::Int32);
     par->Add("spad", OracleDbType::Int32);
@@ -843,7 +843,7 @@ void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, BOOL isSaveAs, BOOL do
         par[5]->Value = pPage->pagina * (pPage->niemakietuj ? -1 : 1);
         par[6]->Value = pPage->pagina_type;
         par[7]->Value = pPage->kolor & 0x07;
-        par[8]->Value = (int)(pPage->kolor&c_spot ? 1 + (pPage->kolor >> 3) : 0);
+        par[8]->Value = (int)(pPage->kolor&ColorId::spot ? 1 + (pPage->kolor >> 3) : 0);
         par[9]->Value = gcnew String(pPage->name);
         par[10]->Value = gcnew String(pPage->caption);
         par[11]->Value = gcnew String(pPage->space.ToRaw());
@@ -943,7 +943,7 @@ void CDrawDocDbWriter::SaveOgloszenie(OracleCommand^ cmd, CDrawAdd *pAdd)
     par[28]->Value = gcnew String(pAdd->czaskto);
     par[29]->Value = pAdd->powtorka == 0 ? 0 : (pAdd->powtorka - CTime(POWTSEED_0)).GetDays();
     par[30]->Value = pAdd->oldAdno;
-    par[31]->Value = pAdd->flags.studio;
+    par[31]->Value = (uint8_t)pAdd->flags.studio;
     par[32]->Value = gcnew String(pAdd->remarks_atex);
     par[33]->Value = pAdd->flags.epsok;
     par[34]->Value = pAdd->spad_flag;
@@ -995,7 +995,7 @@ BOOL CManODPNET::PrepareConnectionString(const CString& user, const CString& pas
 
 BOOL CManODPNET::CkAccess(LPCTSTR tytul, LPCTSTR mutacja, LPCTSTR rights, BOOL szczekaj)
 {
-    if (!_tcscmp(rights, _T("S")) && (theApp.grupa & R_DEA))
+    if (!_tcscmp(rights, _T("S")) && (theApp.grupa & UserRole::dea))
         return TRUE;
 
     /* vu : Funkcja sprawdza poziom dostêpu do tytu³u i mutacji obecnie
@@ -1428,7 +1428,7 @@ BOOL CManODPNET::F4(CDrawDoc* doc, CListCtrl* list, BOOL initialize)
                     list->SetCheck(rc, FALSE);
                     list->SetItemData(rc, 0L);
                     cs.Format(_T("%i"), vAdd->fizpage >> 16);
-                    if (vAdd->fizpage & c_rzym)
+                    if (vAdd->fizpage & PaginaType::roman)
                         cs += _T("rom");
                     list->SetItemText(rc, 1, cs);
                     vAdd->iFileId = odr->GetInt32(1);

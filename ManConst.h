@@ -1,6 +1,7 @@
 
 #pragma once
 
+#pragma region constants
 constexpr int CLIENT_SCALE = 20;
 constexpr int PRINT_VOFFSET = -10;
 constexpr int MIN_COLSPERROW = 10;
@@ -20,31 +21,9 @@ constexpr __time64_t ONEDAY = 86400;         // liczba sekund w dobie
 constexpr __time64_t POWTSEED_0 = 946594800; // 31/12/1999 00:00 data, w stosunku do której s¹ obliczane powtórki
 constexpr __time64_t POWTSEED_1 = 946598400; // 31/12/1999 01:00 data, w stosunku do której s¹ obliczane powtórki plus godzina
                                              // kolory
-constexpr int c_brak = 1;
-constexpr int c_spot = 2;
-constexpr int c_full = 4;
 constexpr auto BRAK = _T("(brak)");
 constexpr auto FULL = _T("(full)");
 constexpr COLORREF BIALY = RGB(255, 255, 255);
-// numeracja - odpowiada PK s³ownika TYP_NUMERACJI z bazy
-constexpr int c_normal = 1;
-constexpr int c_rzym = 2;
-// grupy
-constexpr int R_DEA = 1;
-constexpr int R_RED = 2;
-constexpr int R_STU = 4;
-constexpr int R_KIE = 8;
-constexpr int R_ADM = 16;
-constexpr int R_MAS = 32;
-// status studia
-constexpr int STUDIO_BRAK = 0;
-constexpr int STUDIO_JEST = 1;
-constexpr int STUDIO_NOWY = 2;
-constexpr int STUDIO_ACC = 3;
-constexpr int STUDIO_OK = 4;
-constexpr int STUDIO_SEND = 5;
-constexpr int STUDIO_FILTR = 6;
-constexpr int STUDIO_MSG = 7;
 // gen eps
 constexpr float mm2pkt = 0.2835f; // 1mm = 2.835pt
 constexpr float pkt2mm = 0.3527f; // 1pt = 0.3527mm
@@ -61,7 +40,34 @@ constexpr auto OPI_TAG = "%%MANAM-OPI ";
 constexpr auto APP_NAME = _T("Manam");
 constexpr int bigSize = 0x8000;   // 32kB
 constexpr size_t n_size = 0x7FFF; // (bigSize-1)
+#pragma endregion constants
 
+#pragma region flag_enums
+namespace UserRole // grupy
+{ 
+    constexpr uint8_t dea = 1;
+    constexpr uint8_t red = 2;
+    constexpr uint8_t stu = 4;
+    constexpr uint8_t kie = 8;
+    constexpr uint8_t adm = 16;
+    constexpr uint8_t mas = 32;
+}
+
+namespace ColorId
+{
+    constexpr uint8_t brak = 1;
+    constexpr uint8_t spot = 2;
+    constexpr uint8_t full = 4;
+}
+
+namespace PaginaType // numeracja - odpowiada PK s³ownika TYP_NUMERACJI z bazy
+{
+    constexpr uint16_t arabic = 1;
+    constexpr uint16_t roman = 2;
+}
+#pragma endregion flag_enums
+
+#pragma region enums
 enum class DrawShape : uint8_t
 {
     add = ID_DRAW_ADD,
@@ -126,3 +132,17 @@ enum class EntityType : uint8_t // typy obiektow
     page_lib = 4,
     opis_lib = 5
 };
+
+enum class StudioStatus : uint8_t // status studia
+{
+    brak = 0,
+    jest = 1,
+    nowy = 2,
+    acc = 3,
+    ok = 4,
+    send = 5,
+    filtr = 6,
+    msg = 7
+};
+#pragma endregion enums
+

@@ -201,12 +201,12 @@ void CGridFrm::RefreshRow(int nRow, CDrawAdd *vAdd)
         if (vAdd->skad_ol.GetLength() == 2)
             nImage = (vAdd->skad_ol != theApp.activeDoc->symWydawcy) ? IMG_FILE_REMOTE : IMG_FILE_LOCAL;
     } else {
-        if (vAdd->flags.studio >= STUDIO_MSG)
+        if (vAdd->flags.studio >= StudioStatus::msg)
             nImage = IMG_ERR;
         else if (vAdd->powtorka == 0)
-            nImage = (vAdd->flags.studio == STUDIO_JEST) ? IMG_NEW_JEST : IMG_NEW_BRAK;
+            nImage = (vAdd->flags.studio == StudioStatus::jest) ? IMG_NEW_JEST : IMG_NEW_BRAK;
         else
-            nImage = (vAdd->flags.studio == STUDIO_JEST) ? IMG_POWT_JEST : IMG_POWT_BRAK;
+            nImage = (vAdd->flags.studio == StudioStatus::jest) ? IMG_POWT_JEST : IMG_POWT_BRAK;
     }
 
     LVITEM lvi = { 0 };
@@ -229,11 +229,11 @@ void CGridFrm::RefreshRow(int nRow, CDrawAdd *vAdd)
     lcPubList.SetItemText(nRow, rozmiar, bf);
     lcPubList.SetItemText(nRow, nazwa, vAdd->nazwa);
     _itot_s(((vAdd->fizpage) >> 16), bf, 64, 10);
-    if (vAdd->fizpage & c_rzym)
+    if (vAdd->fizpage & PaginaType::roman)
         ::StringCchCat(bf, 64, _T("rom"));
     lcPubList.SetItemText(nRow, strona, bf);
-    if (vAdd->kolor != c_brak) {
-        if (vAdd->kolor == c_full)
+    if (vAdd->kolor != ColorId::brak) {
+        if (vAdd->kolor == ColorId::full)
             ::StringCchCopy(bf, 64, FULL);
         else
             ::StringCchCopy(bf, 64, CDrawDoc::kolory[vAdd->kolor >> 3]);
@@ -251,9 +251,9 @@ void CGridFrm::RefreshRow(int nRow, CDrawAdd *vAdd)
 
     LPCTSTR sStudio;
     switch (vAdd->flags.studio) {
-        case STUDIO_JEST:
+        case StudioStatus::jest:
             if (vAdd->f5_errInfo.IsEmpty())
-                sStudio = (LPCTSTR)studioStats[vAdd->flags.studio];
+                sStudio = (LPCTSTR)studioStats[(uint8_t)vAdd->flags.studio];
             else {
                 if (_istdigit(vAdd->f5_errInfo[0]))
                     vAdd->f5_errInfo = vAdd->f5_errInfo.Mid(9, vAdd->f5_errInfo.GetLength() - 11);
@@ -261,7 +261,7 @@ void CGridFrm::RefreshRow(int nRow, CDrawAdd *vAdd)
             }
             break;
         default:
-            sStudio = (LPCTSTR)studioStats[vAdd->flags.studio]; break;
+            sStudio = (LPCTSTR)studioStats[(uint8_t)vAdd->flags.studio]; break;
     }
     lcPubList.SetItemText(nRow, studio, sStudio);
 }

@@ -10,7 +10,7 @@ extern BOOL drawErrorBoxes;
 
 IMPLEMENT_SERIAL(CDrawObj, CObject, 0)
 
-CDrawObj::CDrawObj() noexcept : m_pDocument(nullptr), kolor(c_brak), dirty(TRUE)
+CDrawObj::CDrawObj() noexcept : m_pDocument(nullptr), kolor(ColorId::brak), dirty(TRUE)
 {
 }
 
@@ -53,7 +53,7 @@ void CDrawObj::Serialize(CArchive& ar)
 
     if (ar.IsStoring()) {
         ar << m_position;
-        ar << (WORD)kolor;
+        ar << kolor;
         ar << info;
     } else {
         // get the document back pointer from the archive
@@ -62,8 +62,7 @@ void CDrawObj::Serialize(CArchive& ar)
         ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CDrawDoc)));
 
         ar >> m_position;
-        WORD wTemp;
-        ar >> wTemp; kolor = wTemp;
+        ar >> kolor;
         ar >> info;
         dirty = TRUE;
     }
@@ -327,7 +326,7 @@ BOOL CDrawObj::OnOpen(CDrawView*)
 
 void CDrawObj::ChangeKolor(UINT new_kolor)
 {
-    kolor = (kolor == new_kolor) ? c_brak : new_kolor;
+    kolor = (kolor == new_kolor) ? ColorId::brak : new_kolor;
     SetDirty();
     UpdateInfo();
     Invalidate();
@@ -336,7 +335,7 @@ void CDrawObj::ChangeKolor(UINT new_kolor)
 void CDrawObj::DrawKolor(CDC *pDC, const CRect& pos) const
 {
     CRect r1, r2, r3;
-    if (kolor == c_full) {
+    if (kolor == ColorId::full) {
         r1 = CRect(pos.left + 1, pos.top - 1, pos.left + (int)floor((float)abs(pos.left - pos.right) / 3), pos.bottom + 1);
         r2 = CRect(pos.left + (int)floor((float)abs(pos.left - pos.right) / 3), pos.top - 1, pos.right - (int)floor((float)abs(pos.left - pos.right) / 3), pos.bottom + 1);
         r3 = CRect(pos.right - (int)floor((float)abs(pos.left - pos.right) / 3), pos.top - 1, pos.right - 1, pos.bottom + 1);

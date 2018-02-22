@@ -44,7 +44,7 @@ class CDrawApp : public CWinAppEx
     BYTE showAcDeadline : 1;        // rysowanie deadline'ów dniowych dla Czasopism na stronach
     BYTE isParalellGen : 1;         // równoleg³e sprawdzanie/generowanie postscriptu
     BYTE ribbonStyle : 1;           // jeœli =0 to klasyczne menu, wst¹¿ka w przeiwnym przypadku
-    BYTE grupa;                     // flaga z³o¿ona z masek R_DEA,R_RED itd.
+    BYTE grupa;                     // flaga z³o¿ona z masek UserRole::dea,UserRole::red itd.
     CString sManamEpsName;          // nazwa pliku z definicj¹ szablonu postscriptowego do produkcji stron
     CString m_tnsname;              // identyfikator bazy danych u¿ywany przez connection pooling
     CString m_login;                // login po³¹czenia do bazy danych u¿ywane przez connection pooling

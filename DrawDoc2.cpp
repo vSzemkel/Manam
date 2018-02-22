@@ -221,10 +221,10 @@ void CDrawDoc::ZmianaSpotow(int n)
     int m = DBReadSpot(n);
     if (m_spot_makiety.size() == m) return;
     for (const auto& p : m_pages) {
-        const int e1 = p->kolor & c_spot;
+        const int e1 = p->kolor & ColorId::spot;
         const int e2 = p->kolor >> 3;
-        if ((e1 == c_spot) && (e2 >= m))
-            p->ChangeKolor(c_brak);
+        if ((e1 == ColorId::spot) && (e2 >= m))
+            p->ChangeKolor(ColorId::brak);
     }
     ((CMainFrame*)AfxGetMainWnd())->InsComboNrSpotow(m);
     m_spot_makiety.resize(m);
@@ -361,7 +361,7 @@ aSecondRun:
             if (castval->szpalt_x != vPage->szpalt_x || castval->szpalt_y != vPage->szpalt_y) continue;
             //nie zgodne kolory - kolor strony 2 oznacza spot anonimowy
             if ((castval->kolor & 7) > (vPage->kolor & 7) ||
-                ((castval->kolor&c_spot) && (vPage->kolor&c_spot) && (castval->kolor >> 3) != m_spot_makiety[(vPage->kolor >> 3)] && m_spot_makiety[(vPage->kolor >> 3)])) continue;
+                ((castval->kolor&ColorId::spot) && (vPage->kolor&ColorId::spot) && (castval->kolor >> 3) != m_spot_makiety[(vPage->kolor >> 3)] && m_spot_makiety[(vPage->kolor >> 3)])) continue;
             //nie na sciezce
             if (sekcja[0]) {
                 CString sSekOgl("/");
@@ -978,9 +978,9 @@ int CDrawDoc::Nr2NrPorz(const TCHAR *s) const noexcept
         if ((nr_porz = CDrawObj::Arabska(s)) == 0)
             nr_porz = -1;
         else
-            nr_porz = GetIPage((nr_porz << 16) + c_rzym);
+            nr_porz = GetIPage((nr_porz << 16) + PaginaType::roman);
     else
-        nr_porz = GetIPage((nr_porz << 16) + c_normal);
+        nr_porz = GetIPage((nr_porz << 16) + PaginaType::arabic);
     return nr_porz;
 }
 

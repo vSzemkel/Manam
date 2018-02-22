@@ -95,7 +95,7 @@ void CDrawDoc::OnDisableDB(CCmdUI *pCmdUI)
 
 void CDrawDoc::OnUpdateEpsdata(CCmdUI *pCmdUI)
 {
-    pCmdUI->Enable(!disableMenu && theApp.isRDBMS && theApp.grupa&(R_MAS | R_STU));
+    pCmdUI->Enable(!disableMenu && theApp.isRDBMS && theApp.grupa&(UserRole::mas | UserRole::stu));
 }
 
 void CDrawDoc::OnDisableGrbNotSaved(CCmdUI *pCmdUI)
@@ -202,7 +202,7 @@ void CDrawDoc::SetTitleAndMru(BOOL addRecentFiles)
         makieta.SetAt(len - 8, _T('-'));
     }
 
-    SetTitle(CString(isGRB ? "Grzbiet drukowany " : "Makieta ") + makieta + (isRO ? (theApp.grupa&R_DEA ? " [tylko do rezerwacji]" : " [tylko do odczytu]") : ""));
+    SetTitle(CString(isGRB ? "Grzbiet drukowany " : "Makieta ") + makieta + (isRO ? (theApp.grupa&UserRole::dea ? " [tylko do rezerwacji]" : " [tylko do odczytu]") : ""));
     if (!addRecentFiles) return;
 
     ASSERT(gazeta.GetLength() == 6);
@@ -307,7 +307,7 @@ void CDrawDoc::Draw(CDC *pDC, CDrawView *pView)
         CDrawPage *pPage = m_pages[psize / 2];
         CRect& pRozkl = pPage->m_position;
         CRect r(pRozkl.right - vscale, pRozkl.top - pmoduly - vscale, pRozkl.right + vscale, pRozkl.bottom + vscale);
-        pDC->FillRect(r, pPage->pagina_type == c_rzym ? (CBrush*)pDC->SelectStockObject(WHITE_BRUSH) : &((CMainFrame*)AfxGetMainWnd())->rzym);
+        pDC->FillRect(r, pPage->pagina_type == PaginaType::roman ? (CBrush*)pDC->SelectStockObject(WHITE_BRUSH) : &((CMainFrame*)AfxGetMainWnd())->rzym);
     }
 
     for (const auto& pObj : m_objects) {
@@ -888,8 +888,8 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL c
                 i = fizpag;
                 break;
             case fizpag: fizpage = _istdigit(st[0])
-                ? (_ttoi(st) << 16) + c_normal
-                : (CDrawObj::Arabska(st) << 16) + c_rzym;
+                ? (_ttoi(st) << 16) + PaginaType::arabic
+                : (CDrawObj::Arabska(st) << 16) + PaginaType::roman;
                 i = pox;
                 break;
             case pox: posx = ((fizpage == 0) ? 0 : (result == 0 ? szpalt_x + 1 - sx : _ttoi(st))); i = poy; break;
@@ -902,7 +902,7 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL c
                 i = kolo;
             }
             break;
-            case kolo: p_kolor = (result == 0 ? c_brak : ValidKolor(st)); i = logp; break;
+            case kolo: p_kolor = (result == 0 ? ColorId::brak : ValidKolor(st)); i = logp; break;
             case logp: p_logpage = CString(st).Left(5); i = remark; break;
             case remark: p_remarks = st; i = wer; break;
             case wer: p_wersja = CString(st).Left(5); i = dodomu; break;
@@ -952,9 +952,9 @@ int CDrawDoc::ValidKolor(const CString& k) noexcept
     const auto len = (int)kolory.size();
     for (int i = 1; i < len; ++i)
         if (kolory[i].Find(k) == 0)
-            return (i == 1) ? c_full : (i << 3) + c_spot;
+            return (i == 1) ? ColorId::full : (i << 3) + ColorId::spot;
 
-    return c_brak;
+    return ColorId::brak;
 }
 
 CBrush* CDrawDoc::GetSpotBrush(int i) noexcept
@@ -966,7 +966,7 @@ void CDrawDoc::SetSpotKolor(UINT idx_m_spot_makiety, UINT idx_Spot_Kolor)
 {
     m_spot_makiety[idx_m_spot_makiety] = (m_spot_makiety[idx_m_spot_makiety] == idx_Spot_Kolor) ? 0 : idx_Spot_Kolor;
     for (const auto& p : m_pages)
-        if (p->kolor == ((idx_m_spot_makiety << 3) + c_spot))
+        if (p->kolor == ((idx_m_spot_makiety << 3) + ColorId::spot))
             p->Invalidate();
     SetModifiedFlag();
 }
@@ -1004,7 +1004,7 @@ void CDrawDoc::NumberPages()
     auto pView = GetPanelView<CDrawView>();
     if (pView->m_selection.size() == 1) {
         auto pSelPage = dynamic_cast<CDrawPage*>(pView->m_selection.front());
-        if (pSelPage != nullptr && pSelPage->pagina_type == c_normal) {
+        if (pSelPage != nullptr && pSelPage->pagina_type == PaginaType::arabic) {
             iFirstPageNumber = pSelPage->pagina;
             iFirstPageToNumber = GetIPage(pSelPage);
             if (iFirstPageToNumber < 0) return; // wystêpuje podczas copy/paste grupy stron
@@ -1029,11 +1029,11 @@ void CDrawDoc::NumberPages()
         int rz = 0;
         for (int i = iFirstPageToNumber; i <= pc; ++i) {
             auto pObj = m_pages[i % pc];
-            if (pObj->pagina_type == c_rzym) {
-                pObj->SetNr(((++rz) << 16) + c_rzym);
+            if (pObj->pagina_type == PaginaType::roman) {
+                pObj->SetNr(((++rz) << 16) + PaginaType::roman);
                 iFirstPageNumber++;
             } else
-                pObj->SetNr((((iFirstPageNumber++) - rz) << 16) + c_normal);
+                pObj->SetNr((((iFirstPageNumber++) - rz) << 16) + PaginaType::arabic);
         }
     }
     // przenumerowanie od ostatniej wymaga przywrócenia numeru
@@ -1912,7 +1912,7 @@ void CDrawDoc::OnSyncDrv()
 
 void CDrawDoc::OnSetPagina()
 {
-    const auto mask = c_rzym | c_normal;
+    const auto mask = PaginaType::roman | PaginaType::arabic;
     for (const auto& pPage : m_pages) {
         pPage->SetDirty();
         const auto newnum = pPage->nr ^= mask;
@@ -1926,20 +1926,20 @@ void CDrawDoc::OnSetPagina()
 
 void CDrawDoc::OnSetDea()
 {
-    if (theApp.grupa & (R_KIE | R_MAS)) {
-        if (!(theApp.grupa & R_DEA)) {
+    if (theApp.grupa & (UserRole::kie | UserRole::mas)) {
+        if (!(theApp.grupa & UserRole::dea)) {
             SaveModified();
-            theApp.grupa |= R_DEA;
+            theApp.grupa |= UserRole::dea;
         } else
-            theApp.grupa ^= R_DEA;
+            theApp.grupa ^= UserRole::dea;
         ((CMainFrame*)AfxGetMainWnd())->SetRoleStatus();
     }
 }
 
 void CDrawDoc::OnUpdateSetDea(CCmdUI *pCmdUI)
 {
-    pCmdUI->Enable(theApp.isRDBMS && theApp.grupa&(R_KIE | R_MAS));
-    pCmdUI->SetCheck(theApp.grupa&R_DEA);
+    pCmdUI->Enable(theApp.isRDBMS && theApp.grupa&(UserRole::kie | UserRole::mas));
+    pCmdUI->SetCheck(theApp.grupa&UserRole::dea);
 }
 
 void CDrawDoc::OnShowTime()
@@ -1973,11 +1973,11 @@ void CDrawDoc::OnUpdateShowAcDeadline(CCmdUI *pCmdUI)
         if (pAdd && pAdd->remnet_xx == remnet_xx) {
             ::InterlockedExchange((volatile LONG*)&pAdd->remnet_xx, 0);
             if (!isOK) {
-                pAdd->flags.studio = STUDIO_MSG;
+                pAdd->flags.studio = StudioStatus::msg;
                 pAdd->flags.showeps = FALSE;
                 pAdd->remnetMsg = msg;
             } else {
-                pAdd->flags.studio = STUDIO_JEST;
+                pAdd->flags.studio = StudioStatus::jest;
                 pAdd->flags.showeps = TRUE;
                 pAdd->remnetMsg = _T("");
             }

@@ -140,9 +140,9 @@ void CDrawView::OnDisableMenuRDBMS(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu
 
 void CDrawView::OnDisableMenuLIB(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB); }
 
-void CDrawView::OnDisableMenuDEAL(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && !(theApp.grupa & (R_DEA))); }
+void CDrawView::OnDisableMenuDEAL(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && !(theApp.grupa & (UserRole::dea))); }
 
-void CDrawView::OnDisableMenuSTU(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && (theApp.grupa & R_STU)); }
+void CDrawView::OnDisableMenuSTU(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && (theApp.grupa & UserRole::stu)); }
 
 void CDrawView::OnDisableMenuAdSel(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && m_selection.size() == 1 && dynamic_cast<CDrawAdd *>(m_selection.front())); }
 
@@ -150,7 +150,7 @@ void CDrawView::OnDisableMenuAdPageSel(CCmdUI *pCmdUI) { pCmdUI->Enable(!disable
 
 void CDrawView::OnDisableMenuAdSelOPI(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && !theApp.isOpiMode && m_selection.size() == 1 && dynamic_cast<CDrawAdd *>(m_selection.front())); }
 
-void CDrawView::OnDisableMenuAdSelSTU(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && (theApp.grupa & R_STU) && m_selection.size() == 1 && dynamic_cast<CDrawAdd *>(m_selection.front())); }
+void CDrawView::OnDisableMenuAdSelSTU(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && (theApp.grupa & UserRole::stu) && m_selection.size() == 1 && dynamic_cast<CDrawAdd *>(m_selection.front())); }
 
 BOOL CDrawView::PreCreateWindow(CREATESTRUCT &cs)
 {

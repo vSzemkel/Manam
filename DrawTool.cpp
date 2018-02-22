@@ -164,7 +164,7 @@ void CSelectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poi
         dc.DrawFocusRect(m_last_rect);
     }
 
-    if (pView->GetDocument()->isGRB || (theApp.grupa & R_DEA) > 0)
+    if (pView->GetDocument()->isGRB || (theApp.grupa & UserRole::dea) > 0)
         selectMode = SelectMode::none;
 
     lastPoint = local;
@@ -346,7 +346,7 @@ void CSelectTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
             CPoint local = point;
             pView->ClientToDoc(local);
             m_DragHandle = pObj->HitTest(local, pView, TRUE);
-            if (m_DragHandle != 0 && (theApp.grupa & R_DEA) == 0)
+            if (m_DragHandle != 0 && (theApp.grupa & UserRole::dea) == 0)
                 ::SetCursor(pObj->GetHandleCursor(m_DragHandle));
             else
                 OnCancel();
@@ -481,7 +481,7 @@ void CKolorTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poin
         int kolorek = frame->GetKolor((int)pObj->m_pDocument->m_spot_makiety.size());
         if (kolorek == CB_ERR) return;
         if (pPage != nullptr) {
-            if ((kolorek & c_spot) == c_spot || kolorek == c_brak || kolorek == c_full)
+            if ((kolorek & ColorId::spot) == ColorId::spot || kolorek == ColorId::brak || kolorek == ColorId::full)
                 pPage->ChangeKolor(kolorek);
             else
                 pPage->SetSpotKolor(kolorek >> 3);
@@ -496,8 +496,8 @@ void CKolorTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poin
                 }
                 pAdd->Invalidate();
             } else // kolor
-                if ((kolorek & c_spot) == 0 || kolorek == c_brak || kolorek == c_full)
-                    pObj->ChangeKolor(((kolorek == c_full) ? c_full : ((kolorek == c_brak) ? c_brak : (kolorek + c_spot))));
+                if ((kolorek & ColorId::spot) == 0 || kolorek == ColorId::brak || kolorek == ColorId::full)
+                    pObj->ChangeKolor(((kolorek == ColorId::full) ? ColorId::full : ((kolorek == ColorId::brak) ? ColorId::brak : (kolorek + ColorId::spot))));
         }
     } else  // caption tool
         if (theApp.swCZV == ToolbarMode::tryb_studia && pPage != nullptr) { // naglowki_prn

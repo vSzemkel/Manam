@@ -464,7 +464,7 @@ void CDrawApp::FileRefresh(CDrawDoc *refreshDoc)
     }
     OPENRO = FALSE;
     initCZV = ToolbarMode::normal;
-    (grupa&R_DEA) ? ((CMDIFrameWnd*)m_pMainWnd)->MDICascade() : ((CMDIFrameWnd*)m_pMainWnd)->MDITile(MDITILE_HORIZONTAL);
+    (grupa&UserRole::dea) ? ((CMDIFrameWnd*)m_pMainWnd)->MDICascade() : ((CMDIFrameWnd*)m_pMainWnd)->MDITile(MDITILE_HORIZONTAL);
 }
 
 void CDrawApp::OnFileDBOpenRO()
@@ -575,12 +575,12 @@ yesNext:
 
 void CDrawApp::OnUpdateAdmin(CCmdUI *pCmdUI)
 {
-    pCmdUI->Enable(isRDBMS && (grupa & (R_ADM | R_MAS)));
+    pCmdUI->Enable(isRDBMS && (grupa & (UserRole::adm | UserRole::mas)));
 }
 
 void CDrawApp::OnUpdateStudio(CCmdUI *pCmdUI)
 {
-    pCmdUI->Enable(isRDBMS && (grupa & (R_STU | R_ADM | R_MAS)));
+    pCmdUI->Enable(isRDBMS && (grupa & (UserRole::stu | UserRole::adm | UserRole::mas)));
 }
 
 void CDrawApp::OnCaptions()

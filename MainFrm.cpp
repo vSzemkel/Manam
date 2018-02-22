@@ -253,12 +253,12 @@ void CMainFrame::SetLogonStatus(LPCTSTR t)
 void CMainFrame::SetRoleStatus()
 {
     CString role;
-    if (theApp.grupa&R_DEA) role = _T("DEALER");
-    else if (theApp.grupa&R_MAS) role = _T("MASTER");
-    else if (theApp.grupa&R_ADM) role = _T("ADMINISTRATOR");
-    else if (theApp.grupa&R_KIE) role = _T("KIEROWNIK");
-    else if (theApp.grupa&R_STU) role = _T("STUDIO");
-    else if (theApp.grupa&R_RED) role = _T("REDAKTOR");
+    if (theApp.grupa&UserRole::dea) role = _T("DEALER");
+    else if (theApp.grupa&UserRole::mas) role = _T("MASTER");
+    else if (theApp.grupa&UserRole::adm) role = _T("ADMINISTRATOR");
+    else if (theApp.grupa&UserRole::kie) role = _T("KIEROWNIK");
+    else if (theApp.grupa&UserRole::stu) role = _T("STUDIO");
+    else if (theApp.grupa&UserRole::red) role = _T("REDAKTOR");
     else role = _T("GOŒÆ");
     CSize s = GetDC()->GetTextExtent(role);
     m_wndStatusBar.SetPaneInfo(3, ID_INDICATOR_ROLE, SBPS_NORMAL, (int)(0.8 * s.cx));
@@ -394,13 +394,13 @@ UINT CMainFrame::GetKolor(int ile_spotow) const // kolejnoœæ na liscie: spoty, b
     auto k = m_KolorBox->GetCurSel();
 
     if (k == ile_spotow)
-        return c_brak;
+        return ColorId::brak;
     if (k == ile_spotow + 1)
-        return c_full;
+        return ColorId::full;
     if (k == CB_ERR)
         return CB_ERR;
     if (k < ile_spotow)
-        return ((k << 3) + c_spot); // index w tablicy spotow
+        return ((k << 3) + ColorId::spot); // index w tablicy spotow
     return ((k - ile_spotow) << 3); // gdy nie jest ustawiony spot bit
 }
 

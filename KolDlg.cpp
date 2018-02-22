@@ -132,7 +132,7 @@ CPageDlg::CPageDlg(CWnd *pParent /*=NULL*/)
 {
     //{{AFX_DATA_INIT(CPageDlg)
     m_topage = 1;
-    m_kolor = c_brak;
+    m_kolor = ColorId::brak;
     m_deadline = m_typ_pary = m_drukarnie = m_ile_spotow = m_nr = 0;
     m_dervlvl = DervType::none;
     m_rzymska = m_iscaption = m_sztywna_kratka = m_niemakietuj = FALSE;
@@ -171,11 +171,11 @@ void CPageDlg::OnOK()
     CString rs;
     m_kolorcombo.GetLBText(m_kolorcombo.GetCurSel(), rs);
     if (rs.CompareNoCase(FULL) == 0)
-        m_kolor = c_full;
+        m_kolor = ColorId::full;
     else if (rs.CompareNoCase(BRAK) == 0)
-        m_kolor = c_brak;
+        m_kolor = ColorId::brak;
     else
-        m_kolor = m_kolorcombo.GetCurSel() * 8 + c_spot;
+        m_kolor = m_kolorcombo.GetCurSel() * 8 + ColorId::spot;
     // mutred
     m_mutred.Empty();
     int i, rc = m_mutredcombo.GetCount();
@@ -312,9 +312,9 @@ BOOL CPageDlg::OnInitDialog()
     m_kolorcombo.AddString(BRAK);
     m_kolorcombo.AddString(FULL);
 
-    if (m_kolor == c_brak)
+    if (m_kolor == ColorId::brak)
         m_kolorcombo.SetCurSel(m_ile_spotow);
-    else if (m_kolor == c_full)
+    else if (m_kolor == ColorId::full)
         m_kolorcombo.SetCurSel(m_ile_spotow + 1);
     else
         m_kolorcombo.SetCurSel(m_kolor >> 3);
@@ -367,7 +367,7 @@ BOOL CPageDlg::OnInitDialog()
             m_wydawcycombo.SetCurSel(j);
     }
 
-    if (theApp.swCZV == ToolbarMode::tryb_studia && theApp.isRDBMS && ((theApp.grupa&R_STU) || (theApp.grupa&R_MAS))) {
+    if (theApp.swCZV == ToolbarMode::tryb_studia && theApp.isRDBMS && (theApp.grupa&(UserRole::stu | UserRole::mas))) {
         // odczytaj ustawienia strony
         int prn_flag;
         CManODPNETParms orapar {
@@ -434,7 +434,7 @@ CAddDlg::CAddDlg(CWnd *pParent /*=NULL*/)
     : CDialog(CAddDlg::IDD, pParent), vActiveDoc(theApp.activeDoc)
 {
     //{{AFX_DATA_INIT(CAddDlg)
-    m_kolor = c_brak;
+    m_kolor = ColorId::brak;
     m_add_xx = m_nag_xx = m_spad = m_fizpage = m_oldadno = m_txtposx = m_txtposy = 0;
     m_posx = m_posy = m_sizex = m_sizey = 0;
     m_spad_top = m_spad_bottom = m_spad_left = m_spad_right = m_locked = m_flaga_rezerw = m_rzymnum = FALSE;
@@ -548,10 +548,10 @@ BOOL CAddDlg::OnInitDialog()
 
     // TODO: Add extra initialization here
     switch (m_kolor) {
-        case c_brak:
+        case ColorId::brak:
             m_kolorcombo.SetCurSel(0);
             break;
-        case c_full:
+        case ColorId::full:
             m_kolorcombo.SetCurSel(1);
             break;
         default:
@@ -594,11 +594,11 @@ BOOL CAddDlg::OnInitDialog()
         GetDlgItem(IDC_GODZ_CZOB)->EnableWindow(FALSE);
     }
     // blokuj opcje dla og³oszeñ niespacerowanych
-    if (m_add_xx < 0 && (theApp.grupa&R_DEA))
+    if (m_add_xx < 0 && (theApp.grupa&UserRole::dea))
         GetDlgItem(IDOK)->EnableWindow(FALSE);
-    GetDlgItem(IDEMISJE)->EnableWindow(m_add_xx > 0 && (theApp.grupa&(R_MAS | R_KIE | R_DEA)));
+    GetDlgItem(IDEMISJE)->EnableWindow(m_add_xx > 0 && (theApp.grupa&(UserRole::mas | UserRole::kie | UserRole::dea)));
     GetDlgItem(IDATEX)->EnableWindow(GetDlgItem(IDEMISJE)->IsWindowEnabled());
-    GetDlgItem(IDC_ODBLOKUJ)->EnableWindow(theApp.grupa&(R_MAS | R_KIE));
+    GetDlgItem(IDC_ODBLOKUJ)->EnableWindow(theApp.grupa&(UserRole::mas | UserRole::kie));
     // dla zajawek pobierz listê dopuszczalnych nazw
     OnEnChangeWersja();
 
@@ -970,13 +970,13 @@ void CAddDlg::OnOK()
     // ustaw m_kolor
     switch (m_kolorcombo.GetCurSel()) {
         case 0:
-            m_kolor = c_brak;
+            m_kolor = ColorId::brak;
             break;
         case 1:
-            m_kolor = c_full;
+            m_kolor = ColorId::full;
             break;
         default:
-            m_kolor = (m_kolorcombo.GetCurSel() * 8 + c_spot);
+            m_kolor = (m_kolorcombo.GetCurSel() * 8 + ColorId::spot);
     }
     // ustaw szpalty
     int i = m_kratkacombo.GetCurSel();
@@ -1056,7 +1056,7 @@ BOOL CInfoDlg::OnInitDialog()
     GetDlgItem(IDOK)->EnableWindow(!isRO);
     SetDlgItemText(IDC_MODSTATISTICS, title);
     GetDlgItemText(IDC_SIGN_TEXT, title, 3);
-    if (title[0] || !(theApp.grupa&R_KIE))
+    if (title[0] || !(theApp.grupa&UserRole::kie))
         GetDlgItem(IDB_SIGN)->EnableWindow(FALSE);
     GetDlgItemText(ID_DATA_STUDIO, title, 11);
     if (m_grzbiet.GetLength() == 2) { //mutacja grzbietu
@@ -1898,9 +1898,9 @@ BOOL CConfDlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
     OnDaydirs();
-    GetDlgItem(IDC_SETDEA)->EnableWindow(theApp.grupa&R_KIE);
-    GetDlgItem(IDC_INSERT)->EnableWindow(!theApp.activeDoc->isRO && (theApp.grupa&R_STU));
-    if (theApp.grupa&R_DEA) CheckDlgButton(IDC_SETDEA, BST_CHECKED);
+    GetDlgItem(IDC_SETDEA)->EnableWindow(theApp.grupa&UserRole::kie);
+    GetDlgItem(IDC_INSERT)->EnableWindow(!theApp.activeDoc->isRO && (theApp.grupa&UserRole::stu));
+    if (theApp.grupa&UserRole::dea) CheckDlgButton(IDC_SETDEA, BST_CHECKED);
     OnBnClickedCopyPodwaly();
     OnBnClickedOpiMode();
 
@@ -2769,8 +2769,8 @@ void COstWer::AppendAdd(CDrawAdd *pAdd, int status)
     m_adds.SetItemText(i, 3, pAdd->nazwa);
     ::StringCchPrintf(theApp.bigBuf, n_size, _T("%i"), pAdd->fizpage >> 16);
     m_adds.SetItemText(i, 4, theApp.bigBuf);
-    if (pAdd->kolor != c_brak) {
-        if (pAdd->kolor == c_full)
+    if (pAdd->kolor != ColorId::brak) {
+        if (pAdd->kolor == ColorId::full)
             ::StringCchCopy(theApp.bigBuf, n_size, FULL);
         else
             ::StringCchCopy(theApp.bigBuf, n_size, CDrawDoc::kolory[pAdd->kolor >> 3]);
