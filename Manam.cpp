@@ -442,7 +442,7 @@ void CDrawApp::FileRefresh(CDrawDoc *refreshDoc)
         if (vDoc->m_mak_xx > 0 || !vDoc->GetPathName().IsEmpty()) {
             aIsRO.Add((BOOL)vDoc->isRO);
             aSwCZV.Add((BYTE)vDoc->swCZV);
-            CString d(vDoc->data);
+            CString d{vDoc->data};
             if (!vDoc->isLIB) {
                 d.SetAt(2, '-'); d.SetAt(5, '-');
             }

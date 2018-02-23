@@ -660,9 +660,9 @@ void CDrawDocDbWriter::RemoveDeletedObj(OracleConnection^ conn, BOOL delAdds)
     par->Add("obj", OracleDbType::Int32);
 
     for (const auto& del : m_doc->m_del_obj) {
-        if ((delAdds && del.second != EntityType::add) || (!delAdds && del.second == EntityType::add)) continue;
-        par[1]->Value = (uint8_t)del.second;
-        par[2]->Value = del.first;
+        if ((delAdds && del.first != EntityType::add) || (!delAdds && del.first == EntityType::add)) continue;
+        par[1]->Value = (uint8_t)del.first;
+        par[2]->Value = del.second;
         cmd->ExecuteNonQuery();
     }
 }

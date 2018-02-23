@@ -226,7 +226,7 @@ void CQueView::RepaintRect(CRect *rect)
 void CQueView::OnEditClear()
 {
     if (selected_add && AfxMessageBox(_T("Czy usun¹æ wybrane og³oszenie z kolejki"), MB_YESNO) == IDYES) {
-        GetDocument()->m_del_obj.emplace_back(selected_add->m_pub_xx, EntityType::addque);
+        GetDocument()->m_del_obj.emplace_back(EntityType::addque, selected_add->m_pub_xx);
         auto& q = GetDocument()->m_addsque;
         q.erase(std::find(std::begin(q), std::end(q), CQueView::selected_add));
         GetDocument()->ArrangeQue();

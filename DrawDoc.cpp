@@ -106,7 +106,7 @@ void CDrawDoc::OnDisableGrbNotSaved(CCmdUI *pCmdUI)
 // CDrawDoc construction/destruction
 
 CDrawDoc::CDrawDoc() :
-    drobneH(0), m_mak_xx(-1), id_drw(-2),isRO(0), isSIG(0), isGRB(0), isLIB(0), isACD(0),
+    drobneH(0), m_mak_xx(-1), id_drw(-2), isRO(0), isSIG(0), isGRB(0), isLIB(0), isACD(0),
     data(CTime::GetCurrentTime().Format(c_ctimeData)), iDocType(DocType::makieta), swCZV(ToolbarMode::normal)
 {
     iPagesInRow = 10 + 2 * theApp.GetProfileInt(_T("General"), _T("PagesInRow"), 0);
@@ -449,11 +449,11 @@ void CDrawDoc::Remove(CDrawObj *pObj)
             auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
             if (pAdd) {
                 if (pAdd->m_pub_xx != -1 && pObj != CQueView::selected_add)
-                    m_del_obj.emplace_back(pAdd->m_pub_xx, EntityType::add);
+                    m_del_obj.emplace_back(EntityType::add, pAdd->m_pub_xx);
             } else {
                 auto pOpis = dynamic_cast<CDrawOpis*>(pObj);
                 if (pOpis && pOpis->m_opi_xx != -1)
-                    m_del_obj.emplace_back(pOpis->m_opi_xx, isLIB ? EntityType::opis_lib : EntityType::opis);
+                    m_del_obj.emplace_back(isLIB ? EntityType::opis_lib : EntityType::opis, pOpis->m_opi_xx);
             }
             m_objects.erase(pos);
         }
@@ -585,7 +585,7 @@ void CDrawDoc::RemovePage(CDrawPage *pObj)
         m_pages[ii]->MoveTo(&m_pages[ii - 1]->m_position);
 
     if (pObj->id_str != -1)
-        m_del_obj.emplace_back(std::make_pair(pObj->id_str, isLIB ? EntityType::page_lib : EntityType::page));
+        m_del_obj.emplace_back(isLIB ? EntityType::page_lib : EntityType::page, pObj->id_str);
     m_pages.erase(m_pages.cbegin() + i);
     SetModifiedFlag();
 

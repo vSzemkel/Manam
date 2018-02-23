@@ -1108,7 +1108,7 @@ int CDrawAdd::CkPageLocation(int vFizPage)
             zwraca 1, a jezeli wszystko jest w porzadku zwraca 0		end vu */
 
     CDrawPage *vPage;
-    int pc, nr_sek, nr_pl, nr_off, vnr_sek = 0;
+    int nr_sek, nr_pl, nr_off, vnr_sek = 0;
     TCHAR op_zew[2], op_sekcji[2], op_pl[2], sekcja[30], pl[2];
 
     // gdy nie stoi na ¿adnej stronie, to dobrze
@@ -1116,7 +1116,7 @@ int CDrawAdd::CkPageLocation(int vFizPage)
     // parsuj napis i ustaw zmienne 
     ParseLogpage(op_zew, sekcja, op_sekcji, &nr_sek, pl, op_pl, &nr_pl);
     // przejdz liste stron w dokumencie, zeby zapamietac jaki numer ma strona w danej sekcji 
-    pc = (int)m_pDocument->m_pages.size();
+    const int pc = (int)m_pDocument->m_pages.size();
     for (int j = 1; j <= pc; j++) {
         vPage = m_pDocument->m_pages[j % pc];
         CString vStrLog(vPage->name);

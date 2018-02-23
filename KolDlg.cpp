@@ -59,7 +59,11 @@ void CConnDlg::OnOK()
     CDialog::OnOK();
     CString& tns = theApp.m_tnsname;
 
-    if (::PathFileExistsW(_T(".\\Oracle.ManagedDataAccess.dll")) == FALSE) {
+    TCHAR manamPath[MAX_PATH];
+    ::GetModuleFileName(NULL, manamPath, MAX_PATH);
+    auto pos = _tcsrchr(manamPath, _T('\\'));
+    ::StringCchCopy(pos + 1, 29, _T("Oracle.ManagedDataAccess.dll"));
+    if (::PathFileExistsW(manamPath) == FALSE) {
         AfxMessageBox(_T("Nie odnaleziono klienta Oracle"), MB_ICONSTOP);
         EndDialog(IDABORT);
         return;

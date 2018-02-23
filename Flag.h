@@ -70,6 +70,6 @@ private:
     union
     {
         uintptr_t flag;                                     // if (size > CRITICAL_SIZE) uintptr_t->char*
-        void     *flagblob_ptr;                             // ASSERT(size % CRITICAL_SIZE == 0)
+        void*     flagblob_ptr;                             // ASSERT(size % CRITICAL_SIZE == 0)
     };
 };

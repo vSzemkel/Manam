@@ -4,7 +4,6 @@
 #include "DrawPage.h"
 
 class CGenEpsInfoDlg;
-class CDrawPage;
 
 class CDrawAdd final : public CDrawObj
 {

@@ -1315,7 +1315,10 @@ void CDrawView::UpdateToolbar(ToolbarMode newMode)
     Invalidate(FALSE);
 }
 
-void CDrawView::OnAsideAdds() { GetDocument()->OnAsideAdds(); }
+void CDrawView::OnAsideAdds()
+{
+    GetDocument()->OnAsideAdds();
+}
 
 //GN
 DWORD WINAPI CDrawView::DelegateGenEPS(LPVOID pArg)
@@ -1371,7 +1374,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
     theApp.isParalellGen = d.m_bPotokowe ? 1 : 0;
     theApp.WriteProfileInt(_T("GenEPS"), _T("autoMark"), theApp.autoMark = d.m_markfound);
 
-    int pc = (int)pDoc->m_pages.size();
+    const int pc = (int)pDoc->m_pages.size();
     CFlag wyborStron(0, 0, 1, pc);
     switch (d.m_page) {
         case 0:
