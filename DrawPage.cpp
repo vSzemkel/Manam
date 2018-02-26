@@ -339,7 +339,7 @@ void CDrawPage::DrawKolor(CDC *pDC, const CRect& pos) const
         CPen* pOldPen = reinterpret_cast<CPen*>(pDC->SelectStockObject(NULL_PEN));
         if (m_pDocument->isGRB) pOldBrush = reinterpret_cast<CBrush*>(pDC->SelectStockObject(LTGRAY_BRUSH));
         else pOldBrush = pDC->SelectObject(CDrawDoc::GetSpotBrush(m_pDocument->m_spot_makiety[kolor >> 3]));
-        COLORREF bk = pDC->SetBkColor(BIALY);
+        const COLORREF bk = pDC->SetBkColor(BIALY);
         pDC->Rectangle(r1);
         DrawNapis(pDC, Rzymska(((kolor >> 3) + 1)), Rzymska(((kolor >> 3) + 1)).GetLength(), r1, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP, OPAQUE);
         pDC->SetBkColor(bk);
@@ -519,7 +519,7 @@ BOOL CDrawPage::OnOpen(CDrawView*)
 
     if (m_typ_pary != dlg.m_typ_pary) {
         m_typ_pary = dlg.m_typ_pary;
-        int nr_porz = m_pDocument->GetIPage(this);
+        const int nr_porz = m_pDocument->GetIPage(this);
         auto pPage = m_pDocument->m_pages[nr_porz + 1 - 2 * (nr_porz & 1)];
         pPage->m_typ_pary = m_typ_pary;
         pPage->SetDirty();
@@ -527,8 +527,8 @@ BOOL CDrawPage::OnOpen(CDrawView*)
 
     SetBaseKrata(dlg.m_szpalt_x, dlg.m_szpalt_y);
 
+    const int pc = (int)m_pDocument->m_pages.size();
     int i, pom_nr = (dlg.m_nr << 16) + (dlg.m_rzymska ? PaginaType::roman : PaginaType::arabic);
-    int pc = (int)m_pDocument->m_pages.size();
     if (nr != pom_nr) {
         // sprawdz czy istnieje juz taka strona - bo numer/typ_num nie moze sie powtarzac
         for (i = 0; i < pc; i++)
@@ -836,7 +836,7 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
     if (!m_kraty_niebazowe.empty()) {
         CRect intsec;
         const CRect& src = GetNormalizedModuleRect(module);
-        int s_x = szpalt_x, s_y = szpalt_y;
+        const int s_x = szpalt_x, s_y = szpalt_y;
         for (const auto& kn : m_kraty_niebazowe) {
             SetBaseKrata(kn.m_szpalt_x, kn.m_szpalt_y, FALSE);
             CFlag& space_mark2 = mode == SpaceMode::spacelock ? space_locked : space_red;
@@ -1020,7 +1020,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
     auto wThreadBuf = pArg->cBigBuf;
     auto cThreadBuf = reinterpret_cast<char*>(pArg->cBigBuf);
     if (pArg->bIsPRN) {
-        int lnr_porz = m_pDocument->GetIPage(this);
+        const int lnr_porz = m_pDocument->GetIPage(this);
         num.Format(_T("%03i"), lnr_porz ? lnr_porz : (int)m_pDocument->m_pages.size());
     } else
         (pagina_type == PaginaType::roman) ? num = Rzymska(pagina) : num.Format(_T("%03i"), pagina);
@@ -1030,7 +1030,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
     const BOOL fileWarn = GetDestName(pArg, num, dest_name);
     CString sUid;
     sUid.Format(_T(" guid: %s"), GenerateGUIDString());
-    const char *tofind[] = { "%!PS-Adobe-3.1 EPSF-3.0", "%%BoundingBox:", "%%Creator:", "%%Title:", "%%CreationDate:", "%%Copyright:", "%%DocumentProcessColors:", "MIEJSCE_NA_EPS" };
+    const char* const tofind[] = { "%!PS-Adobe-3.1 EPSF-3.0", "%%BoundingBox:", "%%Creator:", "%%Title:", "%%CreationDate:", "%%Copyright:", "%%DocumentProcessColors:", "MIEJSCE_NA_EPS" };
     CStringA towrite[7];
     towrite[0] = "%!PS-Adobe-3.1";
     towrite[1] = "<dynamic>";
@@ -1182,7 +1182,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
         if (!StaleElementy(pArg, &fPagina))
             return FALSE;
 
-        auto len = (UINT)fPagina.GetLength();
+        const auto len = (UINT)fPagina.GetLength();
         auto buf = fPagina.Detach();
         dest->Write(buf, len);
         free(buf); // CMemFile::Free
@@ -1303,12 +1303,12 @@ BOOL CDrawPage::PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) co
         std::unique_ptr<CHttpFile> pFile(pSrv->OpenRequest(CHttpConnection::HTTP_VERB_POST, strObject, NULL, 1, NULL, NULL, INTERNET_FLAG_EXISTING_CONNECT | INTERNET_FLAG_NO_AUTO_REDIRECT));
         pFile->AddRequestHeaders(_T("Content-Type: multipart/form-data; boundary=") + CString(sOpiSeparator));
 
-        int iReqLen = (int)pOpiFile->GetLength() + sFormBody.GetLength() + sOpiSeparator.GetLength() + 4; /* cztery minusy wokol ostatniego sOpiSeparator */
+        const int iReqLen = (int)pOpiFile->GetLength() + sFormBody.GetLength() + sOpiSeparator.GetLength() + 4; /* cztery minusy wokol ostatniego sOpiSeparator */
         try {
             pFile->SendRequestEx(iReqLen);
             pFile->Write(sFormBody, sFormBody.GetLength());
             // wklej plik
-            auto len = (UINT)pOpiFile->GetLength();
+            const auto len = (UINT)pOpiFile->GetLength();
             auto buf = pOpiFile->Detach();
             pFile->Write(buf, len);
             free(buf); // CMemFile::Free
@@ -1348,9 +1348,9 @@ void CDrawPage::Preview(PGENEPSARG pArg, CFile *dest, int bx1, int by1, int bx2,
     const int y = (int)ceil(by1 / pkt_10m - 0.5);
     const int dx = (int)ceil((bx2 - bx1) / pkt_10m - 0.5);
     const int dy = 2 + (int)ceil((by2 - by1 - podpisH) / pkt_10m - 0.5);
-    div_t szer_t = div(dx, 8);
-    int szer = szer_t.quot + min(szer_t.rem, 1);
-    int p_size = (int)(dy*szer * sizeof(BYTE));
+    const div_t szer_t = div(dx, 8);
+    const int szer = szer_t.quot + min(szer_t.rem, 1);
+    const int p_size = (int)(dy*szer * sizeof(BYTE));
 
     if (p_size > n_size) {
         const TCHAR* errMsg = _T("Zbyt gêsta krata. Proszê wy³¹czyæ opcjê generowania preview");
@@ -1377,7 +1377,7 @@ void CDrawPage::Preview(PGENEPSARG pArg, CFile *dest, int bx1, int by1, int bx2,
     header[6] = (DWORD)dest->GetLength() - header[5];
     dest->SeekToBegin();
     dest->Write(header, sizeof(header));
-    WORD w = (WORD)0xFFFF;
+    const WORD w = (WORD)0xFFFF;
     dest->Write(&w, sizeof(WORD));
 }
 
@@ -1393,7 +1393,7 @@ BOOL CDrawPage::GenPDF(PGENEPSARG pArg)
         return FALSE;
     }
 
-    BOOL fileWarn = GetDestName(pArg, num, dstName);
+    const BOOL fileWarn = GetDestName(pArg, num, dstName);
     pArg->pDlg->StrInfo(pArg->iChannelId, CString("Strona ") + num + "\ndo pliku " + dstName);
 
     // czy plik istnieje

@@ -233,7 +233,7 @@ void CMainFrame::SetToolbarBitmap(ToolbarMode bPrevMode, ToolbarMode bNewMode)
 
 void CMainFrame::SetOpenStatus(LPCTSTR t)
 {
-    CSize s = GetDC()->GetTextExtent(t, (int)_tcslen(t));
+    const CSize s = GetDC()->GetTextExtent(t, (int)_tcslen(t));
     m_wndStatusBar.SetPaneInfo(1, ID_INDICATOR_OPENSTAT, s.cx ? SBPS_NORMAL : SBPS_NOBORDERS | SBPS_DISABLED, (int)(0.8 * s.cx));
     m_wndStatusBar.SetPaneText(1, t);
     if (MDIGetActive()) { // w grzbiecie ukryj toolbar
@@ -244,7 +244,7 @@ void CMainFrame::SetOpenStatus(LPCTSTR t)
 
 void CMainFrame::SetLogonStatus(LPCTSTR t)
 {
-    CSize s = GetDC()->GetTextExtent(t, (int)_tcslen(t));
+    const CSize s = GetDC()->GetTextExtent(t, (int)_tcslen(t));
     m_wndStatusBar.SetPaneInfo(2, ID_INDICATOR_LOGIN, SBPS_NORMAL, (int)(0.8 * s.cx));
     m_wndStatusBar.SetPaneText(2, t);
     SetRoleStatus();
@@ -319,7 +319,7 @@ void CMainFrame::IniCaptionBox(int id_drw, int new_id_drw)
     if (new_id_drw == INT_MAX)
         m_CaptionBox->ResetContent();
     else {
-        auto isCap = theApp.GetProfileInt(_T("General"), _T("Captions"), 1) == 1;
+        const auto isCap = theApp.GetProfileInt(_T("General"), _T("Captions"), 1) == 1;
         if (new_id_drw > 0 && theApp.isRDBMS && !DBIniCaptionCombo(isCap, new_id_drw))
             IniCaptionCombo(isCap);
     }
@@ -360,7 +360,7 @@ BOOL CMainFrame::DBIniCaptionCombo(BOOL iscaption, int id_drw)
         : "sciezka from strukt_drzewa where co_to='L' and"));
 
     m_CaptionBox->ResetContent();
-    int ind = m_CaptionBox->AddString(_T(""));
+    const int ind = m_CaptionBox->AddString(_T(""));
     m_CaptionBox->SetItemData(ind, (WORD)0);
 
     CManODPNETParms orapar { CManODPNET::DbTypeInt32, &id_drw };
@@ -376,7 +376,7 @@ BOOL CMainFrame::DBIniCaptionCombo(BOOL iscaption, int id_drw)
 CString CMainFrame::GetKolorText() const noexcept
 {
     CString s;
-    int sel = m_KolorBox->GetCurSel();
+    const int sel = m_KolorBox->GetCurSel();
     if (sel != CB_ERR)
         m_KolorBox->GetLBText(sel, s);
 
@@ -385,13 +385,13 @@ CString CMainFrame::GetKolorText() const noexcept
 
 int CMainFrame::GetKolorInd(const CString& text) const noexcept
 {
-    int ind = m_KolorBox->FindString(0, text);
+    const int ind = m_KolorBox->FindString(0, text);
     return ind == CB_ERR ? -1 : ind;
 }
 
 UINT CMainFrame::GetKolor(int ile_spotow) const // kolejnoœæ na liscie: spoty, brak, full, kolory
 {
-    auto k = m_KolorBox->GetCurSel();
+    const auto k = m_KolorBox->GetCurSel();
 
     if (k == ile_spotow)
         return ColorId::brak;

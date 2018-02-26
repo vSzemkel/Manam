@@ -229,7 +229,7 @@ BOOL CDrawApp::ConnecttoDB()
     PMIB_IFROW pifr = nullptr;
     PMIB_IFTABLE pift = (PMIB_IFTABLE)bigBuf;
     ULONG pift_size = bigSize;
-    unsigned int en = GetIfTable(pift, &pift_size, FALSE);
+    const unsigned int en = GetIfTable(pift, &pift_size, FALSE);
     if (en == NO_ERROR)
         for (unsigned int row = 0; row < pift->dwNumEntries; ++row) {
             pifr = &pift->table[row];
@@ -352,7 +352,7 @@ void CDrawApp::InitKratyDrukarnie()
 void CDrawApp::FillKrataCombo(CComboBox& combo, int szpalt_x, int szpalt_y)
 {
     for (const auto& k : kraty) {
-        auto ind = combo.AddString(k);
+        const auto ind = combo.AddString(k);
         if (szpalt_xarr[ind] == szpalt_x && szpalt_yarr[ind] == szpalt_y)
             combo.SetCurSel(ind);
     }
@@ -585,7 +585,7 @@ void CDrawApp::OnUpdateStudio(CCmdUI *pCmdUI)
 
 void CDrawApp::OnCaptions()
 {
-    int lastSet = GetProfileInt(_T("General"), _T("Captions"), 1);
+    const int lastSet = GetProfileInt(_T("General"), _T("Captions"), 1);
     WriteProfileInt(_T("General"), _T("Captions"), (1 - lastSet) % 2);
     ((CMainFrame*)m_pMainWnd)->IniCaptionBox(0, INT_MAX);
 }
@@ -630,7 +630,7 @@ void CDrawApp::OnDaydirs()
 
 BOOL CDrawApp::OpenWebBrowser(const TCHAR *sUrl)
 {
-    size_t ret = (size_t)::ShellExecute(::GetDesktopWindow(), _T("Open"), sUrl, NULL, NULL, SW_SHOWNORMAL);
+    const size_t ret = (size_t)::ShellExecute(::GetDesktopWindow(), _T("Open"), sUrl, NULL, NULL, SW_SHOWNORMAL);
     return ret > 32;
 }
 
@@ -702,7 +702,7 @@ BOOL CDrawApp::TryUpgradeImage() const
     if (!::MoveFileEx(cmdLine, sBackupImage, MOVEFILE_REPLACE_EXISTING))
         return FALSE;
 
-    auto ret = theManODPNET.Deploy(cmdLine);
+    const auto ret = theManODPNET.Deploy(cmdLine);
     if (!ret) ::MoveFile(sBackupImage, cmdLine);
 
     return ret;

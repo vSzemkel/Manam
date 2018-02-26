@@ -175,9 +175,9 @@ void CGridFrm::Select(CDrawAdd *pObj, int i)
 
     CRect r;
     GetClientRect(&r);
-    int iSelRowY = i*ROWHEIGHT + MARGINTOP;
-    int iTopRowY = GetScrollPosition().y;
-    int iBottomRowY = iTopRowY + r.Height() - ROWHEIGHT;
+    const int iSelRowY = i*ROWHEIGHT + MARGINTOP;
+    const int iTopRowY = GetScrollPosition().y;
+    const int iBottomRowY = iTopRowY + r.Height() - ROWHEIGHT;
     if (iSelRowY < iTopRowY || iBottomRowY < iSelRowY)
         ScrollToPosition(CPoint(0, iSelRowY - r.Height() / 2));
 }

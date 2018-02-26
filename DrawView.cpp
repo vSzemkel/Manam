@@ -484,12 +484,12 @@ void CDrawView::Select(CDrawObj *pObj, BOOL bAdd)
 
         auto pPage = dynamic_cast<CDrawPage *>(pObj);
         if (bAdd && pPage) {
-            int iHitPos = GetDocument()->GetIPage(pPage);
+            const int iHitPos = GetDocument()->GetIPage(pPage);
             for (int i = iHitPos - 1; i >= 0; i--)
                 if (IsSelected(GetDocument()->m_pages[i]))
                     for (int j = i + 1; j < iHitPos; j++)
                         Select((CDrawObj *)GetDocument()->m_pages[j], TRUE);
-            size_t iPC = GetDocument()->m_pages.size();
+            const size_t iPC = GetDocument()->m_pages.size();
             for (size_t i = iHitPos + 1; i < iPC; i++)
                 if (IsSelected(GetDocument()->m_pages[i]))
                     for (size_t j = iHitPos + 1; j < i; j++)
@@ -589,8 +589,8 @@ void CDrawView::OnMouseMove(UINT nFlags, CPoint point)
 
 BOOL CDrawView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
-    auto delta = zDelta / WHEEL_DELTA;
-    float fFactor = (15 + (float)delta) / 15;
+    const auto delta = zDelta / WHEEL_DELTA;
+    const float fFactor = (15 + (float)delta) / 15;
     if ((nFlags & MK_CONTROL) > 0) {
         CDrawOpis *pOpi;
         if (m_selection.size() == 1 && (pOpi = dynamic_cast<CDrawOpis *>(m_selection.front()))) {
@@ -599,7 +599,7 @@ BOOL CDrawView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
             pOpi->SetDirty();
             pOpi->Invalidate();
         } else {
-            CSize zoomNum((int)(m_zoomNum.cx * fFactor), (int)(m_zoomNum.cy * fFactor));
+            const CSize zoomNum((int)(m_zoomNum.cx * fFactor), (int)(m_zoomNum.cy * fFactor));
             // regulacja jest dopuszczalna w zakresie rgiZoomFactor[0]..rgiZoomFactor[size-1]
             if ((zoomNum.cx >= 60 || fFactor > 1.0) && (zoomNum.cx <= 1000 || fFactor < 1.0))
                 SetZoomFactor(zoomNum, m_zoomDenom);
@@ -729,7 +729,7 @@ void CDrawView::OnEditClear()
             if (pPage) {
                 if (pPage->m_dervlvl == DervType::adds && !pPage->m_adds.empty())
                     continue;
-                if (std::any_of(pPage->m_adds.cbegin(), pPage->m_adds.cend(), [](auto pAdd) { return pAdd->flags.derived > 0; }))
+                if (std::any_of(pPage->m_adds.cbegin(), pPage->m_adds.cend(), [](auto pAdd) noexcept { return pAdd->flags.derived > 0; }))
                     continue;
                 to_tell = TRUE;
             }
@@ -982,7 +982,7 @@ LPDEVMODE CDrawView::SetLandscape()
     if (!::OpenPrinter(theApp.bigBuf, &hPrinter, NULL))
         return nullptr;
     // pobierz ustawienia
-    DWORD dwNeeded = DocumentProperties(this->m_hWnd, hPrinter, theApp.bigBuf, NULL, NULL, 0);
+    const DWORD dwNeeded = DocumentProperties(this->m_hWnd, hPrinter, theApp.bigBuf, NULL, NULL, 0);
     PDEVMODE dm = (PDEVMODE)LocalAlloc(LMEM_FIXED, dwNeeded);
     // zmieñ
     DocumentProperties(this->m_hWnd, hPrinter, theApp.bigBuf, dm, NULL, DM_OUT_BUFFER);
@@ -1482,7 +1482,7 @@ subseterr:
         }
     }
 
-    BOOL bInitOpiMode = theApp.isOpiMode;
+    const BOOL bInitOpiMode = theApp.isOpiMode;
     if (isprint && d.m_format == F_EPS) theApp.isOpiMode = FALSE; // Dla F_EPS nie u¿ywaj OPI
 
     GENEPSARG genEpsArg;
@@ -1630,7 +1630,7 @@ void CDrawView::OnPrevKolumnaDruk() // single Page selected
 {
     CString sURL;
     auto pPage = dynamic_cast<CDrawPage *>(m_selection.front());
-    int iNrPorz = theApp.activeDoc->GetIPage(pPage);
+    const int iNrPorz = theApp.activeDoc->GetIPage(pPage);
     sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s&nrstrony=%i&format=pdf&rozmiar=1"), theApp.activeDoc->gazeta.Left(3), theApp.activeDoc->gazeta.Mid(4, 2), theApp.activeDoc->dayws, iNrPorz == 0 ? (int)theApp.activeDoc->m_pages.size() : iNrPorz);
     theApp.OpenWebBrowser(4, sURL);
 }
@@ -1694,7 +1694,7 @@ void CDrawView::OnPrevDig()
     sURL.Format(sUrlTemplate, pAdd->nreps, dataSepia);
     auto pFile = theApp.OpenURL(5, sURL);
     if (pFile) {
-        auto iXmlLen = pFile->Read(buf, bigSize);
+        const auto iXmlLen = pFile->Read(buf, bigSize);
         pFile->Close();
         if (iXmlLen == bigSize) {
             AfxMessageBox(_T("Plik z dodatkow¹ treœci¹ jest za du¿y"));

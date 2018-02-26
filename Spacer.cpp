@@ -208,7 +208,7 @@ BOOL CSpacerDlg::OnInitDialog()
         }
     } else {
         // kolejne emisje tylko pozniej
-        CTime hightime(m_lastemision.GetYear() + 5, m_lastemision.GetMonth(), m_lastemision.GetDay(), 0, 0, 0);
+        const CTime hightime(m_lastemision.GetYear() + 5, m_lastemision.GetMonth(), m_lastemision.GetDay(), 0, 0, 0);
         m_lastemisionctl.SetRange(&m_lastemision, &hightime);
 
         CDrawPage *p = pub->m_pDocument->GetPage(pub->fizpage);
@@ -411,8 +411,8 @@ void CSpacerDlg::OnPagelayout()
 void CSpacerDlg::OnDelsel()
 {
     long pub_xx;
-    int i, rc = m_emisjelist.GetCount();
-    for (i = rc - 1; i > 0; i--) // pierwsze zostaje
+    const int rc = m_emisjelist.GetCount();
+    for (int i = rc - 1; i > 0; --i) // pierwsze zostaje
         if (m_emisjelist.GetSel(i)) {
             pub_xx = (long)m_emisjelist.GetItemData(i);
 
@@ -451,7 +451,7 @@ void CSpacerDlg::OnDelall()
 
 void CSpacerDlg::SetBlokadaState()
 {
-    int iQF = GetQueryFlag();
+    const int iQF = GetQueryFlag();
     if (iQF != CSpacerDlg::qfExact && iQF != CSpacerDlg::qfSectionExact && iQF != CSpacerDlg::qfSecParExact) {
         CheckDlgButton(IDC_LOCKED, BST_UNCHECKED);
         GetDlgItem(IDC_LOCKED)->EnableWindow(FALSE);
@@ -535,7 +535,7 @@ void CSpacerDlg::OnQue()
         { CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &pub->m_pub_xx },
     };
     orapar.outParamsCount = 2;
-    int rc = m_emisjelist.GetCount();
+    const int rc = m_emisjelist.GetCount();
     const char* sql = "begin spacer.que(:mak_xx,:szpalt_x,:szpalt_y,:sizex,:sizey,:nazwa,:wersja,:uwagi,:ile_kol,:spo_xx,:typ_xx,:add_xx,:pub_xx); end;";
     if (queDeal) {
         if (!theManODPNET.EI(sql, orapar))
@@ -650,7 +650,7 @@ void CSpacerDlg::OnOK()
     };
     orapar.outParamsCount = 3;
 
-    int rc = m_emisjelist.GetCount();
+    const int rc = m_emisjelist.GetCount();
     if (rc <= 1) {
         if (rc == 0 || (rc == 1 && ((long)m_emisjelist.GetItemData(0) > 0)))
             if (!theManODPNET.EI("begin spacer.reserve(:mak_xx,:str_xx,:szpalt_x,:szpalt_y,:x,:y,:sizex,:sizey,:qf,:blokada,:nazwa,:wersja,:uwagi,:ile_kol,:spo_xx,:typ_xx,:add_xx,:pub_xx,:czaskto); end;", orapar))
@@ -814,7 +814,7 @@ void CSpacerDlg::OnBnClickedMutacje()
 void CSpacerDlg::OnBnClickedMalaSiec()
 {
     for (const auto& s : { _T("BY"), _T("GD"), _T("KA"), _T("KR"), _T("LU"), _T("LO"), _T("PO"), _T("SZ"), _T("WR"), _T("WA") }) {
-        auto found = m_ollist.FindString(0, s);
+        const auto found = m_ollist.FindString(0, s);
         if (found != LB_ERR)
             m_ollist.SetSel(found);
     }

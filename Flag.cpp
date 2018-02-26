@@ -452,7 +452,7 @@ void CFlag::Reverse(size_t len) noexcept
 {
     if (len <= 8 * size)
         for (size_t i = 0; i < len / 2; ++i) {
-            auto bit = operator[](i);
+            const auto bit = operator[](i);
             SetBit(i, operator[](len - i - 1));
             SetBit(len - i - 1, bit);
         }

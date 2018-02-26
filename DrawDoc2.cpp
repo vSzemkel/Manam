@@ -99,11 +99,6 @@ BOOL CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
     if (isGRB) NumberPages();
     UpdateAllViews(NULL);
 
-    TCHAR filedate[11];
-    if (!isLIB) {
-        _tcscpy_s(filedate, 11, data);
-        filedate[2] = filedate[5] = '-';
-    }
     if (theApp.showAcDeadline > 0) {
         theApp.showAcDeadline = 0;
         OnShowAcDeadline();
@@ -167,7 +162,7 @@ void CDrawDoc::DBSaveAs(BOOL isSaveAs)
     disableMenu = TRUE;
     BeginWaitCursor();
 
-    BOOL doSaveAdds = (!isLIB && (m_mak_xx == -1 || !isSaveAs));
+    const bool doSaveAdds = (!isLIB && (m_mak_xx == -1 || !isSaveAs));
     ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo((LPCTSTR)_T("Trwa zapis makiety ") + gazeta + _T(" ") + data);
     if (theManODPNET.SaveManamDoc(this, isSaveAs, doSaveAdds)) {
         if (!doSaveAdds) {
@@ -218,7 +213,7 @@ void CDrawDoc::ZmianaSpotow(int n)
 {
     // gdy dodaje strony byc moze mam wiecej mozliwosci spotu, pod warunkiem ze mam wybrane drzewo
     if (id_drw == -1) return;
-    int m = DBReadSpot(n);
+    const int m = DBReadSpot(n);
     if (m_spot_makiety.size() == m) return;
     for (const auto& p : m_pages) {
         const int e1 = p->kolor & ColorId::spot;
@@ -340,7 +335,8 @@ void CDrawDoc::OnVuMakietowanie()
         CString sOrgLogpage;
         BOOL bSecondRun = FALSE;
 aSecondRun:
-        int nr_sek, nr_pl, nr_off, vnr_sek = 0, pc = (int)m_pages.size();
+        const int pc = (int)m_pages.size();
+        int nr_sek, nr_pl, nr_off, vnr_sek = 0;
         TCHAR op_zew[2], op_sekcji[2], op_pl[2], sekcja[30], pl[2];
         castval = (CDrawAdd*)vAdds.GetAt(i);
         castval->logpage.Trim().MakeUpper();
@@ -497,16 +493,16 @@ void CDrawDoc::MakietujStrone(CDrawPage *pPage)
     for (i = 0; i < vAddsCount - 1; ++i) {
         k = -1;
         auto viAdd = (CDrawAdd*)vAdds.GetAt(i);
-        BOOL hashedi = viAdd->logpage.ReverseFind('#') >= 0;
+        bool hashedi = viAdd->logpage.ReverseFind('#') >= 0;
         // pasek ma najwyzszy priorytet
         if (hashedi && (viAdd->sizex == viAdd->szpalt_x && viAdd->sizey == 1) || (viAdd->sizey == viAdd->szpalt_y && viAdd->sizex == 1)) continue;
         int maxWeight = viAdd->sizex*viAdd->sizey;
         for (j = i + 1; j < vAddsCount; j++) {
             auto vjAdd = (CDrawAdd*)vAdds.GetAt(j);
-            BOOL hashedj = vjAdd->logpage.ReverseFind('#') >= 0;
+            const bool hashedj = vjAdd->logpage.ReverseFind('#') >= 0;
             if (hashedi && !hashedj) continue;
             if (!hashedi && hashedj) { // po znalezieniu pierwszego hashowanego sprawdzaj tylko hashowane
-                hashedi = TRUE;
+                hashedi = true;
                 maxWeight = vjAdd->sizex * vjAdd->sizey;
                 vAdds.SetAt(i, vjAdd);
                 vAdds.SetAt(j, viAdd);
@@ -580,7 +576,7 @@ void CDrawDoc::MakietujStrone(CDrawPage *pPage)
             }
         } else {
             // ustaw ogloszenie bez opisu na prawej stronie w prawym dolnym rogu strony, na lewej - w lewym dolnym
-            castval->SetEstPagePos((pPage->pagina & 1 ? _T("DP") : _T("DL")), &vRect, pPage);
+            castval->SetEstPagePos((pPage->pagina & 1) ? _T("DP") : _T("DL"), &vRect, pPage);
         }
         castval->m_position = vRect;
         castval->Invalidate();
@@ -628,7 +624,7 @@ void CDrawDoc::AsideAdds()
 
 CPoint CDrawDoc::GetAsideAddPos(BOOL opening) const
 {
-    const int addsAsideCnt = opening ? 1 : 1 + (int)std::count_if(cbegin(m_objects), cend(m_objects), [](CDrawObj *pObj) { auto a = dynamic_cast<CDrawAdd*>(pObj); return a && a->posx == 0; });
+    const int addsAsideCnt = opening ? 1 : 1 + (int)std::count_if(cbegin(m_objects), cend(m_objects), [](CDrawObj *pObj) noexcept { const auto a = dynamic_cast<CDrawAdd*>(pObj); return a && a->posx == 0; });
     const int marginPageMinX = (int)(pmodulx*(1 + iPagesInRow / 2 + (pszpalt_x*iPagesInRow)));
     const int marginPageMaxX = (int)(nearbyint((float)(m_size.cx * vscale * 100) / (theApp.m_initZoom * pmodulx)) - (pszpalt_x + 2)) * pmodulx;
     return CPoint(max(marginPageMinX, marginPageMaxX), -pmoduly * addsAsideCnt);
@@ -844,7 +840,7 @@ void CDrawDoc::OnAsideAdds()
 
 void CDrawDoc::IniKolorTable()
 {
-    int max_col = theApp.GetProfileInt(_T("SpotColors"), _T("Amount"), 0);
+    const int max_col = theApp.GetProfileInt(_T("SpotColors"), _T("Amount"), 0);
     kolory.resize(max_col + 2);
     brushe.resize(max_col + 2);
     kolory[0] = BRAK; brushe[0] = new CBrush(RGB(190, 190, 190));
@@ -891,7 +887,7 @@ const CRozm* CDrawDoc::GetCRozm(int s_x, int s_y, int typ_xx)
 
 const CRozm* CDrawDoc::GetCRozm(PGENEPSARG pArg, int s_x, int s_y, int typ_xx)
 {
-    auto pR = std::find_if(m_Rozm.cbegin(), m_Rozm.cend(), [=](const CRozm& r) {
+    auto pR = std::find_if(m_Rozm.cbegin(), m_Rozm.cend(), [=](const CRozm& r) noexcept {
         return (typ_xx == 0 && s_x == r.szpalt_x && s_y == r.szpalt_y) || (typ_xx > 0 && typ_xx == r.typ_xx);
     });
 
@@ -986,7 +982,7 @@ int CDrawDoc::Nr2NrPorz(const TCHAR *s) const noexcept
 
 void CDrawDoc::OnChangeColsPerRow()
 {
-    CPoint pNowhere(INT_MAX >> 2, 0);
+    const CPoint pNowhere(INT_MAX >> 2, 0);
     iPagesInRow = MIN_COLSPERROW + 2 * (((iPagesInRow - MIN_COLSPERROW) / 2 + 1) % 5);
     int i, iPC = (int)m_pages.size();
     auto aNoPagePos = (CRect*)theApp.bigBuf;

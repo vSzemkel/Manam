@@ -18,8 +18,8 @@ private:
     BOOL moving;
     // Operations 
 public:
-    CRect* GetStoredPosition() { return &vPos; }
-    static CDrawAdd* GetSelectedAdd() { return selected_add; }
+    CRect* GetStoredPosition() noexcept { return &vPos; }
+    static CDrawAdd* GetSelectedAdd() noexcept { return selected_add; }
     // Implementation
 protected:
     virtual ~CQueView() = default;
@@ -27,7 +27,7 @@ protected:
     virtual void OnPrepareDC(CDC *pDC, CPrintInfo *pInfo) override;
     virtual void OnUpdate(CView *pSender, LPARAM lHint, CObject *pHint) override;
     virtual void OnInitialUpdate() override; // first time after construct
-    auto GetDocument() const { return reinterpret_cast<CDrawDoc*>(m_pDocument); }
+    auto GetDocument() const noexcept { return reinterpret_cast<CDrawDoc*>(m_pDocument); }
     void DocToClient(CRect *rect);
     void ClientToDoc(CRect *rect);
     void ClientToDoc(CPoint *point);

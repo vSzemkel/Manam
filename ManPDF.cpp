@@ -107,12 +107,11 @@ const char* CManPDF::memstr(const char *str, const char *sub, size_t len)
 unsigned long CManPDF::SearchPattern(CFile &f, const char *pat) const
 {
     char *p;
-    unsigned long filepos;
     size_t res = 1;
-    int backLen = (int)strlen(pat);
+    const int backLen = (int)strlen(pat);
 
     while (res > 0) { // read block from the file
-        filepos = (unsigned long)f.GetPosition();
+        const auto filepos = (long)f.GetPosition();
         res = f.Read(cStore, n_size);    // check if anything was read and no error occurred
         if (res < 1) break;
         if (res == n_size)
@@ -536,7 +535,7 @@ BOOL CManPDF::EmbedPDF(CFile& src, unsigned int objNr, CDrawAdd& pAdd)
     xrefOffset = 0L;
     renumMap.clear();
 
-    unsigned long offset = GetMediaBox(NULL, &bbx1, &bby1, &bbx2, &bby2, (HANDLE)src.m_hFile);
+    const unsigned long offset = GetMediaBox(NULL, &bbx1, &bby1, &bbx2, &bby2, (HANDLE)src.m_hFile);
     if (offset == 0L) return FALSE;
     StringCchPrintfA(cStore, bigSize, "/BBox [ %.2f %.2f %.2f %.2f ]\x0a", bbx1, bby1, bbx2, bby2);
     trg.Write(cStore, (UINT)strlen(cStore));
@@ -549,10 +548,10 @@ BOOL CManPDF::EmbedPDF(CFile& src, unsigned int objNr, CDrawAdd& pAdd)
     if (!pRozm) return FALSE;
     float px = (float)(mm2pkt * (pAdd.posx - 1) * (pRozm->w + pRozm->sw));
     float py = (float)(-1 * mm2pkt * (pAdd.posy + pAdd.sizey - 1) * (pRozm->h + pRozm->sh));
-    float dimx = (float)((pAdd.sizex*(pRozm->w + pRozm->sw) - pRozm->sw)*mm2pkt);
-    float dimy = (float)((pAdd.sizey*(pRozm->h + pRozm->sh) - pRozm->sh)*mm2pkt);
-    float sclx = (bbx2 == bbx1 || pAdd.typ_xx != 0) ? 1 : dimx / (bbx2 - bbx1);
-    float scly = (bby2 == bby1 || pAdd.typ_xx != 0) ? 1 : dimy / (bby2 - bby1);
+    const float dimx = (float)((pAdd.sizex*(pRozm->w + pRozm->sw) - pRozm->sw)*mm2pkt);
+    const float dimy = (float)((pAdd.sizey*(pRozm->h + pRozm->sh) - pRozm->sh)*mm2pkt);
+    const float sclx = (bbx2 == bbx1 || pAdd.typ_xx != 0) ? 1 : dimx / (bbx2 - bbx1);
+    const float scly = (bby2 == bby1 || pAdd.typ_xx != 0) ? 1 : dimy / (bby2 - bby1);
 
     if (pAdd.wersja.Find(_T("c")) >= 0) { //centrujemy
         px += (float)(0.5 * (dimx - bbx2 + bbx1));
@@ -617,7 +616,7 @@ BOOL CManPDF::GenProlog()
 void CManPDF::GenPDFTail(unsigned int howMany)
 {
     std::vector<CString> offsetArr;
-    BOOL noLimit = howMany == 0;
+    const BOOL noLimit = howMany == 0;
 
     unsigned int objnr = 0;
     unsigned long offset;
@@ -755,8 +754,8 @@ BOOL CManPDF::CreatePDF(CDrawPage *page, const TCHAR *trgName)
         for (i = pocz; i < kon; ++i) {
             pAdd = page->m_adds[i - pocz];
             auto pRozm = pAdd->m_pDocument->GetCRozm(pAdd->szpalt_x, pAdd->szpalt_y, pAdd->typ_xx);
-            float px = (float)(mm2pkt * ((pAdd->posx + pAdd->sizex - 1) * (pRozm->w + pRozm->sw) - pRozm->sw));
-            float py = (float)(-1 * mm2pkt * (pAdd->posy + pAdd->sizey - 1) * (pRozm->h + pRozm->sh) - podpisH);
+            const float px = (float)(mm2pkt * ((pAdd->posx + pAdd->sizex - 1) * (pRozm->w + pRozm->sw) - pRozm->sw));
+            const float py = (float)(-1 * mm2pkt * (pAdd->posy + pAdd->sizey - 1) * (pRozm->h + pRozm->sh) - podpisH);
             fname.Format(_T("%li%s"), pAdd->nreps, pAdd->wersja);
             // pdf ogloszenia
             if (!embAlias[i - pocz].IsEmpty()) {
@@ -764,8 +763,8 @@ BOOL CManPDF::CreatePDF(CDrawPage *page, const TCHAR *trgName)
                 ::StringCchCopyA(&cStore[contentLen], n_size - contentLen, CStringA(cs));
             } else {
                 fname = "Nie odnaleziono pliku: " + fname;
-                float w = (float)(mm2pkt * (pAdd->sizex * (pRozm->w + pRozm->sw) - pRozm->sw));
-                float h = (float)(mm2pkt * (pAdd->sizey * (pRozm->h + pRozm->sh) - pRozm->sh));
+                const float w = (float)(mm2pkt * (pAdd->sizex * (pRozm->w + pRozm->sw) - pRozm->sw));
+                const float h = (float)(mm2pkt * (pAdd->sizey * (pRozm->h + pRozm->sh) - pRozm->sh));
                 cs.Format(_T("q %.2f %.2f %.2f %.2f re S Q\012"), px, py + podpisH, -w, h);
                 ::StringCchCopyA(&cStore[contentLen], n_size - contentLen, CStringA(cs));
             }

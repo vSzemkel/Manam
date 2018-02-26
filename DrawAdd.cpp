@@ -583,7 +583,7 @@ BOOL CDrawAdd::OnOpen(CDrawView *pView)
         szpalt_x = dlg.m_szpalt_x;
         szpalt_y = dlg.m_szpalt_y;
         space = CFlag(sizex, sizey, szpalt_x, szpalt_y);
-        CRect vPos(m_position.left, m_position.top, m_position.left + (int)(sizex*modulx), m_position.top - (int)(sizey*moduly));
+        const CRect vPos(m_position.left, m_position.top, m_position.left + (int)(sizex*modulx), m_position.top - (int)(sizey*moduly));
         MoveTo(vPos);
     }
     if (!dlg.m_fromQue && (((theApp.grupa&UserRole::dea) > 0) || (theApp.grupa&UserRole::kie && m_pDocument->isRO)))
@@ -918,7 +918,7 @@ void CDrawAdd::InitPrecel(const CString& sPrecelFlag)
 void CDrawAdd::MoveWithPage(const CRect& position, CDrawView *pView)
 {
     dirty = TRUE;
-    CRect toPos(position.left + (int)(modulx*(posx - 1)), position.bottom + (int)(moduly*(szpalt_y - posy + 1)), position.left + (int)(modulx*(posx + sizex - 1)), position.bottom + (int)(moduly*(szpalt_y - posy - sizey + 1)));
+    const CRect toPos(position.left + (int)(modulx*(posx - 1)), position.bottom + (int)(moduly*(szpalt_y - posy + 1)), position.left + (int)(modulx*(posx + sizex - 1)), position.bottom + (int)(moduly*(szpalt_y - posy - sizey + 1)));
     MoveTo(toPos, pView);
 }
 
@@ -1399,7 +1399,7 @@ BOOL CDrawAdd::BBoxFromFile(PGENEPSARG pArg, CFile *handle, float *x1, float *y1
     BOOL bRet = false;
     size_t res = 1;
     char *p, *s = reinterpret_cast<char*>(pArg->cBigBuf);
-    unsigned long filepos = (unsigned long)handle->GetPosition();
+    const auto filepos = (unsigned long)handle->GetPosition();
 
     while (res > 0) { // read block from the file
         res = handle->Read(s, n_size);    // check if anything was read and no error occurred
@@ -1463,7 +1463,7 @@ BOOL CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR *cKolor, float *bx1, float *by
     // szukaj Koloru w pliku
     eps.SeekToBegin();
     CManPDF mp(pArg);
-    unsigned long DPCpos = mp.SearchPattern(eps, "DocumentProcessColors:");
+    const auto DPCpos = mp.SearchPattern(eps, "DocumentProcessColors:");
     if (DPCpos == CManPDF::ulNotFound)
         *cKolor = _T('-');
     else {

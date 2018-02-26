@@ -54,7 +54,7 @@ struct OdpHelper final
 
     inline static void __clrcall String2CString(System::String^ s, CString& cs)
     {
-        int noe = s->Length;
+        const int noe = s->Length;
         auto buf = cs.GetBufferSetLength(s->Length);
         pin_ptr<const wchar_t> wch = PtrToStringChars(s);
         ::CopyMemory(buf, wch, 2 * noe);
@@ -124,7 +124,7 @@ struct OdpHelper final
     static void __clrcall AddParams(OracleCommand^ cmd, CManODPNETParms& ps)
     {
         for (const auto& p : ps.params) {
-            auto dir = static_cast<ParameterDirection>(p.m_direction);
+            const auto dir = static_cast<ParameterDirection>(p.m_direction);
             switch (dir) {
                 case ParameterDirection::Output:
                     if (p.m_odptype == CManODPNET::DbTypeVarchar2) {
@@ -169,7 +169,7 @@ struct OdpHelper final
     static BOOL __clrcall InitRozmInternal(OracleCommand^ cmd, std::vector<CRozm>& roz)
     {
         auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
-        BOOL found = odr->HasRows;
+        const BOOL found = odr->HasRows;
         while (odr->Read()) {
             int i1 = odr->GetInt32(0);
             int i2 = odr->GetInt32(1);
@@ -336,7 +336,7 @@ void CDrawDocDbReader::OpenOpis(OracleDataReader^ opiCur)
 void CDrawDocDbReader::OpenQued(OracleDataReader^ queCur)
 {
     while (queCur->Read()) {
-        CRect r(0, 0, 1, 1);
+        const CRect r(0, 0, 1, 1);
         auto pAdd = new CDrawAdd(r);
         m_doc->AddQue(pAdd);
         pAdd->flags.reserv = 0;
@@ -425,7 +425,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
                 ivy = pubCur->GetInt32(11); // sizey
                 szpalt_x = pubCur->GetInt32(4); // szpalt_x
                 szpalt_y = pubCur->GetInt32(5); // szpalt_y
-                CRect rt(pos, CSize((int)(ivx*modulx), (int)(ivy*(-1)*moduly)));
+                const CRect rt(pos, CSize((int)(ivx*modulx), (int)(ivy*(-1)*moduly)));
                 auto pAdd = new CDrawAdd(rt);
                 pAdd->m_pub_xx = pubCur->GetInt32(0); // xx
                 pAdd->m_add_xx = pubCur->GetInt32(1); // add_xx
@@ -508,8 +508,8 @@ void CDrawDocDbReader::OpenMultiKraty(OracleCommand^ cmd, const CFlag& multiKrat
     for (int i = 0; i < (int)m_objetosc; ++i) {
         if (!multiKraty[i]) continue;
         auto pPage = m_doc->m_pages[i];
-        int s_x = pPage->szpalt_x;
-        int s_y = pPage->szpalt_y;
+        const int s_x = pPage->szpalt_x;
+        const int s_y = pPage->szpalt_y;
 
         par[1]->Value = pPage->id_str;
         auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
@@ -843,7 +843,7 @@ void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, BOOL isSaveAs, BOOL do
         par[5]->Value = pPage->pagina * (pPage->niemakietuj ? -1 : 1);
         par[6]->Value = pPage->pagina_type;
         par[7]->Value = pPage->kolor & 0x07;
-        par[8]->Value = (int)(pPage->kolor&ColorId::spot ? 1 + (pPage->kolor >> 3) : 0);
+        par[8]->Value = (int)((pPage->kolor&ColorId::spot) ? 1 + (pPage->kolor >> 3) : 0);
         par[9]->Value = gcnew String(pPage->name);
         par[10]->Value = gcnew String(pPage->caption);
         par[11]->Value = gcnew String(pPage->space.ToRaw());
@@ -1342,20 +1342,20 @@ BOOL CManODPNET::RmSysLock(CDrawDoc* doc)
 
 BOOL CManODPNET::GrbSaveMutczas(CDrawDoc* doc)
 {
-    int cc = (int)doc->m_pages.size();
-    auto mutArr = gcnew array<int>(cc);
-    for (int i = 0; i < cc; i++)
+    const int pc = (int)doc->m_pages.size();
+    auto mutArr = gcnew array<int>(pc);
+    for (int i = 0; i < pc; i++)
         mutArr[i] = doc->m_pages[i]->m_mutczas;
 
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();
-    cmd->CommandText = "begin grb.update_mutczas(:mak_xx,:cc,:mutczasArr); end;";
+    cmd->CommandText = "begin grb.update_mutczas(:mak_xx,:pc,:mutczasArr); end;";
     cmd->Parameters->Add("mak_xx", OracleDbType::Int32, ParameterDirection::InputOutput)->Value = doc->m_mak_xx;
-    cmd->Parameters->Add("cc", OracleDbType::Int32)->Value = cc;
+    cmd->Parameters->Add("pc", OracleDbType::Int32)->Value = pc;
 
     auto ma = cmd->Parameters->Add("mutczasArr", OracleDbType::Int32);
     ma->CollectionType = OracleCollectionType::PLSQLAssociativeArray;
-    ma->Size = cc;
+    ma->Size = pc;
     ma->Value = mutArr;
 
     try {
@@ -1504,7 +1504,7 @@ BOOL CManODPNET::ReadAcDeadlines(CDrawDoc* doc)
         auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
         while (odr->Read()) {
             int id_str = odr->GetInt32(0);
-            auto p = std::find_if(std::cbegin(doc->m_pages), std::cend(doc->m_pages), [id_str](auto pPage) { return pPage->id_str == id_str; });
+            auto p = std::find_if(std::cbegin(doc->m_pages), std::cend(doc->m_pages), [id_str](auto pPage) noexcept { return pPage->id_str == id_str; });
             if (p != std::end(doc->m_pages)) {
                 auto s = OdpHelper::ReadOdrString(odr, 1);
                 (*p)->m_ac_red = CDrawApp::ShortDateToCTime(s);
@@ -1603,7 +1603,7 @@ BOOL CManODPNET::SpacerMulti(const std::vector<int>& mak_xxArr, std::vector<CStr
 
     OdpHelper::AddParams(cmd, ps);
 
-    int cnt = (int)mak_xxArr.size();
+    const int cnt = (int)mak_xxArr.size();
     auto man_mak_xxArr = gcnew array<int>(cnt);
     auto man_bindSize = gcnew array<int>(cnt);
     for (int i = 0; i < cnt; ++i) {
@@ -1650,7 +1650,7 @@ BOOL CManODPNET::SpacerMulti(const std::vector<int>& mak_xxArr, std::vector<CStr
 
 BOOL CManODPNET::Zapora(std::vector<int>* pub_xxArr)
 {
-    int cnt = (int)pub_xxArr->size();
+    const int cnt = (int)pub_xxArr->size();
     auto man_pub_xxArr = gcnew array<int>(cnt);
     for (int i = 0; i < cnt; ++i)
         man_pub_xxArr[i] = (*pub_xxArr)[i];

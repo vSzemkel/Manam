@@ -28,7 +28,7 @@ void CDrawOpis::DrawInternal(CDC *pDC, CRect& rect) const
     auto pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
     auto pOldFont = pDC->SelectObject(&m_pDocument->m_pagefont);
 
-    bool coloured = kolor > 7;
+    const bool coloured = kolor > 7;
     auto pOldBrush = CDrawDoc::GetSpotBrush(coloured ? kolor >> 3 : 1);
     if (coloured) {
         LOGBRUSH lb;
@@ -48,7 +48,7 @@ void CDrawOpis::DrawInternal(CDC *pDC, CRect& rect) const
             *edge = (LONG)(*edge * scale);
 
         rect.OffsetRect(1, -1);
-        auto oldBM = pDC->SetBkMode(TRANSPARENT);
+        const auto oldBM = pDC->SetBkMode(TRANSPARENT);
         pDC->DrawText(info, info.GetLength(), rect, DT_WORDBREAK);
         pDC->SetWindowExt(initExt);
         pDC->SetBkMode(oldBM);

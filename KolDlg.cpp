@@ -270,7 +270,7 @@ void CPageDlg::SetFunListBox(BOOL setDefaults)
 
 void CPageDlg::OnSelchangePrnMak()
 {
-    int ind = m_prn_mak.GetCurSel();
+    const int ind = m_prn_mak.GetCurSel();
     m_prn_mak_xx = ind != CB_ERR ? (int)m_prn_mak.GetItemData(ind) : 0;
     SetFunListBox(TRUE);
 }
@@ -844,9 +844,9 @@ BOOL CAddDlg::AtexVerify(LPCTSTR adno)
 
     CString sAddXX, sURL, sMsg;
     if (m_fullView && m_emisjelist.GetSelCount()) {
-        int i, rc = m_emisjelist.GetCount();
+        const int rc = m_emisjelist.GetCount();
         CFlag f(0, 0, 1, rc);
-        for (i = 0; i < rc; i++)
+        for (int i = 0; i < rc; i++)
             if (m_emisjelist.GetSel(i))
                 f.SetBit(i);
         sURL = f.Print();
@@ -1479,7 +1479,7 @@ BOOL CDrz1Dlg::OnInitDialog()
 
 void CDrz1Dlg::OnOK()
 {
-    int ind = m_drz_combo.GetCurSel();
+    const int ind = m_drz_combo.GetCurSel();
     if (ind != CB_ERR) {
         m_id_drw = (int)m_drz_combo.GetItemData(ind);
         m_drz_combo.GetLBText(ind, m_gazeta);
@@ -1601,7 +1601,7 @@ void CDBOpenDlg::OnOK()
 void CDBOpenDlg::RefreshCombo()
 {
     CWnd *wnOldFocus = GetFocus();
-    BOOL isON = IsDlgButtonChecked(IDC_LIB);
+    const BOOL isON = IsDlgButtonChecked(IDC_LIB);
     if (bEnableCtrls) { //aktywacja kontrolek
         GetDlgItem(ID_DATA_TEXT)->ShowWindow(isON ? SW_HIDE : SW_SHOW);
         GetDlgItem(IDC_DT)->ShowWindow(isON ? SW_HIDE : SW_SHOW);
@@ -1658,7 +1658,7 @@ void CDBOpenDlg::OnDtnDatetimechangeDt(NMHDR *pNMHDR, LRESULT *pResult)
 {
     static CTime oldDate = 0;
     auto pDTChange = reinterpret_cast<LPNMDATETIMECHANGE>(pNMHDR);
-    auto t = CTime(pDTChange->st);
+    const CTime t(pDTChange->st);
     if (t != oldDate) {
         oldDate = t;
         RefreshCombo();
@@ -1718,7 +1718,7 @@ BOOL CDBSaveAsDlg::OnInitDialog()
 
 void CDBSaveAsDlg::OnLib()
 {
-    BOOL isON = IsDlgButtonChecked(IDC_LIB);
+    const BOOL isON = IsDlgButtonChecked(IDC_LIB);
     GetDlgItem(ID_DATA_TEXT)->ShowWindow(isON ? SW_HIDE : SW_SHOW);
     GetDlgItem(IDC_DT)->ShowWindow(isON ? SW_HIDE : SW_SHOW);
     GetDlgItem(ID_WERSJA_TEXT)->ShowWindow(isON ? SW_SHOW : SW_HIDE);
@@ -1921,7 +1921,7 @@ void CConfDlg::OnSubdir()
 
 void CConfDlg::OnDaydirs()
 {
-    BOOL isClear = !IsDlgButtonChecked(IDC_DAYDIRS);
+    const BOOL isClear = !IsDlgButtonChecked(IDC_DAYDIRS);
     if (isClear) OnSubdir(); else GetDlgItem(IDC_HASHING)->EnableWindow(FALSE);
     GetDlgItem(IDC_COPYOLDEPS)->EnableWindow(!isClear);
     GetDlgItem(IDC_SUBDIR)->EnableWindow(isClear);
@@ -1935,7 +1935,7 @@ void CConfDlg::OnBnClickedCopyPodwaly()
 
 void CConfDlg::OnBnClickedOpiMode()
 {
-    BOOL isOpiUnchecked = !IsDlgButtonChecked(IDC_OPIMODE);
+    const BOOL isOpiUnchecked = !IsDlgButtonChecked(IDC_OPIMODE);
     GetDlgItem(IDC_DAYDIRS)->EnableWindow(isOpiUnchecked);
     GetDlgItem(IDC_INSERT)->EnableWindow(isOpiUnchecked);
     GetDlgItem(IDC_SUBDIR)->EnableWindow(isOpiUnchecked);
@@ -2077,7 +2077,7 @@ void CPrnEpsDlg::OnLButtonDown(UINT nFlags, CPoint point)
     CRect odR, doR, ssR, dR, cdR;
     GetWindowRect(dR);
     GetClientRect(cdR);
-    int borderWidth = (dR.Width() - cdR.Width()) / 2;
+    const int borderWidth = (dR.Width() - cdR.Width()) / 2;
     GetDlgItem(IDC_FROMPAGE)->GetWindowRect(odR);
     GetDlgItem(IDC_TOPAGE)->GetWindowRect(doR);
     GetDlgItem(IDC_DWARLOG)->GetWindowRect(ssR);
@@ -2765,7 +2765,7 @@ END_MESSAGE_MAP()
 
 void COstWer::AppendAdd(CDrawAdd *pAdd, int status)
 {
-    int i = m_adds.InsertItem(m_adds.GetItemCount(), pAdd->logpage, status);
+    const int i = m_adds.InsertItem(m_adds.GetItemCount(), pAdd->logpage, status);
     ::StringCchPrintf(theApp.bigBuf, n_size, _T("%li"), pAdd->nreps);
     m_adds.SetItemText(i, 1, theApp.bigBuf);
     ::StringCchPrintf(theApp.bigBuf, n_size, _T("%iX%i "), pAdd->sizex, pAdd->sizey);
@@ -2810,7 +2810,7 @@ BOOL COstWer::OnInitDialog()
     m_adds.SetImageList(&m_SmallImageList, LVSIL_SMALL);
     m_adds.SetImageList(&m_StateImageList, LVSIL_STATE);
 
-    DWORD es = m_adds.GetExtendedStyle();
+    const DWORD es = m_adds.GetExtendedStyle();
     m_adds.SetExtendedStyle(es | LVS_EX_GRIDLINES);
     m_adds.InsertColumn(0, _T("Miejsce"), LVCFMT_LEFT, 90);
     m_adds.InsertColumn(1, _T("EPS"), LVCFMT_LEFT, 70);
@@ -2890,7 +2890,7 @@ void COstWer::OnNMClickAddlist(NMHDR *pNMHDR, LRESULT *pResult)
 {
     UINT uFlags = 0;
     const auto& ptAction = ((LPNMITEMACTIVATE)pNMHDR)->ptAction;
-    auto ind = m_adds.HitTest(ptAction, &uFlags);
+    const auto ind = m_adds.HitTest(ptAction, &uFlags);
 
     if (ind >= 0 && (uFlags & LVHT_ONITEMSTATEICON))
         m_adds.SetCheck(ind, !m_adds.GetCheck(ind));
@@ -2900,8 +2900,9 @@ void COstWer::OnNMClickAddlist(NMHDR *pNMHDR, LRESULT *pResult)
 
 void COstWer::OnSelectAll()
 {
-    BOOL bChecked = IsDlgButtonChecked(IDC_SIGNALL);
-    for (int i = 0; i < m_adds.GetItemCount(); i++)
+    const auto rc = m_adds.GetItemCount();
+    const BOOL bChecked = IsDlgButtonChecked(IDC_SIGNALL);
+    for (int i = 0; i < rc; ++i)
         m_adds.SetCheck(i, bChecked);
 }
 

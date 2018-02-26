@@ -21,7 +21,7 @@ CDrawObj::CDrawObj(const CRect& position) noexcept : CDrawObj::CDrawObj()
 
 void CDrawObj::DrawNapis(CDC *pDC, LPCTSTR napis, int cnt, LPRECT r, UINT format, int bkMode)
 {
-    auto saved = pDC->SetBkMode(bkMode);
+    const auto saved = pDC->SetBkMode(bkMode);
     if (vscale == 1) 
         pDC->DrawText(napis, cnt, r, format);
     else {
@@ -141,7 +141,7 @@ int CDrawObj::HitTest(const CPoint& point, CDrawView *pView, BOOL bSelected) con
         const int nHandleCount = GetHandleCount();
         for (int nHandle = 1; nHandle <= nHandleCount; ++nHandle) {
             // GetHandleRect returns in logical coords
-            CRect rc = GetHandleRect(nHandle, pView);
+            const CRect rc = GetHandleRect(nHandle, pView);
             if (rc.PtInRect(point))
                 return nHandle;
         }
@@ -257,7 +257,7 @@ HCURSOR CDrawObj::GetHandleCursor(int nHandle) const
 {
     ASSERT_VALID(this);
 
-    LPCTSTR kierunek[4] = { IDC_SIZEWE, IDC_SIZENWSE, IDC_SIZENS, IDC_SIZENESW };
+    const LPCTSTR kierunek[4] = { IDC_SIZEWE, IDC_SIZENWSE, IDC_SIZENS, IDC_SIZENESW };
     return ::LoadCursor(0, kierunek[nHandle & 0x03]);
 }
 
@@ -385,7 +385,7 @@ CString CDrawObj::Rzymska(int i)
     /* vu: liczby rzymskie do kodowania pozycji systemu dziesiêtnego u¿ywaj¹ 3 ró¿nych znaków,
            a s¹siednie pozycje maj¹ jeden znak wspólny - dalej ju¿ ³atwo :end vu */
 
-    CString rz_cyfry[7] = { "I", "V", "X", "L", "C", "D", "M" };
+    const CString rz_cyfry[7] = { "I", "V", "X", "L", "C", "D", "M" };
     if (abs(i) >= 9000) return "Big one";
     if (i < 0) return CString("-") + Rzymska(-i);
     return RzCyfra(i / 100, &rz_cyfry[4]) + RzCyfra((i % 100) / 10, &rz_cyfry[2]) + RzCyfra(i % 10, &rz_cyfry[0]);
