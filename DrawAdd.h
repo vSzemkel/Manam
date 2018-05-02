@@ -14,33 +14,33 @@ class CDrawAdd final : public CDrawObj
     CDrawAdd(const CRect& position) noexcept;
 
     virtual ~CDrawAdd();
-    virtual void Draw(CDC *pDC) override;
-    virtual void Print(CDC *pDC) override;
+    virtual void Draw(CDC* pDC) override;
+    virtual void Print(CDC* pDC) override;
     virtual void UpdateInfo() override;
     virtual void Serialize(CArchive& ar) override;
-    virtual BOOL OnOpen(CDrawView *pView) override;
+    virtual BOOL OnOpen(CDrawView* pView) override;
 
     int m_pub_xx;
-    int m_add_xx;	// FK_SPACER_AD
+    int m_add_xx; // FK_SPACER_AD
     int szpalt_x;
     int szpalt_y;
     int typ_xx; // FK_TYP_OGLOSZENIA
     int nag_xx; // FK_NAGLOWEK_OGLOSZENIA, identyfikator górnego nag³ówka redakcyjnego
-    long  nreps; //nr eps          ==adno z atexa
-    long  oldAdno; //adno z którego jest powtórka
+    long nreps; //nr eps          ==adno z atexa
+    long oldAdno; //adno z którego jest powtórka
     CString nazwa; //nazwa ogl
-    CString logpage;	//logiczna strona - powiedzmy ze string war logicznych
-    CString remarks;	//uwagi
-    CString remarks_atex;	//uwagi_atex
-    CString wersja;		//scan,eps,el,klisze,odz
-    CString czaskto;	//zawiera sformatowany czas obowi¹zywania i login sprzedawcy
-    CString kodModulu;	//zawiera nazwê pliku z materia³em Ÿród³owym do produkcji, bez œcie¿ki i rozszerzenia
+    CString logpage; //logiczna strona - powiedzmy ze string war logicznych
+    CString remarks; //uwagi
+    CString remarks_atex; //uwagi_atex
+    CString wersja; //scan,eps,el,klisze,odz
+    CString czaskto; //zawiera sformatowany czas obowi¹zywania i login sprzedawcy
+    CString kodModulu; //zawiera nazwê pliku z materia³em Ÿród³owym do produkcji, bez œcie¿ki i rozszerzenia
     CString f5_errInfo; //komunikat o b³êdzie dotycz¹cym materia³u, wygenerowany przez funkcjê F5
     int sizex;
     int sizey;
     int posx;
     int posy;
-    int fizpage;     //fizpage & PaginaType::roman == PaginaType::roman to jest rzymska paginacja
+    int fizpage; //fizpage & PaginaType::roman == PaginaType::roman to jest rzymska paginacja
     struct
     {
         BYTE epsok : 2;          // akceptacja sprzeda¿y (0-NIE,1-TAK,2-NIE WIEM)
@@ -51,71 +51,72 @@ class CDrawAdd final : public CDrawObj
         BYTE zagroz : 2;         // zagro¿ona emisja
         BYTE isok : 2;           // spacer-status
         BYTE derived : 1;        // flaga dziedziczenia
-        BYTE reksbtl : 1;        // czy pod og³oszeniem w podpisie wydrukowaæ napis REKLAMA	
+        BYTE reksbtl : 1;        // czy pod og³oszeniem w podpisie wydrukowaæ napis REKLAMA
         BYTE digital : 1;        // czy og³oszenie ma treœæ cyfrow¹
         StudioStatus studio : 3; // status dla studia
     } flags;
     struct
-    {				// BANK OG£OSZEÑ
-        WORD insid;			// insertionid
-        WORD n;				// ile opublikowaæ
-        WORD k;				// w ilu wydaniach
+    { // BANK OG£OSZEÑ
+        WORD insid;              // insertionid
+        WORD n;                  // ile opublikowaæ
+        WORD k;                  // w ilu wydaniach
     } bank;
     int txtposx;
     int txtposy;
-    int precelWertexCnt;	// iloœæ wierzcho³ków precla, 0 jesli precelWertexCnt == 4
-    int precelRingCnt;		// iloœæ obwodnic precla
-    int iFileId;			// identyfikator materia³u graficznego wykorzytywany przy F4
-    BYTE spad_flag : 4;		// flaga mapuj¹ca krawêdzie do wylewu na spad
-    CFlag space;			// odpowiada ksztaltowi      
+    int precelWertexCnt;         // iloœæ wierzcho³ków precla, 0 jesli precelWertexCnt == 4
+    int precelRingCnt;           // iloœæ obwodnic precla
+    int iFileId;                 // identyfikator materia³u graficznego wykorzytywany przy F4
+    BYTE spad_flag : 4;          // flaga mapuj¹ca krawêdzie do wylewu na spad
+    CFlag space;                 // odpowiada ksztaltowi
     CString lastAdnoUsed;
-    CString skad_ol;		// kod oddzia³y przyjmuj¹cego, uzyskany przy F7
-    CTime powtorka;			// data powtórki
-    CTime epsDate;			// data pliku
+    CString skad_ol;             // kod oddzia³y przyjmuj¹cego, uzyskany przy F7
+    CTime powtorka;              // data powtórki
+    CTime epsDate;               // data pliku
 
-    static void PrintPadlock(CDC *pDC, const CRect& rect);
-    static BOOL BBoxFromFile(PGENEPSARG pArg, CFile *handle, float *x1, float *y1, float *x2, float *y2);
-    static BOOL LocatePreview(CFile& fEps, unsigned long *lOffset, unsigned long *lSize);
-    static BOOL CopyNewFile(const CString& srcPath, const CString& dstPath);
-    static BOOL EpsFromATEX(const CString& num, const CString& dstPath);
+    static void PrintPadlock(CDC* pDC, const CRect& rect);
+    static bool BBoxFromFile(PGENEPSARG pArg, CFile& handle, float* x1, float* y1, float* x2, float* y2);
+    static bool LocatePreview(CFile& fEps, unsigned long* lOffset, unsigned long* lSize);
+    static bool CopyNewFile(const CString& srcPath, const CString& dstPath);
+    static bool EpsFromATEX(const CString& num, const CString& dstPath);
+    static bool EmbedFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcPath);
 
-    void DrawTx(CDC *pDC, const CRect& rect, LPCTSTR tx, BOOL top) const;
-    void DrawDesc(CDC *pDC, const CRect& rect) const; // vu : rysuje opis tekstowy og³oszenia
-    void DrawPadlock(CDC *pDC, const CRect& rect) const;
-    CString PrepareBuf(TCHAR *ch) const;
+    void DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, BOOL top) const;
+    void DrawDesc(CDC* pDC, const CRect& rect) const; // vu : rysuje opis tekstowy og³oszenia
+    void DrawPadlock(CDC* pDC, const CRect& rect) const;
+    CString PrepareBuf(TCHAR* ch) const;
 
-    CFlag GetPlacementFlag() const;					// mapa modu³ów zajêtych na stronie przez to og³oszenie
-    CFlag GetPlacementFlag(int px, int py) const;	// mapa modu³ów zajêtych na stronie przez to og³oszenie, gdyby mia³o wspó³rzêdne (posx, posy)
+    CFlag GetPlacementFlag() const; // mapa modu³ów zajêtych na stronie przez to og³oszenie
+    CFlag GetPlacementFlag(int px, int py) const; // mapa modu³ów zajêtych na stronie przez to og³oszenie, gdyby mia³o wspó³rzêdne (posx, posy)
     void Lock();
-    void SetPosition(CRect *m_pos, CDrawPage *pPage);
+    void SetPosition(CRect* m_pos, CDrawPage* pPage);
     void SetPosition(int fizp, int px, int py, int sx, int sy);
-    void SetSpaceSize(int sx, int sy);				// og³oszenie w ustalonej kracie zmienia rozmiar
+    void SetSpaceSize(int sx, int sy); // og³oszenie w ustalonej kracie zmienia rozmiar
     void SetSpaceAndPosition(int fizp, int px, int py);
-    void MoveWithPage(const CRect& position, CDrawView *pView = nullptr);
+    void MoveWithPage(const CRect& position, CDrawView* pView = nullptr);
     void InitPrecel(const CString& sPrecelFlag);
 
     void SetLogpage(CString& m_op_zew, CString& m_sekcja, CString& m_op_sekcji, int m_nr_w_sekcji, CString& m_PL, CString& m_op_PL, int m_nr_PL, CString& m_poz_na_str); //vu
-    void ParseLogpage(TCHAR *op_zew, TCHAR *sekcja, TCHAR *op_sekcji, int *nr_sek, TCHAR *pl, TCHAR *op_pl, int *nr_pl, TCHAR *poz_na_str = nullptr); // vu
-    int  CkPageLocation(int vFizPage); //vu : czy ogloszenie moze byc na stronie numer vFizPage
-    void SetEstPagePos(TCHAR *description, CRect *vRect, CDrawPage *pPage);
-    BOOL SetPagePosition(CRect *vRect, CDrawPage *vPage);
+    void ParseLogpage(TCHAR* op_zew, TCHAR* sekcja, TCHAR* op_sekcji, int* nr_sek, TCHAR* pl, TCHAR* op_pl, int* nr_pl, TCHAR* poz_na_str = nullptr); // vu
+    int CkPageLocation(int vFizPage); //vu : czy ogloszenie moze byc na stronie numer vFizPage
+    void SetEstPagePos(TCHAR* description, CRect* vRect, CDrawPage* pPage);
+    bool SetPagePosition(CRect* vRect, CDrawPage* vPage);
 
-    BOOL GetProdInfo(PGENEPSARG pArg, TCHAR *cKolor, float *bx1, float *by1, float *bx2, float *by2, int *ileMat); // szuka danych w bazie, jeœli nie ma, to otwiera i przeszukuje plik
-    BOOL CheckSrcFile(PGENEPSARG pArg);
-    BOOL RewriteEps(PGENEPSARG pArg, CFile *dest);
-    BOOL RewriteDrob(PGENEPSARG pArg, CFile *dest);
+    bool GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by1, float* bx2, float* by2, int* ileMat); // szuka danych w bazie, jeœli nie ma, to otwiera i przeszukuje plik
+    bool CheckSrcFile(PGENEPSARG pArg);
+    bool RewriteEps(PGENEPSARG pArg, CFile& dest);
+    bool RewriteDrob(PGENEPSARG pArg, CFile& dest);
     CString FindZajawka(CString& root, const CString& ext) const;
     CString EpsName(int format, BOOL copyOldEPS, BOOL modifTest = FALSE);
     void Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const;
-    void SetDotM(BOOL setFlag);		// parsuje wersjê i ustawia lub cofa .m
+    void SetDotM(BOOL setFlag); // parsuje wersjê i ustawia lub cofa .m
 
-private:
+  private:
     static const int ciMaxRings; // maksymalna iloœæ obwodnic precla
-    CString m_precel_flag;  // flaga precla, przechowywana po to, by niepotrzebnie nie liczyæ obwodnic po OnOpen
-    std::unique_ptr<CPoint[]> aPrecelWertex;	// tablica wierzcho³ków precla
-    int *aRingWertexCnt;    // tablica iloœci wierzcho³ków na poszczególnych obwodnicach, w³asciciel pamiêci: aPrecelWertex
-    BOOL SetStrictDescPos(LPCTSTR description, CRect *vRect, CDrawPage *pPage);
-    BOOL PtOnRing(CPoint p) const; // stwierdza, czy krawêdŸ (px,py)->(px+1,py) jest na dotychczas znalezionej obwodnicy precla
+    CString m_precel_flag; // flaga precla, przechowywana po to, by niepotrzebnie nie liczyæ obwodnic po OnOpen
+    std::unique_ptr<CPoint[]> aPrecelWertex; // tablica wierzcho³ków precla
+    int* aRingWertexCnt; // tablica iloœci wierzcho³ków na poszczególnych obwodnicach, w³asciciel pamiêci: aPrecelWertex
+    bool SetStrictDescPos(LPCTSTR description, CRect* vRect, CDrawPage* pPage);
+    bool PtOnRing(CPoint p) const; // stwierdza, czy krawêdŸ (px,py)->(px+1,py) jest na dotychczas znalezionej obwodnicy precla
     int FindRing(CPoint p0, bool bOuterRing); // znajduje obwodnicê precla rozpoczynaj¹c¹ siê od p0 w kierunku E, zwraca liczbê wierzcho³ków
 };
 

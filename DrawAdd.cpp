@@ -143,7 +143,7 @@ void CDrawAdd::Serialize(CArchive& ar)
 }
 
 ////////////////////////// DRAW
-void CDrawAdd::Draw(CDC *pDC)
+void CDrawAdd::Draw(CDC* pDC)
 {
     ASSERT_VALID(this);
 
@@ -243,7 +243,7 @@ void CDrawAdd::Draw(CDC *pDC)
     pDC->SelectObject(pOldPen);
 }
 
-void CDrawAdd::DrawDesc(CDC *pDC, const CRect& rect) const
+void CDrawAdd::DrawDesc(CDC* pDC, const CRect& rect) const
 {
     /* vu : Rysuje opis tekstowy og³oszenia na podanym urz¹dzeniu	end vu */
 
@@ -301,7 +301,7 @@ void CDrawAdd::DrawDesc(CDC *pDC, const CRect& rect) const
     }
 }
 
-void CDrawAdd::DrawTx(CDC * pDC, const CRect& rect, LPCTSTR tx, BOOL top) const
+void CDrawAdd::DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, BOOL top) const
 {
     CFont *oldFont = pDC->SelectObject(&(m_pDocument->m_addfont));
     CRect r = rect;
@@ -318,7 +318,7 @@ void CDrawAdd::DrawTx(CDC * pDC, const CRect& rect, LPCTSTR tx, BOOL top) const
     pDC->SelectObject(oldFont);
 }
 
-void CDrawAdd::DrawPadlock(CDC *pDC, const CRect& rect) const
+void CDrawAdd::DrawPadlock(CDC* pDC, const CRect& rect) const
 {
     CBrush* pOldBrush = (CBrush*)pDC->SelectStockObject(BLACK_BRUSH);
     CPen* pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
@@ -341,8 +341,7 @@ void CDrawAdd::DrawPadlock(CDC *pDC, const CRect& rect) const
     pDC->SelectObject(pOldPen);
 }
 
-////////////////////////// PRINT
-void CDrawAdd::Print(CDC *pDC)
+void CDrawAdd::Print(CDC* pDC)
 {
     ASSERT_VALID(this);
 
@@ -423,7 +422,7 @@ void CDrawAdd::Print(CDC *pDC)
     pDC->SelectObject(pOldPen);
 }
 
-void CDrawAdd::PrintPadlock(CDC *pDC, const CRect& rect)
+void CDrawAdd::PrintPadlock(CDC* pDC, const CRect& rect)
 {
     auto pOldBrush = static_cast<CBrush*>(pDC->SelectStockObject(BLACK_BRUSH));
     auto pOldPen = static_cast<CPen*>(pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->pen)));
@@ -463,7 +462,7 @@ void CDrawAdd::UpdateInfo()
     if (fizpage) info.AppendFormat(_T(" | na str: %s (%i,%i)"), m_pDocument->GetPage(fizpage)->GetNrPaginy(), posx, posy);
 }
 
-CString CDrawAdd::PrepareBuf(TCHAR *ch) const
+CString CDrawAdd::PrepareBuf(TCHAR* ch) const
 {
     CString bufor;
     bufor.AppendFormat(_T("%ix%i%s"), sizex, sizey, ch);
@@ -483,7 +482,7 @@ CString CDrawAdd::PrepareBuf(TCHAR *ch) const
     return bufor;
 }
 
-BOOL CDrawAdd::OnOpen(CDrawView *pView)
+BOOL CDrawAdd::OnOpen(CDrawView* pView)
 {
     ASSERT_VALID(this);
 
@@ -687,7 +686,7 @@ void CDrawAdd::SetPosition(int fizp, int px, int py, int sx, int sy)
     UpdateInfo();
 }
 
-void CDrawAdd::SetPosition(CRect *m_pos, CDrawPage *pPage)
+void CDrawAdd::SetPosition(CRect* m_pos, CDrawPage* pPage)
 {
     int sx = min((int)nearbyint(abs(m_pos->right - m_pos->left) / modulx), szpalt_x);
     int sy = min((int)nearbyint(abs(m_pos->top - m_pos->bottom) / moduly), szpalt_y);
@@ -773,7 +772,7 @@ void CDrawAdd::SetSpaceAndPosition(int fizp, int px, int py)
     UpdateInfo();
 }
 
-BOOL CDrawAdd::PtOnRing(CPoint p) const
+bool CDrawAdd::PtOnRing(CPoint p) const
 {
     for (int i = 0; i < precelWertexCnt - 1; ++i) {
         if (aPrecelWertex[i].y != aPrecelWertex[i + 1].y || aPrecelWertex[i].y != p.y)
@@ -782,9 +781,9 @@ BOOL CDrawAdd::PtOnRing(CPoint p) const
         int r2 = aPrecelWertex[i + 1].x;
         if (r1 > r2) std::swap(r1, r2);
         if (r1 <= p.x && p.x + 1 <= r2)
-            return TRUE;
+            return true;
     }
-    return FALSE;
+    return false;
 }
 
 int CDrawAdd::FindRing(CPoint p0, bool bOuterRing)
@@ -915,7 +914,7 @@ void CDrawAdd::InitPrecel(const CString& sPrecelFlag)
     space >>= szpalt_x - sizex;
 }
 
-void CDrawAdd::MoveWithPage(const CRect& position, CDrawView *pView)
+void CDrawAdd::MoveWithPage(const CRect& position, CDrawView* pView)
 {
     dirty = TRUE;
     const CRect toPos(position.left + (int)(modulx*(posx - 1)), position.bottom + (int)(moduly*(szpalt_y - posy + 1)), position.left + (int)(modulx*(posx + sizex - 1)), position.bottom + (int)(moduly*(szpalt_y - posy - sizey + 1)));
@@ -962,7 +961,7 @@ void CDrawAdd::SetLogpage(CString& m_op_zew, CString& m_sekcja, CString& m_op_se
     }
 }
 
-void CDrawAdd::ParseLogpage(TCHAR *op_zew, TCHAR *sekcja, TCHAR *op_sekcji, int *nr_sek, TCHAR *pl, TCHAR *op_pl, int *nr_pl, TCHAR *poz_na_str)
+void CDrawAdd::ParseLogpage(TCHAR* op_zew, TCHAR* sekcja, TCHAR* op_sekcji, int* nr_sek, TCHAR* pl, TCHAR* op_pl, int* nr_pl, TCHAR* poz_na_str)
 {
     /* vu :	Obiekt ogloszenie ma pole CString logpage. Funkcja ParseLogpage interpretuje jego zawartosc zgodnie
             z sugestiami zawartymi w dokumencie warlog.doc i uzyskane wartosci przekazuje do argumentow funkcji.
@@ -1197,7 +1196,7 @@ int CDrawAdd::CkPageLocation(int vFizPage)
     return 0; // wszystko w porz¹dku
 }
 
-void CDrawAdd::SetEstPagePos(TCHAR *description, CRect *vRect, CDrawPage *pPage) //vu  
+void CDrawAdd::SetEstPagePos(TCHAR* description, CRect* vRect, CDrawPage* pPage)
 {
     /* vu : Jako description - opis polozenia ogloszenia na stronie podaje sie
             jeden ze skrotow in ('P','L','G','D','Gl','GP','DL','DP')
@@ -1274,7 +1273,7 @@ postaw:
     pPage->AddAdd(this);
 }
 
-BOOL CDrawAdd::SetPagePosition(CRect *pRect, CDrawPage *vPage) //vu  
+bool CDrawAdd::SetPagePosition(CRect* pRect, CDrawPage* vPage)
 {
     /*	vRect ? stawia : sprawdza */
     int j, k = 0;
@@ -1304,7 +1303,7 @@ BOOL CDrawAdd::SetPagePosition(CRect *pRect, CDrawPage *vPage) //vu
     return mozna;
 }
 
-BOOL CDrawAdd::SetStrictDescPos(LPCTSTR description, CRect *pRect, CDrawPage *pPage) //vu  
+bool CDrawAdd::SetStrictDescPos(LPCTSTR description, CRect* pRect, CDrawPage* pPage)
 {
     /* vu : Jako description - opis polozenia ogloszenia na stronie podaje sie
             jeden ze skrotow in ('P','L','G','D','GL','GP','DL','DP')
@@ -1360,8 +1359,8 @@ BOOL CDrawAdd::SetStrictDescPos(LPCTSTR description, CRect *pRect, CDrawPage *pP
             i = 1; j = 1; goto postaw;
         }
 
-    //nie udalo sie postawic
-    return FALSE;
+    // nie udalo sie postawic
+    return false;
 
 postaw:
     if (pRect) {
@@ -1371,7 +1370,7 @@ postaw:
             pPage->m_position.left + (int)((posx + sizex - 1)*modulx), pPage->m_position.bottom + (int)((szpalt_y - posy - sizey + 1)*moduly));
         pPage->AddAdd(this);
     }
-    return TRUE;
+    return true;
 }
 
 void CDrawAdd::SetDotM(BOOL setFlag)
@@ -1392,19 +1391,18 @@ void CDrawAdd::SetDotM(BOOL setFlag)
     }
 }
 
-//////////////////////// GEN 
-BOOL CDrawAdd::BBoxFromFile(PGENEPSARG pArg, CFile *handle, float *x1, float *y1, float *x2, float *y2)
+bool CDrawAdd::BBoxFromFile(PGENEPSARG pArg, CFile& handle, float* x1, float* y1, float* x2, float* y2)
 {
-    const int len = 30; //bo obetniemy w srodku wartosci
-    BOOL bRet = false;
+    const int len = 30; // bo obetniemy w srodku wartosci
+    bool bRet = false;
     size_t res = 1;
     char *p, *s = reinterpret_cast<char*>(pArg->cBigBuf);
-    const auto filepos = (unsigned long)handle->GetPosition();
+    const auto filepos = (unsigned long)handle.GetPosition();
 
     while (res > 0) { // read block from the file
-        res = handle->Read(s, n_size);    // check if anything was read and no error occurred
+        res = handle.Read(s, n_size);    // check if anything was read and no error occurred
         if ((res > 0) && (res != unsigned(-1))) {      // move file pointer back, lest we can loose string read in partially
-            if (res == n_size) handle->Seek(-len, CFile::current);      // buffer has to end with zero TCHAR to be treated as string
+            if (res == n_size) handle.Seek(-len, CFile::current);      // buffer has to end with zero TCHAR to be treated as string
             s[res] = 0;
         } else break;// break on error or EOF
         if ((p = (char*)CManPDF::memstr(s, "%BoundingBox:", res)) != nullptr && s + n_size - p >= len) { // search for substring and get it's position
@@ -1412,11 +1410,11 @@ BOOL CDrawAdd::BBoxFromFile(PGENEPSARG pArg, CFile *handle, float *x1, float *y1
             break;
         }
     }
-    handle->Seek(filepos, CFile::begin);
+    handle.Seek(filepos, CFile::begin);
     return bRet;
 }
 
-BOOL CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR *cKolor, float *bx1, float *by1, float *bx2, float *by2, int *ileMat)
+bool CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by1, float* bx2, float* by2, int* ileMat)
 {
     BOOL bReqProdInfo = false;
     // szukaj danych w bazie
@@ -1454,7 +1452,7 @@ BOOL CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR *cKolor, float *bx1, float *by
 
         return false;
     }
-    if (!BBoxFromFile(pArg, &eps, bx1, by1, bx2, by2))
+    if (!BBoxFromFile(pArg, eps, bx1, by1, bx2, by2))
         f5_errInfo.AppendFormat(_T("%li z³e BoundingBox, "), nreps);
     if (cKolor == nullptr) {
         eps.Close();
@@ -1472,11 +1470,11 @@ BOOL CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR *cKolor, float *bx1, float *by
         eps.Read(buf, 512);
         buf[512] = '\0';
         strtok(buf, CManPDF::sepline);
-        BOOL jestBlack = FALSE;
+        bool jestBlack = false;
         int tokcount = 0;
         char* p = strtok(buf, CManPDF::septok);
         while (p = strtok(nullptr, CManPDF::septok)) {
-            if (strtok(p, "Black") == nullptr) jestBlack = TRUE;
+            if (strtok(p, "Black") == nullptr) jestBlack = true;
             tokcount++;
         }
         *cKolor = (!jestBlack || tokcount > 1) ? _T('F') : _T('B');
@@ -1486,7 +1484,7 @@ BOOL CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR *cKolor, float *bx1, float *by
     return true;
 } // GetProdInfo
 
-BOOL CDrawAdd::CheckSrcFile(PGENEPSARG pArg)
+bool CDrawAdd::CheckSrcFile(PGENEPSARG pArg)
 {
     CString msg;
     f5_errInfo.Empty();
@@ -1503,7 +1501,7 @@ dajWymiarKraty:
             iSearchTypXX = 0;
             goto dajWymiarKraty;
         }
-        f5_errInfo += _T("Brak rozmiaru w bazie "); return FALSE;
+        f5_errInfo += _T("Brak rozmiaru w bazie "); return false;
     }
 
     // check scale
@@ -1569,7 +1567,7 @@ dajWymiarKraty:
     return TRUE;
 } // CheckSrcFile
 
-BOOL CDrawAdd::CopyNewFile(const CString& srcPath, const CString& dstPath)
+bool CDrawAdd::CopyNewFile(const CString& srcPath, const CString& dstPath)
 {
     // Kopiuje plik <=> src jest nowszy od dst
     CFileStatus srcStat;
@@ -1586,19 +1584,19 @@ BOOL CDrawAdd::CopyNewFile(const CString& srcPath, const CString& dstPath)
                 cs.Format(_T("Nieudana próba kopiowania pliku\n\nz\t%s\ndo\t%s\n\nPlik Ÿród³owy jest starszy ni¿ plik docelowy.\nSprawdŸ czy poprawnie zaznaczono powórkê."), srcPath, dstPath);
                 ::MessageBox(NULL, cs, APP_NAME, MB_OK | MB_ICONERROR);
             }
-            return FALSE;
+            return false;
         }
     }
     if (!::CopyFile(srcPath, dstPath, FALSE)) {
         CString cs;
         cs.Format(_T("B³¹d kopiowania (errno=%lu) pliku %s"), GetLastError(), srcPath);
         ::MessageBox(NULL, cs, APP_NAME, MB_OK | MB_ICONERROR);
-        return FALSE;
+        return false;
     }
-    return TRUE;
+    return true;
 }
 
-BOOL CDrawAdd::EpsFromATEX(const CString& num, const CString& dstPath)
+bool CDrawAdd::EpsFromATEX(const CString& num, const CString& dstPath)
 {
     CString sAtexEPS = theApp.GetProfileString(_T("GenEPS"), _T("EpsATEX"), _T("T:\\ATEX\\EPS\\"));
     CFileFind ff;
@@ -1624,12 +1622,12 @@ CString CDrawAdd::FindZajawka(CString& root, const CString& ext) const
     return _T("");
 }
 
-BOOL CDrawAdd::LocatePreview(CFile& fEps, unsigned long *lOffset, unsigned long *lSize)
+bool CDrawAdd::LocatePreview(CFile& fEps, unsigned long* lOffset, unsigned long* lSize)
 {
     unsigned long header[3];
     fEps.SeekToBegin();
     if (fEps.Read(header, sizeof(header)) != sizeof(header))
-        return FALSE;
+        return false;
 
     if (header[0] == 0xC6D3D0C5L) {
         *lOffset = header[1];
@@ -1639,7 +1637,7 @@ BOOL CDrawAdd::LocatePreview(CFile& fEps, unsigned long *lOffset, unsigned long 
         *lSize = (unsigned long)fEps.GetLength();
     }
 
-    return TRUE;
+    return true;
 }
 
 CString CDrawAdd::EpsName(int format, BOOL copyOldEPS, BOOL bModifTest)
@@ -1694,7 +1692,6 @@ CString CDrawAdd::EpsName(int format, BOOL copyOldEPS, BOOL bModifTest)
             s = eps_path + pathtail;
 
             if (ff.FindFile(s + aExt[format])) { // znaleziono plik z powtórk¹
-
                 WIN32_FILE_ATTRIBUTE_DATA actualAttr;
                 if (copyOldEPS && ::GetFileAttributesEx(eps_path + m_pDocument->daydir + num + _T(".eps"), GetFileExInfoStandard, &actualAttr)) { // mo¿e wgrano nowy material i nie zdjeto flagi powtorki
                     WIN32_FILE_ATTRIBUTE_DATA powtAttr;
@@ -1757,7 +1754,7 @@ modifTest:
     return s + aExt[format];
 } // EpsName
 
-BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
+bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
 {
     CString eps_name;
     char* s = reinterpret_cast<char*>(pArg->cBigBuf);
@@ -1775,7 +1772,7 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
         CDrawPage *pPrevPage = fizpage > 0xffff ? m_pDocument->GetPage(fizpage - 0x10000) : m_pDocument->m_pages[0];
         if (pPrevPage->m_adds.empty()) {
             ::MessageBox(pArg->pDlg->m_hWnd, _T("Na lewej stronie rozkladówki nie ma og³oszenia"), _T("Brak og³oszenia"), MB_ICONSTOP);
-            return FALSE;
+            return false;
         }
         pLeftAdd = pPrevPage->m_adds.front();
         if (pLeftAdd) eps_name = pLeftAdd->EpsName(F_EPS, copyEps);
@@ -1792,9 +1789,9 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
         if (pArg->bIsPRN == 1 && pArg->bDoKorekty == 0)
             ::MessageBox(pArg->pDlg->m_hWnd, _T("Na produkcyjnej wersji kolumny brakuje materia³u: ") + eps_name, _T("Brak og³oszenia"), MB_ICONWARNING);
 
-        ::StringCchPrintfA(s, n_size, ".25 .1 .9 %.2f %.2f %.2f %.2f R\r\n", gpx, gpy, x, y); dest->Write(s, (UINT)strlen(s));
-        ::StringCchPrintfA(s, n_size, "(%s) %.2f %.2f %d /Switzerland Po\r\n", CStringA(eps_name), (x + gpx), (y - podpisH), podpisH);  dest->Write(s, (UINT)strlen(s));
-        return FALSE;
+        ::StringCchPrintfA(s, n_size, ".25 .1 .9 %.2f %.2f %.2f %.2f R\r\n", gpx, gpy, x, y); dest.Write(s, (UINT)strlen(s));
+        ::StringCchPrintfA(s, n_size, "(%s) %.2f %.2f %d /Switzerland Po\r\n", CStringA(eps_name), (x + gpx), (y - podpisH), podpisH);  dest.Write(s, (UINT)strlen(s));
+        return false;
     }
 
     TRY {
@@ -1817,7 +1814,7 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
         pArg->pDlg->OglInfo(pArg->iChannelId, _T("Podwa³: ") + podwal);
         CopyNewFile(eps_name, podwal);
         if (!theApp.GetInt(_T("Podwaly"), 0))
-            return TRUE;
+            return true;
     }
 
     if (spad_flag == 0 && pPage->m_typ_pary < 2) { // podpisujemy tylko pasowane
@@ -1834,10 +1831,10 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
         } else
             dopodpisu.Format("%li%s", nreps, CStringA(wersja));
 
-        ::StringCchPrintfA(s, n_size, "(%s) %.2f %.2f %d /Switzerland Po\r\n", dopodpisu, (x + gpx), (y - podpisH), podpisH); dest->Write(s, (UINT)strlen(s));
+        ::StringCchPrintfA(s, n_size, "(%s) %.2f %.2f %d /Switzerland Po\r\n", dopodpisu, (x + gpx), (y - podpisH), podpisH); dest.Write(s, (UINT)strlen(s));
         if (this->flags.reksbtl) {
             ::StringCchPrintfA(s, n_size, "(REKLAMA) %.2f %.2f 1 %d /Switzerland textLR\r\n", x, y - podpisH, podpisH);
-            dest->Write(s, (UINT)strlen(s));
+            dest.Write(s, (UINT)strlen(s));
         }
     }
 
@@ -1845,20 +1842,20 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
     if (!pLeftAdd->GetProdInfo(pArg, nullptr, &x1, &y1, &x2, &y2, nullptr)) {
         ::MessageBox(pArg->pDlg->m_hWnd, f5_errInfo, _T("B³¹d"), MB_ICONERROR);
         f5_errInfo.Empty();
-        return FALSE;
+        return false;
     }
 
-    ::StringCchPrintfA(s, n_size, "beginManamEPS \r\n"); dest->Write(s, (UINT)strlen(s));
+    ::StringCchPrintfA(s, n_size, "beginManamEPS \r\n"); dest.Write(s, (UINT)strlen(s));
     if (pPage->m_typ_pary < 2) {
         // spad zdefiniowany dla krawedzi
         x += aSpadInfo[spad_flag].adjust_x * (gpx - (x2 - x1)) / 2;
         y += aSpadInfo[spad_flag].adjust_y * (gpy - (y2 - y1)) / 2;
-        ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", x, y);  dest->Write(s, (UINT)strlen(s));
+        ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", x, y);  dest.Write(s, (UINT)strlen(s));
         // skalowanie
         const float scalx = (x2 == x1 || !pRozAdd->scale_it || !aSpadInfo[spad_flag].scale_x) ? 1 : gpx / (x2 - x1);
         const float scaly = (y2 == y1 || !pRozAdd->scale_it || !aSpadInfo[spad_flag].scale_y) ? 1 : gpy / (y2 - y1);
         if (scalx != 1 || scaly != 1) {
-            ::StringCchPrintfA(s, n_size, "%.4f %.4f scale\r\n", scalx, scaly);  dest->Write(s, (UINT)strlen(s));
+            ::StringCchPrintfA(s, n_size, "%.4f %.4f scale\r\n", scalx, scaly);  dest.Write(s, (UINT)strlen(s));
         }
     }
 
@@ -1887,9 +1884,9 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
                 else
                     x -= fMargDoGrb + 0.5f*(x2 - x1);
                 y += 0.5f * (gpy + y1 - y2);
-                ::StringCchPrintfA(s, n_size, "%.2f %.2f translate %s translate\r\n", x, y, sTrans);  dest->Write(s, (UINT)strlen(s));
+                ::StringCchPrintfA(s, n_size, "%.2f %.2f translate %s translate\r\n", x, y, sTrans);  dest.Write(s, (UINT)strlen(s));
                 if (bLewaStrona) {
-                    ::StringCchPrintfA(s, n_size, ".5 (%s) 0 -5.5 1 7 /GWFranklinBold textKLR\r\n", sReklama); dest->Write(s, (UINT)strlen(s));
+                    ::StringCchPrintfA(s, n_size, ".5 (%s) 0 -5.5 1 7 /GWFranklinBold textKLR\r\n", sReklama); dest.Write(s, (UINT)strlen(s));
                 }
             } else {
                 const char* f = (strncmp("0 26", sTrans, 4) == 0) ? "/GWTimesCondensed" : "/GWFranklinBold";
@@ -1897,55 +1894,37 @@ BOOL CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile *dest)
                     ::StringCchPrintfA(s, n_size, "%s translate 90 rotate 2 (%s) 0 1.5 1 7 %s textKLR -90 rotate\r\n", sTrans, sReklama, f);
                 else
                     ::StringCchPrintfA(s, n_size, "%s translate 90 rotate 2 (%s) 0 %.2f 1 7 %s textKLR -90 rotate\r\n", sTrans, sReklama, x1 - x2 - 7, f);
-                dest->Write(s, (UINT)strlen(s));
+                dest.Write(s, (UINT)strlen(s));
             }
         } else {
             ::MessageBox(pArg->pDlg->m_hWnd, _T("Aby uzyskaæ parê kolumn z jednego materia³u wygaœ wszystkie elementy paginy"), APP_NAME, MB_ICONINFORMATION);
-            return FALSE;
+            return false;
         }
     }
 
-    ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", -x1, -y1); dest->Write(s, (UINT)strlen(s));
-    ::StringCchPrintfA(s, n_size, "%.2f %.2f %.2f %.2f clipEPS \r\nclip newpath\r\n", x1, y1, x2 - x1, y2 - y1); dest->Write(s, (UINT)strlen(s));
-    ::StringCchPrintfA(s, n_size, "%%%%BeginDocument: %s\r\n", CStringA(eps_name)); dest->Write(s, (UINT)strlen(s));
-    dest->Flush();
+    ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", -x1, -y1); dest.Write(s, (UINT)strlen(s));
+    ::StringCchPrintfA(s, n_size, "%.2f %.2f %.2f %.2f clipEPS \r\nclip newpath\r\n", x1, y1, x2 - x1, y2 - y1); dest.Write(s, (UINT)strlen(s));
+    ::StringCchPrintfA(s, n_size, "%%%%BeginDocument: %s\r\n", CStringA(eps_name)); dest.Write(s, (UINT)strlen(s));
+    dest.Flush();
 
     if (theApp.isOpiMode) {
         ::StringCchPrintfA(s, n_size, "%s%s %s\r\n", OPI_TAG, "OG", CStringA(eps_name));
-        dest->Write(s, (UINT)strlen(s));
-    } else {
-        CFile eps;
-        if (!eps.Open(eps_name, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
-            theApp.SetErrorMessage(pArg->cBigBuf);
-            ::MessageBox(pArg->pDlg->m_hWnd, CString(pArg->cBigBuf) + _T("\n") + eps_name, _T("B³¹d"), MB_OK);
-            return FALSE;
-        }
-        CDrawAdd::LocatePreview(eps, &lOffset, &lSize);
-        eps.Seek(lOffset, CFile::begin);
-        unsigned long res;
-        do {
-            res = eps.Read(s, n_size);
-            if (res > 0 && res != unsigned(-1)) {
-                if (lSize < (unsigned long)res) res = int(lSize);
-                dest->Write(s, (UINT)res);
-                lSize -= res;
-            } else break;
-        } while (res > 0 && lSize > 0);
-        eps.Close();
-    }
+        dest.Write(s, (UINT)strlen(s));
+    } else
+        CDrawAdd::EmbedFile(pArg, dest, eps_name);
 
     ::StringCchPrintfA(s, n_size, "%%%%EndDocument\r\nendManamEPS\r\n");
-    dest->Write(s, (UINT)strlen(s));
+    dest.Write(s, (UINT)strlen(s));
     } CATCH(CFileException, e) {
         theApp.SetErrorMessage(pArg->cBigBuf);
         ::MessageBox(pArg->pDlg->m_hWnd, CString("B³¹d przy przepisywaniu eps'a ") + eps_name + _T("\n ") + pArg->cBigBuf, _T("B³¹d"), MB_OK | MB_ICONERROR);
-        return FALSE;
+        return false;
     } END_CATCH
 
-        return TRUE;
+        return true;
 } // RewriteEps
 
-BOOL CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile *dest)
+bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
 {
     auto s = reinterpret_cast<char*>(pArg->cBigBuf);
     unsigned long lOffset = 0, lSize = 0;
@@ -1960,7 +1939,7 @@ BOOL CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile *dest)
 
     pArg->pDlg->OglInfo(pArg->iChannelId, "Drobne: " + nazwa);
 
-    BOOL bReadFromATEX = FALSE;
+    bool bReadFromATEX = false;
     CString sURL;
     sURL.Format(_T("drw_xx=%i&kiedy=%s&nr_porz=%i"), m_pDocument->id_drw, m_pDocument->dayws, txtposx);
     auto pFile = theApp.OpenURL(2, sURL);
@@ -1983,51 +1962,60 @@ BOOL CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile *dest)
         if (!eps.Open(nazwa, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
             theApp.SetErrorMessage(pArg->cBigBuf);
             ::MessageBox(pArg->pDlg->m_hWnd, CString("Brakuje strony z Drobnixa: ") + nazwa + _T("\n") + pArg->cBigBuf, APP_NAME, MB_OK | MB_ICONERROR);
-            return FALSE;
+            return false;
         }
         eps.SeekToBegin();
-        BBoxFromFile(pArg, &eps, &x1, &y1, &x2, &y2);
+        BBoxFromFile(pArg, eps, &x1, &y1, &x2, &y2);
         eps.Close();
     }
 
-    ::StringCchPrintfA(s, n_size, "beginManamEPS \r\n");  dest->Write(s, (UINT)strlen(s));
-    ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", x, y);  dest->Write(s, (UINT)strlen(s));
+    ::StringCchPrintfA(s, n_size, "beginManamEPS \r\n");  dest.Write(s, (UINT)strlen(s));
+    ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", x, y);  dest.Write(s, (UINT)strlen(s));
     scaly = (y2 == y1) ? 1 : m_pDocument->GetDrobneH() / (y2 - y1);
-    ::StringCchPrintfA(s, n_size, "1 %.4f scale\r\n", scaly);  dest->Write(s, (UINT)strlen(s));
+    ::StringCchPrintfA(s, n_size, "1 %.4f scale\r\n", scaly);  dest.Write(s, (UINT)strlen(s));
 
-    ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", -x1, -y1);  dest->Write(s, (UINT)strlen(s));
-    ::StringCchPrintfA(s, n_size, "%.2f %.2f %.2f %.2f clipEPS \r\nclip newpath\r\n", x1, y1, x2 - x1, y2 - y1);  dest->Write(s, (UINT)strlen(s));
-    ::StringCchPrintfA(s, n_size, "%%%%BeginDocument: %s\r\n", CStringA(nazwa)); dest->Write(s, (UINT)strlen(s));
-    dest->Flush();
+    ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", -x1, -y1);  dest.Write(s, (UINT)strlen(s));
+    ::StringCchPrintfA(s, n_size, "%.2f %.2f %.2f %.2f clipEPS \r\nclip newpath\r\n", x1, y1, x2 - x1, y2 - y1);  dest.Write(s, (UINT)strlen(s));
+    ::StringCchPrintfA(s, n_size, "%%%%BeginDocument: %s\r\n", CStringA(nazwa)); dest.Write(s, (UINT)strlen(s));
+    dest.Flush();
 
     if (theApp.isOpiMode) {
         ::StringCchPrintfA(s, n_size, "%sDR %s\r\n", OPI_TAG, CStringA(nazwa));
-        dest->Write(s, (UINT)strlen(s));
-    } else {
-        CFile eps;
-        if (!eps.Open(nazwa, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
-            theApp.SetErrorMessage(pArg->cBigBuf);
-            ::MessageBox(pArg->pDlg->m_hWnd, CString("Brakuje strony z Drobnixa: ") + nazwa + _T("\n") + pArg->cBigBuf, APP_NAME, MB_OK | MB_ICONERROR);
-            return FALSE;
+        dest.Write(s, (UINT)strlen(s));
+    } else 
+        CDrawAdd::EmbedFile(pArg, dest, nazwa);
+
+    ::StringCchPrintfA(s, n_size, "%%%%EndDocument\r\nendManamEPS\r\n"); dest.Write(s, (UINT)strlen(s));
+
+    return true;
+} // RewriteDrob
+
+bool CDrawAdd::EmbedFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcPath)
+{
+    CFile srcFile;
+    if (!srcFile.Open(srcPath, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
+        theApp.SetErrorMessage(pArg->cBigBuf);
+        ::MessageBox(pArg->pDlg->m_hWnd, CString("Brakuje pliku: ") + srcPath + _T("\n") + pArg->cBigBuf, APP_NAME, MB_OK | MB_ICONERROR);
+        return false;
+    }
+    HANDLE map_handle = ::CreateFileMapping(srcFile.m_hFile, NULL, PAGE_READONLY | SEC_RESERVE, 0, 0, 0);
+    if (map_handle == NULL)
+        return false;
+
+    bool ret = false;
+    char* map_ptr = (char*)::MapViewOfFile(map_handle, FILE_MAP_READ, 0, 0, 0);
+    if (map_ptr != nullptr) {
+        unsigned long offset, nCount;
+        if (CDrawAdd::LocatePreview(srcFile, &offset, &nCount)) {
+            dstFile.Write(map_ptr + offset, nCount);
+            ret = true;
         }
-        CDrawAdd::LocatePreview(eps, &lOffset, &lSize);
-        eps.Seek(lOffset, CFile::begin);
-        unsigned long res;
-        do {
-            res = eps.Read(s, n_size);
-            if (res > 0 && res != unsigned(-1)) {
-                if (lSize < res) res = int(lSize);
-                dest->Write(s, res);
-                lSize -= res;
-            } else break;
-        } while (res > 0 && lSize > 0);
-        eps.Close();
+        ::UnmapViewOfFile(map_ptr);
     }
 
-    ::StringCchPrintfA(s, n_size, "%%%%EndDocument\r\nendManamEPS\r\n"); dest->Write(s, (UINT)strlen(s));
-
-    return TRUE;
-} // RewriteDrob
+    ::CloseHandle(map_handle);
+    return ret;
+}
 
 void CDrawAdd::Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const
 {

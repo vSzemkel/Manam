@@ -922,7 +922,7 @@ BOOL CDrawPage::CheckSrcFile(PGENEPSARG pArg)
     return isOK;
 } //CheckSrcFile
 
-BOOL CDrawPage::StaleElementy(PGENEPSARG pArg, CFile *handle)
+BOOL CDrawPage::StaleElementy(PGENEPSARG pArg, CFile& handle)
 {
     BOOL isOK = TRUE;
     std::vector<CString> elementy;
@@ -937,32 +937,23 @@ BOOL CDrawPage::StaleElementy(PGENEPSARG pArg, CFile *handle)
                 float x, y;
                 TCHAR logoName[64] = _T("");
                 if (_stscanf_s(elem, _T("#%s %f %f logo"), logoName, 64, &x, &y) != 3) return FALSE;
-                elem.Format(_T("%.3f %.3f translate\r\n"), x, y); handle->Write(CStringA(elem), elem.GetLength());
+                elem.Format(_T("%.3f %.3f translate\r\n"), x, y); handle.Write(CStringA(elem), elem.GetLength());
                 CString logo = theApp.GetProfileString(_T("GenEPS"), _T("EpsSrc"), _T(""));
                 logo += CString(((logo.Right(1) == "\\") ? "" : "\\")) + "logo\\" + logoName;
-                elem.Format(_T("beginManamEPS\r\n%%%%BeginDocument: %s\r\n"), logo); handle->Write(CStringA(elem), elem.GetLength());
+                elem.Format(_T("beginManamEPS\r\n%%%%BeginDocument: %s\r\n"), logo); handle.Write(CStringA(elem), elem.GetLength());
 
                 if (theApp.isOpiMode) {
                     auto buf = reinterpret_cast<char*>(pArg->cBigBuf);
                     StringCchPrintfA(buf, n_size, "%sLG %s\r\n", OPI_TAG, CStringA(logoName));
-                    handle->Write(buf, (UINT)strlen(buf));
-                } else {
-                    CFile eps;
-                    if (!eps.Open(logo, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
-                        ::MessageBox(pArg->pDlg->m_hWnd, _T("Nie mo¿na otworzyæ pliku ") + logo, _T("B³¹d"), MB_ICONERROR);
-                        return FALSE;
-                    }
-                    UINT res;
-                    while ((res = eps.Read(pArg->cBigBuf, n_size)) > 0)
-                        handle->Write(pArg->cBigBuf, (UINT)res);
-                    eps.Close();
-                }
+                    handle.Write(buf, (UINT)strlen(buf));
+                } else
+                    CDrawAdd::EmbedFile(pArg, handle, logo);
 
-                handle->Write("%%EndDocument\r\nendManamEPS\r\n", 28);
-                elem.Format(_T("%.3f %.3f translate\r\n"), -x, -y); handle->Write(CStringA(elem), elem.GetLength());
+                handle.Write("%%EndDocument\r\nendManamEPS\r\n", 28);
+                elem.Format(_T("%.3f %.3f translate\r\n"), -x, -y); handle.Write(CStringA(elem), elem.GetLength());
             } else {
                 elem += _T("\r\n");
-                handle->Write(CStringA(elem), elem.GetLength());
+                handle.Write(CStringA(elem), elem.GetLength());
             }
         }
     } else isOK = FALSE;
@@ -1060,7 +1051,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
 
     CMemFile destOpi;
     CFile destNonOpi;
-    CFile *dest = nullptr;
+    CFile* dest = nullptr;
 
     if (theApp.isOpiMode) {
         destOpi.SetFilePath(dest_name);
@@ -1179,7 +1170,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
 
     if (ok && pArg->bIsPRN) {
         CMemFile fPagina;
-        if (!StaleElementy(pArg, &fPagina))
+        if (!StaleElementy(pArg, fPagina))
             return FALSE;
 
         const auto len = (UINT)fPagina.GetLength();
@@ -1219,7 +1210,7 @@ foundsizex:
                     externAdd.szpalt_y = szpalt_y;
                     externAdd.wersja = DERV_TMPL_WER;
                     externAdd.nazwa = uzupEpsPath;
-                    ok = externAdd.RewriteEps(pArg, dest);
+                    ok = externAdd.RewriteEps(pArg, *dest);
                 }
             }
         }
@@ -1230,13 +1221,13 @@ foundsizex:
             externAdd.sizex = externAdd.szpalt_x = pszpalt_x;
             externAdd.sizey = externAdd.szpalt_y = pszpalt_y;
             externAdd.nazwa = drobneEpsPath;
-            ok = externAdd.RewriteDrob(pArg, dest);
+            ok = externAdd.RewriteDrob(pArg, *dest);
         }
     }
 
     auto itAdd = m_adds.cbegin();
     while (ok && itAdd != m_adds.cend() && !pArg->pDlg->cancelGenEPS) {
-        BOOL bAddOK = (*itAdd++)->RewriteEps(pArg, dest);
+        BOOL bAddOK = (*itAdd++)->RewriteEps(pArg, *dest);
         if (!bAddOK && pArg->bIsPRN == 1 && pArg->bDoKorekty == 0) {
             if (!theApp.isOpiMode) {
                 CString sPath(dest->GetFilePath());
@@ -1260,7 +1251,7 @@ foundsizex:
     }
 
     if (ok && pArg->bIsPreview)
-        Preview(pArg, dest, BX1, BY1, BX2, BY2);
+        Preview(pArg, *dest, BX1, BY1, BX2, BY2);
 
     if (fManamEps.m_hFile != CFile::hFileNull) fManamEps.Close();
 
@@ -1335,15 +1326,15 @@ BOOL CDrawPage::PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) co
     return true;
 }
 
-void CDrawPage::Preview(PGENEPSARG pArg, CFile *dest, int bx1, int by1, int bx2, int by2)
+void CDrawPage::Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2, int by2)
 { //GN     //x,y dx dy w 0.1 mm
     DWORD header[7];
     header[0] = 0xC6D3D0C5L; // eps z preview
     header[1] = (DWORD)preview_offset; // poczatek eps'a 
-    header[2] = (DWORD)(dest->GetLength() - preview_offset);  //dl eps'a
+    header[2] = (DWORD)(dest.GetLength() - preview_offset);  //dl eps'a
     header[3] = (DWORD)0;
     header[4] = (DWORD)0;
-    header[5] = (DWORD)dest->GetLength(); // pozycja tifa
+    header[5] = (DWORD)dest.GetLength(); // pozycja tifa
     const int x = (int)ceil(bx1 / pkt_10m - 0.5);
     const int y = (int)ceil(by1 / pkt_10m - 0.5);
     const int dx = (int)ceil((bx2 - bx1) / pkt_10m - 0.5);
@@ -1362,7 +1353,7 @@ void CDrawPage::Preview(PGENEPSARG pArg, CFile *dest, int bx1, int by1, int bx2,
             }
         } else {
             ::MessageBox(pArg->pDlg->m_hWnd, errMsg, _T("B³¹d"), MB_OK | MB_ICONINFORMATION);
-            dest->SetLength(0);
+            dest.SetLength(0);
             return;
         }
     }
@@ -1372,13 +1363,13 @@ void CDrawPage::Preview(PGENEPSARG pArg, CFile *dest, int bx1, int by1, int bx2,
         pAdd->Preview(pArg, x, y, dy, szer);
 
     // CManTiff::TiffHeader(dest, dx, dy, szer);
-    dest->Write(pArg->cBigBuf, p_size);
+    dest.Write(pArg->cBigBuf, p_size);
 
-    header[6] = (DWORD)dest->GetLength() - header[5];
-    dest->SeekToBegin();
-    dest->Write(header, sizeof(header));
+    header[6] = (DWORD)dest.GetLength() - header[5];
+    dest.SeekToBegin();
+    dest.Write(header, sizeof(header));
     const WORD w = (WORD)0xFFFF;
-    dest->Write(&w, sizeof(WORD));
+    dest.Write(&w, sizeof(WORD));
 }
 
 BOOL CDrawPage::GenPDF(PGENEPSARG pArg)

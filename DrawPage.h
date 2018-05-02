@@ -115,11 +115,11 @@ class CDrawPage final : public CDrawObj
     BOOL CheckSpaceDiffKraty(const CDrawAdd *pObj, const int x, const int y) const;
 
     void BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *by2);
-    void Preview(PGENEPSARG pArg, CFile *dest, int bx1, int by1, int bx2, int by2);
+    void Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2, int by2);
     BOOL CheckRozmKrat(PGENEPSARG pArg);
     BOOL GenPDF(PGENEPSARG pArg);
     BOOL CheckSrcFile(PGENEPSARG pArg);
-    BOOL StaleElementy(PGENEPSARG pArg, CFile *handle);
+    BOOL StaleElementy(PGENEPSARG pArg, CFile& handle);
     BOOL GenEPS(PGENEPSARG pArg);
     BOOL GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destName);
     BOOL PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) const;
