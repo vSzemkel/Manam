@@ -244,8 +244,9 @@ void CSpacerDlg::OnKratowe()
         theManODPNET.FillNiekratowe(this, pub->szpalt_x, pub->szpalt_y);
 
     GetDlgItem(IDC_TYP_OGL)->ShowWindow(m_niekratowe ? SW_SHOW : SW_HIDE);
-    GetDlgItem(IDC_SIZEX)->ShowWindow(m_niekratowe ? SW_HIDE : SW_SHOW);
-    GetDlgItem(IDC_SIZEY)->ShowWindow(m_niekratowe ? SW_HIDE : SW_SHOW);
+    const auto showSize = m_niekratowe ? SW_HIDE : SW_SHOW;
+    GetDlgItem(IDC_SIZEX)->ShowWindow(showSize);
+    GetDlgItem(IDC_SIZEY)->ShowWindow(showSize);
 }
 
 void CSpacerDlg::OnDealappend()
@@ -573,7 +574,6 @@ void CSpacerDlg::OnQue()
 
 void CSpacerDlg::OnOK()
 {
-    BOOL saleSucc = TRUE;
     GetDlgItem(IDC_LASTEMISION)->EnableWindow(FALSE);
     if (!UpdateData(TRUE)) return;
 
@@ -650,6 +650,7 @@ void CSpacerDlg::OnOK()
     };
     orapar.outParamsCount = 3;
 
+    bool saleSucc = true;
     const int rc = m_emisjelist.GetCount();
     if (rc <= 1) {
         if (rc == 0 || (rc == 1 && ((long)m_emisjelist.GetItemData(0) > 0)))
@@ -657,12 +658,13 @@ void CSpacerDlg::OnOK()
                 return;
     } else {
         CString errText;
-        int mak_xx, maxwidth = 0;
+        int maxwidth = 0;
         std::vector<int> mak_xxArr;
 
-        for (i = 0; i < rc; i++) // wysylamy tylko niesprzedane
-            if ((long)m_emisjelist.GetItemData(i) > 0)
-                mak_xxArr.push_back((int)m_emisjelist.GetItemData(i));
+        for (i = 0; i < rc; ++i) { // wysylamy tylko niesprzedane
+            const auto xx = (int)m_emisjelist.GetItemData(i);
+            if (xx > 0) mak_xxArr.push_back(xx);
+        }
 
         if (!mak_xxArr.empty()) { // usunieto niezrealizowane recznie
             std::vector<CString> msgArr;
@@ -672,20 +674,20 @@ void CSpacerDlg::OnOK()
             if (m_first_emision_pub_xx < 0)
                 m_first_emision_pub_xx = pub->m_pub_xx;
 
-            CDC *pDC;
-            pDC = m_emisjelist.GetDC();
-            for (size_t j = 0; j < mak_xxArr.size(); j++) {
+            const auto pDC = m_emisjelist.GetDC();
+            const int mrc = (int)mak_xxArr.size();
+            for (int j = 0; j < mrc; ++j) {
                 // ustal i na podstawie j
-                mak_xx = mak_xxArr[j];
-                for (i = 0; i < rc; i++)
-                    if (mak_xx == (long)m_emisjelist.GetItemData(i)) break;
+                int mak_xx = mak_xxArr[j];
+                for (i = 0; i < rc; ++i)
+                    if (mak_xx == (int)m_emisjelist.GetItemData(i)) break;
                 if (i == rc) continue;
 
                 if (msgArr[j].IsEmpty()) { // succeded
                     msgArr[j] = _T("OK");
                     mak_xx *= -1;
                 } else
-                    saleSucc = FALSE;
+                    saleSucc = false;
 
                 m_emisjelist.GetText(i, errText);
                 errText = errText.Left(10) + _T(" # ") + msgArr[j];
@@ -701,7 +703,7 @@ void CSpacerDlg::OnOK()
         }
     }
 
-    if (pub->czaskto.Left(1) == _T("#"))
+    if (pub->czaskto[0] == _T('#'))
         pub->czaskto = czas_kto;
 
     if (saleSucc) {

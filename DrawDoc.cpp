@@ -505,14 +505,13 @@ CDrawAdd* CDrawDoc::FindAddAt(int i) const
 int CDrawDoc::GetAdPosition(const CDrawAdd *pAdd) const
 {
     int n = 0;
-    auto pos = std::find_if(m_objects.cbegin(), m_objects.cend(), [&](auto p) -> bool {
-        if (dynamic_cast<CDrawAdd*>(p) != nullptr) {
-            ++n;
-            return pAdd == p;
-        } else
-            return false;
-    });
+    const auto count_position = [&](auto p) noexcept->bool {
+        if (dynamic_cast<CDrawAdd*>(p) == nullptr) return false;
+        ++n;
+        return pAdd == p;
+    };
 
+    const auto pos = std::find_if(m_objects.cbegin(), m_objects.cend(), count_position);
     return pos == m_objects.cend() ? -1 : n;
 }
 
@@ -524,7 +523,8 @@ void CDrawDoc::SelectAdd(CDrawAdd *pObj, BOOL multiselect) const
 
 int CDrawDoc::AddsCount() const noexcept
 {
-    return (int)std::count_if(std::cbegin(m_objects), std::cend(m_objects), [](auto p) noexcept { return dynamic_cast<CDrawAdd*>(p) != nullptr; });
+    const auto is_ad = [](auto p) noexcept { return dynamic_cast<CDrawAdd*>(p) != nullptr; };
+    return (int)std::count_if(std::cbegin(m_objects), std::cend(m_objects), is_ad);
 }
 
 //import i import++
