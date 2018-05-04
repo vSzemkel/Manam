@@ -78,7 +78,7 @@ class CDrawAdd final : public CDrawObj
     static bool LocatePreview(CFile& fEps, unsigned long* lOffset, unsigned long* lSize);
     static bool CopyNewFile(const CString& srcPath, const CString& dstPath);
     static bool EpsFromATEX(const CString& num, const CString& dstPath);
-    static bool EmbedFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcPath);
+    static bool EmbedEpsFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcPath);
 
     void DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, BOOL top) const;
     void DrawDesc(CDC* pDC, const CRect& rect) const; // vu : rysuje opis tekstowy og³oszenia

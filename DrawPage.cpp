@@ -947,7 +947,7 @@ BOOL CDrawPage::StaleElementy(PGENEPSARG pArg, CFile& handle)
                     StringCchPrintfA(buf, n_size, "%sLG %s\r\n", OPI_TAG, CStringA(logoName));
                     handle.Write(buf, (UINT)strlen(buf));
                 } else
-                    CDrawAdd::EmbedFile(pArg, handle, logo);
+                    CDrawAdd::EmbedEpsFile(pArg, handle, logo);
 
                 handle.Write("%%EndDocument\r\nendManamEPS\r\n", 28);
                 elem.Format(_T("%.3f %.3f translate\r\n"), -x, -y); handle.Write(CStringA(elem), elem.GetLength());
@@ -1049,21 +1049,9 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
         m_pDocument->ovEPS = TRUE;
     }
 
-    CMemFile destOpi;
-    CFile destNonOpi;
-    CFile* dest = nullptr;
-
-    if (theApp.isOpiMode) {
-        destOpi.SetFilePath(dest_name);
-        dest = &destOpi;
-    } else {
-        dest = &destNonOpi;
-        if (!dest->Open(dest_name, CFile::modeCreate | CFile::modeReadWrite | CFile::typeBinary)) {
-            theApp.SetErrorMessage(pArg->cBigBuf);
-            ::MessageBox(pArg->pDlg->m_hWnd, CString(pArg->cBigBuf) + "\n" + dest_name, _T("B³¹d"), MB_OK);
-            return FALSE;
-        }
-    }
+    CMemFile dest;
+    dest.SetLength(0x4000);
+    dest.SetFilePath(dest_name);
 
     CFile externFile;
     CFileException fEx;
@@ -1106,10 +1094,10 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
         }
     }
 
-    int BX1 = 0, BY1 = 0, BX2 = 0, BY2 = 0;
+    int bx1 = 0, by1 = 0, bx2 = 0, by2 = 0;
     if (!pArg->bIsPRN) {
-        if (isDrobEPS) { BX1 = 0; BX2 = 709; BY1 = 0; BY2 = (int)m_pDocument->GetDrobneH() + 5; } else BoundingBox(pArg, &BX1, &BY1, &BX2, &BY2);
-        pArg->bIsPreview = (pArg->bIsPreview && BX1 != BX2 && BY1 != BY2);
+        if (isDrobEPS) { bx1 = 0; bx2 = 709; by1 = 0; by2 = (int)m_pDocument->GetDrobneH() + 5; } else BoundingBox(pArg, &bx1, &by1, &bx2, &by2);
+        pArg->bIsPreview = (pArg->bIsPreview && bx1 != bx2 && by1 != by2);
     }
 
     BOOL ok = TRUE;
@@ -1123,7 +1111,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
 
     try {
         if (pArg->bIsPreview) // TIFF header placeholder
-            dest->Seek(28, CFile::begin);
+            dest.Seek(28, CFile::begin);
 
         int i = 0;
         while (ok && (fManamEps.ReadString(wThreadBuf, n_size) != NULL)) {
@@ -1145,7 +1133,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
                             line = CStringA(tofind[i]) + " " + CW2A(wBoundingBox);
                         }
                     } else
-                        line.Format("%%%%BoundingBox: %d %d %d %d", BX1, BY1, BX2, BY2);
+                        line.Format("%%%%BoundingBox: %d %d %d %d", bx1, by1, bx2, by2);
                     break;
                     case 6: line = CStringA(tofind[i]) + (kolor == 1 ? " Black" : towrite[i]);
                         break;
@@ -1156,11 +1144,10 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
                 if (++i == 8) break;
                 line.Append("\r\n");
             }
-            dest->Write(line, line.GetLength());
+            dest.Write(line, line.GetLength());
         }
         if (!pArg->bIsPRN)
-            dest->Write("%%EndPageSetup\r\n/STAN_STR save def\r\n", 36);
-        dest->Flush();
+            dest.Write("%%EndPageSetup\r\n/STAN_STR save def\r\n", 36);
     } catch (CException* e2) {
         theApp.SetErrorMessage(pArg->cBigBuf);
         ::MessageBox(pArg->pDlg->m_hWnd, CString("B³¹d przepisywania plików\n") + pArg->cBigBuf, _T("B³¹d"), MB_ICONERROR);
@@ -1173,10 +1160,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
         if (!StaleElementy(pArg, fPagina))
             return FALSE;
 
-        const auto len = (UINT)fPagina.GetLength();
-        auto buf = fPagina.Detach();
-        dest->Write(buf, len);
-        free(buf); // CMemFile::Free
+        CDrawPage::MoveMemFileContent(dest, std::move(fPagina));
     }
 
     // extern
@@ -1210,7 +1194,7 @@ foundsizex:
                     externAdd.szpalt_y = szpalt_y;
                     externAdd.wersja = DERV_TMPL_WER;
                     externAdd.nazwa = uzupEpsPath;
-                    ok = externAdd.RewriteEps(pArg, *dest);
+                    ok = externAdd.RewriteEps(pArg, dest);
                 }
             }
         }
@@ -1221,28 +1205,22 @@ foundsizex:
             externAdd.sizex = externAdd.szpalt_x = pszpalt_x;
             externAdd.sizey = externAdd.szpalt_y = pszpalt_y;
             externAdd.nazwa = drobneEpsPath;
-            ok = externAdd.RewriteDrob(pArg, *dest);
+            ok = externAdd.RewriteDrob(pArg, dest);
         }
     }
 
     auto itAdd = m_adds.cbegin();
     while (ok && itAdd != m_adds.cend() && !pArg->pDlg->cancelGenEPS) {
-        BOOL bAddOK = (*itAdd++)->RewriteEps(pArg, *dest);
-        if (!bAddOK && pArg->bIsPRN == 1 && pArg->bDoKorekty == 0) {
-            if (!theApp.isOpiMode) {
-                CString sPath(dest->GetFilePath());
-                dest->Close();
-                ::DeleteFile(sPath);
-            }
+        BOOL bAddOK = (*itAdd++)->RewriteEps(pArg, dest);
+        if (!bAddOK && pArg->bIsPRN == 1 && pArg->bDoKorekty == 0)
             return FALSE;
-        }
     }
 
     try {
         UINT br;
         while (ok && (br = fManamEps.Read(cThreadBuf, n_size)) > 0)
-            dest->Write(cThreadBuf, br);
-        dest->Write("\r\n", 2);
+            dest.Write(cThreadBuf, br);
+        dest.Write("\r\n", 2);
     } catch (CFileException* e2) {
         theApp.SetErrorMessage(pArg->cBigBuf);
         ::MessageBox(pArg->pDlg->m_hWnd, CString("B³¹d przepisywania plików 2\n") + pArg->cBigBuf, _T("B³¹d"), MB_ICONERROR);
@@ -1251,35 +1229,49 @@ foundsizex:
     }
 
     if (ok && pArg->bIsPreview)
-        Preview(pArg, *dest, BX1, BY1, BX2, BY2);
+        Preview(pArg, dest, bx1, by1, bx2, by2);
 
-    if (fManamEps.m_hFile != CFile::hFileNull) fManamEps.Close();
+    if (fManamEps.m_hFile != CFile::hFileNull) 
+        fManamEps.Close();
 
-    if (ok && theApp.isOpiMode)
-        ok &= PostPageToWorkflowServer(pArg, (CMemFile*)dest);
-
-    dest->Close();
+    if (ok) {
+        if (theApp.isOpiMode)
+            ok &= MovePageToOpiServer(pArg, std::move(dest));
+        else {
+            CFile page;
+            if (page.Open(dest_name, CFile::modeCreate | CFile::modeReadWrite | CFile::typeBinary)) {
+                CDrawPage::MoveMemFileContent(page, std::move(dest));
+                page.Close();
+            } else {
+                theApp.SetErrorMessage(pArg->cBigBuf);
+                ::MessageBox(pArg->pDlg->m_hWnd, CString(pArg->cBigBuf) + _T("\n") + dest_name, _T("B³¹d"), MB_OK);
+                ok = FALSE;
+            }
+        }
+    }
 
     return ok;
 }
 
-BOOL CDrawPage::PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) const
+BOOL CDrawPage::MovePageToOpiServer(PGENEPSARG pArg, CMemFile&& pOpiFile) const
 {
     CStringA sOpiSeparator;
     if (!sOpiSeparator.LoadString(IDS_OPISEPAR))
         throw CManPDFExc(_T("Nie odnaleziono separatora OPI"));
 
     CStringA sFormBody, sFormData; /* rfc2046 */
+    const auto attachmentLength = pOpiFile.GetPosition();
     const CString sAppId(APP_NAME + theApp.m_app_version);
+    const CStringA attachmentName(pOpiFile.GetFileName());
     const CStringA sOpiLine = "--" + sOpiSeparator + "--\r\n";
     sFormData.Format("--%s\r\nContent-Disposition: form-data; name=\"", sOpiSeparator);
     sFormBody.AppendFormat("%suser\"\r\n\r\n%s\r\n", sFormData, CStringA(theManODPNET.m_userName));
     sFormBody.AppendFormat("%sdaydir\"\r\n\r\n%s\r\n", sFormData, CStringA(m_pDocument->dayws));
     sFormBody.AppendFormat("%sftype\"\r\n\r\nPAGE\r\n", sFormData);
-    sFormBody.AppendFormat("%sfname\"\r\n\r\n%s\r\n", sFormData, CStringA(pOpiFile->GetFileName()));
-    sFormBody.AppendFormat("%sfsize\"\r\n\r\n%llu\r\n", sFormData, pOpiFile->GetLength());
+    sFormBody.AppendFormat("%sfname\"\r\n\r\n%s\r\n", sFormData, attachmentName);
+    sFormBody.AppendFormat("%sfsize\"\r\n\r\n%llu\r\n", sFormData, attachmentLength);
     sFormBody.AppendFormat("%sversion\"\r\n\r\n%s\r\n", sFormData, CStringA(sAppId));
-    sFormBody.AppendFormat("%sfile\"; filename=\"%s\"\r\nContent-Type: application/postscript\r\n\r\n", sFormData, CStringA(pOpiFile->GetFileName()));
+    sFormBody.AppendFormat("%sfile\"; filename=\"%s\"\r\nContent-Type: application/postscript\r\n\r\n", sFormData, attachmentName);
 
     INTERNET_PORT nPort;
     DWORD dwServiceType;
@@ -1294,15 +1286,11 @@ BOOL CDrawPage::PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) co
         std::unique_ptr<CHttpFile> pFile(pSrv->OpenRequest(CHttpConnection::HTTP_VERB_POST, strObject, NULL, 1, NULL, NULL, INTERNET_FLAG_EXISTING_CONNECT | INTERNET_FLAG_NO_AUTO_REDIRECT));
         pFile->AddRequestHeaders(_T("Content-Type: multipart/form-data; boundary=") + CString(sOpiSeparator));
 
-        const int iReqLen = (int)pOpiFile->GetLength() + sFormBody.GetLength() + sOpiSeparator.GetLength() + 4; /* cztery minusy wokol ostatniego sOpiSeparator */
+        const int iReqLen = (int)attachmentLength + sFormBody.GetLength() + sOpiSeparator.GetLength() + 4; /* cztery minusy wokol ostatniego sOpiSeparator */
         try {
             pFile->SendRequestEx(iReqLen);
             pFile->Write(sFormBody, sFormBody.GetLength());
-            // wklej plik
-            const auto len = (UINT)pOpiFile->GetLength();
-            auto buf = pOpiFile->Detach();
-            pFile->Write(buf, len);
-            free(buf); // CMemFile::Free
+            CDrawPage::MoveMemFileContent(*pFile, std::move(pOpiFile));
             pFile->Write(sOpiLine, sOpiLine.GetLength());
             pFile->EndRequest();
             pFile->ReadString(pArg->cBigBuf, bigSize);
@@ -1324,6 +1312,14 @@ BOOL CDrawPage::PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) co
     }
 
     return true;
+}
+
+void CDrawPage::MoveMemFileContent(CFile& dst, CMemFile&& src)
+{
+    const auto len = (UINT)src.GetPosition();
+    const auto buf = src.Detach();
+    dst.Write(buf, len);
+    free(buf); // CMemFile::Free
 }
 
 void CDrawPage::Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2, int by2)

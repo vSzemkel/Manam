@@ -122,13 +122,14 @@ class CDrawPage final : public CDrawObj
     BOOL StaleElementy(PGENEPSARG pArg, CFile& handle);
     BOOL GenEPS(PGENEPSARG pArg);
     BOOL GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destName);
-    BOOL PostPageToWorkflowServer(PGENEPSARG pArg, CMemFile *pOpiFile) const;
+    BOOL MovePageToOpiServer(PGENEPSARG pArg, CMemFile&& pOpiFile) const;
     CRect GetNormalizedModuleRect(size_t module) const;	// Prostok¹t ograniczaj¹cy modu³ o numerze porz¹dkowym module zakresu 0..sx*sy-1
     CString GetNrPaginy() const;
 
 private:
-    CFlag GetReservedFlag();							// Pobiera flagê szarych modu³ów
-    static CString GenerateGUIDString();				// Konwertuje wygenerowany GIUD do stringu
+    CFlag GetReservedFlag();                                    // Pobiera flagê szarych modu³ów
+    static CString GenerateGUIDString();                        // Konwertuje wygenerowany GIUD do stringu
+    static void MoveMemFileContent(CFile& dst, CMemFile&& src); // Przenosi zawartoœæ src od poczatku do aktualnej pozycji
 };
 
 // CRozm

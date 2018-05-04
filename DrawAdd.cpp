@@ -1911,7 +1911,7 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
         ::StringCchPrintfA(s, n_size, "%s%s %s\r\n", OPI_TAG, "OG", CStringA(eps_name));
         dest.Write(s, (UINT)strlen(s));
     } else
-        CDrawAdd::EmbedFile(pArg, dest, eps_name);
+        CDrawAdd::EmbedEpsFile(pArg, dest, eps_name);
 
     ::StringCchPrintfA(s, n_size, "%%%%EndDocument\r\nendManamEPS\r\n");
     dest.Write(s, (UINT)strlen(s));
@@ -1983,37 +1983,38 @@ bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
         ::StringCchPrintfA(s, n_size, "%sDR %s\r\n", OPI_TAG, CStringA(nazwa));
         dest.Write(s, (UINT)strlen(s));
     } else 
-        CDrawAdd::EmbedFile(pArg, dest, nazwa);
+        CDrawAdd::EmbedEpsFile(pArg, dest, nazwa);
 
     ::StringCchPrintfA(s, n_size, "%%%%EndDocument\r\nendManamEPS\r\n"); dest.Write(s, (UINT)strlen(s));
 
     return true;
 } // RewriteDrob
 
-bool CDrawAdd::EmbedFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcPath)
+bool CDrawAdd::EmbedEpsFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcPath)
 {
     CFile srcFile;
     if (!srcFile.Open(srcPath, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
         theApp.SetErrorMessage(pArg->cBigBuf);
-        ::MessageBox(pArg->pDlg->m_hWnd, CString("Brakuje pliku: ") + srcPath + _T("\n") + pArg->cBigBuf, APP_NAME, MB_OK | MB_ICONERROR);
+        ::MessageBox(pArg->pDlg->m_hWnd, _T("Brakuje pliku: ") + srcPath + _T("\n") + pArg->cBigBuf, APP_NAME, MB_OK | MB_ICONERROR);
         return false;
     }
-    HANDLE map_handle = ::CreateFileMapping(srcFile.m_hFile, NULL, PAGE_READONLY | SEC_RESERVE, 0, 0, 0);
-    if (map_handle == NULL)
-        return false;
 
     bool ret = false;
-    char* map_ptr = (char*)::MapViewOfFile(map_handle, FILE_MAP_READ, 0, 0, 0);
-    if (map_ptr != nullptr) {
-        unsigned long offset, nCount;
-        if (CDrawAdd::LocatePreview(srcFile, &offset, &nCount)) {
-            dstFile.Write(map_ptr + offset, nCount);
-            ret = true;
+    HANDLE mapHandle = ::CreateFileMapping(srcFile.m_hFile, NULL, PAGE_READONLY | SEC_RESERVE, 0, 0, 0);
+    if (mapHandle != NULL) {
+        auto mapPtr = (const char*)::MapViewOfFile(mapHandle, FILE_MAP_READ, 0, 0, 0);
+        if (mapPtr != nullptr) {
+            unsigned long offset, nCount;
+            if (CDrawAdd::LocatePreview(srcFile, &offset, &nCount)) {
+                dstFile.Write(mapPtr + offset, nCount);
+                ret = true;
+            }
+            ::UnmapViewOfFile(mapPtr);
         }
-        ::UnmapViewOfFile(map_ptr);
+        ::CloseHandle(mapHandle);
     }
 
-    ::CloseHandle(map_handle);
+    srcFile.Close();
     return ret;
 }
 
