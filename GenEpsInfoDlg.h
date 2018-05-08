@@ -14,7 +14,7 @@ class CGenEpsInfoDlg : public CDialog /* singleton */
 
 private:
     enum { IDD = IDD_WAIT };
-    static int iCpuCnt;
+    static WORD iCpuCnt;
     static CGenEpsInfoDlg m_instance;
     static const int ciMaxChannels = 2;
 
@@ -28,7 +28,7 @@ public:
     static DWORD WINAPI CreateGenEPSDialog(PMESPUMPDLGARG pArg);	// wykonywana przez w¹tek roboczy, definiuje message loop
     static CGenEpsInfoDlg* GetGenEpsInfoDlg(BOOL bIsGen);			// inicjalizacja okna dialogowego
     static void ReleaseGenEpsInfoDlg(CGenEpsInfoDlg *pDlg);         // zwolnienie okna
-    static int GetCpuCnt();											// ile mamy procesorów 
+    static WORD GetCpuCnt();											// ile mamy procesorów 
     static INT_PTR CALLBACK DialogProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam);
 
     BOOL cancelGenEPS;				// flaga przerwania przetwarzania

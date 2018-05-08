@@ -10,16 +10,16 @@ class CGenEpsInfoDlg;
 
 typedef struct _GENEPSARG
 {
-    int  iChannelId;
-    int  iThreadId;
-    TCHAR *cBigBuf;
     BOOL bIsPRN;
-    BOOL bIsPreview;
-    BOOL bSignAll;
-    BOOL bDoKorekty;
     BOOL bStatus;
-    CDrawPage *pPage;
-    CGenEpsInfoDlg *pDlg;
+    BOOL bSignAll;
+    BOOL bIsPreview;
+    BOOL bDoKorekty;
+    WORD iChannelId;
+    TCHAR* cBigBuf;
+    CDrawPage* pPage;
+    CGenEpsInfoDlg* pDlg;
+    HANDLE hCompletedEvent;
 } GENEPSARG, *PGENEPSARG;
 
 struct CKrataNiebazowa final

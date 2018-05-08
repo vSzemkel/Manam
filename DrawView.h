@@ -30,7 +30,7 @@ class CDrawView : public CScrollView
     DECLARE_DYNCREATE(CDrawView)
 
     // Operations
-    static DWORD WINAPI DelegateGenEPS(LPVOID pArg);
+    static void CALLBACK CDrawView::DelegateGenEPS(PTP_CALLBACK_INSTANCE, PVOID parameter, PTP_WORK work);
 
     virtual ~CDrawView() noexcept {};
     virtual void OnDraw(CDC* pDC) override; // overridden to draw this view

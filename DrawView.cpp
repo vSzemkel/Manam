@@ -1320,22 +1320,6 @@ void CDrawView::OnAsideAdds()
     GetDocument()->OnAsideAdds();
 }
 
-//GN
-DWORD WINAPI CDrawView::DelegateGenEPS(LPVOID pArg)
-{
-    BOOL bStatus = TRUE;
-    PGENEPSARG pA = static_cast<PGENEPSARG>(pArg);
-    CDrawPage *pPage = pA->pPage;
-    if (pA->pDlg->m_bIsGen) {
-        bStatus = pPage->GenEPS(pA);
-        if (!bStatus)
-            pA->pDlg->cancelGenEPS = TRUE;
-    } else
-        pPage->CheckSrcFile(pA);
-
-    return bStatus;
-}
-
 void CDrawView::OnPrintEps()
 {
     CheckPrintEps(TRUE);
@@ -1344,6 +1328,20 @@ void CDrawView::OnPrintEps()
 void CDrawView::OnCheckEps()
 {
     CheckPrintEps(FALSE);
+}
+
+void CALLBACK CDrawView::DelegateGenEPS(PTP_CALLBACK_INSTANCE, PVOID parameter, PTP_WORK work)
+{
+    auto pA = static_cast<PGENEPSARG>(parameter);
+    CDrawPage* pPage = pA->pPage;
+    if (pA->pDlg->m_bIsGen) {
+        if (!pPage->GenEPS(pA))
+            pA->pDlg->cancelGenEPS = TRUE;
+    } else
+        pPage->CheckSrcFile(pA);
+
+    ::CloseThreadpoolWork(work);
+    ::SetEvent(pA->hCompletedEvent);
 }
 
 void CDrawView::CheckPrintEps(BOOL isprint)
@@ -1432,9 +1430,6 @@ subseterr:
         pDoc->IniRozm();
     if (isprint && !pDoc->SaveModified()) return;
 
-    int iCpuCnt, iThreadCnt = 0;
-    HANDLE *ThreadHandles;
-    GENEPSARG *ThreadArgs;
     BeginWaitCursor();
 
     if (isprint) {
@@ -1455,6 +1450,9 @@ subseterr:
             theManODPNET.GetManamEps();
     }
 
+    HANDLE *waitEvents;
+    GENEPSARG *threadArgs;
+    WORD iCpuCnt, iThreadCnt = 0;
     CGenEpsInfoDlg *pDlg = CGenEpsInfoDlg::GetGenEpsInfoDlg(isprint);
 
     if (d.m_bPotokowe) {
@@ -1464,16 +1462,17 @@ subseterr:
         if (iIleStron < iCpuCnt)
             iCpuCnt = iIleStron;
 
-        ThreadHandles = (HANDLE *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(HANDLE));
-        ThreadArgs = (GENEPSARG *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(GENEPSARG));
-        for (int i = 0; i < iCpuCnt; ++i) {
-            auto& ta = ThreadArgs[i];
+        waitEvents = (HANDLE *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(HANDLE));
+        threadArgs = (GENEPSARG *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(GENEPSARG));
+        for (WORD i = 0; i < iCpuCnt; ++i) {
+            auto& ta = threadArgs[i];
             ta.iChannelId = i;
             ta.bIsPRN = (BOOL)d.m_format;
             ta.bIsPreview = d.m_preview;
             ta.bSignAll = d.m_signall;
             ta.bDoKorekty = d.m_korekta;
             ta.pDlg = (CGenEpsInfoDlg *)pDlg;
+            ta.hCompletedEvent = waitEvents[i] = ::CreateEvent(NULL, FALSE, FALSE, NULL);
             ta.cBigBuf = i == 0 ? theApp.bigBuf : (TCHAR *)VirtualAlloc(NULL, bigSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
             if (!ta.cBigBuf) {
                 AfxMessageBox(_T("Zbyt ma³o pamiêci do uruchomienia dodatkowego potoku (Buf)"), MB_ICONSTOP);
@@ -1486,7 +1485,7 @@ subseterr:
     if (isprint && d.m_format == F_EPS) theApp.isOpiMode = FALSE; // Dla F_EPS nie u¿ywaj OPI
 
     GENEPSARG genEpsArg;
-    auto& channId = genEpsArg.iChannelId = 0;
+    genEpsArg.iChannelId = 0;
     genEpsArg.bIsPRN = (BOOL)d.m_format;
     genEpsArg.bIsPreview = d.m_preview;
     genEpsArg.bSignAll = d.m_signall;
@@ -1495,6 +1494,19 @@ subseterr:
     genEpsArg.pPage = pPage;
     genEpsArg.pDlg = (CGenEpsInfoDlg *)pDlg;
     pDoc->ovEPS = FALSE;
+
+    const auto submitWorkOnPage = [&]() noexcept {
+        WORD channId;
+        if (iThreadCnt >= iCpuCnt)
+            channId = (WORD)::WaitForMultipleObjects(iCpuCnt, waitEvents, FALSE, INFINITE) - WAIT_OBJECT_0;
+        else
+            channId = iThreadCnt++;
+
+        auto& channelArg = threadArgs[channId];
+        channelArg.pPage = pPage;
+        PTP_WORK work = ::CreateThreadpoolWork(CDrawView::DelegateGenEPS, &channelArg, NULL);
+        ::SubmitThreadpoolWork(work);
+    };
 
     for (int i = 0; !pDlg->cancelGenEPS && i < pc; ++i) {
         if (wyborStron[i]) {
@@ -1505,48 +1517,35 @@ subseterr:
 
             if (isprint) { // generate
                 if (d.m_format != F_PDF) {
-                    if (d.m_bPotokowe) {
-                        if (iThreadCnt >= iCpuCnt) {
-                            channId = ::WaitForMultipleObjects(iCpuCnt, ThreadHandles, FALSE, INFINITE) - WAIT_OBJECT_0;
-                            ::CloseHandle(ThreadHandles[channId]);
-                        } else
-                            channId = iThreadCnt++;
-                        ThreadArgs[channId].pPage = pPage;
-                        ThreadHandles[channId] = ::CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)CDrawView::DelegateGenEPS, &ThreadArgs[channId], 0, (LPDWORD)&genEpsArg.iThreadId);
-                    } else {
-                        if (!pPage->GenEPS(&genEpsArg)) {
-                            pDlg->cancelGenEPS = TRUE;
-                            break;
-                        }
+                    if (d.m_bPotokowe)
+                        submitWorkOnPage();
+                    else if (!pPage->GenEPS(&genEpsArg)) {
+                        pDlg->cancelGenEPS = TRUE;
+                        break;
                     }
                 } else {
                     if (!pPage->GenPDF(&genEpsArg))
                         break;
                 }
             } else { // check
-                if (d.m_bPotokowe) {
-                    if (iThreadCnt >= iCpuCnt) {
-                        channId = ::WaitForMultipleObjects(iCpuCnt, ThreadHandles, FALSE, INFINITE) - WAIT_OBJECT_0;
-                        ::CloseHandle(ThreadHandles[channId]);
-                    } else
-                        channId = iThreadCnt++;
-                    ThreadArgs[channId].pPage = pPage;
-                    ThreadHandles[channId] = ::CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)CDrawView::DelegateGenEPS, &ThreadArgs[channId], 0, (LPDWORD)&genEpsArg.iThreadId);
-                } else
+                if (d.m_bPotokowe)
+                    submitWorkOnPage();
+                else
                     pPage->CheckSrcFile(&genEpsArg);
             }
         }
     }
 
     if (d.m_bPotokowe) {
-        ::WaitForMultipleObjects(iThreadCnt, ThreadHandles, TRUE, INFINITE);
-        for (int i = 0; i < iThreadCnt; i++)
-            ::CloseHandle(ThreadHandles[i]);
-        ::LocalFree(ThreadHandles);
-
-        for (int i = 1; i < iCpuCnt; i++)
-            ::VirtualFree(ThreadArgs[i].cBigBuf, 0, MEM_RELEASE);
-        ::LocalFree(ThreadArgs);
+        ::WaitForMultipleObjects(iCpuCnt, waitEvents, TRUE, INFINITE);
+        for (WORD i = 0; i < iCpuCnt; ++i) {
+            auto& arg = threadArgs[i];
+            ::CloseHandle(arg.hCompletedEvent);
+            if (i > 0)
+                ::VirtualFree(arg.cBigBuf, 0, MEM_RELEASE);
+        }
+        ::LocalFree(waitEvents);
+        ::LocalFree(threadArgs);
     }
     AfxGetMainWnd()->ActivateTopParent();
     EndWaitCursor();
@@ -1554,7 +1553,7 @@ subseterr:
     if (!isprint) {
         pDlg->ShowWindow(SW_HIDE);
         CString msg;
-        for (int i = 0; i < pc; i++)
+        for (int i = 0; i < pc; ++i)
             if (wyborStron[i])
                 msg += pDoc->m_pages[i]->f5_errInfo;
         ::MessageBox(theApp.GetMainWnd()->m_hWnd, msg.IsEmpty() ? _T("Nie ma b³êdów") : msg, _T("Raport sprawdzenia EPS"), MB_OK);

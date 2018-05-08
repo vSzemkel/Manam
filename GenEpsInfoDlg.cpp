@@ -4,7 +4,7 @@
 
 IMPLEMENT_DYNAMIC(CGenEpsInfoDlg, CDialog)
 
-int CGenEpsInfoDlg::iCpuCnt;
+WORD CGenEpsInfoDlg::iCpuCnt;
 CGenEpsInfoDlg CGenEpsInfoDlg::m_instance;
 
 CGenEpsInfoDlg::CGenEpsInfoDlg()
@@ -82,13 +82,13 @@ void CGenEpsInfoDlg::ReleaseGenEpsInfoDlg(CGenEpsInfoDlg *pDlg)
     CGenEpsInfoDlg::m_instance.Detach();
 }
 
-int CGenEpsInfoDlg::GetCpuCnt()
+WORD CGenEpsInfoDlg::GetCpuCnt()
 {
     if (iCpuCnt > 0) return iCpuCnt;
 
     SYSTEM_INFO si;
     GetSystemInfo(&si);
-    return iCpuCnt = si.dwNumberOfProcessors;
+    return iCpuCnt = (WORD)si.dwNumberOfProcessors;
 }
 
 void CGenEpsInfoDlg::SetChannelCount(int iChannelCnt)
