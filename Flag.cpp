@@ -304,7 +304,7 @@ CFlag CFlag::operator >> (size_t shift) const noexcept
             for (i = 0; i < 8 * size - shift; ++i)
                 ret.SetBit(i, operator[](i + shift));
             for (i = 0; i < shift; ++i)
-                ret.SetBit(8 * size - 1 - i, 0);
+                ret.SetBit(8 * size - 1 - i, false);
         }
     } else
         ret.flag = (flag >> shift);
@@ -322,7 +322,7 @@ CFlag CFlag::operator<< (size_t shift) const noexcept
             for (i = 8 * size - 1 - shift; i != (size_t)-1; --i)
                 ret.SetBit(i + shift, operator[](i));
             for (i = 0; i < shift; i++)
-                ret.SetBit(i, 0);
+                ret.SetBit(i, false);
         }
     } else
         ret.flag = (flag << shift);
@@ -339,7 +339,7 @@ CFlag& CFlag::operator>>= (size_t shift) noexcept
             for (i = 0; i < 8 * size - shift; ++i)
                 SetBit(i, operator[](i + shift));
             for (i = 0; i < shift; ++i)
-                SetBit(8 * size - 1 - i, 0);
+                SetBit(8 * size - 1 - i, false);
         }
     } else
         flag >>= shift;
@@ -356,7 +356,7 @@ CFlag& CFlag::operator<<= (size_t shift) noexcept
             for (i = 8 * size - 1 - shift; i != (size_t)-1; --i)
                 SetBit(i + shift, operator[](i));
             for (i = 0; i < shift; ++i)
-                SetBit(i, 0);
+                SetBit(i, false);
         }
     } else
         flag <<= shift;

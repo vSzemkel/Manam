@@ -1458,7 +1458,7 @@ subseterr:
     if (d.m_bPotokowe) {
         iCpuCnt = CGenEpsInfoDlg::GetCpuCnt();
         pDlg->SetChannelCount(iCpuCnt);
-        const int iIleStron = wyborStron.GetBitCnt(1);
+        const int iIleStron = wyborStron.GetBitCnt(true);
         if (iIleStron < iCpuCnt)
             iCpuCnt = iIleStron;
 

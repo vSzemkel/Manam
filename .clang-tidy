@@ -1,0 +1,3 @@
+---
+Checks: '-*,modernize-use-emplace,modernize-use-bool-literals,modernize-pass-by-value,modernize-make-unique,modernize-loop-convert'
+...

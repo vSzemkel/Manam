@@ -1930,7 +1930,7 @@ bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
     unsigned long lOffset = 0, lSize = 0;
     auto pRoz = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, typ_xx);
 
-    float scaly, x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
+    float x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
     const float x = (float)((posx - 1)*(pRoz->w + pRoz->sw)*mm2pkt);
     const float y = (float)((szpalt_y + 1 - posy - sizey)*(pRoz->h + pRoz->sh)*mm2pkt);
 
@@ -1971,7 +1971,7 @@ bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
 
     ::StringCchPrintfA(s, n_size, "beginManamEPS \r\n");  dest.Write(s, (UINT)strlen(s));
     ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", x, y);  dest.Write(s, (UINT)strlen(s));
-    scaly = (y2 == y1) ? 1 : m_pDocument->GetDrobneH() / (y2 - y1);
+    const float scaly = (y2 == y1) ? 1 : m_pDocument->GetDrobneH() / (y2 - y1);
     ::StringCchPrintfA(s, n_size, "1 %.4f scale\r\n", scaly);  dest.Write(s, (UINT)strlen(s));
 
     ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", -x1, -y1);  dest.Write(s, (UINT)strlen(s));

@@ -2179,10 +2179,10 @@ void CUserDlg::OnZaloz()
 {
     TCHAR *s = theApp.bigBuf;
     int aiGets[6] = { IDC_IMIE, IDC_NAZWISKO, IDC_LOGINNAME, IDC_PASS, IDC_GRUPA, IDC_TELEFON };
-    for (int i = 0; i < 6; ++i) {
-        GetDlgItemText(aiGets[i], s, 255);
+    for (int aiGet : aiGets) {
+        GetDlgItemText(aiGet, s, 255);
         if (!s[0]) {
-            GetDlgItem(aiGets[i])->SetFocus();
+            GetDlgItem(aiGet)->SetFocus();
             return;
         }
     }
