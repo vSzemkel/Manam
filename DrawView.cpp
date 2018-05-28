@@ -122,8 +122,8 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDrawView construction/destruction
 
-CDrawView::CDrawView() noexcept : m_bActive(FALSE), m_zoomNum(theApp.m_initZoom, theApp.m_initZoom),
-    m_zoomDenom(100 * vscale, -100 * vscale), m_pagesPrinted(PRINT_DOC)
+CDrawView::CDrawView() noexcept : m_zoomNum(theApp.m_initZoom, theApp.m_initZoom),
+    m_zoomDenom(100 * vscale, -100 * vscale) 
 {
 }
 
@@ -155,7 +155,7 @@ void CDrawView::OnDisableMenuAdSelSTU(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableM
 BOOL CDrawView::PreCreateWindow(CREATESTRUCT &cs)
 {
     ASSERT(cs.style & WS_CHILD);
-    if (cs.lpszClass == NULL)
+    if (cs.lpszClass == nullptr)
         cs.lpszClass = AfxRegisterWndClass(CS_DBLCLKS);
     return TRUE;
 }
@@ -173,7 +173,7 @@ void CDrawView::OnActivateView(BOOL bActivate, CView *pActiveView, CView *pDeact
             CDrawTool::c_drawShape = DrawShape::select;
 
         if (!m_selection.empty())
-            OnUpdate(NULL, HINT_UPDATE_SELECTION, NULL);
+            OnUpdate(nullptr, HINT_UPDATE_SELECTION, nullptr);
         m_bActive = bActivate;
     }
 
@@ -381,7 +381,7 @@ void CDrawView::OnInitialUpdate()
 void CDrawView::SetPageSize()
 {
     OnInitialUpdate();
-    GetDocument()->UpdateAllViews(NULL, HINT_UPDATE_WINDOW, NULL);
+    GetDocument()->UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -402,7 +402,7 @@ void CDrawView::OnCancelEdit()
         // if we found one, deactivate it
         pActiveItem->Close();
     }
-    ASSERT(GetDocument()->GetInPlaceActiveItem(this) == NULL);
+    ASSERT(GetDocument()->GetInPlaceActiveItem(this) == nullptr);
 
     // escape also brings us back into select mode
     ReleaseCapture();
@@ -440,14 +440,14 @@ CRect CDrawView::GetInitialPosition()
 void CDrawView::ClientToDoc(CPoint& point)
 {
     CClientDC dc(this);
-    OnPrepareDC(&dc, NULL);
+    OnPrepareDC(&dc, nullptr);
     dc.DPtoLP(&point);
 }
 
 void CDrawView::ClientToDoc(CRect& rect)
 {
     CClientDC dc(this);
-    OnPrepareDC(&dc, NULL);
+    OnPrepareDC(&dc, nullptr);
     dc.DPtoLP(rect);
     ASSERT(rect.left <= rect.right);
     ASSERT(rect.bottom <= rect.top);
@@ -456,14 +456,14 @@ void CDrawView::ClientToDoc(CRect& rect)
 void CDrawView::DocToClient(CPoint& point)
 {
     CClientDC dc(this);
-    OnPrepareDC(&dc, NULL);
+    OnPrepareDC(&dc, nullptr);
     dc.LPtoDP(&point);
 }
 
 void CDrawView::DocToClient(CRect& rect)
 {
     CClientDC dc(this);
-    OnPrepareDC(&dc, NULL);
+    OnPrepareDC(&dc, nullptr);
     dc.LPtoDP(rect);
     rect.NormalizeRect();
 }
@@ -471,7 +471,7 @@ void CDrawView::DocToClient(CRect& rect)
 void CDrawView::Select(CDrawObj *pObj, BOOL bAdd)
 {
     if (!bAdd) {
-        OnUpdate(NULL, HINT_UPDATE_SELECTION, NULL);
+        OnUpdate(nullptr, HINT_UPDATE_SELECTION, nullptr);
         m_selection.clear();
     }
 
@@ -506,7 +506,7 @@ void CDrawView::Select(CDrawObj *pObj, BOOL bAdd)
 void CDrawView::SelectWithinRect(CRect rect, BOOL bAdd)
 {
     if (!bAdd)
-        Select(NULL);
+        Select(nullptr);
 
     ClientToDoc(rect);
 
@@ -712,7 +712,7 @@ void CDrawView::OnEditClear()
 {
     BOOL to_tell = FALSE;
     // update all the views before the selection goes away
-    OnUpdate(NULL, HINT_UPDATE_SELECTION, NULL);
+    OnUpdate(nullptr, HINT_UPDATE_SELECTION, nullptr);
 
     // now remove the selection from the document
     for (auto& pObj : m_selection) {
@@ -742,7 +742,7 @@ void CDrawView::OnEditClear()
     }
     m_selection.clear();
     if (to_tell)
-        GetDocument()->UpdateAllViews(this, HINT_DELETE_FROM_GRID, NULL); //zeby grid zareagowal
+        GetDocument()->UpdateAllViews(this, HINT_DELETE_FROM_GRID, nullptr); //zeby grid zareagowal
 }
 
 void CDrawView::OnUpdateAnySelect(CCmdUI *pCmdUI)
@@ -926,7 +926,7 @@ void CDrawView::OnEditPaste()
         return;
 
     // invalidate current selection since it will be deselected
-    OnUpdate(NULL, HINT_UPDATE_SELECTION, NULL);
+    OnUpdate(nullptr, HINT_UPDATE_SELECTION, nullptr);
     m_selection.clear();
     // deserialize objects from clipboard into m_selection
     Paste(dataObject);
@@ -955,7 +955,7 @@ void CDrawView::OnEditPaste()
     // invalidate new pasted stuff
     GetDocument()->UpdateAllViews(this);
     if (newAds)
-        GetDocument()->UpdateAllViews(this, HINT_EDIT_PASTE, NULL); // dla gridu by dodac
+        GetDocument()->UpdateAllViews(this, HINT_EDIT_PASTE, nullptr); // dla gridu by dodac
 }
 
 void CDrawView::OnUpdateEditPaste(CCmdUI *pCmdUI)
@@ -979,13 +979,13 @@ LPDEVMODE CDrawView::SetLandscape()
         return nullptr;
     // otwórz
     HANDLE hPrinter;
-    if (!::OpenPrinter(theApp.bigBuf, &hPrinter, NULL))
+    if (!::OpenPrinter(theApp.bigBuf, &hPrinter, nullptr))
         return nullptr;
     // pobierz ustawienia
-    const DWORD dwNeeded = DocumentProperties(this->m_hWnd, hPrinter, theApp.bigBuf, NULL, NULL, 0);
-    PDEVMODE dm = (PDEVMODE)LocalAlloc(LMEM_FIXED, dwNeeded);
+    const DWORD dwNeeded = DocumentProperties(this->m_hWnd, hPrinter, theApp.bigBuf, nullptr, nullptr, 0);
+    auto dm = (PDEVMODE)LocalAlloc(LMEM_FIXED, dwNeeded);
     // zmieñ
-    DocumentProperties(this->m_hWnd, hPrinter, theApp.bigBuf, dm, NULL, DM_OUT_BUFFER);
+    DocumentProperties(this->m_hWnd, hPrinter, theApp.bigBuf, dm, nullptr, DM_OUT_BUFFER);
     if (dm && dm->dmFields & DM_ORIENTATION)
         dm->dmOrientation = DMORIENT_LANDSCAPE;
     DocumentProperties(this->m_hWnd, hPrinter, theApp.bigBuf, dm, dm, DM_IN_BUFFER | DM_OUT_BUFFER);
@@ -1025,7 +1025,7 @@ void CDrawView::OnBeginPrinting(CDC *, CPrintInfo *)
 void CDrawView::OnEndPrinting(CDC *, CPrintInfo *)
 {
     theApp.SetScale(CLIENT_SCALE);
-    GetDocument()->UpdateAllViews(NULL);
+    GetDocument()->UpdateAllViews(nullptr);
 };
 
 void CDrawView::OnPrint(CDC *pDC, CPrintInfo *pInfo)
@@ -1112,7 +1112,7 @@ void CDrawView::OnEditProperties()
         if (pTool)
             pTool->OnLButtonDblClk(this, 0, CPoint(0, 0));
 
-        ASSERT(pTool != NULL);
+        ASSERT(pTool != nullptr);
     }
 }
 
@@ -1138,7 +1138,7 @@ void CDrawView::OnChooseFont(CFont& m_font, BOOL IsPageFont)
         m_font.DeleteObject();
         if (m_font.CreateFontIndirect(&lf))
             SetFont(&m_font);
-        GetDocument()->UpdateAllViews(NULL);
+        GetDocument()->UpdateAllViews(nullptr);
     }
 }
 
@@ -1237,7 +1237,7 @@ void CDrawView::OnDrawMakStrony()
     pDoc->MakietujStrone(reinterpret_cast<CDrawPage *>(m_selection.front()));
     // ustaw z boku te, ktorych sie nie zmakietowalo automatycznie
     pDoc->AsideAdds();
-    pDoc->UpdateAllViews(NULL);
+    pDoc->UpdateAllViews(nullptr);
 }
 
 void CDrawView::OnUpdateDrawMakStrony(CCmdUI *pCmdUI)
@@ -1271,7 +1271,7 @@ void CDrawView::OnViewAdddesc()
     if (dlg.m_top == dlg.m_bottom) dlg.m_bottom = TEXT_BRAK; // nie mog¹ byæ takie same
     theApp.m_view_bottom = dlg.m_bottom;
     theApp.m_view_top = dlg.m_top;
-    GetDocument()->UpdateAllViews(NULL);
+    GetDocument()->UpdateAllViews(nullptr);
 }
 
 void CDrawView::OnDrawOpcje() { GetDocument()->OnDrawOpcje(); }
@@ -1372,7 +1372,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
     theApp.isParalellGen = d.m_bPotokowe ? 1 : 0;
     theApp.WriteProfileInt(_T("GenEPS"), _T("autoMark"), theApp.autoMark = d.m_markfound);
 
-    const int pc = (int)pDoc->m_pages.size();
+    const auto pc = (int)pDoc->m_pages.size();
     CFlag wyborStron(0, 0, 1, pc);
     switch (d.m_page) {
         case 0:
@@ -1393,7 +1393,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
             const TCHAR septok[] = { ',', '-' };
             ::StringCchCopy(theApp.bigBuf, n_size, d.m_subset);
             tok = _tcstok(theApp.bigBuf, septok);
-            while (tok != NULL) {
+            while (tok != nullptr) {
                 liczbaA = pDoc->Nr2NrPorz(tok);
                 if (liczbaA == -1)
                     goto subseterr;
@@ -1403,10 +1403,10 @@ void CDrawView::CheckPrintEps(BOOL isprint)
                     case '\0':
                     case ',':
                         wyborStron.SetBit(liczbaA % pc);
-                        tok = _tcstok(NULL, septok);
+                        tok = _tcstok(nullptr, septok);
                         break;
                     case '-':
-                        tok = _tcstok(NULL, septok);
+                        tok = _tcstok(nullptr, septok);
                         liczbaB = pDoc->Nr2NrPorz(tok);
                         if (liczbaB == -1)
                             goto subseterr;
@@ -1414,7 +1414,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
                             liczbaB = pc;
                         for (int i = liczbaA; i <= liczbaB; i++)
                             wyborStron.SetBit(i % pc);
-                        tok = _tcstok(NULL, septok);
+                        tok = _tcstok(nullptr, septok);
                         break;
                     default:
                         goto subseterr;
@@ -1472,8 +1472,8 @@ subseterr:
             ta.bSignAll = d.m_signall;
             ta.bDoKorekty = d.m_korekta;
             ta.pDlg = (CGenEpsInfoDlg *)pDlg;
-            ta.hCompletedEvent = waitEvents[i] = ::CreateEvent(NULL, FALSE, FALSE, NULL);
-            ta.cBigBuf = i == 0 ? theApp.bigBuf : (TCHAR *)VirtualAlloc(NULL, bigSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+            ta.hCompletedEvent = waitEvents[i] = ::CreateEvent(nullptr, FALSE, FALSE, nullptr);
+            ta.cBigBuf = i == 0 ? theApp.bigBuf : (TCHAR *)VirtualAlloc(nullptr, bigSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
             if (!ta.cBigBuf) {
                 AfxMessageBox(_T("Zbyt ma³o pamiêci do uruchomienia dodatkowego potoku (Buf)"), MB_ICONSTOP);
                 return;
@@ -1504,7 +1504,7 @@ subseterr:
 
         auto& channelArg = threadArgs[channId];
         channelArg.pPage = pPage;
-        PTP_WORK work = ::CreateThreadpoolWork(CDrawView::DelegateGenEPS, &channelArg, NULL);
+        PTP_WORK work = ::CreateThreadpoolWork(CDrawView::DelegateGenEPS, &channelArg, nullptr);
         ::SubmitThreadpoolWork(work);
     };
 
@@ -1557,10 +1557,10 @@ subseterr:
             if (wyborStron[i])
                 msg += pDoc->m_pages[i]->f5_errInfo;
         ::MessageBox(theApp.GetMainWnd()->m_hWnd, msg.IsEmpty() ? _T("Nie ma b³êdów") : msg, _T("Raport sprawdzenia EPS"), MB_OK);
-        if (theApp.autoMark && theApp.activeDoc) pDoc->UpdateAllViews(NULL);
+        if (theApp.autoMark && theApp.activeDoc) pDoc->UpdateAllViews(nullptr);
     } else if (isprint && theApp.isOpiMode && !pDlg->cancelGenEPS) {
         pDlg->ShowWindow(SW_HIDE);
-        ::MessageBox(NULL, _T("Kolumny zosta³y wys³ane do serwera OPI"), APP_NAME, MB_OK);
+        ::MessageBox(nullptr, _T("Kolumny zosta³y wys³ane do serwera OPI"), APP_NAME, MB_OK);
     } else if (isprint && d.m_format == F_EPS)
         theApp.isOpiMode = bInitOpiMode;
 
@@ -1725,7 +1725,7 @@ void CDrawView::OnPrevDig()
         }
     }
 
-    ::ShellExecute(::GetDesktopWindow(), _T("Edit"), digCntFilename, NULL, NULL, SW_SHOWNORMAL);
+    ::ShellExecute(::GetDesktopWindow(), _T("Edit"), digCntFilename, nullptr, nullptr, SW_SHOWNORMAL);
 
     if (GetLastError() > 0)
         AfxMessageBox(_T("Brak skojarzenia z .xmlw"), MB_ICONERROR);

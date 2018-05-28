@@ -53,7 +53,7 @@ void CDrawPage::Serialize(CArchive& ar)
         ar << (BYTE)niemakietuj;
         space_locked.Serialize(ar);
         space_red.Serialize(ar);
-        WORD ile_krat = (WORD)m_kraty_niebazowe.size();
+        auto ile_krat = (WORD)m_kraty_niebazowe.size();
         ar << ile_krat;
         for (WORD i = 0; i < ile_krat; ++i) {
             auto& krata = m_kraty_niebazowe[i];
@@ -310,7 +310,7 @@ CRect CDrawPage::GetNormalizedModuleRect(size_t module) const
     const auto tmp = div((int)module, szpalt_x);
     const auto posx = szpalt_x - tmp.rem;
     const auto posy = szpalt_y - tmp.quot;
-    return CRect(m_position.left + (int)(modulx * (posx - 1)), m_position.bottom + (int)(moduly * (szpalt_y - posy)), m_position.left + (int)(modulx * posx), m_position.bottom + (int)(moduly * (szpalt_y - posy + 1)));
+    return {m_position.left + (int)(modulx * (posx - 1)), m_position.bottom + (int)(moduly * (szpalt_y - posy)), m_position.left + (int)(modulx * posx), m_position.bottom + (int)(moduly * (szpalt_y - posy + 1))};
 }
 
 void CDrawPage::SetSpotKolor(UINT spot_kolor) // spot kolor to index spotkoloru w tablicy Spot_Kolor
@@ -336,7 +336,7 @@ void CDrawPage::DrawKolor(CDC *pDC, const CRect& pos) const
     } else {
         auto r1 = CRect(pos.left, pos.top + 3 * vscale, pos.right, pos.top);
         CBrush* pOldBrush;
-        CPen* pOldPen = reinterpret_cast<CPen*>(pDC->SelectStockObject(NULL_PEN));
+        auto pOldPen = reinterpret_cast<CPen*>(pDC->SelectStockObject(NULL_PEN));
         if (m_pDocument->isGRB) pOldBrush = reinterpret_cast<CBrush*>(pDC->SelectStockObject(LTGRAY_BRUSH));
         else pOldBrush = pDC->SelectObject(CDrawDoc::GetSpotBrush(m_pDocument->m_spot_makiety[kolor >> 3]));
         const COLORREF bk = pDC->SetBkColor(BIALY);
@@ -502,8 +502,8 @@ BOOL CDrawPage::OnOpen(CDrawView*)
     m_ac_kol = dlg.m_kol;
     if (m_drukarnie != dlg.m_drukarnie) { // zmiana dla czworki stron drukowanych na jednej kartce
         m_drukarnie = dlg.m_drukarnie;
-        int obj = (int)m_pDocument->m_pages.size();
         int nr_porz = m_pDocument->GetIPage(this);
+        auto obj = (int)m_pDocument->m_pages.size();
         auto pPage = m_pDocument->m_pages[(obj - nr_porz + 1) % obj];
         pPage->m_drukarnie = m_drukarnie;
         pPage->SetDirty();
@@ -527,7 +527,7 @@ BOOL CDrawPage::OnOpen(CDrawView*)
 
     SetBaseKrata(dlg.m_szpalt_x, dlg.m_szpalt_y);
 
-    const int pc = (int)m_pDocument->m_pages.size();
+    const auto pc = (int)m_pDocument->m_pages.size();
     int i, pom_nr = (dlg.m_nr << 16) + (dlg.m_rzymska ? PaginaType::roman : PaginaType::arabic);
     if (nr != pom_nr) {
         // sprawdz czy istnieje juz taka strona - bo numer/typ_num nie moze sie powtarzac
@@ -647,7 +647,7 @@ void CDrawPage::RemoveAdd(CDrawAdd *pAdd, BOOL bRemodeFromAdds)
             if (p != this && p->nr == this->nr) {
                 CString sMsg;
                 sMsg.Format(_T("W makiecie powtarza siê numer strony %i. Proszê poprawiæ"), this->pagina);
-                MessageBox(NULL, sMsg, _T("Makieta uszkodzna"), MB_ICONSTOP);
+                MessageBox(nullptr, sMsg, _T("Makieta uszkodzna"), MB_ICONSTOP);
             }
     }
     pAdd->SetDirty();
@@ -1114,7 +1114,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
             dest.Seek(28, CFile::begin);
 
         int i = 0;
-        while (ok && (fManamEps.ReadString(wThreadBuf, n_size) != NULL)) {
+        while (ok && (fManamEps.ReadString(wThreadBuf, n_size) != nullptr)) {
             CStringA line = wThreadBuf;
             if (strstr(line, tofind[i]) != nullptr) {
                 switch (i) {
@@ -1331,13 +1331,13 @@ void CDrawPage::Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2,
     header[3] = (DWORD)0;
     header[4] = (DWORD)0;
     header[5] = (DWORD)dest.GetLength(); // pozycja tifa
-    const int x = (int)ceil(bx1 / pkt_10m - 0.5);
-    const int y = (int)ceil(by1 / pkt_10m - 0.5);
-    const int dx = (int)ceil((bx2 - bx1) / pkt_10m - 0.5);
+    const auto x = (int)ceil(bx1 / pkt_10m - 0.5);
+    const auto y = (int)ceil(by1 / pkt_10m - 0.5);
+    const auto dx = (int)ceil((bx2 - bx1) / pkt_10m - 0.5);
     const int dy = 2 + (int)ceil((by2 - by1 - podpisH) / pkt_10m - 0.5);
     const div_t szer_t = div(dx, 8);
     const int szer = szer_t.quot + min(szer_t.rem, 1);
-    const int p_size = (int)(dy*szer * sizeof(BYTE));
+    const auto p_size = (int)(dy*szer * sizeof(BYTE));
 
     if (p_size > n_size) {
         const TCHAR* errMsg = _T("Zbyt gêsta krata. Proszê wy³¹czyæ opcjê generowania preview");
@@ -1364,7 +1364,7 @@ void CDrawPage::Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2,
     header[6] = (DWORD)dest.GetLength() - header[5];
     dest.SeekToBegin();
     dest.Write(header, sizeof(header));
-    const WORD w = (WORD)0xFFFF;
+    const auto w = (WORD)0xFFFF;
     dest.Write(&w, sizeof(WORD));
 }
 

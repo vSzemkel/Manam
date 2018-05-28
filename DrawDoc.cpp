@@ -106,8 +106,8 @@ void CDrawDoc::OnDisableGrbNotSaved(CCmdUI *pCmdUI)
 // CDrawDoc construction/destruction
 
 CDrawDoc::CDrawDoc() :
-    drobneH(0), m_mak_xx(-1), id_drw(-2), isRO(0), isSIG(0), isGRB(0), isLIB(0), isACD(0),
-    data(CTime::GetCurrentTime().Format(c_ctimeData)), iDocType(DocType::makieta), swCZV(ToolbarMode::normal)
+    isRO(0), isSIG(0), isGRB(0), isLIB(0), isACD(0),
+    data(CTime::GetCurrentTime().Format(c_ctimeData))
 {
     iPagesInRow = 10 + 2 * theApp.GetProfileInt(_T("General"), _T("PagesInRow"), 0);
     // font
@@ -246,10 +246,10 @@ void CDrawDoc::Serialize(CArchive& ar)
         tmpList.Serialize(ar);
     } else {
         ar.Read(&lf, sizeof(LOGFONT));
-        if (m_pagefont.m_hObject != NULL) m_pagefont.DeleteObject();
+        if (m_pagefont.m_hObject != nullptr) m_pagefont.DeleteObject();
         m_pagefont.CreateFontIndirect(&lf);
         ar.Read(&lf, sizeof(LOGFONT));
-        if (m_addfont.m_hObject != NULL) m_addfont.DeleteObject();
+        if (m_addfont.m_hObject != nullptr) m_addfont.DeleteObject();
         m_addfont.CreateFontIndirect(&lf);
 
         WORD wTemp;
@@ -617,8 +617,8 @@ void CDrawDoc::SetPageRectFromOrd(CDrawPage *pObj, size_t iOrd) const
 {
     ASSERT(0 <= iOrd && iOrd < m_pages.size());
 
-    const int x = (int)(pmodulx*(1 + floor(fmod((float)iOrd, (float)iPagesInRow) / 2) + (pszpalt_x*fmod((float)iOrd, (float)iPagesInRow))));
-    const int y = (int)((-7)*pmoduly*floor((float)iOrd / iPagesInRow) + (-1)*(pmoduly*(floor((float)iOrd / iPagesInRow) + 1)));
+    const auto x = (int)(pmodulx*(1 + floor(fmod((float)iOrd, (float)iPagesInRow) / 2) + (pszpalt_x*fmod((float)iOrd, (float)iPagesInRow))));
+    const auto y = (int)((-7)*pmoduly*floor((float)iOrd / iPagesInRow) + (-1)*(pmoduly*(floor((float)iOrd / iPagesInRow) + 1)));
 
     pObj->m_position.SetRect(x, y, x + pszpalt_x*pmodulx, y - 7 * pmoduly);
     pObj->MoveTo(&pObj->m_position);
@@ -643,7 +643,7 @@ void CDrawDoc::MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt)
 
     CPoint pNowhere(INT_MAX >> 2, 0);
     int i, iOldOrd, iBufSize = iKon - iPocz;
-    CRect* aNoPagePos = (CRect*)theApp.bigBuf;
+    auto aNoPagePos = (CRect*)theApp.bigBuf;
 
     // przywróæ pozycjê przesuwanym stronom
     for (i = 0; i < iCnt; ++i)
@@ -673,7 +673,7 @@ void CDrawDoc::MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt)
         }
 
     SetModifiedFlag();
-    UpdateAllViews(NULL);
+    UpdateAllViews(nullptr);
 }
 
 int CDrawDoc::GetIdxfromSpotID(UINT spot_id) noexcept
@@ -700,7 +700,7 @@ CDrawPage* CDrawDoc::PageAt(const CPoint& point) const
 
 void CDrawDoc::ComputeCanvasSize()
 {
-    CClientDC dc(NULL);
+    CClientDC dc{nullptr};
     auto r = div((int)m_pages.size(), iPagesInRow);
     if (r.quot < 3) r.quot = 3;
     else if (r.rem > 0) r.quot++;
@@ -756,7 +756,7 @@ void CDrawDoc::OnFileSaveAs()
         if (pos > -1) fname = fname.Left(pos);
     }
 
-    CFileDialog dlg(FALSE, NULL, fname, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("manam (*.man)|*.man|Wszystkie pliki (*.*)|*.*||"));
+    CFileDialog dlg(FALSE, nullptr, fname, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("manam (*.man)|*.man|Wszystkie pliki (*.*)|*.*||"));
     if (dlg.DoModal() != IDOK)
         return;
 
@@ -771,12 +771,12 @@ void CDrawDoc::OnFileSaveAs()
 
 void CDrawDoc::OnImport(BOOL fromDB)
 {
-    const int n = (int)m_objects.size();
+    const auto n = (int)m_objects.size();
     if ((fromDB) ? DBImport() : Import(TRUE)) {
         auto pView = GetPanelView<CDrawView>();
         if (pView && pView->m_bActive) pView->Select(NULL, FALSE);
         RemoveFromHead(n);
-        UpdateAllViews(NULL, HINT_UPDATE_WINDOW, NULL);
+        UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
     } else
         RemoveFromTail((int)m_objects.size() - n);
 }
@@ -789,19 +789,19 @@ void CDrawDoc::OnFileImportPlus()
 void CDrawDoc::OnFileImportMinus()
 {
     Import(TRUE);
-    UpdateAllViews(NULL, HINT_UPDATE_WINDOW, NULL);
+    UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
 }
 
 void CDrawDoc::OnDBImportMinus()
 {
     DBImport(FALSE);
-    UpdateAllViews(NULL, HINT_UPDATE_WINDOW, NULL);
+    UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
 }
 
 void CDrawDoc::OnAddSynchronize()
 {
     DBImport(TRUE);
-    UpdateAllViews(NULL, HINT_UPDATE_WINDOW, NULL);
+    UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
 }
 
 void CDrawDoc::OnDBImportPlus()
@@ -814,12 +814,12 @@ void CDrawDoc::OnImportPlus(BOOL fromDB)
     const auto n = m_objects.size();
     if (!(fromDB ? DBImport() : Import(TRUE)))
         RemoveFromTail((int)(m_objects.size() - n));
-    UpdateAllViews(NULL, HINT_UPDATE_WINDOW, NULL);
+    UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
 }
 
 BOOL CDrawDoc::Import(BOOL check_exist) // tu dodaje na koncu do m_objects najwyzej sie potem usunie 
 {
-    CFileDialog dlg(TRUE, _T("txt"), _T(""), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Og³oszenia (*.txt)|*.txt| Wszystkie pliki (*.*)|*.*||"), NULL);
+    CFileDialog dlg(TRUE, _T("txt"), _T(""), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Og³oszenia (*.txt)|*.txt| Wszystkie pliki (*.*)|*.*||"), nullptr);
     if (dlg.DoModal() != IDOK)
         return 0;
 
@@ -828,7 +828,7 @@ BOOL CDrawDoc::Import(BOOL check_exist) // tu dodaje na koncu do m_objects najwy
         auto& buf = theApp.bigBuf;
         CStdioFile file(dlg.m_ofn.lpstrFile, CFile::modeRead | CFile::typeUnicode);
         CPoint pos = GetAsideAddPos(FALSE);
-        while (file.ReadString(buf, n_size) != NULL && ok)
+        while (file.ReadString(buf, n_size) != nullptr && ok)
             ok = CreateAdd(buf, '\t', pos, check_exist);
 
         file.Close();
@@ -975,7 +975,7 @@ void CDrawDoc::SetSpotKolor(UINT idx_m_spot_makiety, UINT idx_Spot_Kolor)
 
 void CDrawDoc::OnExport()
 {
-    CFileDialog dlg(FALSE, _T("txt"), _T("add.txt"), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Og³oszenia (*.txt) |*.txt| Wszystkie pliki (*.*)|*.*||"), NULL);
+    CFileDialog dlg(FALSE, _T("txt"), _T("add.txt"), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Og³oszenia (*.txt) |*.txt| Wszystkie pliki (*.*)|*.*||"), nullptr);
     if (dlg.DoModal() != IDOK)
         return;
 
@@ -1011,7 +1011,7 @@ void CDrawDoc::NumberPages()
         }
     }
     // sprawdzamy, czy nie powstan¹ duble w numeracji
-    const int pc = (int)m_pages.size();
+    const auto pc = (int)m_pages.size();
     const int iLastPageNumber = iFirstPageNumber + pc - iFirstPageToNumber;
     for (int i = 1; i < iFirstPageToNumber; ++i) {
         const int iNrToCheck = m_pages[i]->pagina;
@@ -1042,7 +1042,7 @@ void CDrawDoc::NumberPages()
         pPage->SetNr(((--iFirstPageNumber - pc) << 16) + pPage->pagina_type);
     }
 
-    UpdateAllViews(NULL);
+    UpdateAllViews(nullptr);
 }
 
 void CDrawDoc::OnNumberPages()
@@ -1062,7 +1062,7 @@ BOOL CDrawDoc::Add4Pages()
     if (dlg.DoModal() != IDOK)
         return FALSE;
 
-    const CRect r { 0 };
+    const CRect r{nullptr};
     const int n = _ttoi(dlg.m_ile_kolumn);
     const size_t last = m_pages.size();
     for (size_t i = last; i < last + n; ++i) {
@@ -1080,7 +1080,7 @@ BOOL CDrawDoc::Add4Pages()
     ZmianaSpotow((int)last + n);
     NumberPages();
     ComputeCanvasSize();
-    UpdateAllViews(NULL);
+    UpdateAllViews(nullptr);
 
     return TRUE;
 }
@@ -1095,7 +1095,7 @@ BOOL CDrawDoc::AddDrz4Pages(LPCTSTR ile_kolumn)
     gazeta = dlg.m_gazeta;
     id_drw = dlg.m_id_drw;
 
-    const CRect r { 0 };
+    const CRect r{nullptr};
     const int n = _ttoi(dlg.m_ile_kolumn);
     const auto last = (int)m_pages.size();
     for (int i = last; i < last + n; ++i) {
@@ -1107,7 +1107,7 @@ BOOL CDrawDoc::AddDrz4Pages(LPCTSTR ile_kolumn)
     ZmianaSpotow(n);
     NumberPages();
     ComputeCanvasSize();
-    UpdateAllViews(NULL);
+    UpdateAllViews(nullptr);
     return TRUE;
 }
 
@@ -1185,7 +1185,7 @@ void CDrawDoc::OnFileInfo()
         rezp = (float)rez / pmodcnt;
         wolp = (float)wol / pmodcnt;
         ::StringCchPrintf(theApp.bigBuf, n_size, _T("Wszystkich modu³ów\n\tog³oszeniowych %u\n\tredakcyjnych %u\n\tzarezerwowanych %u\n\twolnych %u\nStron\n\tog³oszeniowych %.3f\n\tredakcyjnych %.3f\n\tzarezerwowanych %.3f\n\twolnych %.3f\n\nPowierzchnia og³oszeñ: %.2f mod."), ogl, red, rez, wol, oglp, redp, rezp, wolp, PowAdd2Mod(FALSE));
-        MessageBox(NULL, theApp.bigBuf, _T("Statystyka"), MB_OK);
+        MessageBox(nullptr, theApp.bigBuf, _T("Statystyka"), MB_OK);
         return;
     }
 
@@ -1442,7 +1442,7 @@ void CDrawDoc::PrintInfo(CDC *pDC, int max_n, int wspol_na_str)  //wspol_na_str 
     }
 
     pDC->SelectObject(pOldFont);
-    if (&m_font != NULL) m_font.DeleteObject();
+    if (&m_font != nullptr) m_font.DeleteObject();
     if (vertOK) m_vertfont.DeleteObject();
 }
 
@@ -1595,7 +1595,7 @@ second_paper:
         AfxMessageBox(_T("nie odnaleziono og³oszeñ"));
 
     if (synchronize) { // usuñ z makiety te og³oszenia, które maj¹ nr>0 i nie ma ich w ATEX'ie
-        UpdateAllViews(NULL, HINT_SAVEAS_DELETE_SELECTION, NULL);
+        UpdateAllViews(nullptr, HINT_SAVEAS_DELETE_SELECTION, nullptr);
         BOOL spfluos = FALSE, rejestracjaSpfluos = FALSE;
         int i, j = 1, ac = (int)syncATEX.size();
         std::vector<CDrawAdd*> aDelAdds;
@@ -1640,7 +1640,7 @@ second_paper:
         // ostateczna synchronizacja
         if (bOstateczna) {
             if (aNewAdds.empty() && aModifAdds.empty() && aDelAdds.empty())
-                MessageBox(NULL, _T("Nie stwierdzono zmian"), _T("Ostateczna Weryfikacja z ATEX'em"), MB_OK);
+                MessageBox(nullptr, _T("Nie stwierdzono zmian"), _T("Ostateczna Weryfikacja z ATEX'em"), MB_OK);
             else {
                 COstWer dlg2(&aNewAdds, &aOldAdds, &aModifAdds, &aDelAdds, FALSE);
                 dlg2.DoModal();
@@ -1667,7 +1667,7 @@ second_paper:
             if (!sQueMissed.IsEmpty())
                 adnos += _T("W kolejce stoj¹ powi¹zane og³oszenia, ktorych brak w ATEXie:\n\n") + sQueMissed.Mid(2) + _T("\n\n");
             if (spfluos) {
-                UpdateAllViews(NULL);
+                UpdateAllViews(nullptr);
                 if (AfxMessageBox(adnos + _T("Czy usun¹æ nadmiarowe og³oszenia z makiety?"), MB_YESNO, AFX_IDP_ASK_TO_SAVE) == IDYES)
                     for (const auto& a : aDelAdds) {
                         Remove(a);
@@ -1817,7 +1817,7 @@ void CDrawDoc::OnDelremarks()
             auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
             if (pAdd) pAdd->remarks.Empty();
         }
-        UpdateAllViews(NULL);
+        UpdateAllViews(nullptr);
     }
 }
 
@@ -1858,7 +1858,7 @@ void CDrawDoc::OnPagederv()
 
 HMENU CDrawDoc::GetDefaultMenu()
 {
-    return isGRB ? m_grzbietMenu.GetSafeHmenu() : NULL;
+    return isGRB ? m_grzbietMenu.GetSafeHmenu() : nullptr;
 }
 
 void CDrawDoc::OnInsertGrzbiet()
@@ -1922,7 +1922,7 @@ void CDrawDoc::OnSetPagina()
             pAdd->SetDirty();
         }
     }
-    UpdateAllViews(NULL);
+    UpdateAllViews(nullptr);
 }
 
 void CDrawDoc::OnSetDea()
@@ -1945,7 +1945,7 @@ void CDrawDoc::OnUpdateSetDea(CCmdUI *pCmdUI)
 
 void CDrawDoc::OnShowTime()
 {
-    theApp.showDeadline = !theApp.showDeadline; UpdateAllViews(NULL);
+    theApp.showDeadline = !theApp.showDeadline; UpdateAllViews(nullptr);
 }
 
 void CDrawDoc::OnShowAcDeadline()
@@ -1955,7 +1955,7 @@ void CDrawDoc::OnShowAcDeadline()
         if (theManODPNET.ReadAcDeadlines(this))
             isACD = 1;
 
-    UpdateAllViews(NULL);
+    UpdateAllViews(nullptr);
 }
 
 void CDrawDoc::OnUpdateShowTime(CCmdUI *pCmdUI)

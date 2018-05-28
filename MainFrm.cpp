@@ -34,7 +34,7 @@ static UINT BASED_CODE indicators[] =
 /////////////////////////////////////////////////////////////////////////////
 // CMainFrame construction/destruction
 
-CMainFrame::CMainFrame() : lastCapToolBar(0), lastColToolBar(false)
+CMainFrame::CMainFrame()
 {
 }
 
@@ -166,7 +166,7 @@ BOOL CMainFrame::CreateManamToolBar()
 
 LRESULT CMainFrame::OnToolBarReset(WPARAM wp, LPARAM)
 {
-    UINT uiToolBarId = (UINT)wp;
+    auto uiToolBarId = (UINT)wp;
     switch (uiToolBarId) {
         case IDR_TOOL_MAIN:
             CMFCToolBarComboBoxButton cbKolorCombo(IDV_COMBO_COLOR, GetCmdMgr()->GetCmdImage(IDV_COMBO_COLOR, FALSE));
@@ -189,7 +189,7 @@ LRESULT CMainFrame::OnToolBarReset(WPARAM wp, LPARAM)
 
 void CMainFrame::OnToolBarCustomize()
 {
-    CMFCToolBarsCustomizeDialog* pDlgCust = new CMFCToolBarsCustomizeDialog(this, TRUE);
+    auto pDlgCust = new CMFCToolBarsCustomizeDialog(this, TRUE);
     this->OnToolBarReset(IDR_TOOL_MAIN, 0);
     pDlgCust->Create();
 }

@@ -77,7 +77,7 @@ BOOL CGridFrm::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwSty
 
 void CGridFrm::OnUpdate(CView *pSender, LPARAM lHint, CObject *pHint)
 {
-    if (m_bEventLockout || (pHint != NULL && !dynamic_cast<CDrawAdd*>(pHint)))
+    if (m_bEventLockout || (pHint != nullptr && !dynamic_cast<CDrawAdd*>(pHint)))
         return;
 
     m_bEventLockout = TRUE;
@@ -138,7 +138,7 @@ void CGridFrm::InvalAll()
         lcPubList.DeleteItem(0);
 
     for (const auto& pObj : pDoc->m_objects) {
-        CDrawAdd *pAdd = dynamic_cast<CDrawAdd*>(pObj);
+        auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
         if (pAdd)
             RefreshRow(nRow++, pAdd);
     }
@@ -373,7 +373,7 @@ void CGridFrm::OnFilePrintPreview()
 
 void CGridFrm::OnPrint(CDC *pDC, CPrintInfo* pInfo)
 {
-    CClientDC dcScreen(NULL);
+    CClientDC dcScreen{nullptr};
     pDC->SetMapMode(MM_ANISOTROPIC);
     // czynnik skaluj¹cy 
     pDC->SetWindowExt((int)(dcScreen.GetDeviceCaps(LOGPIXELSX) / 1.295), (int)(dcScreen.GetDeviceCaps(LOGPIXELSX) / 1.17));

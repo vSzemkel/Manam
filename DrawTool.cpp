@@ -93,7 +93,7 @@ void CDrawTool::OnMouseMove(CDrawView*, UINT, const CPoint& point)
 void CDrawTool::OnCancel()
 {
     c_drawShape = DrawShape::select;
-    ::SetCursor(::LoadCursor(0, IDC_ARROW));
+    ::SetCursor(::LoadCursor(nullptr, IDC_ARROW));
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -155,7 +155,7 @@ void CSelectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poi
     // Click on background, start a net-selection
     if (selectMode == SelectMode::none) {
         if ((nFlags & MK_SHIFT) == 0)
-            pView->Select(NULL);
+            pView->Select(nullptr);
 
         selectMode = SelectMode::netSelect;
 
@@ -235,8 +235,8 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
                                 else {
                                     const int mx = min(pmodulx, (int)modulx);
                                     const int my = -min(pmoduly, (int)moduly);
-                                    const int x = (int)(mx * nearbyint((double)pAdd->m_position.left / mx));
-                                    const int y = (int)(my * nearbyint((double)pAdd->m_position.top / my));
+                                    const auto x = (int)(mx * nearbyint((double)pAdd->m_position.left / mx));
+                                    const auto y = (int)(my * nearbyint((double)pAdd->m_position.top / my));
                                     toPos.SetRect(x, y, x + pAdd->m_position.Width(), y + pAdd->m_position.Height());
                                 }
                                 pAdd->SetPosition(&toPos, dstPage);
@@ -284,12 +284,12 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
                     const int szpalt_y = pAdd->szpalt_y;
                     const int mx = min(pmodulx, (int)modulx);
                     const int my = -min(pmoduly, (int)moduly);
-                    const int x = (int)(mx * ceil((double)toPos.left / mx - 0.5));
-                    const int y = (int)(my * ceil((double)toPos.bottom / my - 0.5));
+                    const auto x = (int)(mx * ceil((double)toPos.left / mx - 0.5));
+                    const auto y = (int)(my * ceil((double)toPos.bottom / my - 0.5));
                     const auto cx = ceil((toPos.right - toPos.left) / modulx - 0.5);
-                    const int sx = (int)(cx == 0 ? modulx : cx*modulx);
+                    const auto sx = (int)(cx == 0 ? modulx : cx*modulx);
                     const auto cy = ceil((toPos.top - toPos.bottom) / moduly - 0.5);
-                    const int sy = (int)(cy == 0 ? moduly : cy*moduly);
+                    const auto sy = (int)(cy == 0 ? moduly : cy*moduly);
                     const CPoint& p = toPos.CenterPoint();
                     CDrawPage *vPage = pView->GetDocument()->PageAt(p);
                     toPos.SetRect(x, y, x + sx, y + sy);
@@ -401,7 +401,7 @@ void CRectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
             auto pDoc = pView->GetDocument();
             auto pPage = pDoc->PageAt(local);
             if (pPage && pPage->m_dervlvl == DervType::proh) {
-                pView->Select(NULL);
+                pView->Select(nullptr);
                 return;
             }
             r = CRect(local, CSize(0, 0));

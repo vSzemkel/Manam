@@ -48,7 +48,7 @@ BOOL CSpacerDlg::Deal(CDrawAdd *vAdd)
         vDoc->Remove(vAdd);
         if (vAdd->m_add_xx < 1) delete vAdd;
         if (pPage) pPage->Invalidate();
-        else vDoc->UpdateAllViews(NULL);
+        else vDoc->UpdateAllViews(nullptr);
         vDoc->SetModifiedFlag(FALSE);
     } else dlg.refreshOnClose ? theApp.FileRefresh() : vAdd->UpdateInfo();
 
@@ -212,7 +212,7 @@ BOOL CSpacerDlg::OnInitDialog()
         m_lastemisionctl.SetRange(&m_lastemision, &hightime);
 
         CDrawPage *p = pub->m_pDocument->GetPage(pub->fizpage);
-        int count = (int)(p->m_adds.size() - 1);
+        auto count = (int)(p->m_adds.size() - 1);
         m_str_xx = p->id_str;
 
         CManODPNETParms orapar {
@@ -510,7 +510,7 @@ void CSpacerDlg::OnQue()
     }
 
     int ile_kol = (((pub->kolor & ColorId::full) == ColorId::full) ? ColorId::full : (((pub->kolor & ColorId::brak) == ColorId::brak) ? ColorId::brak : ColorId::spot));
-    int spo_xx = (int)CDrawDoc::spoty[pub->kolor >> 3];
+    auto spo_xx = (int)CDrawDoc::spoty[pub->kolor >> 3];
     if (IsDlgButtonChecked(IDC_DEALAPPEND))
         m_add_xx = GetDlgItemInt(IDC_SPACER);
     else if (firstSearch) {
@@ -625,7 +625,7 @@ void CSpacerDlg::OnOK()
     CString czas_kto(' ', 32);
     int qf = GetQueryFlag();
     int ile_kol = ((pub->kolor & ColorId::full) == ColorId::full) ? ColorId::full : (((pub->kolor & ColorId::brak) == ColorId::brak) ? ColorId::brak : ColorId::spot);
-    int spo_xx = (int)CDrawDoc::spoty[pub->kolor >> 3];
+    auto spo_xx = (int)CDrawDoc::spoty[pub->kolor >> 3];
 
     CManODPNETParms orapar {
         { CManODPNET::DbTypeInt32, &m_mak_xx },	// 0
@@ -675,7 +675,7 @@ void CSpacerDlg::OnOK()
                 m_first_emision_pub_xx = pub->m_pub_xx;
 
             const auto pDC = m_emisjelist.GetDC();
-            const int mrc = (int)mak_xxArr.size();
+            const auto mrc = (int)mak_xxArr.size();
             for (int j = 0; j < mrc; ++j) {
                 // ustal i na podstawie j
                 int mak_xx = mak_xxArr[j];

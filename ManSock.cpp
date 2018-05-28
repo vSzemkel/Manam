@@ -54,7 +54,7 @@ void CManSock::OnReceive(int nErrorCode)
         if (!pos || pos > msg + MSG_LEN) return;
         *pos = '\0';
         pos += 5;
-        ::MessageBox(NULL, pos, APP_NAME, MB_OK | MB_ICONINFORMATION);
+        ::MessageBox(nullptr, pos, APP_NAME, MB_OK | MB_ICONINFORMATION);
         HandleSysMsg1(&msg[10]);
         return;
     }
@@ -76,7 +76,7 @@ void CManSock::SendManamMessage(CString& msg, CString& login, BOOL broadcast)
         if (theManODPNET.EI("select space_reservation.manam_msg.send_broadcast(:msg) from dual", orapar)) {
             CString s;
             s.Format(_T("Powiadomienie otrzyma³o %i u¿ytkowników"), num);
-            ::MessageBox(NULL, s, APP_NAME, MB_OK | MB_ICONINFORMATION);
+            ::MessageBox(nullptr, s, APP_NAME, MB_OK | MB_ICONINFORMATION);
         }
     } else {
         CString ip(' ', 16);
@@ -107,21 +107,21 @@ void CManSock::HandleSysMsg1(TCHAR *sysmsg) const
     } while (pWnd != pActiveWnd);
 
     if (pAdd == nullptr) {
-        ::MessageBox(NULL, _T("Nie odnalezion og³oszenia. Skontaktuj siê ze sprzedawc¹, który wprowadzi³ zmianê lub zamknij makietê bez zapisywania zmian"), APP_NAME, MB_OK | MB_ICONINFORMATION);
+        ::MessageBox(nullptr, _T("Nie odnalezion og³oszenia. Skontaktuj siê ze sprzedawc¹, który wprowadzi³ zmianê lub zamknij makietê bez zapisywania zmian"), APP_NAME, MB_OK | MB_ICONINFORMATION);
         return;
     } else
         pActiveWnd->SetActiveWindow();
 
-    p = _tcstok(NULL, septok);
+    p = _tcstok(nullptr, septok);
     int ivar = _ttoi(p);
-    UINT arrVal = _ttoi(_tcstok(NULL, septok));
+    UINT arrVal = _ttoi(_tcstok(nullptr, septok));
     arrVal = CDrawDoc::GetIdxfromSpotID(arrVal);
     pAdd->kolor = (arrVal << 3) + ivar;
-    pAdd->remarks = _tcstok(NULL, septok);
-    pAdd->wersja = _tcstok(NULL, septok);
-    ivar = _ttol(_tcstok(NULL, septok));
+    pAdd->remarks = _tcstok(nullptr, septok);
+    pAdd->wersja = _tcstok(nullptr, septok);
+    ivar = _ttol(_tcstok(nullptr, septok));
     pAdd->powtorka = ivar ? POWTSEED_1 + ivar * ONEDAY : 0;
-    pAdd->oldAdno = _ttol(_tcstok(NULL, septok));
+    pAdd->oldAdno = _ttol(_tcstok(nullptr, septok));
 
     theApp.activeDoc->SelectAdd(pAdd, FALSE);
 }

@@ -521,7 +521,7 @@ CString CFlag::ToRaw() const
     CString raw("");
     if (size > CRITICAL_SIZE) {
         int32_t l;
-        char *str = (char*)flag;
+        auto str = (char*)flag;
         for (size_t i = 0; i < size; i += DBRAW_BLOCK) {
             memcpy((char*)&l, &str[i], DBRAW_BLOCK);
             ::StringCchPrintf(buf, 9, _T("%08lx"), l);

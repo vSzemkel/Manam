@@ -34,7 +34,7 @@ public:
     BOOL cancelGenEPS;				// flaga przerwania przetwarzania
     BOOL m_bIsGen;					// flaga okreœlaj¹ca, czy dialog jest w trybie generowania/sprawdzania 
 
-    virtual ~CGenEpsInfoDlg();
+    ~CGenEpsInfoDlg() override;
     void SetChannelCount(int iChannelCnt);
     void StrInfo(int iChannel, const CString& s);
     void OglInfo(int iChannel, const CString& s);

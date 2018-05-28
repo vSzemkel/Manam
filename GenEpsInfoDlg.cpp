@@ -10,8 +10,8 @@ CGenEpsInfoDlg CGenEpsInfoDlg::m_instance;
 CGenEpsInfoDlg::CGenEpsInfoDlg()
 {
     cancelGenEPS = FALSE;
-    hCreationEvent = ::CreateEvent(NULL, FALSE, FALSE, NULL);
-    if (hCreationEvent == NULL)
+    hCreationEvent = ::CreateEvent(nullptr, FALSE, FALSE, nullptr);
+    if (hCreationEvent == nullptr)
         AfxMessageBox(_T("B³¹d inicjalizacji CGenEpsInfoDlg"), MB_ICONERROR);
 }
 
@@ -23,9 +23,9 @@ CGenEpsInfoDlg::~CGenEpsInfoDlg()
 DWORD WINAPI CGenEpsInfoDlg::CreateGenEPSDialog(PMESPUMPDLGARG pArg)
 {
     HANDLE hEvent = pArg->hEvent;
-    HWND hWnd = ::CreateDialog(NULL, MAKEINTRESOURCE(CGenEpsInfoDlg::IDD), NULL, CGenEpsInfoDlg::DialogProc);
+    HWND hWnd = ::CreateDialog(nullptr, MAKEINTRESOURCE(CGenEpsInfoDlg::IDD), nullptr, CGenEpsInfoDlg::DialogProc);
 
-    if (hWnd != NULL)
+    if (hWnd != nullptr)
         ::ShowWindow(hWnd, SW_SHOW);
 
     pArg->pDlg->Attach(hWnd);
@@ -59,12 +59,12 @@ INT_PTR CALLBACK CGenEpsInfoDlg::DialogProc(HWND, UINT iMsg, WPARAM wParam, LPAR
 
 CGenEpsInfoDlg* CGenEpsInfoDlg::GetGenEpsInfoDlg(BOOL bIsGen)
 {
-    ASSERT(CGenEpsInfoDlg::m_instance.m_hWnd == NULL);
+    ASSERT(CGenEpsInfoDlg::m_instance.m_hWnd == nullptr);
     MESPUMPDLGARG dlgArg;
     dlgArg.pDlg = &CGenEpsInfoDlg::m_instance;
     dlgArg.hEvent = CGenEpsInfoDlg::m_instance.hCreationEvent;
     dlgArg.pDlg->cancelGenEPS = FALSE;
-    CGenEpsInfoDlg::m_instance.hWorkingThread = ::CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)CGenEpsInfoDlg::CreateGenEPSDialog, &dlgArg, 0, NULL);
+    CGenEpsInfoDlg::m_instance.hWorkingThread = ::CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)CGenEpsInfoDlg::CreateGenEPSDialog, &dlgArg, 0, nullptr);
     WaitForSingleObject(CGenEpsInfoDlg::m_instance.hCreationEvent, INFINITE);
 
     m_instance.m_bIsGen = bIsGen;
@@ -107,22 +107,22 @@ void CGenEpsInfoDlg::SetChannelCount(int iChannelCnt)
         case 2:
             pChildCtrl = CGenEpsInfoDlg::m_instance.GetDlgItem(IDC_SPA);
             pChildCtrl->GetWindowRect(&cwr);
-            ::MapWindowPoints(NULL, CGenEpsInfoDlg::m_instance.m_hWnd, (LPPOINT)&cwr, 2);
+            ::MapWindowPoints(nullptr, CGenEpsInfoDlg::m_instance.m_hWnd, (LPPOINT)&cwr, 2);
             pChildCtrl->SetWindowPos(&CWnd::wndTop, cwr.left, cwr.top - 45, cwr.Width(), cwr.Height(), SWP_SHOWWINDOW);
 
             pChildCtrl = CGenEpsInfoDlg::m_instance.GetDlgItem(IDC_A3_PAGE);
             pChildCtrl->GetWindowRect(&cwr);
-            ::MapWindowPoints(NULL, CGenEpsInfoDlg::m_instance.m_hWnd, (LPPOINT)&cwr, 2);
+            ::MapWindowPoints(nullptr, CGenEpsInfoDlg::m_instance.m_hWnd, (LPPOINT)&cwr, 2);
             pChildCtrl->SetWindowPos(&CWnd::wndTop, cwr.left, cwr.top - 45, cwr.Width(), cwr.Height(), SWP_SHOWWINDOW);
 
             pChildCtrl = CGenEpsInfoDlg::m_instance.GetDlgItem(IDC_OBJETOSC);
             pChildCtrl->GetWindowRect(&cwr);
-            ::MapWindowPoints(NULL, CGenEpsInfoDlg::m_instance.m_hWnd, (LPPOINT)&cwr, 2);
+            ::MapWindowPoints(nullptr, CGenEpsInfoDlg::m_instance.m_hWnd, (LPPOINT)&cwr, 2);
             pChildCtrl->SetWindowPos(&CWnd::wndTop, cwr.left, cwr.top - 45, cwr.Width(), cwr.Height(), SWP_SHOWWINDOW);
 
             pChildCtrl = CGenEpsInfoDlg::m_instance.GetDlgItem(IDCANCEL);
             pChildCtrl->GetWindowRect(&cwr);
-            ::MapWindowPoints(NULL, CGenEpsInfoDlg::m_instance.m_hWnd, (LPPOINT)&cwr, 2);
+            ::MapWindowPoints(nullptr, CGenEpsInfoDlg::m_instance.m_hWnd, (LPPOINT)&cwr, 2);
             pChildCtrl->SetWindowPos(&CWnd::wndTop, cwr.left, cwr.top + 110, cwr.Width(), cwr.Height(), SWP_SHOWWINDOW);
 
             CGenEpsInfoDlg::m_instance.SetWindowPos(&CWnd::wndTop, (dtwr.right - dwr.Width()) / 2, (dtwr.bottom - dwr.Height()) / 3, dwr.Width(), 295, SWP_SHOWWINDOW);

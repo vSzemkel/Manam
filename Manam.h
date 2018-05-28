@@ -24,7 +24,7 @@ class CDrawApp : public CWinAppEx
     DECLARE_DYNAMIC(CDrawApp)
   public:
     CDrawApp();
-    CDrawDoc* activeDoc;
+    CDrawDoc* activeDoc{nullptr};
     CString default_title, default_mut;
     ToolbarMode swCZV : 2;          // switch wskazuje typ widoku (zwyk³y==0,czasu obowi¹zywania==1,studio==2)
     ToolbarMode initCZV : 2;        // switch u¿ywany do okreœlania typu widoku przy otwieraniu

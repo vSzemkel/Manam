@@ -32,18 +32,18 @@ class CDrawView : public CScrollView
     // Operations
     static void CALLBACK CDrawView::DelegateGenEPS(PTP_CALLBACK_INSTANCE, PVOID parameter, PTP_WORK work);
 
-    virtual ~CDrawView() noexcept {};
-    virtual void OnDraw(CDC* pDC) override; // overridden to draw this view
-    virtual void OnActivateView(BOOL bActivate, CView* pActiveView, CView* pDeactiveView) override;
-    virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) override;
-    virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo) override;
-    virtual BOOL OnScrollBy(CSize sizeScroll, BOOL bDoScroll) override;
-    virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam) override;
-    virtual BOOL IsSelected(const CObject* pDocItem) const override;
+    ~CDrawView() noexcept override = default;
+    void OnDraw(CDC* pDC) override; // overridden to draw this view
+    void OnActivateView(BOOL bActivate, CView* pActiveView, CView* pDeactiveView) override;
+    void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) override;
+    void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo) override;
+    BOOL OnScrollBy(CSize sizeScroll, BOOL bDoScroll) override;
+    BOOL PreCreateWindow(CREATESTRUCT& cs) override;
+    BOOL OnCommand(WPARAM wParam, LPARAM lParam) override;
+    BOOL IsSelected(const CObject* pDocItem) const override;
 #ifdef _DEBUG
-    virtual void AssertValid() const override;
-    virtual void Dump(CDumpContext& dc) const override;
+    void AssertValid() const override;
+    void Dump(CDumpContext& dc) const override;
 #endif
 
     auto GetDocument() const noexcept { return reinterpret_cast<CDrawDoc*>(m_pDocument); }
@@ -71,17 +71,17 @@ class CDrawView : public CScrollView
     // Attributes
     static CLIPFORMAT m_cfDraw; // custom clipboard format
     std::vector<CDrawObj*> m_selection;
-    BOOL m_bActive; // is the view active?
+    BOOL m_bActive{FALSE}; // is the view active?
 
   protected:
     CDrawView() noexcept; // create from serialization only
 
-    virtual void OnInitialUpdate() override; // called first time after construct
+    void OnInitialUpdate() override; // called first time after construct
     // Printing support
-    virtual BOOL OnPreparePrinting(CPrintInfo* pInfo) override;
-    virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo) override;
-    virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) override;
-    virtual void OnPrint(CDC* pDC, CPrintInfo* pInfo) override;
+    BOOL OnPreparePrinting(CPrintInfo* pInfo) override;
+    void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo) override;
+    void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) override;
+    void OnPrint(CDC* pDC, CPrintInfo* pInfo) override;
 
     void OnChoosePageFont();
     void OnChooseAddFont();
@@ -171,7 +171,7 @@ class CDrawView : public CScrollView
     DECLARE_MESSAGE_MAP()
   private:
     static int OnDisableMenuInt(CCmdUI* pCmdUI);
-    unsigned char m_pagesPrinted;
+    unsigned char m_pagesPrinted{PRINT_DOC};
 
     BOOL ModifyMutczas(int n);
     void OnPrevKolumnaDruk();                // pokazuje preview kolumny przygotowanej do druku

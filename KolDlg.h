@@ -37,7 +37,7 @@ public:
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CConnDlg)
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override; // DDX/DDV support
     //}}AFX_VIRTUAL
 
 // Implementation
@@ -45,8 +45,8 @@ protected:
 
     // Generated message map functions
     //{{AFX_MSG(CConnDlg)
-    virtual BOOL OnInitDialog() override;
-    virtual void OnOK() override;
+    BOOL OnInitDialog() override;
+    void OnOK() override;
     //}}AFX_MSG
     afx_msg void OnChangePasswd();
     DECLARE_MESSAGE_MAP()
@@ -70,11 +70,11 @@ public:
 
 // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CKolDlg)
-    virtual BOOL OnInitDialog() override;
+    BOOL OnInitDialog() override;
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
 };
@@ -128,11 +128,11 @@ public:
     //}}AFX_DATA
 // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CPageDlg)
-    virtual BOOL OnInitDialog() override;
+    BOOL OnInitDialog() override;
     afx_msg void GiveOutStrLog();
     afx_msg void OnSelchangePrnMak();
     afx_msg void OnBnClickedAcdead();
@@ -228,8 +228,8 @@ private:
     CDrawDoc *vActiveDoc;
     // Implementation
 protected:
-    virtual BOOL OnInitDialog() override;
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    BOOL OnInitDialog() override;
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CAddDlg)
@@ -312,11 +312,11 @@ public:
     CComboBox m_wydawcyredcombo;
     //}}AFX_DATA
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CInfoDlg)
-    virtual BOOL OnInitDialog() override;
+    BOOL OnInitDialog() override;
     afx_msg void OnShowPageDeadlines();
     afx_msg void OnSign();
     afx_msg void OnOK() override;
@@ -340,7 +340,7 @@ public:
 
 // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(COpisDlg)
@@ -348,7 +348,7 @@ protected:
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
 public:
-    BOOL m_Centruj;
+    BOOL m_Centruj{FALSE};
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -368,7 +368,7 @@ public:
 
 // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CZoomDlg)
@@ -402,11 +402,11 @@ public:
 
     // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
-    virtual void OnOK() override;
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void OnOK() override;
     // Generated message map functions
     //{{AFX_MSG(CDbDlg)
-    virtual BOOL OnInitDialog() override;
+    BOOL OnInitDialog() override;
     afx_msg void OnDefineZone();
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
@@ -431,12 +431,12 @@ public:
     int m_id_drw;
     // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
-    virtual BOOL OnInitDialog() override;
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    BOOL OnInitDialog() override;
 
     // Generated message map functions
     //{{AFX_MSG(CDrzDlg)
-    virtual void OnOK() override;
+    void OnOK() override;
     afx_msg void OnKiedyChanged(NMHDR *pNMHDR, LRESULT *pResult);
     afx_msg void OnCbnEditupdateDrzewo();
     //}}AFX_MSG
@@ -461,9 +461,9 @@ public:
     int m_id_drw;
     // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
-    virtual BOOL OnInitDialog() override;
-    virtual void OnOK() override;
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    BOOL OnInitDialog() override;
+    void OnOK() override;
 
     // Generated message map functions
     //{{AFX_MSG(CDrz1Dlg)
@@ -500,8 +500,8 @@ private:
     BOOL bEnableCtrls;
     void RefreshCombo();
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
-    virtual void OnOK() override;
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void OnOK() override;
     // Generated message map functions
     //{{AFX_MSG(CDBOpenDlg)
     afx_msg void OnChangeTytul();
@@ -532,9 +532,9 @@ public:
 
     // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
-    virtual void OnOK() override;
-    virtual BOOL OnInitDialog() override;
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void OnOK() override;
+    BOOL OnInitDialog() override;
     // Generated message map functions
     //{{AFX_MSG(CDBSaveAsDlg)
     afx_msg void OnLib();
@@ -568,7 +568,7 @@ public:
 
 // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CAddDesc)
@@ -595,7 +595,7 @@ public:
 
 // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CAddFindDlg)
@@ -625,7 +625,7 @@ public:
 
 // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CInfoDlgLib)
@@ -674,12 +674,12 @@ public:
 
 // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CConfDlg)
-    virtual void OnOK() override;
-    virtual BOOL OnInitDialog() override;
+    void OnOK() override;
+    BOOL OnInitDialog() override;
     afx_msg void OnDaydirs();
     afx_msg void OnSubdir();
     afx_msg void OnBnClickedCopyPodwaly();
@@ -704,11 +704,11 @@ public:
 
 // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CPassDlg)
-    virtual void OnOK() override;
+    void OnOK() override;
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
 };
@@ -742,12 +742,12 @@ public:
 
 // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CPrnEpsDlg)
-    virtual BOOL OnInitDialog() override;
-    virtual void OnOK() override;
+    BOOL OnInitDialog() override;
+    void OnOK() override;
     afx_msg void OnAllPages();
     afx_msg void OnFmteps();
     afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
@@ -778,13 +778,13 @@ public:
     BOOL yesNext;
     // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CUserDlg)
     afx_msg void OnZaloz();
     afx_msg void OnYesnnext();
-    virtual BOOL OnInitDialog() override;
+    BOOL OnInitDialog() override;
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
 };
@@ -816,15 +816,15 @@ public:
 
     // Implementation
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CAccDlg)
     afx_msg void OnAlltyt();
     afx_msg void OnYesnnext();
-    virtual BOOL OnInitDialog() override;
+    BOOL OnInitDialog() override;
     afx_msg void OnGrantAlike();
-    virtual void OnOK() override;
+    void OnOK() override;
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
 };
@@ -858,7 +858,7 @@ public:
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CNewTitleDlg)
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
 // Implementation
@@ -890,7 +890,7 @@ public:
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CEPSDateDlg)
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
 // Implementation
@@ -899,7 +899,7 @@ protected:
     CImageList m_SmallImageList, m_StateImageList;
     // Generated message map functions
     //{{AFX_MSG(CEPSDateDlg)
-    virtual BOOL OnInitDialog() override;
+    BOOL OnInitDialog() override;
     afx_msg void OnUznaj();
     afx_msg void OnClickEpsdate(NMHDR *pNMHDR, LRESULT* pResult);
     //}}AFX_MSG
@@ -928,7 +928,7 @@ public:
         // ClassWizard generated virtual function overrides
         //{{AFX_VIRTUAL(CDirDaysDlg)
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
 // Implementation
@@ -938,7 +938,7 @@ protected:
     //{{AFX_MSG(CDirDaysDlg)
     afx_msg void OnDaydirs();
     afx_msg void OnCab();
-    virtual void OnOK() override;
+    void OnOK() override;
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
 };
@@ -969,7 +969,7 @@ public:
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CPageDerv)
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
 // Implementation
@@ -977,8 +977,8 @@ protected:
 
     // Generated message map functions
     //{{AFX_MSG(CPageDerv)
-    virtual BOOL OnInitDialog() override;
-    virtual void OnOK() override;
+    BOOL OnInitDialog() override;
+    void OnOK() override;
     afx_msg void OnSelchangeDervlvl();
     afx_msg void OnDirectionChange(UINT mode);
     //}}AFX_MSG
@@ -1012,15 +1012,15 @@ public:
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CGrzbDlg)
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
 // Implementation
 protected:
     // Generated message map functions
     //{{AFX_MSG(CGrzbDlg)
-    virtual BOOL OnInitDialog() override;
-    virtual void OnOK() override;
+    BOOL OnInitDialog() override;
+    void OnOK() override;
     afx_msg void OnExpandGrzbiet();
     afx_msg void OnShrinkGrzbiet();
     afx_msg void OnBnClicked4x4();
@@ -1037,14 +1037,14 @@ class CAccGrbDlg final : public CDialog
 
 public:
     CAccGrbDlg(CWnd *pParent = nullptr);   // standard constructor
-    virtual ~CAccGrbDlg() = default;
+    ~CAccGrbDlg() override = default;
 
     // Dialog Data
     enum { IDD = IDD_ACCGRB };
 
 protected:
-    virtual BOOL OnInitDialog() override;
-    virtual void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    BOOL OnInitDialog() override;
+    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
 
     DECLARE_MESSAGE_MAP()
 public:
@@ -1064,15 +1064,15 @@ class COstWer final : public CDialog
 public:
     COstWer(CWnd *pParent = nullptr);   // standard constructor
     COstWer(std::vector<CDrawAdd*> *aNewAdds, std::vector<CDrawAdd*> *aOldAdds, std::vector<CDrawAdd*> *aModifAdds, std::vector<CDrawAdd*> *aDelAdds, BOOL bBankOnly);
-    virtual ~COstWer() = default;
+    ~COstWer() override = default;
 
     // Dialog Data
     enum { IDD = IDD_ATEXADDS };
 
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
-    virtual BOOL OnInitDialog() override;
-    virtual void OnCancel() override;
+    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    BOOL OnInitDialog() override;
+    void OnCancel() override;
 
     DECLARE_MESSAGE_MAP()
 private:
@@ -1098,13 +1098,13 @@ public:
     CTime m_kol;
 
     CAcDeadDlg(CWnd *pParent = nullptr);   // standard constructor
-    virtual ~CAcDeadDlg() = default;
+    ~CAcDeadDlg() override = default;
 
     // Dialog Data
     enum { IDD = IDD_ACDEAD };
 
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
 
     DECLARE_MESSAGE_MAP()
 };
@@ -1126,8 +1126,8 @@ public:
 // Implementation
 protected:
     //{{AFX_MSG(CAboutDlg)
-    virtual void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
-    virtual BOOL OnInitDialog() override;
+    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    BOOL OnInitDialog() override;
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
 };

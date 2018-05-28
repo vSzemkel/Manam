@@ -60,7 +60,7 @@ void CConnDlg::OnOK()
     CString& tns = theApp.m_tnsname;
 
     TCHAR manamPath[MAX_PATH];
-    ::GetModuleFileName(NULL, manamPath, MAX_PATH);
+    ::GetModuleFileName(nullptr, manamPath, MAX_PATH);
     auto pos = _tcsrchr(manamPath, _T('\\'));
     ::StringCchCopy(pos + 1, 29, _T("Oracle.ManagedDataAccess.dll"));
     if (::PathFileExistsW(manamPath) == FALSE) {
@@ -912,7 +912,7 @@ void CAddDlg::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 void CAddDlg::OnBnClickedOdblokuj()
 {
     if (theApp.isRDBMS && UpdateData()) {
-        int adno = static_cast<int>(GetDlgItemInt(ID_NREPS));
+        auto adno = static_cast<int>(GetDlgItemInt(ID_NREPS));
         if (adno < 0x1000000) return;
         CString tytul(theApp.activeDoc->gazeta.Left(3)), mutacja(theApp.activeDoc->gazeta.Mid(4, 2));
         CManODPNETParms orapar {
@@ -927,7 +927,7 @@ void CAddDlg::OnBnClickedOdblokuj()
 
 void CAddDlg::OnDtnDatetimechangePowt(NMHDR *pNMHDR, LRESULT *pResult)
 {
-    LPNMDATETIMECHANGE pDTChange = reinterpret_cast<LPNMDATETIMECHANGE>(pNMHDR);
+    auto pDTChange = reinterpret_cast<LPNMDATETIMECHANGE>(pNMHDR);
     m_candidateAdnoDate.Format(c_formatDaty, pDTChange->st.wDay, pDTChange->st.wMonth, pDTChange->st.wYear);
     CString sOldAdno;
     GetDlgItem(ID_OLDADNO)->GetWindowText(sOldAdno);
@@ -1226,9 +1226,7 @@ END_MESSAGE_MAP()
 // CInfoDlg message handlers
 /////////////////////////////////////////////////////////////////////////////
 // COpisDlg dialog
-COpisDlg::COpisDlg(CWnd *pParent /*=NULL*/)
-    : CDialog(COpisDlg::IDD, pParent)
-    , m_Centruj(FALSE)
+COpisDlg::COpisDlg(CWnd *pParent /*=NULL*/) : CDialog(COpisDlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(COpisDlg)
     //}}AFX_DATA_INIT
@@ -1392,7 +1390,7 @@ BOOL CDrzDlg::OnInitDialog()
 void CDrzDlg::OnKiedyChanged(NMHDR *pNMHDR, LRESULT *pResult)
 {
     static CTime oldDate = 0;
-    LPNMDATETIMECHANGE pDTChange = reinterpret_cast<LPNMDATETIMECHANGE>(pNMHDR);
+    auto pDTChange = reinterpret_cast<LPNMDATETIMECHANGE>(pNMHDR);
     CTime t = CTime(pDTChange->st);
     if (t != oldDate) {
         oldDate = t;
@@ -1418,7 +1416,7 @@ void CDrzDlg::OnCbnEditupdateDrzewo()
 {
     static CString sLastTytul;
     CString typed, match;
-    CComboBox *pebDrzewo = (CComboBox*)GetDlgItem(IDC_DRZEWO);
+    auto pebDrzewo = (CComboBox*)GetDlgItem(IDC_DRZEWO);
 
     pebDrzewo->GetWindowText(typed);
     if (typed.IsEmpty()) return;
@@ -2445,7 +2443,7 @@ END_MESSAGE_MAP()
 void CDirDaysDlg::OnDaydirs()
 {
     ::GetCurrentDirectory(_MAX_DIR, theApp.bigBuf);
-    CFileDialog fd(TRUE, NULL, _T("dir"));
+    CFileDialog fd(TRUE, nullptr, _T("dir"));
     if (fd.DoModal() == IDOK)
         GetDlgItem(IDC_NAME)->SetWindowText(fd.GetPathName().Left(fd.m_ofn.nFileOffset));
     ::SetCurrentDirectory(theApp.bigBuf);
@@ -2472,7 +2470,7 @@ void CDirDaysDlg::OnOK()
     CDialog::OnOK();
     while (m_odkiedy <= m_dokiedy) {
         if (m_odkiedy.GetDayOfWeek() != 1) //w niedziele nie
-            ::CreateDirectory(m_path + m_odkiedy.Format(c_ctimeDataWs), NULL);
+            ::CreateDirectory(m_path + m_odkiedy.Format(c_ctimeDataWs), nullptr);
         m_odkiedy += m_oneday;
     }
     ::WriteProfileString(_T("GenEPS"), _T("DayDirsRoot"), m_path);
@@ -2742,7 +2740,7 @@ COstWer::COstWer(CWnd *pParent /*=NULL*/)
 }
 
 COstWer::COstWer(std::vector<CDrawAdd*> *aNewAdds, std::vector<CDrawAdd*> *aOldAdds, std::vector<CDrawAdd*> *aModifAdds, std::vector<CDrawAdd*> *aDelAdds, BOOL bBankOnly)
-    : CDialog(COstWer::IDD, NULL)
+    : CDialog(COstWer::IDD, nullptr)
 {
     m_aNewAdds = aNewAdds;
     m_aOldAdds = aOldAdds;

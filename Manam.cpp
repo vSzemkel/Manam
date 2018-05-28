@@ -66,9 +66,9 @@ CDrawApp NEAR theApp;
 /////////////////////////////////////////////////////////////////////////////
 // CDrawApp construction
 
-CDrawApp::CDrawApp() : activeDoc(nullptr), m_InternetSession(APP_NAME)
+CDrawApp::CDrawApp() : m_InternetSession(APP_NAME)
 {
-    BYTE i, *p = static_cast<BYTE*>(::LockResource(::LoadResource(NULL, ::FindResource(NULL, (LPCTSTR)VS_VERSION_INFO, RT_VERSION))));
+    BYTE i, *p = static_cast<BYTE*>(::LockResource(::LoadResource(nullptr, ::FindResource(nullptr, (LPCTSTR)VS_VERSION_INFO, RT_VERSION))));
     for (i = 0, p += 36; *((WORD*)p) == 0 && i < 4; p += 2, i++); // 36 == 3*WORD + sizeof(L"VS_VERSION_INFO")
     auto ffi = reinterpret_cast<VS_FIXEDFILEINFO*>(p);
     m_app_version.Format(_T(" %u.%u.%u.%u"), (ffi->dwFileVersionMS & 0xffff0000) >> 16, (ffi->dwFileVersionMS & 0x0000ffff), (ffi->dwFileVersionLS & 0xffff0000) >> 16, (ffi->dwFileVersionLS & 0x0000ffff));
@@ -123,7 +123,7 @@ BOOL CDrawApp::InitInstance()
     pMainFrame->ShowWindow(m_nCmdShow);
 
     // wielki bufor tekstowy 
-    bigBuf = static_cast<TCHAR*>(::VirtualAlloc(NULL, bigSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
+    bigBuf = static_cast<TCHAR*>(::VirtualAlloc(nullptr, bigSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
     if (!bigBuf) {
         AfxMessageBox(_T("Zbyt ma³o pamiêci do uruchomienia aplikacji"), MB_ICONSTOP);
         return FALSE;
@@ -192,10 +192,10 @@ int CDrawApp::ExitInstance()
 void CDrawApp::AddToRecentFileList(LPCTSTR lpszPathName)
 {
     ASSERT_VALID(this);
-    ENSURE_ARG(lpszPathName != NULL);
+    ENSURE_ARG(lpszPathName != nullptr);
     ASSERT(AfxIsValidString(lpszPathName));
 
-    if (m_pRecentFileList != NULL) // do not check if Windows7
+    if (m_pRecentFileList != nullptr) // do not check if Windows7
         m_pRecentFileList->Add(lpszPathName);
 }
 
@@ -226,8 +226,8 @@ BOOL CDrawApp::ConnecttoDB()
 
     // pobierz MAC adres
     CString mac;
-    PMIB_IFROW pifr = nullptr;
-    PMIB_IFTABLE pift = (PMIB_IFTABLE)bigBuf;
+    PMIB_IFROW pifr{nullptr};
+    auto pift = (PMIB_IFTABLE)bigBuf;
     ULONG pift_size = bigSize;
     const unsigned int en = GetIfTable(pift, &pift_size, FALSE);
     if (en == NO_ERROR)
@@ -478,7 +478,7 @@ void CDrawApp::OnFileNewBath()
 {
     if (!theApp.isRDBMS) return;
 
-    CFileDialog dlg(TRUE, _T("txt"), _T(""), OFN_HIDEREADONLY, _T("Definicje edycji makiet (*.txt) |*.txt| Wszystkie pliki (*.*)|*.*||"), NULL);
+    CFileDialog dlg(TRUE, _T("txt"), _T(""), OFN_HIDEREADONLY, _T("Definicje edycji makiet (*.txt) |*.txt| Wszystkie pliki (*.*)|*.*||"), nullptr);
     if (dlg.DoModal() != IDOK) return;
 
     CStdioFile f;
@@ -598,7 +598,7 @@ void CDrawApp::OnUpdateCaptions(CCmdUI *pCmdUI)
 
 void CDrawApp::OnUpdateToolBarCombo(CCmdUI *pCmdUI)
 {
-    pCmdUI->Enable(!disableMenu && theApp.activeDoc != NULL);
+    pCmdUI->Enable(!disableMenu && theApp.activeDoc != nullptr);
 }
 
 void CDrawApp::OnNewTitle()
@@ -630,7 +630,7 @@ void CDrawApp::OnDaydirs()
 
 BOOL CDrawApp::OpenWebBrowser(const TCHAR *sUrl)
 {
-    const size_t ret = (size_t)::ShellExecute(::GetDesktopWindow(), _T("Open"), sUrl, NULL, NULL, SW_SHOWNORMAL);
+    const auto ret = (size_t)::ShellExecute(::GetDesktopWindow(), _T("Open"), sUrl, nullptr, nullptr, SW_SHOWNORMAL);
     return ret > 32;
 }
 
@@ -647,13 +647,13 @@ void CDrawApp::OpenWebBrowser(size_t service, const TCHAR* sUrl)
 void CDrawApp::SetErrorMessage(LPTSTR lpBuffer)
 {
     const auto dw = ::GetLastError();
-    ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, dw, LANG_USER_DEFAULT, lpBuffer, n_size, NULL);
+    ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, dw, LANG_USER_DEFAULT, lpBuffer, n_size, nullptr);
 }
 
 std::unique_ptr<CHttpFile> CDrawApp::OpenURL(size_t service, const CString& sUrl)
 {
     if (!isRDBMS) {
-        ::MessageBox(NULL, _T("Wymagane po³¹czenie do bazy danych"), APP_NAME, MB_OK | MB_ICONERROR);
+        ::MessageBox(nullptr, _T("Wymagane po³¹czenie do bazy danych"), APP_NAME, MB_OK | MB_ICONERROR);
         return nullptr;
     }
 
@@ -666,14 +666,14 @@ std::unique_ptr<CHttpFile> CDrawApp::OpenURL(size_t service, const CString& sUrl
     EndWaitCursor();
 
     if (!f)
-        ::MessageBox(NULL, _T("Nieprawid³owy URL: ") + sUrl, APP_NAME, MB_OK | MB_ICONERROR);
+        ::MessageBox(nullptr, _T("Nieprawid³owy URL: ") + sUrl, APP_NAME, MB_OK | MB_ICONERROR);
 
     return f;
 }
 
 CTime CDrawApp::ShortDateToCTime(const CString& sData)
 {
-    return CTime(_ttoi(sData.Mid(6, 4)), _ttoi(sData.Mid(3, 2)), _ttoi(sData.Mid(0, 2)), 0, 0, 0);
+    return {_ttoi(sData.Mid(6, 4)), _ttoi(sData.Mid(3, 2)), _ttoi(sData.Mid(0, 2)), 0, 0, 0};
 }
 
 void CDrawApp::CTimeToShortDate(const CTime& tData, CString& sData)

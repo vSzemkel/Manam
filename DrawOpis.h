@@ -10,12 +10,12 @@ class CDrawOpis final : public CDrawObj
     CDrawOpis(const CRect& position) noexcept;
     CDrawOpis(const CRect& position, const TCHAR *tx) noexcept;
 
-    virtual void Draw(CDC *pDC) override;
-    virtual void Print(CDC *pDC) override;
-    virtual void Serialize(CArchive &ar) override;
+    void Draw(CDC *pDC) override;
+    void Print(CDC *pDC) override;
+    void Serialize(CArchive &ar) override;
 
-    virtual BOOL OnOpen(CDrawView *pView) override;
-    virtual CDrawObj *Clone(CDrawDoc *pDoc) const override;
+    BOOL OnOpen(CDrawView *pView) override;
+    CDrawObj *Clone(CDrawDoc *pDoc) const override;
 
     int m_opi_xx;
     float m_Scale;

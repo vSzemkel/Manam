@@ -143,15 +143,15 @@ class CDrawDoc final : public COleDocument
     const CRozm* GetCRozm(PGENEPSARG pArg, int s_x, int s_y, int typ_xx = 0);
 
 #ifdef _DEBUG
-    virtual void AssertValid() const override;
-    virtual void Dump(CDumpContext& dc) const override;
+    void AssertValid() const override;
+    void Dump(CDumpContext& dc) const override;
 #endif
 
-    int m_mak_xx;          // ident makiety
-    int id_drw;            // ident drzewa
+    int m_mak_xx{-1};      // ident makiety
+    int id_drw{-2};        // ident drzewa
     int iPagesInRow;       // ile stron rysyje siê w wierszu
     BYTE ovEPS : 1;        // nadpisuj EPS'y przy generacji
-    BYTE isRO : 1;         // otwarty tylko do odczytu
+    BYTE isRO  : 1;        // otwarty tylko do odczytu
     BYTE isSIG : 1;        // makieta podpisana przez kierownika 
     BYTE isGRB : 1;        // grzbiet
     BYTE isLIB : 1;        // makieta biblioteczna
@@ -164,8 +164,8 @@ class CDrawDoc final : public COleDocument
     CString daydir;        // do generowania ps z katalogów dniowych
     CString docmutred;     // lista dopuszczalnych mutacji redakcyjnych
     CString sOpiServerUrl; // adres serwera OPI, do którego bêd¹ wysy³ane kolumny
-    DocType iDocType;      // typ dokumentu na podstawie eDocType
-    ToolbarMode swCZV;     // prze³¹cznik widoku: 0==standard; 1==czas_obow; 2==studio;
+    DocType iDocType{DocType::makieta};     // typ dokumentu na podstawie eDocType
+    ToolbarMode swCZV{ToolbarMode::normal}; // prze³¹cznik widoku: 0==standard; 1==czas_obow; 2==studio;
 
     std::vector<UINT> m_spot_makiety;  // lista uzywanych kolorow spotowych
     std::vector<CDrawObj*>  m_objects; // lista og³oszeñ i opisów nale¿¹cych do dokumentu, og³oszenia przed opisami
@@ -222,7 +222,7 @@ protected:
     DECLARE_MESSAGE_MAP()
 
 private:
-    float drobneH;                                     // wysokoœæ drobnych na stronie
+    float drobneH{0};                                 // wysokoœæ drobnych na stronie
     int findNextInd;
     CMenu m_grzbietMenu;
     CTime dataZamkniecia;
@@ -242,7 +242,7 @@ private:
 template<class T> T* CDrawDoc::GetPanelView() const noexcept
 {
     POSITION pos = GetFirstViewPosition();
-    while (pos != NULL) {
+    while (pos != nullptr) {
         auto vView = dynamic_cast<T*>(GetNextView(pos));
         if (vView)
             return vView;

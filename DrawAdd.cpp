@@ -39,9 +39,9 @@ const int CDrawAdd::ciMaxRings = 4;
 
 IMPLEMENT_SERIAL(CDrawAdd, CDrawObj, 0)
 
-CDrawAdd::CDrawAdd() noexcept : // u¿ywany tylko przez ::Serialize
-    m_pub_xx(-1), nag_xx(1), bank { 0 }, precelWertexCnt(0), precelRingCnt(0), iFileId(0)
-{}
+CDrawAdd::CDrawAdd() noexcept : bank{0}
+{
+}
 
 CDrawAdd::CDrawAdd(const CRect& position) noexcept : CDrawAdd::CDrawAdd()
 {
@@ -195,7 +195,7 @@ void CDrawAdd::Draw(CDC* pDC)
                 pDC->FillRect(r1, CDrawDoc::GetSpotBrush(iKolInd ? (iKolInd + 1) % CDrawDoc::brushe.size() : 0));
         }
         if (aRectClip)
-            pDC->SelectClipRgn(NULL);
+            pDC->SelectClipRgn(nullptr);
     }
 
     pDC->SelectStockObject(NULL_BRUSH);
@@ -320,8 +320,8 @@ void CDrawAdd::DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, BOOL top) const
 
 void CDrawAdd::DrawPadlock(CDC* pDC, const CRect& rect) const
 {
-    CBrush* pOldBrush = (CBrush*)pDC->SelectStockObject(BLACK_BRUSH);
-    CPen* pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
+    auto pOldBrush = (CBrush*)pDC->SelectStockObject(BLACK_BRUSH);
+    auto pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
 
     if (m_pDocument->swCZV != ToolbarMode::czas_obow) { // k³ódka
         CRect r(rect.right - 4 * vscale, rect.bottom + 4 * vscale, rect.right, rect.bottom);
@@ -345,8 +345,8 @@ void CDrawAdd::Print(CDC* pDC)
 {
     ASSERT_VALID(this);
 
-    CBrush* pOldBrush = pDC->SelectObject(CDrawDoc::GetSpotBrush(kolor >> 3));
-    CPen* pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
+    auto pOldBrush = pDC->SelectObject(CDrawDoc::GetSpotBrush(kolor >> 3));
+    auto pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
 
     CRgn rgn;
     int iClipRegions;
@@ -372,7 +372,7 @@ void CDrawAdd::Print(CDC* pDC)
             for (int i = 0; i < iClipRegions; ++i) {
                 pDC->IntersectClipRect(aRectClip[i]);
                 DrawKolor(pDC, &rect);
-                pDC->SelectClipRgn(NULL);
+                pDC->SelectClipRgn(nullptr);
             }
             pDC->SelectStockObject(NULL_BRUSH);
             pDC->OffsetWindowOrg(-rect.left, -rect.top);
@@ -397,7 +397,7 @@ void CDrawAdd::Print(CDC* pDC)
             for (int i = 0; i < iClipRegions; ++i) {
                 pDC->IntersectClipRect(aRectClip[i]);
                 DrawKolor(pDC, &rect);
-                pDC->SelectClipRgn(NULL);
+                pDC->SelectClipRgn(nullptr);
             }
             pDC->SelectStockObject(NULL_BRUSH);
             pDC->OffsetWindowOrg(-rect.left, -rect.top);
@@ -905,7 +905,7 @@ void CDrawAdd::InitPrecel(const CString& sPrecelFlag)
         }
 
     // wyrownanie do kraty	
-    const int iRightBound = static_cast<int>(sizex * modulx);
+    const auto iRightBound = static_cast<int>(sizex * modulx);
     for (int i = 0; i < precelWertexCnt; ++i) {
         if (aPrecelWertex[i].x == iRightBound) aPrecelWertex[i].x -= 11;
     }
@@ -1115,7 +1115,7 @@ int CDrawAdd::CkPageLocation(int vFizPage)
     // parsuj napis i ustaw zmienne 
     ParseLogpage(op_zew, sekcja, op_sekcji, &nr_sek, pl, op_pl, &nr_pl);
     // przejdz liste stron w dokumencie, zeby zapamietac jaki numer ma strona w danej sekcji 
-    const int pc = (int)m_pDocument->m_pages.size();
+    const auto pc = (int)m_pDocument->m_pages.size();
     for (int j = 1; j <= pc; j++) {
         vPage = m_pDocument->m_pages[j % pc];
         CString vStrLog(vPage->name);
@@ -1536,8 +1536,8 @@ dajWymiarKraty:
         f5_errInfo += msg;
         return FALSE;
     }
-    const float scalx = (float)(((sizex * (pR->w + pR->sw) - pR->sw) * mm2pkt) / (x2 - x1));
-    const float scaly = (float)(((sizey * (pR->h + pR->sh) - pR->sh) * mm2pkt) / (y2 - y1));
+    const auto scalx = (float)(((sizex * (pR->w + pR->sw) - pR->sw) * mm2pkt) / (x2 - x1));
+    const auto scaly = (float)(((sizey * (pR->h + pR->sh) - pR->sh) * mm2pkt) / (y2 - y1));
     if (fabs(scalx - 1.0) > 0.1 || fabs(scaly - 1.0) > 0.1) {
         msg.Format(_T("%li inny rozmiar %.2fx%.2f, "), nreps, scalx, scaly);
         f5_errInfo += msg;
@@ -1582,7 +1582,7 @@ bool CDrawAdd::CopyNewFile(const CString& srcPath, const CString& dstPath)
             if (srcStat.m_mtime < dstTime) {
                 CString cs;
                 cs.Format(_T("Nieudana próba kopiowania pliku\n\nz\t%s\ndo\t%s\n\nPlik Ÿród³owy jest starszy ni¿ plik docelowy.\nSprawdŸ czy poprawnie zaznaczono powórkê."), srcPath, dstPath);
-                ::MessageBox(NULL, cs, APP_NAME, MB_OK | MB_ICONERROR);
+                ::MessageBox(nullptr, cs, APP_NAME, MB_OK | MB_ICONERROR);
             }
             return false;
         }
@@ -1590,7 +1590,7 @@ bool CDrawAdd::CopyNewFile(const CString& srcPath, const CString& dstPath)
     if (!::CopyFile(srcPath, dstPath, FALSE)) {
         CString cs;
         cs.Format(_T("B³¹d kopiowania (errno=%lu) pliku %s"), GetLastError(), srcPath);
-        ::MessageBox(NULL, cs, APP_NAME, MB_OK | MB_ICONERROR);
+        ::MessageBox(nullptr, cs, APP_NAME, MB_OK | MB_ICONERROR);
         return false;
     }
     return true;
@@ -1700,7 +1700,7 @@ CString CDrawAdd::EpsName(int format, BOOL copyOldEPS, BOOL bModifTest)
                             (actualAttr.ftLastWriteTime.dwHighDateTime == powtAttr.ftLastWriteTime.dwHighDateTime && actualAttr.ftLastWriteTime.dwLowDateTime > powtAttr.ftLastWriteTime.dwLowDateTime)) {
                             CString msg;
                             msg.Format(_T("SprawdŸ czy poprawnie zaznaczono powórkê:\n\n%s\n\nPlik docelowy jest nowszy ni¿ archiwum."), num);
-                            ::MessageBox(NULL, msg, APP_NAME, MB_OK | MB_ICONERROR);
+                            ::MessageBox(nullptr, msg, APP_NAME, MB_OK | MB_ICONERROR);
                             copyOldEPS = FALSE;
                         }
                 }
@@ -1757,8 +1757,8 @@ modifTest:
 bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
 {
     CString eps_name;
-    char* s = reinterpret_cast<char*>(pArg->cBigBuf);
-    CDrawAdd *pLeftAdd = this;
+    CDrawAdd* pLeftAdd = this;
+    auto s = reinterpret_cast<char*>(pArg->cBigBuf);
     unsigned long lOffset = 0, lSize = 0;
     auto pPage = m_pDocument->GetPage(fizpage);
     const bool bLewaStrona = (m_pDocument->GetIPage(pPage) & 1) == 0;
@@ -1780,10 +1780,10 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
         eps_name = wersja == DERV_TMPL_WER ? nazwa : EpsName(F_EPS, copyEps); // albo nazwa pliku ze sciezka, albo info o bledzie
     pArg->pDlg->OglInfo(pArg->iChannelId, eps_name);
 
-    float x = (float)((posx - 1)*(pRozKraty->w + pRozKraty->sw)*mm2pkt);
-    float y = (float)((szpalt_y + 1 - posy - sizey)*(pRozKraty->h + pRozKraty->sh)*mm2pkt + (pArg->bSignAll ? podpisH : podpisH / 2));   // miejsce gdzie sie zaczyna eps bez podpisu
-    const float gpx = (float)((sizex*(pRozAdd->w + pRozAdd->sw) - pRozAdd->sw)*mm2pkt);
-    const float gpy = (float)((sizey*(pRozAdd->h + pRozAdd->sh) - pRozAdd->sh)*mm2pkt);
+    auto x = (float)((posx - 1)*(pRozKraty->w + pRozKraty->sw)*mm2pkt);
+    auto y = (float)((szpalt_y + 1 - posy - sizey)*(pRozKraty->h + pRozKraty->sh)*mm2pkt + (pArg->bSignAll ? podpisH : podpisH / 2));   // miejsce gdzie sie zaczyna eps bez podpisu
+    const auto gpx = (float)((sizex*(pRozAdd->w + pRozAdd->sw) - pRozAdd->sw)*mm2pkt);
+    const auto gpy = (float)((sizey*(pRozAdd->h + pRozAdd->sh) - pRozAdd->sh)*mm2pkt);
 
     if (eps_name.Mid(1, 1) != _T(":")) {
         if (pArg->bIsPRN == 1 && pArg->bDoKorekty == 0)
@@ -1804,9 +1804,9 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
             podwal += fname;
         else {
             CString sPodwalDir(podwal + theApp.activeDoc->data.Mid(3, 2) + theApp.activeDoc->data.Mid(0, 2) + _T("\\"));
-            if (::CreateDirectory(sPodwalDir, NULL) || GetLastError() == ERROR_ALREADY_EXISTS) {
+            if (::CreateDirectory(sPodwalDir, nullptr) || GetLastError() == ERROR_ALREADY_EXISTS) {
                 sPodwalDir += theApp.activeDoc->gazeta.Mid(0, 3) + theApp.activeDoc->gazeta.Mid(4, 2) + _T("\\");
-                if (::CreateDirectory(sPodwalDir, NULL) || GetLastError() == ERROR_ALREADY_EXISTS)
+                if (::CreateDirectory(sPodwalDir, nullptr) || GetLastError() == ERROR_ALREADY_EXISTS)
                     podwal = sPodwalDir + fname;
             } else
                 ::MessageBox(pArg->pDlg->m_hWnd, CString(_T("Nie mo¿na utworzyæ katalogu: ")) + sPodwalDir, _T("B³¹d"), MB_ICONERROR);
@@ -1931,8 +1931,8 @@ bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
     auto pRoz = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, typ_xx);
 
     float x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
-    const float x = (float)((posx - 1)*(pRoz->w + pRoz->sw)*mm2pkt);
-    const float y = (float)((szpalt_y + 1 - posy - sizey)*(pRoz->h + pRoz->sh)*mm2pkt);
+    const auto x = (float)((posx - 1)*(pRoz->w + pRoz->sw)*mm2pkt);
+    const auto y = (float)((szpalt_y + 1 - posy - sizey)*(pRoz->h + pRoz->sh)*mm2pkt);
 
     if (theApp.isOpiMode)
         nazwa.Format(_T("%s%s%03i.eps"), m_pDocument->gazeta.Left(3), m_pDocument->gazeta.Mid(4, 2), txtposx);
@@ -2000,8 +2000,8 @@ bool CDrawAdd::EmbedEpsFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcP
     }
 
     bool ret = false;
-    HANDLE mapHandle = ::CreateFileMapping(srcFile.m_hFile, NULL, PAGE_READONLY | SEC_RESERVE, 0, 0, 0);
-    if (mapHandle != NULL) {
+    HANDLE mapHandle = ::CreateFileMapping(srcFile.m_hFile, nullptr, PAGE_READONLY | SEC_RESERVE, 0, 0, nullptr);
+    if (mapHandle != nullptr) {
         auto mapPtr = (const char*)::MapViewOfFile(mapHandle, FILE_MAP_READ, 0, 0, 0);
         if (mapPtr != nullptr) {
             unsigned long offset, nCount;
@@ -2020,7 +2020,7 @@ bool CDrawAdd::EmbedEpsFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcP
 
 void CDrawAdd::Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const
 {
-    BYTE *p = (BYTE*)pArg->cBigBuf;
+    auto p = (BYTE*)pArg->cBigBuf;
     auto pRoz = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, typ_xx);
 
     div_t x1 = div((int)((posx - 1)*(pRoz->w + pRoz->sw)) / 10 - x, 8);
@@ -2030,12 +2030,12 @@ void CDrawAdd::Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const
     y1 = min(dy - y1, dy - 2);   // koniec
     y2 = max(dy - y2, 0);   //poczatek
 
-    BYTE p1 = (BYTE)((1 << (8 - x1.rem)) - 1);
-    BYTE p2 = (BYTE)(255 ^ (BYTE)((1 << (8 - x2.rem)) - 1));
-    BYTE m1 = (BYTE)(1 << (7 - x1.rem));
-    BYTE m2 = (BYTE)(1 << (7 - x2.rem));
-    BYTE c1 = (BYTE)170; //136
-    BYTE c2 = (BYTE)85;   //34
+    auto p1 = (BYTE)((1 << (8 - x1.rem)) - 1);
+    auto p2 = (BYTE)(255 ^ (BYTE)((1 << (8 - x2.rem)) - 1));
+    auto m1 = (BYTE)(1 << (7 - x1.rem));
+    auto m2 = (BYTE)(1 << (7 - x2.rem));
+    auto c1 = (BYTE)170; //136
+    auto c2 = (BYTE)85;   //34
     BYTE ci = c1;
 
     for (i = 1; i < 3; i++)

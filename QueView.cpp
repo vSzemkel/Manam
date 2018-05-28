@@ -16,7 +16,7 @@ CDrawAdd *CQueView::selected_add = nullptr;
 
 IMPLEMENT_DYNCREATE(CQueView, CScrollView)
 
-CQueView::CQueView() : moving(FALSE)
+CQueView::CQueView()
 {
 }
 
@@ -108,7 +108,7 @@ void CQueView::OnDraw(CDC *pDC)
 void CQueView::DocToClient(CRect *rect)
 {
     CClientDC dc(this);
-    OnPrepareDC(&dc, NULL);
+    OnPrepareDC(&dc, nullptr);
     dc.LPtoDP(rect);
     rect->NormalizeRect();
 }
@@ -116,21 +116,21 @@ void CQueView::DocToClient(CRect *rect)
 void CQueView::ClientToDoc(CPoint *point)
 {
     CClientDC dc(this);
-    OnPrepareDC(&dc, NULL);
+    OnPrepareDC(&dc, nullptr);
     dc.DPtoLP(point);
 }
 
 void CQueView::ClientToDoc(CRect *rect)
 {
     CClientDC dc(this);
-    OnPrepareDC(&dc, NULL);
+    OnPrepareDC(&dc, nullptr);
     dc.DPtoLP(rect);
 }
 
 void CQueView::DocToClient(CPoint *point)
 {
     CClientDC dc(this);
-    OnPrepareDC(&dc, NULL);
+    OnPrepareDC(&dc, nullptr);
     dc.LPtoDP(point);
 }
 
@@ -139,7 +139,7 @@ void CQueView::OnLButtonDblClk(UINT nFlags, CPoint point)
     ClientToDoc(&point);
     CDrawAdd *pObj = GetDocument()->ObjectAtQue(point);
     if (pObj)
-        pObj->OnOpen(NULL);
+        pObj->OnOpen(nullptr);
     else {
         GetDocument()->ArrangeQue();
         GetDocument()->GetPanelView<CQueView>()->Invalidate(FALSE);
@@ -165,7 +165,7 @@ void CQueView::OnLButtonDown(UINT nFlags, CPoint point)
     RepaintRect(&vPos);
     vPoint = point;
     vPos = selected_add->m_position;
-    moving = TRUE;
+    moving = true;
     RepaintRect(&vPos);
     SetCapture();
     CScrollView::OnLButtonDown(nFlags, point);
@@ -185,7 +185,7 @@ void CQueView::OnMouseMove(UINT nFlags, CPoint point)
             point.y > screen.top || point.y < screen.bottom) { // out of view mouse movement
             ReleaseCapture();
             theApp.unQueing = TRUE;
-            moving = FALSE;
+            moving = false;
             selected_add->m_position = vPos;
             Invalidate(FALSE);
         } else
@@ -212,7 +212,8 @@ void CQueView::OnLButtonUp(UINT nFlags, CPoint point)
             RepaintRect(&rect);
             RepaintRect(&selected_add->m_position);
         }
-        moving = theApp.unQueing = FALSE;
+        moving = false;
+        theApp.unQueing = FALSE;
     }
     ReleaseCapture();
     CScrollView::OnLButtonUp(nFlags, point);

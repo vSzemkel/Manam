@@ -20,22 +20,22 @@ class CDrawAdd final : public CDrawObj
     void Serialize(CArchive& ar) override;
     BOOL OnOpen(CDrawView* pView) override;
 
-    int m_pub_xx;
-    int m_add_xx; // FK_SPACER_AD
+    int m_pub_xx{-1};
+    int m_add_xx;         // FK_SPACER_AD
     int szpalt_x;
     int szpalt_y;
-    int typ_xx; // FK_TYP_OGLOSZENIA
-    int nag_xx; // FK_NAGLOWEK_OGLOSZENIA, identyfikator górnego nag³ówka redakcyjnego
-    long nreps; //nr eps          ==adno z atexa
-    long oldAdno; //adno z którego jest powtórka
-    CString nazwa; //nazwa ogl
-    CString logpage; //logiczna strona - powiedzmy ze string war logicznych
-    CString remarks; //uwagi
+    int typ_xx;           // FK_TYP_OGLOSZENIA
+    int nag_xx{1};        // FK_NAGLOWEK_OGLOSZENIA, identyfikator górnego nag³ówka redakcyjnego
+    long nreps;           //nr eps==adno z atexa
+    long oldAdno;         //adno z którego jest powtórka
+    CString nazwa;        //nazwa ogl
+    CString logpage;      //logiczna strona - powiedzmy ze string war logicznych
+    CString remarks;      //uwagi
     CString remarks_atex; //uwagi_atex
-    CString wersja; //scan,eps,el,klisze,odz
-    CString czaskto; //zawiera sformatowany czas obowi¹zywania i login sprzedawcy
-    CString kodModulu; //zawiera nazwê pliku z materia³em Ÿród³owym do produkcji, bez œcie¿ki i rozszerzenia
-    CString f5_errInfo; //komunikat o b³êdzie dotycz¹cym materia³u, wygenerowany przez funkcjê F5
+    CString wersja;       //scan,eps,el,klisze,odz
+    CString czaskto;      //zawiera sformatowany czas obowi¹zywania i login sprzedawcy
+    CString kodModulu;    //zawiera nazwê pliku z materia³em Ÿród³owym do produkcji, bez œcie¿ki i rozszerzenia
+    CString f5_errInfo;   //komunikat o b³êdzie dotycz¹cym materia³u, wygenerowany przez funkcjê F5
     int sizex;
     int sizey;
     int posx;
@@ -63,9 +63,9 @@ class CDrawAdd final : public CDrawObj
     } bank;
     int txtposx;
     int txtposy;
-    int precelWertexCnt;         // iloœæ wierzcho³ków precla, 0 jesli precelWertexCnt == 4
-    int precelRingCnt;           // iloœæ obwodnic precla
-    int iFileId;                 // identyfikator materia³u graficznego wykorzytywany przy F4
+    int precelWertexCnt{0};      // iloœæ wierzcho³ków precla, 0 jesli precelWertexCnt == 4
+    int precelRingCnt{0};        // iloœæ obwodnic precla
+    int iFileId{0};              // identyfikator materia³u graficznego wykorzytywany przy F4
     BYTE spad_flag : 4;          // flaga mapuj¹ca krawêdzie do wylewu na spad
     CFlag space;                 // odpowiada ksztaltowi
     CString lastAdnoUsed;

@@ -4,7 +4,7 @@
 #include "StdAfx.h"
 #include "DrawPage.h"
 
-typedef std::map<int, int, std::less<int> > uintmap;
+typedef std::map<unsigned int, int, std::less<>> uintmap;
 
 class CDrawAdd;
 
@@ -18,7 +18,7 @@ public:
     static const char* memstr(const char *str, const char *sub, size_t len);
     CManPDF(PGENEPSARG pArg);
     virtual ~CManPDF() = default;
-    unsigned long GetMediaBox(const TCHAR *fpath, float *x1, float *y1, float *x2, float *y2, HANDLE hFile = 0);
+    unsigned long GetMediaBox(const TCHAR* fpath, float* x1, float* y1, float* x2, float* y2, HANDLE hFile = nullptr);
     unsigned long SearchPattern(CFile& f, const char *pat) const;
     BOOL CreatePDF(CDrawPage *page, const TCHAR *trgName);
 

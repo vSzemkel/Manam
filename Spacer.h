@@ -67,11 +67,11 @@ private:
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CSpacerDlg)
 protected:
-    virtual void OnOK() override;
-    virtual void OnCancel() override;
-    virtual BOOL DestroyWindow() override;
-    virtual BOOL OnInitDialog() override;
-    virtual void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void OnOK() override;
+    void OnCancel() override;
+    BOOL DestroyWindow() override;
+    BOOL OnInitDialog() override;
+    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
     // Generated message map functions

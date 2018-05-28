@@ -1342,7 +1342,7 @@ BOOL CManODPNET::RmSysLock(CDrawDoc* doc)
 
 BOOL CManODPNET::GrbSaveMutczas(CDrawDoc* doc)
 {
-    const int pc = (int)doc->m_pages.size();
+    const auto pc = (int)doc->m_pages.size();
     auto mutArr = gcnew array<int>(pc);
     for (int i = 0; i < pc; i++)
         mutArr[i] = doc->m_pages[i]->m_mutczas;

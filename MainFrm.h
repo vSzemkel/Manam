@@ -12,11 +12,11 @@ class CMainFrame : public CMDIFrameWndEx
     DECLARE_DYNAMIC(CMainFrame)
 public:
     CMainFrame();
-    virtual ~CMainFrame();
-    virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd *pParentWnd = nullptr, CCreateContext* pContext = nullptr) override;
+    ~CMainFrame() override;
+    BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd *pParentWnd = nullptr, CCreateContext* pContext = nullptr) override;
 #ifdef _DEBUG
-    virtual void AssertValid() const override;
-    virtual void Dump(CDumpContext& dc) const override;
+    void AssertValid() const override;
+    void Dump(CDumpContext& dc) const override;
 #endif
 private:
     void StoreComboHandlers();
@@ -45,8 +45,8 @@ public:
     CBrush cyjan, magenta, yellow, rzym, robgcolor;
     BOOL show_spacelocks;
 
-    int lastCapToolBar;  // 0==combo zawiera nag³ówki_eps; >0==id_drw
-    bool lastColToolBar; // czy combo zawiera kolory
+    int lastCapToolBar{0};      // 0==combo zawiera nag³ówki_eps; >0==id_drw
+    bool lastColToolBar{false}; // czy combo zawiera kolory
 // Implementation
 public:
     void SetLogonStatus(LPCTSTR t);

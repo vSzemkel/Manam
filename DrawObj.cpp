@@ -10,7 +10,7 @@ extern BOOL drawErrorBoxes;
 
 IMPLEMENT_SERIAL(CDrawObj, CObject, 0)
 
-CDrawObj::CDrawObj() noexcept : m_pDocument(nullptr), kolor(ColorId::brak), dirty(TRUE)
+CDrawObj::CDrawObj() noexcept
 {
 }
 
@@ -41,10 +41,10 @@ inline int CDrawObj::GetVertPrintShift() const
 
 CRect CDrawObj::GetPrintRect() const
 {
-    return CRect(m_position.left / CLIENT_SCALE,
+    return {m_position.left / CLIENT_SCALE,
         m_position.top / CLIENT_SCALE - GetVertPrintShift(),
         m_position.right / CLIENT_SCALE,
-        m_position.bottom / CLIENT_SCALE - GetVertPrintShift());
+        m_position.bottom / CLIENT_SCALE - GetVertPrintShift()};
 }
 
 void CDrawObj::Serialize(CArchive& ar)
@@ -233,7 +233,7 @@ CPoint CDrawObj::GetHandle(int nHandle) const
             break;
     }
 
-    return CPoint(x, y);
+    return {x, y};
 }
 
 // return rectange of handle in logical coords
@@ -258,7 +258,7 @@ HCURSOR CDrawObj::GetHandleCursor(int nHandle) const
     ASSERT_VALID(this);
 
     const LPCTSTR kierunek[4] = { IDC_SIZEWE, IDC_SIZENWSE, IDC_SIZENS, IDC_SIZENESW };
-    return ::LoadCursor(0, kierunek[nHandle & 0x03]);
+    return ::LoadCursor(nullptr, kierunek[nHandle & 0x03]);
 }
 
 // point must be in logical
@@ -315,7 +315,7 @@ void CDrawObj::MoveHandleTo(int nHandle, const CPoint& point, CDrawView *pView)
 void CDrawObj::Invalidate()
 {
     ASSERT_VALID(this);
-    m_pDocument->UpdateAllViews(NULL, HINT_UPDATE_DRAWOBJ, this);
+    m_pDocument->UpdateAllViews(nullptr, HINT_UPDATE_DRAWOBJ, this);
 }
 
 BOOL CDrawObj::OnOpen(CDrawView*)

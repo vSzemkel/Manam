@@ -108,7 +108,7 @@ unsigned long CManPDF::SearchPattern(CFile &f, const char *pat) const
 {
     char *p;
     size_t res = 1;
-    const int backLen = (int)strlen(pat);
+    const auto backLen = (int)strlen(pat);
 
     while (res > 0) { // read block from the file
         const auto filepos = (long)f.GetPosition();
@@ -477,7 +477,7 @@ void CManPDF::EmbedContents(CFile& src, unsigned long offset)
     } else
         EmbedSection(p, TRUE);
     trg.Write(">>\x0astream\x0a", 10);
-    unsigned long b = (unsigned long)trg.GetPosition();
+    auto b = (unsigned long)trg.GetPosition();
     unsigned int lastR = 0;
     if (!multi)
         EmbedStream(src, loffset, FALSE);
@@ -535,7 +535,7 @@ BOOL CManPDF::EmbedPDF(CFile& src, unsigned int objNr, CDrawAdd& pAdd)
     xrefOffset = 0L;
     renumMap.clear();
 
-    const unsigned long offset = GetMediaBox(NULL, &bbx1, &bby1, &bbx2, &bby2, (HANDLE)src.m_hFile);
+    const unsigned long offset = GetMediaBox(nullptr, &bbx1, &bby1, &bbx2, &bby2, (HANDLE)src.m_hFile);
     if (offset == 0L) return FALSE;
     StringCchPrintfA(cStore, bigSize, "/BBox [ %.2f %.2f %.2f %.2f ]\x0a", bbx1, bby1, bbx2, bby2);
     trg.Write(cStore, (UINT)strlen(cStore));
@@ -546,10 +546,10 @@ BOOL CManPDF::EmbedPDF(CFile& src, unsigned int objNr, CDrawAdd& pAdd)
     //ustal maciez dla ogloszenia
     auto pRozm = pAdd.m_pDocument->GetCRozm(pAdd.szpalt_x, pAdd.szpalt_y, pAdd.typ_xx);
     if (!pRozm) return FALSE;
-    float px = (float)(mm2pkt * (pAdd.posx - 1) * (pRozm->w + pRozm->sw));
-    float py = (float)(-1 * mm2pkt * (pAdd.posy + pAdd.sizey - 1) * (pRozm->h + pRozm->sh));
-    const float dimx = (float)((pAdd.sizex*(pRozm->w + pRozm->sw) - pRozm->sw)*mm2pkt);
-    const float dimy = (float)((pAdd.sizey*(pRozm->h + pRozm->sh) - pRozm->sh)*mm2pkt);
+    auto px = (float)(mm2pkt * (pAdd.posx - 1) * (pRozm->w + pRozm->sw));
+    auto py = (float)(-1 * mm2pkt * (pAdd.posy + pAdd.sizey - 1) * (pRozm->h + pRozm->sh));
+    const auto dimx = (float)((pAdd.sizex*(pRozm->w + pRozm->sw) - pRozm->sw)*mm2pkt);
+    const auto dimy = (float)((pAdd.sizey*(pRozm->h + pRozm->sh) - pRozm->sh)*mm2pkt);
     const float sclx = (bbx2 == bbx1 || pAdd.typ_xx != 0) ? 1 : dimx / (bbx2 - bbx1);
     const float scly = (bby2 == bby1 || pAdd.typ_xx != 0) ? 1 : dimy / (bby2 - bby1);
 
@@ -754,8 +754,8 @@ BOOL CManPDF::CreatePDF(CDrawPage *page, const TCHAR *trgName)
         for (i = pocz; i < kon; ++i) {
             pAdd = page->m_adds[i - pocz];
             auto pRozm = pAdd->m_pDocument->GetCRozm(pAdd->szpalt_x, pAdd->szpalt_y, pAdd->typ_xx);
-            const float px = (float)(mm2pkt * ((pAdd->posx + pAdd->sizex - 1) * (pRozm->w + pRozm->sw) - pRozm->sw));
-            const float py = (float)(-1 * mm2pkt * (pAdd->posy + pAdd->sizey - 1) * (pRozm->h + pRozm->sh) - podpisH);
+            const auto px = (float)(mm2pkt * ((pAdd->posx + pAdd->sizex - 1) * (pRozm->w + pRozm->sw) - pRozm->sw));
+            const auto py = (float)(-1 * mm2pkt * (pAdd->posy + pAdd->sizey - 1) * (pRozm->h + pRozm->sh) - podpisH);
             fname.Format(_T("%li%s"), pAdd->nreps, pAdd->wersja);
             // pdf ogloszenia
             if (!embAlias[i - pocz].IsEmpty()) {
@@ -763,8 +763,8 @@ BOOL CManPDF::CreatePDF(CDrawPage *page, const TCHAR *trgName)
                 ::StringCchCopyA(&cStore[contentLen], n_size - contentLen, CStringA(cs));
             } else {
                 fname = "Nie odnaleziono pliku: " + fname;
-                const float w = (float)(mm2pkt * (pAdd->sizex * (pRozm->w + pRozm->sw) - pRozm->sw));
-                const float h = (float)(mm2pkt * (pAdd->sizey * (pRozm->h + pRozm->sh) - pRozm->sh));
+                const auto w = (float)(mm2pkt * (pAdd->sizex * (pRozm->w + pRozm->sw) - pRozm->sw));
+                const auto h = (float)(mm2pkt * (pAdd->sizey * (pRozm->h + pRozm->sh) - pRozm->sh));
                 cs.Format(_T("q %.2f %.2f %.2f %.2f re S Q\012"), px, py + podpisH, -w, h);
                 ::StringCchCopyA(&cStore[contentLen], n_size - contentLen, CStringA(cs));
             }
@@ -825,7 +825,7 @@ unsigned long CManPDF::GetMediaBox(const TCHAR *fpath, float *x1, float *y1, flo
         if (!p)
             throw CManPDFExc(_T("GetMediaBox: nie odnaleziono /Root"));
         strtok(p, septok);
-        offset = FindObjEntry(src, atoi(strtok(NULL, septok)));
+        offset = FindObjEntry(src, atoi(strtok(nullptr, septok)));
 
         src.Seek(offset, CFile::begin);
         src.Read(cStore, bigSize);
@@ -856,7 +856,7 @@ readMediaBox:
         pdftok(t);
         t = pdftok(nullptr);
         if (!strcmp(t, "["))
-            *x1 = (float)atof(strtok(NULL, septok));
+            *x1 = (float)atof(strtok(nullptr, septok));
         else {
             int i = 0;
             while (!isdigit((int)t[i]) && t[i])

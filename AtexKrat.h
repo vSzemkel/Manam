@@ -40,8 +40,8 @@ class CKratCalc : public CDialog
     DECLARE_DYNAMIC(CKratCalc)
 
 public:
-    CKratCalc(CWnd *pParent = nullptr);   // standard constructor
-    virtual ~CKratCalc() = default;
+    CKratCalc(CWnd* pParent = nullptr); // standard constructor
+    ~CKratCalc() override = default;
 
     // Dialog Data
     enum { IDD = IDD_KRATCALC };
@@ -52,13 +52,13 @@ protected:
     DECLARE_MESSAGE_MAP()
 public:
     BOOL OnInitDialog() override;
-public:
-    afx_msg void OnDeltaposSpin(UINT spinCtrlId, NMHDR *pNMHDR, LRESULT *pResult);
+
+    afx_msg void OnDeltaposSpin(UINT spinCtrlId, NMHDR* pNMHDR, LRESULT* pResult);
     afx_msg void OnCbnSelchangeKratka();
     afx_msg void OnDefineModelid();
 private:
-    BOOL bCalcMode;					//tryb kalkulatora czy rêczny
-    static const double TOLERANCE;	//wzgledna tolerancja rozmiaru
+    BOOL bCalcMode;                //tryb kalkulatora czy rêczny
+    static const double TOLERANCE; //wzgledna tolerancja rozmiaru
     CComboBox m_kratycombo;
     CString m_sizex;
     CString m_sizey;

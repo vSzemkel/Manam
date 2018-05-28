@@ -84,8 +84,8 @@ protected:
 protected:
     ~CGridFrm() override = default;
 #ifdef _DEBUG
-    virtual void AssertValid() const override;
-    virtual void Dump(CDumpContext& dc) const override;
+    void AssertValid() const override;
+    void Dump(CDumpContext& dc) const override;
 #endif
 
     // Generated message map functions

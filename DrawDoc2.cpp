@@ -63,7 +63,7 @@ BOOL CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
     // moze byc juz otwarte
     auto frame = reinterpret_cast<CMainFrame*>(AfxGetMainWnd());
     auto pos = m_pDocTemplate->GetFirstDocPosition();
-    while (pos != NULL) {
+    while (pos != nullptr) {
         auto openDoc = reinterpret_cast<CDrawDoc*>(m_pDocTemplate->GetNextDoc(pos));
         if (openDoc == this) continue;
         if (openDoc->data == dlg.m_dt && openDoc->gazeta == dlg.m_tytul + (dlg.m_mutacja == " " ? "" : " " + dlg.m_mutacja) && static_cast<int>(openDoc->iDocType) == dlg.m_doctype) {
@@ -73,7 +73,7 @@ BOOL CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
     }
 
     if (dlg.m_tytul.IsEmpty() || dlg.m_dt.IsEmpty()) {
-        MessageBox(NULL, (LPCTSTR)_T("Proszê podaæ trzyliterowy kod tytu³u i datê emisji lub wersjê"), (LPCTSTR)_T("Brak danych"), MB_ICONSTOP);
+        MessageBox(nullptr, (LPCTSTR)_T("Proszê podaæ trzyliterowy kod tytu³u i datê emisji lub wersjê"), (LPCTSTR)_T("Brak danych"), MB_ICONSTOP);
         return FALSE;
     }
 
@@ -97,7 +97,7 @@ BOOL CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
     ComputeCanvasSize();
     ArrangeQue();
     if (isGRB) NumberPages();
-    UpdateAllViews(NULL);
+    UpdateAllViews(nullptr);
 
     if (theApp.showAcDeadline > 0) {
         theApp.showAcDeadline = 0;
@@ -176,7 +176,7 @@ void CDrawDoc::DBSaveAs(BOOL isSaveAs)
 
         SetTitleAndMru();
         if (!doSaveAdds)
-            UpdateAllViews(NULL, HINT_SAVEAS_DELETE_SELECTION, NULL);
+            UpdateAllViews(nullptr, HINT_SAVEAS_DELETE_SELECTION, nullptr);
     } else {
         if (isSaveAs) m_mak_xx = -1;
         ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo((LPCTSTR)_T("Poczas zachowywania wyst¹pi³ b³¹d. Zadzwoñ: 56158 lub napisz: velvet@agora.pl"));
@@ -199,7 +199,7 @@ void CDrawDoc::OnDBDelete()
 
     if (AfxMessageBox(_T("Czy na pewno chcesz usunaæ ") + CString(isGRB ? "ten grzbiet" : "tê makietê"), MB_OKCANCEL | MB_ICONQUESTION) != IDOK) return;
 
-    char* sql = reinterpret_cast<char*>(theApp.bigBuf);
+    auto sql = reinterpret_cast<char*>(theApp.bigBuf);
     ::StringCchPrintfA(sql, bigSize, "begin %s%s(:mak_xx); end;", isGRB ? "grb.delete_grzbiet" : "delete_makieta", isLIB ? "_lib" : "");
     CManODPNETParms orapar { CManODPNET::DbTypeInt32, &m_mak_xx };
     if (theManODPNET.EI(sql, orapar)) {
@@ -274,7 +274,7 @@ void CDrawDoc::OnVuMakietowanie()
             postawi og³oszenia na stronie, gdy ich kraty nie s¹ zgodne					end vu */
 
     CObArray vAdds;
-    CDrawPage *vTmpPage, *vPage = NULL;
+    CDrawPage *vTmpPage, *vPage = nullptr;
     CDrawAdd *castval;
     CRect vRect;
 
@@ -335,7 +335,7 @@ void CDrawDoc::OnVuMakietowanie()
         CString sOrgLogpage;
         BOOL bSecondRun = FALSE;
 aSecondRun:
-        const int pc = (int)m_pages.size();
+        const auto pc = (int)m_pages.size();
         int nr_sek, nr_pl, nr_off, vnr_sek = 0;
         TCHAR op_zew[2], op_sekcji[2], op_pl[2], sekcja[30], pl[2];
         castval = (CDrawAdd*)vAdds.GetAt(i);
@@ -404,7 +404,7 @@ aSecondRun:
             //polozenie na stronie
             hashed = castval->logpage.ReverseFind('#') >= 0;
             if (hashed) {
-                if (!castval->SetPagePosition(NULL, vPage))
+                if (!castval->SetPagePosition(nullptr, vPage))
                     continue;
             } else {
                 k = 1;
@@ -459,7 +459,7 @@ aSecondRun:
     // ustaw z boku te, ktorych sie nie zmakietowalo automatycznie
     AsideAdds();
 
-    UpdateAllViews(NULL);
+    UpdateAllViews(nullptr);
 
     theApp.EndWaitCursor();
 }
@@ -489,7 +489,7 @@ void CDrawDoc::MakietujStrone(CDrawPage *pPage)
     }), pPage->m_adds.end());
 
     // posortuj liste pod wzgledem kryteriow rozmieszczenia ogloszenia - {skomplikowane == poczatek listy}
-    const int vAddsCount = (int)vAdds.GetSize();
+    const auto vAddsCount = (int)vAdds.GetSize();
     for (i = 0; i < vAddsCount - 1; ++i) {
         k = -1;
         auto viAdd = (CDrawAdd*)vAdds.GetAt(i);
@@ -591,7 +591,7 @@ void CDrawDoc::OnVuCkMakietowanie()
 
     drawErrorBoxes = !drawErrorBoxes;
 
-    CDrawView* vView = GetPanelView<CDrawView>();
+    auto vView = GetPanelView<CDrawView>();
     if (vView) vView->Invalidate(FALSE);
 }
 
@@ -625,15 +625,15 @@ void CDrawDoc::AsideAdds()
 CPoint CDrawDoc::GetAsideAddPos(BOOL opening) const
 {
     const int addsAsideCnt = opening ? 1 : 1 + (int)std::count_if(cbegin(m_objects), cend(m_objects), [](CDrawObj *pObj) noexcept { const auto a = dynamic_cast<CDrawAdd*>(pObj); return a && a->posx == 0; });
-    const int marginPageMinX = (int)(pmodulx*(1 + iPagesInRow / 2 + (pszpalt_x*iPagesInRow)));
-    const int marginPageMaxX = (int)(nearbyint((float)(m_size.cx * vscale * 100) / (theApp.m_initZoom * pmodulx)) - (pszpalt_x + 2)) * pmodulx;
-    return CPoint(max(marginPageMinX, marginPageMaxX), -pmoduly * addsAsideCnt);
+    const auto marginPageMinX = (int)(pmodulx*(1 + iPagesInRow / 2 + (pszpalt_x*iPagesInRow)));
+    const auto marginPageMaxX = (int)(nearbyint((float)(m_size.cx * vscale * 100) / (theApp.m_initZoom * pmodulx)) - (pszpalt_x + 2)) * pmodulx;
+    return {max(marginPageMinX, marginPageMaxX), -pmoduly * addsAsideCnt};
 }
 
 void CDrawDoc::ArrangeQue()
 {
     CPoint vPoint(pmodulx, -pmoduly);
-    const int iPageWidth = (int)(pszpalt_x * CDrawObj::modx(pszpalt_x));
+    const auto iPageWidth = (int)(pszpalt_x * CDrawObj::modx(pszpalt_x));
 
     for (const auto& a : m_addsque) {
         a->m_position.SetRect(vPoint.x, vPoint.y, vPoint.x + (int)(a->sizex * CDrawObj::modx(a->szpalt_x)), (int)(vPoint.y - a->sizey * CDrawObj::mody(a->szpalt_y)));
@@ -643,7 +643,7 @@ void CDrawDoc::ArrangeQue()
             vPoint.y -= pszpalt_y * pmoduly;
         }
     }
-    UpdateAllViews(NULL);
+    UpdateAllViews(nullptr);
 }
 
 void CDrawDoc::AddFind(long nrAtex, long nrSpacer, LPCTSTR nazwa)
@@ -795,14 +795,14 @@ int CDrawDoc::GetIPage(CDrawPage *pPage) const noexcept
 
 void CDrawDoc::OnAsideAdds()
 {
-    CDrawPage* vPage = nullptr;
-    CDrawView *pView = GetPanelView<CDrawView>();
+    CDrawPage* vPage{nullptr};
+    auto pView = GetPanelView<CDrawView>();
     if (pView->m_selection.size() == 1)
         vPage = dynamic_cast<CDrawPage*>(pView->m_selection.front());
 
     if (vPage == nullptr) {
         const auto pcount = m_pages.size();
-        for (size_t i = 0; i < pcount; i++)
+        for (size_t i = 0; i < pcount; ++i)
             if (!(m_pages[i])->niemakietuj) {
                 vPage = m_pages[i];
                 vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd *pAdd) -> BOOL {
@@ -832,7 +832,7 @@ void CDrawDoc::OnAsideAdds()
         }), vPage->m_adds.end());
     }
 
-    UpdateAllViews(NULL);
+    UpdateAllViews(nullptr);
     SetModifiedFlag(TRUE);
 }
 
@@ -998,5 +998,5 @@ void CDrawDoc::OnChangeColsPerRow()
     for (i = MIN_COLSPERROW; i < iPC; ++i)
         MoveOpisAfterPage(&aNoPagePos[i], &m_pages[i]->m_position);
 
-    UpdateAllViews(NULL);
+    UpdateAllViews(nullptr);
 }
