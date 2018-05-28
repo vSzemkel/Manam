@@ -13,12 +13,12 @@ class CDrawAdd final : public CDrawObj
     CDrawAdd() noexcept;
     CDrawAdd(const CRect& position) noexcept;
 
-    virtual ~CDrawAdd();
-    virtual void Draw(CDC* pDC) override;
-    virtual void Print(CDC* pDC) override;
-    virtual void UpdateInfo() override;
-    virtual void Serialize(CArchive& ar) override;
-    virtual BOOL OnOpen(CDrawView* pView) override;
+    ~CDrawAdd() override;
+    void Draw(CDC* pDC) override;
+    void Print(CDC* pDC) override;
+    void UpdateInfo() override;
+    void Serialize(CArchive& ar) override;
+    BOOL OnOpen(CDrawView* pView) override;
 
     int m_pub_xx;
     int m_add_xx; // FK_SPACER_AD

@@ -24,14 +24,14 @@ class CAddListCtrl sealed : public CMFCListCtrl
     DECLARE_DYNAMIC(CAddListCtrl)
 public:
     CAddListCtrl(CGridFrm *pView);
-    virtual ~CAddListCtrl() = default;
+    ~CAddListCtrl() override = default;
 
     afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 protected:
     DECLARE_MESSAGE_MAP()
 private:
-    virtual void InitHeader() override;
-    virtual int OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn) override;
+    void InitHeader() override;
+    int OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn) override;
     static const int iWheelUnitY;
     CGridFrm *m_pContainer;
     CImageList m_SmallImageList;

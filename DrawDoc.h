@@ -45,13 +45,13 @@ class CDrawDoc final : public COleDocument
     static CBrush* GetSpotBrush(int i) noexcept;
     static CString XmlReadText(IXmlReader *reader);
 
-    virtual ~CDrawDoc();
-    virtual BOOL OnNewDocument() override;
-    virtual BOOL OnOpenDocument(LPCTSTR pszPathName) override;
-    virtual void OnCloseDocument() override;
-    virtual HMENU GetDefaultMenu() override;        // dla grzbietu zmien menu
-    virtual void Serialize(CArchive& ar) override;  // overridden for document i/o
-    virtual BOOL SaveModified() override;           // plik do pliku , baza do bazy
+    ~CDrawDoc() override;
+    BOOL OnNewDocument() override;
+    BOOL OnOpenDocument(LPCTSTR pszPathName) override;
+    void OnCloseDocument() override;
+    HMENU GetDefaultMenu() override;        // dla grzbietu zmien menu
+    void Serialize(CArchive& ar) override;  // overridden for document i/o
+    BOOL SaveModified() override;           // plik do pliku , baza do bazy
 
     template<class T> T* GetPanelView() const noexcept;
     const CSize& GetSize() const noexcept { return m_size; }

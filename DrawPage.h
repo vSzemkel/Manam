@@ -40,19 +40,19 @@ class CDrawPage final : public CDrawObj
     DECLARE_SERIAL(CDrawPage);
 
 // public: declared in macro
-    CDrawPage() noexcept {};
+    CDrawPage() noexcept {}; // can't be =default
     CDrawPage(const CRect& position) noexcept;
-    virtual ~CDrawPage();
+    ~CDrawPage() override;
 
     // Overrides
-    virtual void Draw(CDC *pDC) override;
-    virtual void Print(CDC *pDC) override;
-    virtual void Serialize(CArchive &ar) override;
-    virtual void UpdateInfo() override;
-    virtual void DrawKolor(CDC *pDC, const CRect &pos) const override;
-    virtual void MoveTo(const CRect &positon, CDrawView *pView = nullptr) override;
-    virtual BOOL OnOpen(CDrawView *pView) override;
-    virtual CDrawObj *Clone(CDrawDoc *pDoc) const override;
+    void Draw(CDC *pDC) override;
+    void Print(CDC *pDC) override;
+    void Serialize(CArchive &ar) override;
+    void UpdateInfo() override;
+    void DrawKolor(CDC *pDC, const CRect &pos) const override;
+    void MoveTo(const CRect &positon, CDrawView *pView = nullptr) override;
+    BOOL OnOpen(CDrawView *pView) override;
+    CDrawObj *Clone(CDrawDoc *pDoc) const override;
 
     // Members
     int id_str;

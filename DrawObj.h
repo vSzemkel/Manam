@@ -22,15 +22,15 @@ class CDrawObj : public CObject
     CDrawObj() noexcept;
     CDrawObj(const CRect& position) noexcept;
 
-    virtual ~CDrawObj() = default;
+    ~CDrawObj() override = default;
     virtual void Draw(CDC *pDC);
     virtual void Print(CDC *pDC) { Draw(pDC); }
     virtual void UpdateInfo() {}
     virtual void DrawKolor(CDC *pDC, const CRect& pos) const;
     virtual void MoveTo(const CRect& positon, CDrawView *pView = nullptr);
-    virtual void Serialize(CArchive& ar) override;
     virtual BOOL OnOpen(CDrawView *pView);
     virtual CDrawObj* Clone(CDrawDoc *pDoc = nullptr) const { return nullptr; };
+    void Serialize(CArchive& ar) override;
 
     static double modx(double x);
     static double mody(double y);

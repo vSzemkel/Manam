@@ -72,17 +72,17 @@ public:
     auto GetDocument() const { return reinterpret_cast<CDrawDoc*>(m_pDocument); }
 
 public:
-    virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd *pParentWnd, UINT nID, CCreateContext* pContext = nullptr) override;
+    BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd *pParentWnd, UINT nID, CCreateContext* pContext = nullptr) override;
 protected:
-    virtual void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
-    virtual BOOL OnPreparePrinting(CPrintInfo* pInfo) override;
-    virtual void OnPrint(CDC *pDC, CPrintInfo* pInfo) override;
-    virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject *pHint) override;
+    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    BOOL OnPreparePrinting(CPrintInfo* pInfo) override;
+    void OnPrint(CDC *pDC, CPrintInfo* pInfo) override;
+    void OnUpdate(CView* pSender, LPARAM lHint, CObject *pHint) override;
     //}}AFX_VIRTUAL
 
 // Implementation
 protected:
-    virtual ~CGridFrm() = default;
+    ~CGridFrm() override = default;
 #ifdef _DEBUG
     virtual void AssertValid() const override;
     virtual void Dump(CDumpContext& dc) const override;
