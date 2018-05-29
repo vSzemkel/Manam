@@ -670,8 +670,8 @@ void CAddDlg::OnEnChangeWersja()
 
 void CAddDlg::OnCbnSelchangeZajawka()
 {
-    int cs = m_zajawkacombo.GetCurSel();
-    int zaj_xx = (int)m_zajawkacombo.GetItemData(cs);
+    const int cs = m_zajawkacombo.GetCurSel();
+    auto zaj_xx = (int)m_zajawkacombo.GetItemData(cs);
     if (zaj_xx < 0) return; // nazwa zajawki wprowadzana rêcznie
     int iPowt = theApp.activeDoc->m_mak_xx;
 
@@ -2557,7 +2557,7 @@ void CPageDerv::OnOK()
     const int cc = m_tytmut.GetCount();
     for (int i = 0; i < cc; ++i) {
         const int isSelected = m_tytmut.GetSel(i);
-        const int sel_drw_xx = int(m_tytmut.GetItemData(i));
+        const auto sel_drw_xx = int(m_tytmut.GetItemData(i));
         if (isSelected && sel_drw_xx > 0) // nie by³ wczeœniej zaznaczony
             m_derv_add.push_back(-1 * sel_drw_xx);
         else if (!isSelected && (sel_drw_xx < 0)) // zosta³ odznaczony

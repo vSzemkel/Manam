@@ -588,7 +588,7 @@ BOOL CDrawAdd::OnOpen(CDrawView* pView)
     if (!dlg.m_fromQue && (((theApp.grupa&UserRole::dea) > 0) || (theApp.grupa&UserRole::kie && m_pDocument->isRO)))
         if (m_add_xx > 0) {
             int eok = this->flags.epsok;
-            int nrs = (int)CDrawDoc::spoty[this->kolor >> 3];
+            UINT nrs = CDrawDoc::spoty[this->kolor >> 3];
             int powt = (int)(this->powtorka == 0 ? 0 : (this->powtorka - CTime(POWTSEED_0)).GetDays());
             int ik = ((this->kolor) & ColorId::full) == ColorId::full ? ColorId::full : (((this->kolor) & ColorId::brak) == ColorId::brak ? ColorId::brak : ColorId::spot);
             CString czk = this->flags.reserv == 1 ? _T("") : this->czaskto;
