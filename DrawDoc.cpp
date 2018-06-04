@@ -1533,9 +1533,9 @@ second_paper:
             reader->Read(&nodeType);
             if (!reader->IsEmptyElement()) {
                 bBank = TRUE;
-                vAdd2->bank.insid = _wtoi(XmlReadText(reader));
-                vAdd2->bank.n = _wtoi(XmlReadText(reader));
-                vAdd2->bank.k = _wtoi(XmlReadText(reader));
+                vAdd2->bank.insid = (WORD)_wtoi(XmlReadText(reader));
+                vAdd2->bank.n = (WORD)_wtoi(XmlReadText(reader));
+                vAdd2->bank.k = (WORD)_wtoi(XmlReadText(reader));
                 reader->Read(&nodeType);
             }
             reader->Read(&nodeType); // </ad>

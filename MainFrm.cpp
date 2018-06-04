@@ -289,7 +289,7 @@ void CMainFrame::LoadKolorCombo()
         m_KolorBox->ResetContent();
         m_KolorBox->AddString(_T(""));
         theManODPNET.FillCombo(m_KolorBox, "select wersja from spacer_wersje_eps order by 1", CManODPNET::emptyParm);
-    } else if (m_KolorBox->GetCount() != CDrawDoc::kolory.size()) {
+    } else if (m_KolorBox->GetCount() != (int)CDrawDoc::kolory.size()) {
         m_KolorBox->ResetContent();
         // kolory
         for (const auto& k : CDrawDoc::kolory)
@@ -389,7 +389,7 @@ int CMainFrame::GetKolorInd(const CString& text) const noexcept
     return ind == CB_ERR ? -1 : ind;
 }
 
-UINT CMainFrame::GetKolor(int ile_spotow) const // kolejnoœæ na liscie: spoty, brak, full, kolory
+int CMainFrame::GetKolor(int ile_spotow) const // kolejnoœæ na liscie: spoty, brak, full, kolory
 {
     const auto k = m_KolorBox->GetCurSel();
 

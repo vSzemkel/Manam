@@ -483,7 +483,7 @@ BOOL CDrawPage::OnOpen(CDrawView*)
     dlg.m_dervlvl = m_dervlvl;
     dlg.m_mutred = mutred;
     dlg.m_docmutred = m_pDocument->docmutred;
-    dlg.m_typ_pary = m_typ_pary;
+    dlg.m_typ_pary = (int)m_typ_pary;
     dlg.m_wyd_xx = wyd_xx;
     dlg.m_red = m_ac_red;
     dlg.m_fot = m_ac_fot;
@@ -517,11 +517,12 @@ BOOL CDrawPage::OnOpen(CDrawView*)
         pPage->SetDirty();
     }
 
-    if (m_typ_pary != dlg.m_typ_pary) {
-        m_typ_pary = dlg.m_typ_pary;
+    const auto& dlg_typ_pary = (BYTE)dlg.m_typ_pary;
+    if (m_typ_pary != dlg_typ_pary) {
+        m_typ_pary = dlg_typ_pary;
         const int nr_porz = m_pDocument->GetIPage(this);
         auto pPage = m_pDocument->m_pages[nr_porz + 1 - 2 * (nr_porz & 1)];
-        pPage->m_typ_pary = m_typ_pary;
+        pPage->m_typ_pary = dlg_typ_pary;
         pPage->SetDirty();
     }
 

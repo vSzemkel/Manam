@@ -113,9 +113,9 @@ public:
     CString	m_caption;
     CString	m_name;
     long m_drukarnie;
-    int		m_nr;
-    int		m_topage;
-    int		m_typ_pary;			// typ pary
+    int  m_nr;
+    int  m_topage;
+    int  m_typ_pary;
     UINT m_kolor;
     UINT m_ile_spotow;
     BOOL	m_niemakietuj;

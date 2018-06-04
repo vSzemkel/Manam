@@ -1460,7 +1460,7 @@ subseterr:
         pDlg->SetChannelCount(iCpuCnt);
         const int iIleStron = wyborStron.GetBitCnt(true);
         if (iIleStron < iCpuCnt)
-            iCpuCnt = iIleStron;
+            iCpuCnt = (WORD)iIleStron;
 
         waitEvents = (HANDLE *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(HANDLE));
         threadArgs = (GENEPSARG *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(GENEPSARG));

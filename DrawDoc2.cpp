@@ -214,7 +214,7 @@ void CDrawDoc::ZmianaSpotow(int n)
     // gdy dodaje strony byc moze mam wiecej mozliwosci spotu, pod warunkiem ze mam wybrane drzewo
     if (id_drw == -1) return;
     const int m = DBReadSpot(n);
-    if (m_spot_makiety.size() == m) return;
+    if ((int)m_spot_makiety.size() == m) return;
     for (const auto& p : m_pages) {
         const int e1 = p->kolor & ColorId::spot;
         const int e2 = p->kolor >> 3;

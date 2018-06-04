@@ -23,7 +23,7 @@ private:
     void SwapToolbarImages(int iCmd1, int iCmd2);
 public:
     void SetStatusBarInfo(LPCTSTR tx);
-    UINT GetKolor(int ile_spotow) const;   //zwraca kolor z (-) gdy konkretny spot kolor
+    int GetKolor(int ile_spotow) const;   //zwraca kolor z (-) gdy konkretny spot kolor
     CString GetCaption() const;
     CString GetCaption(int i) const;
     CString GetCapStrFromData(const DWORD_PTR captionId) const;

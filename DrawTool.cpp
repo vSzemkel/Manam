@@ -369,11 +369,11 @@ void CSelectTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
     CPoint delta = l - lastPoint;
     lastPoint = l;
 
-    for (const auto& pObj : pView->m_selection) {
+    for (const auto& s : pView->m_selection) {
         if (selectMode == SelectMode::move)
-            pObj->MoveTo(pObj->m_position + delta, pView);
+            s->MoveTo(s->m_position + delta, pView);
         else if (m_DragHandle != 0 && selectMode != SelectMode::dontsize)
-            pObj->MoveHandleTo(m_DragHandle, l, pView);
+            s->MoveHandleTo(m_DragHandle, l, pView);
     }
 
     if (selectMode == SelectMode::size && c_drawShape == DrawShape::select)
@@ -431,7 +431,7 @@ void CRectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
     lastPoint = local;
 }
 
-void CRectTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point)
+void CRectTool::OnLButtonDblClk(CDrawView*, UINT, const CPoint&)
 {
 }
 

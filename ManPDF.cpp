@@ -705,7 +705,6 @@ BOOL CManPDF::CreatePDF(CDrawPage *page, const TCHAR *trgName)
         unsigned int i, dziury = 0;
         for (i = pocz; i < kon; ++i) {
             pAdd = page->m_adds[i - pocz];
-            BOOL copyEps = theApp.GetProfileInt(_T("GenEPS"), _T("CopyOldEPS"), 0);
             fname = pAdd->EpsName(F_PDF, FALSE);
             filePath.emplace_back(fname);
             if (fname.Mid(1, 1) != _T(":")) {
@@ -748,7 +747,7 @@ BOOL CManPDF::CreatePDF(CDrawPage *page, const TCHAR *trgName)
         StringCchPrintfA(cStore, bigSize, "<< %s/Length %u 0 R >>\012stream\012", (compressContent ? "/Filter /FlateDecode " : ""), nextObjNr);
         trg.Write(cStore, (UINT)strlen(cStore));
         long contentLen = 0L;
-        StringCchPrintfA(cStore, bigSize, "q\0121 0 0 1 %i %i cm\012", orgX, orgY);
+        StringCchPrintfA(cStore, bigSize, R"(q\0121 0 0 1 %i %i cm\012)", orgX, orgY);
         contentLen += (UINT)strlen(cStore);
 
         for (i = pocz; i < kon; ++i) {
@@ -889,5 +888,5 @@ kids:
 
 inline void CManPDF::EmbedTextRight(const char *font, unsigned int fsize, float px, float py, const char *text, CStringA& buf)
 {
-    buf.Format("q BT 1 g\012%s %u Tf\0121 0 0 1 %f %f cm\012-100 Tz (%s) Tj 100 Tz 0 g (%s) Tj\012ET Q\012", font, fsize, px, py, text, text);
+    buf.Format(R"(q BT 1 g\012%s %u Tf\0121 0 0 1 %f %f cm\012-100 Tz (%s) Tj 100 Tz 0 g (%s) Tj\012ET Q\012)", font, fsize, px, py, text, text);
 }

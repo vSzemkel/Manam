@@ -392,10 +392,11 @@ BOOL CPageDlg::OnInitDialog()
         m_prn_mak.SetItemData(m_prn_mak.AddString(_T("Bez paginy")), 0);
         if (!theManODPNET.FillCombo(&m_prn_mak, "select xx,nazwa from makprn where mak_xx=:mak_xx and str_xx=:str_xx", orapar2, 0)) return FALSE;
 
-        //ustaw wybór w combo i liste funkcji
+        // ustaw wybór w combo i liste funkcji
         if (m_prn_mak_xx > 0) {
-            for (i = 0; i < m_prn_mak.GetCount(); ++i)
-                if (m_prn_mak.GetItemData(i) == m_prn_mak_xx) {
+            const int cnt = m_prn_mak.GetCount();
+            for (i = 0; i < cnt; ++i)
+                if ((int)m_prn_mak.GetItemData(i) == m_prn_mak_xx) {
                     m_prn_mak.SetCurSel(i);
                     break;
                 }
@@ -2581,11 +2582,11 @@ void CPageDerv::OnDirectionChange(UINT mode)
     if (mode == IDC_FROMPAGE) {
         m_direction = 0;
         for (int i = 0; i < cc; ++i)
-            m_tytmut.SetSel(i, m_tytmut.GetItemData(i) == m_drw_xx);
+            m_tytmut.SetSel(i, (int)m_tytmut.GetItemData(i) == m_drw_xx);
     } else {
         m_direction = 1;
         for (int i = 0; i < cc; ++i)
-            m_tytmut.SetSel(i, int(m_tytmut.GetItemData(i)) < 0);
+            m_tytmut.SetSel(i, (int)m_tytmut.GetItemData(i) < 0);
     }
 
     OnSelchangeDervlvl();

@@ -373,13 +373,13 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
         pPage->szpalt_y = s_y = strCur->GetInt32(10);
         ivar = strCur->GetInt32(2); // nr
         if (ivar < 0) pPage->niemakietuj = TRUE;
-        pPage->pagina = abs(ivar);
+        pPage->pagina = (short)abs(ivar);
         ivar = strCur->GetInt32(3); // num_xx
         if (ivar < 0) {
             ivar *= -1;
             multiKraty.SetBit(ind);
         }
-        pPage->pagina_type = ivar;
+        pPage->pagina_type = (short)ivar;
         ivar = strCur->GetInt32(4); // ile_kol
         pPage->kolor = ivar;
         if (pPage->kolor == ColorId::spot) {

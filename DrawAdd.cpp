@@ -1758,7 +1758,6 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
     CString eps_name;
     CDrawAdd* pLeftAdd = this;
     auto s = reinterpret_cast<char*>(pArg->cBigBuf);
-    unsigned long lOffset = 0, lSize = 0;
     auto pPage = m_pDocument->GetPage(fizpage);
     const bool bLewaStrona = (m_pDocument->GetIPage(pPage) & 1) == 0;
     const auto pRozAdd = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, spad_flag ? 0 : typ_xx);	// gdy zaznaczono spad, to montuj do kraty
@@ -1926,7 +1925,6 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
 bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
 {
     auto s = reinterpret_cast<char*>(pArg->cBigBuf);
-    unsigned long lOffset = 0, lSize = 0;
     auto pRoz = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, typ_xx);
 
     float x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
