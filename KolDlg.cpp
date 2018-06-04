@@ -2557,7 +2557,7 @@ void CPageDerv::OnOK()
     const int cc = m_tytmut.GetCount();
     for (int i = 0; i < cc; ++i) {
         const int isSelected = m_tytmut.GetSel(i);
-        const auto sel_drw_xx = int(m_tytmut.GetItemData(i));
+        const auto sel_drw_xx = (int)m_tytmut.GetItemData(i);
         if (isSelected && sel_drw_xx > 0) // nie by³ wczeœniej zaznaczony
             m_derv_add.push_back(-1 * sel_drw_xx);
         else if (!isSelected && (sel_drw_xx < 0)) // zosta³ odznaczony

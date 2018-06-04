@@ -559,7 +559,7 @@ void CSpacerDlg::OnQue()
                     errText = (errText.Find(_T(" # ")) >= 0 ? errText.Left(errText.Find(_T("#")) + 2) : errText + _T(" # ")) + _T("QUED");
                     m_emisjelist.DeleteString(i);
                     m_emisjelist.InsertString(i, errText);
-                    m_emisjelist.SetItemData(i, -1 * (DWORD_PTR)next_mak_xx);
+                    m_emisjelist.SetItemData(i, (DWORD_PTR)(-1 * next_mak_xx));
                 }
             }
             isDone &= (long)m_emisjelist.GetItemData(i) < 0;

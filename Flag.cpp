@@ -75,13 +75,13 @@ CFlag::CFlag(const char *raw) : size(CRITICAL_SIZE)
             size += 4;
 #endif
         if (size > CRITICAL_SIZE) {
-            int32_t l;
+            uint32_t l;
             char buf[RAW_MOD_SIZE + 1];
             flagblob_ptr = malloc(size);
             buf[RAW_MOD_SIZE] = '\0';
             for (size_t i = 0; DBRAW_BLOCK * i < size; ++i) {
                 memcpy(buf, &raw[len - RAW_MOD_SIZE * (i + 1)], RAW_MOD_SIZE);
-                sscanf_s(buf, "%lx", &l);
+                sscanf_s(buf, "%x", &l);
                 memcpy((char *)flagblob_ptr + DBRAW_BLOCK * i, (const char *)&l, DBRAW_BLOCK);
             }
         } else
