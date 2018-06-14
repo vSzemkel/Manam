@@ -152,7 +152,7 @@ void CDrawAdd::Draw(CDC* pDC)
     CPen* pOldPen = pDC->SelectObject(&(mainWnd->pen));
 
     int iClipRegions = 1;
-    CRect r1, *aRectClip = nullptr, rect = m_position;
+    CRect rect{m_position}, *aRectClip{nullptr};
     // clipping dla precli
     if (precelWertexCnt > 0) {
         CRgn rgn;
@@ -171,28 +171,26 @@ void CDrawAdd::Draw(CDC* pDC)
         if (aRectClip)
             pDC->IntersectClipRect(aRectClip[i]);
         switch (m_pDocument->swCZV) {
-            case 0:
-                DrawKolor(pDC, &m_position);
+            case ToolbarMode::normal:
+                DrawKolor(pDC, &rect);
                 break;
-            case 1:
-                r1 = CRect(m_position.left + 1, m_position.top - 1, m_position.right - 1, m_position.bottom + 1);
+            case ToolbarMode::czas_obow:
                 switch (flags.isok) {
                     case 1: // 'OK.'
-                        pDC->FillRect(r1, &mainWnd->yellow);
+                        pDC->FillRect(rect, &mainWnd->yellow);
                         break;
                     case 2: // 'ATX'
-                        pDC->FillRect(r1, &mainWnd->magenta);
+                        pDC->FillRect(rect, &mainWnd->magenta);
                         break;
                     default: // 'WER'
-                        pDC->FillRect(r1, CDrawDoc::GetSpotBrush(0));
+                        pDC->FillRect(rect, CDrawDoc::GetSpotBrush(0));
                 }
                 break;
-            case 2:
-                r1 = CRect(m_position.left + 1, m_position.top - 1, m_position.right - 1, m_position.bottom + 1);
+            case ToolbarMode::tryb_studia:
                 int iKolInd = ((CMainFrame*)AfxGetMainWnd())->GetKolorInd(wersja.Right(wersja.GetLength() - wersja.Find(_T(".")) - 1));
                 if (iKolInd == -1)
                     iKolInd = 0;
-                pDC->FillRect(r1, CDrawDoc::GetSpotBrush(iKolInd ? (iKolInd + 1) % CDrawDoc::brushe.size() : 0));
+                pDC->FillRect(rect, CDrawDoc::GetSpotBrush(iKolInd ? (iKolInd + 1) % CDrawDoc::brushe.size() : 0));
         }
         if (aRectClip)
             pDC->SelectClipRgn(nullptr);
@@ -216,7 +214,7 @@ void CDrawAdd::Draw(CDC* pDC)
     }
 
     if (flags.derived) {
-        CRect r = rect;
+        CRect r{rect};
         r.InflateRect(-2 * CLIENT_SCALE, 2 * CLIENT_SCALE);
         pDC->Rectangle(r);
     }
@@ -303,16 +301,16 @@ void CDrawAdd::DrawDesc(CDC* pDC, const CRect& rect) const
 
 void CDrawAdd::DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, BOOL top) const
 {
-    CFont *oldFont = pDC->SelectObject(&(m_pDocument->m_addfont));
-    CRect r = rect;
+    CRect r{rect};
     r += CPoint(vscale*(txtposx - TXTSHIFT), -vscale*(txtposy - TXTSHIFT));
+    CFont* oldFont = pDC->SelectObject(&(m_pDocument->m_addfont));
     pDC->SetBkColor(BIALY);
     if (top)
         DrawNapis(pDC, tx, (int)_tcslen(tx), r, DT_LEFT | DT_TOP | DT_SINGLELINE | DT_NOCLIP, OPAQUE);
     else {
         LOGFONT lf;
         m_pDocument->m_addfont.GetObject(sizeof(LOGFONT), &lf);
-        r += CPoint(0, -vscale*abs(lf.lfHeight));
+        r += CPoint(0, -vscale * abs(lf.lfHeight));
         DrawNapis(pDC, tx, (int)_tcslen(tx), r, DT_LEFT | DT_TOP | DT_SINGLELINE | DT_NOCLIP, OPAQUE);
     }
     pDC->SelectObject(oldFont);
@@ -324,7 +322,7 @@ void CDrawAdd::DrawPadlock(CDC* pDC, const CRect& rect) const
     auto pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
 
     if (m_pDocument->swCZV != ToolbarMode::czas_obow) { // k³ódka
-        CRect r(rect.right - 4 * vscale, rect.bottom + 4 * vscale, rect.right, rect.bottom);
+        CRect r{rect.right - 4 * vscale, rect.bottom + 4 * vscale, rect.right, rect.bottom};
         pDC->Rectangle(r);
         (CBrush*)pDC->SelectStockObject(NULL_BRUSH);
         r.SetRect(r.left, r.top + 2 * vscale, r.right, r.bottom + 2 * vscale);
@@ -427,7 +425,7 @@ void CDrawAdd::PrintPadlock(CDC* pDC, const CRect& rect)
     auto pOldBrush = static_cast<CBrush*>(pDC->SelectStockObject(BLACK_BRUSH));
     auto pOldPen = static_cast<CPen*>(pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->pen)));
 
-    CRect r(rect.right - 3 * vscale, rect.bottom + 3 * vscale, rect.right, rect.bottom);
+    CRect r{rect.right - 3 * vscale, rect.bottom + 3 * vscale, rect.right, rect.bottom};
     pDC->Rectangle(r);
     pDC->SelectStockObject(NULL_BRUSH);
     r.SetRect(r.left, r.top + 2 * vscale, r.right, r.bottom + 1 * vscale);

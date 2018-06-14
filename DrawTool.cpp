@@ -322,8 +322,8 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
 void CSelectTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
 {
     c_last = point;
-    CDrawObj *pObj;
-    CPoint l = point;
+    CDrawObj* pObj;
+    CPoint l{point};
     pView->ClientToDoc(l);
 
     if (theApp.unQueing) { // wprowadzamy og³oszenie z widoku CQueView
@@ -366,18 +366,20 @@ void CSelectTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
         return;
     }
 
-    CPoint delta = l - lastPoint;
-    lastPoint = l;
-
     for (const auto& s : pView->m_selection) {
-        if (selectMode == SelectMode::move)
-            s->MoveTo(s->m_position + delta, pView);
-        else if (m_DragHandle != 0 && selectMode != SelectMode::dontsize)
+        if (selectMode == SelectMode::move) {
+            if (l != lastPoint) {
+                const CPoint delta = l - lastPoint;
+                s->MoveTo(s->m_position + delta, pView);
+            }
+        } else if (m_DragHandle != 0 && selectMode != SelectMode::dontsize)
             s->MoveHandleTo(m_DragHandle, l, pView);
     }
 
     if (selectMode == SelectMode::size && c_drawShape == DrawShape::select)
         SetCursor(pView->m_selection.front()->GetHandleCursor(m_DragHandle));
+
+    lastPoint = l;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -460,12 +462,12 @@ CKolorTool::CKolorTool(DrawShape drawShape) : CDrawTool(drawShape)
 {
 }
 
-void CKolorTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point)
+void CKolorTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point)
 {
-    CPoint local = point;
+    CPoint local{point};
     pView->ClientToDoc(local);
 
-    CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
+    CDrawObj* pObj = pView->GetDocument()->ObjectAt(local);
     if (!pObj) return;
 
     auto frame = (CMainFrame*)AfxGetMainWnd();
@@ -473,8 +475,7 @@ void CKolorTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poin
     auto pPage = dynamic_cast<CDrawPage*>(pObj);
     if (pPage != nullptr && pPage->m_dervlvl == DervType::fixd) return;
     if (pAdd != nullptr && pAdd->flags.derived) return;
-    pView->GetDocument()->SetModifiedFlag();
-    pObj->dirty = TRUE;
+    pObj->SetDirty();
     if (!pView->IsSelected(pObj))
         pView->Select(pObj, (nFlags & MK_SHIFT) != 0);
     if (m_drawShape == DrawShape::color) {
