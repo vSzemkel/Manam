@@ -99,14 +99,14 @@ class CDrawAdd final : public CDrawObj
     void ParseLogpage(TCHAR* op_zew, TCHAR* sekcja, TCHAR* op_sekcji, int* nr_sek, TCHAR* pl, TCHAR* op_pl, int* nr_pl, TCHAR* poz_na_str = nullptr); // vu
     int CkPageLocation(int vFizPage); //vu : czy ogloszenie moze byc na stronie numer vFizPage
     void SetEstPagePos(TCHAR* description, CRect* vRect, CDrawPage* pPage);
-    bool SetPagePosition(CRect* vRect, CDrawPage* vPage);
+    bool SetPagePosition(CRect* pRect, CDrawPage* pPage);
 
     bool GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by1, float* bx2, float* by2, int* ileMat); // szuka danych w bazie, jeœli nie ma, to otwiera i przeszukuje plik
     bool CheckSrcFile(PGENEPSARG pArg);
     bool RewriteEps(PGENEPSARG pArg, CFile& dest);
     bool RewriteDrob(PGENEPSARG pArg, CFile& dest);
     CString FindZajawka(CString& root, const CString& ext) const;
-    CString EpsName(int format, BOOL copyOldEPS, BOOL modifTest = FALSE);
+    CString EpsName(int format, BOOL copyOldEPS, BOOL bModifTest = FALSE);
     void Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const;
     void SetDotM(BOOL setFlag); // parsuje wersjê i ustawia lub cofa .m
 
@@ -115,7 +115,7 @@ class CDrawAdd final : public CDrawObj
     CString m_precel_flag; // flaga precla, przechowywana po to, by niepotrzebnie nie liczyæ obwodnic po OnOpen
     std::unique_ptr<CPoint[]> aPrecelWertex; // tablica wierzcho³ków precla
     int* aRingWertexCnt; // tablica iloœci wierzcho³ków na poszczególnych obwodnicach, w³asciciel pamiêci: aPrecelWertex
-    bool SetStrictDescPos(LPCTSTR description, CRect* vRect, CDrawPage* pPage);
+    bool SetStrictDescPos(LPCTSTR description, CRect* pRect, CDrawPage* pPage);
     bool PtOnRing(CPoint p) const; // stwierdza, czy krawêdŸ (px,py)->(px+1,py) jest na dotychczas znalezionej obwodnicy precla
     int FindRing(CPoint p0, bool bOuterRing); // znajduje obwodnicê precla rozpoczynaj¹c¹ siê od p0 w kierunku E, zwraca liczbê wierzcho³ków
 };

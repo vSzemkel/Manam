@@ -110,9 +110,9 @@ class CDrawPage final : public CDrawObj
     void DBChangeName(int id_drw);
     std::vector<int> CleanKraty(BOOL dbSave);
 
-    BOOL FindSpace(CDrawAdd *pObj, int *px, int *py, const int sx, const int sy) const;
-    BOOL CheckSpace(const CDrawAdd *pObj, const int px, const int py) const;
-    BOOL CheckSpaceDiffKraty(const CDrawAdd *pObj, const int x, const int y) const;
+    BOOL FindSpace(CDrawAdd *pObj, int *px, int *py, int sx, int sy) const;
+    BOOL CheckSpace(const CDrawAdd *pObj, int px, int py) const;
+    BOOL CheckSpaceDiffKraty(const CDrawAdd *pObj, int x, int y) const;
 
     void BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *by2);
     void Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2, int by2);

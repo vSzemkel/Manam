@@ -64,7 +64,7 @@ public:
 
 // Attributes
 public:
-    BOOL showLastAdnoUsed;
+    bool showLastAdnoUsed;
     static TCHAR studioStats[][8];
     static GridSortCol eLastOrder;
     // Operations

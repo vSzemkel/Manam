@@ -26,7 +26,7 @@ public:
     int GetKolor(int ile_spotow) const;   //zwraca kolor z (-) gdy konkretny spot kolor
     CString GetCaption() const;
     CString GetCaption(int i) const;
-    CString GetCapStrFromData(const DWORD_PTR captionId) const;
+    CString GetCapStrFromData(DWORD_PTR captionId) const;
     int GetCaptionBoxSize() const;
     void SetToolbarBitmap(ToolbarMode bPrevMode, ToolbarMode bNewMode);
 

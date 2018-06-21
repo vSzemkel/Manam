@@ -108,7 +108,7 @@ class CDrawDoc final : public COleDocument
     void OnDBImportMinus();
     void OnDrawOpcje();
     BOOL Import(BOOL check_exist);
-    BOOL CreateAdd(LPCTSTR buffor, const TCHAR sepChar, CPoint& pos, BOOL check_exist);
+    BOOL CreateAdd(LPCTSTR adBuf, TCHAR sepChar, CPoint& pos, BOOL check_exist);
     BOOL DBImport(BOOL synchronize = FALSE);
     CDrawAdd* AddExists(long nr) const;
     CDrawAdd* PubXXExists(int pub_xx) const;

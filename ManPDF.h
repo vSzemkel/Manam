@@ -58,7 +58,7 @@ public:
     unsigned long GetMainXref(CFile& f);
     unsigned long FindObjEntry(CFile& f, unsigned int obj);
     unsigned long EmbedStream(CFile& src, unsigned long offset, BOOL decorate);
-    unsigned long EmbedPakStream(CFile& src, unsigned long offset, unsigned char *pak, unsigned char *niepak, unsigned char *tmp, const unsigned long niepakoff);
+    unsigned long EmbedPakStream(CFile& src, unsigned long offset, unsigned char *pak, unsigned char *niepak, unsigned char *tmp, unsigned long niepakoff);
     unsigned long GetPrevXref(CFile& f, unsigned long currentxrefOffset);
 };
 

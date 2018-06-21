@@ -27,7 +27,7 @@ class CDrawObj : public CObject
     virtual void Print(CDC* pDC) { Draw(pDC); }
     virtual void UpdateInfo() {}
     virtual void DrawKolor(CDC* pDC, const CRect& pos) const;
-    virtual void MoveTo(const CRect& positon, CDrawView* pView = nullptr);
+    virtual void MoveTo(const CRect& position, CDrawView* pView = nullptr);
     void Serialize(CArchive& ar) override;
     virtual BOOL OnOpen(CDrawView* pView);
     virtual CDrawObj* Clone(CDrawDoc* pDoc = nullptr) const { return nullptr; };
@@ -43,7 +43,7 @@ class CDrawObj : public CObject
     // Attributes
     CString info;
     CRect m_position;
-    BOOL dirty{TRUE};
+    bool dirty{true};
     UINT kolor{ColorId::brak};
     CDrawDoc* m_pDocument{nullptr};
     //3 bity na to ile kolorow czyli 100=4 full; 010=2 spot; 001 =1 brak
@@ -59,7 +59,7 @@ class CDrawObj : public CObject
     void ChangeKolor(UINT new_kolor);
     void SetDirty();
     void SetClean() { dirty = FALSE; }
-    BOOL IsClean() const { return (!dirty); }
+    bool IsClean() const { return (!dirty); }
 
     // Operations
     void Remove();

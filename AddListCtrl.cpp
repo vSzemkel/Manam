@@ -92,7 +92,7 @@ int CAddListCtrl::OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn)
     return bResult ? -1 : 1;
 }
 
-BOOL CAddListCtrl::OnMouseWheel(UINT, short zDelta, CPoint)
+BOOL CAddListCtrl::OnMouseWheel(UINT /*unused*/, short zDelta, CPoint /*unused*/)
 {
     if (m_pContainer == nullptr)
         return FALSE;
