@@ -323,7 +323,7 @@ void CDrawApp::InitKratyDrukarnie()
             }
     } else {
         const int cc = GetProfileInt(_T("Kraty"), _T("Amount"), 0);
-        for (int i = 1; i <= cc; i++) {
+        for (int i = 1; i <= cc; ++i) {
             bf.Format(_T("%i"), i);
             kraty.emplace_back(GetProfileString(_T("Kraty"), _T("Krata") + bf, _T("brak")));
             szpalt_xarr.push_back(GetProfileInt(_T("Kraty"), _T("Krata") + bf + _T("x"), -1));
@@ -628,7 +628,7 @@ void CDrawApp::OnDaydirs()
     dlg.DoModal();
 }
 
-BOOL CDrawApp::OpenWebBrowser(const TCHAR *sUrl)
+bool CDrawApp::OpenWebBrowser(const TCHAR* sUrl)
 {
     const auto ret = (size_t)::ShellExecute(::GetDesktopWindow(), _T("Open"), sUrl, nullptr, nullptr, SW_SHOWNORMAL);
     return ret > 32;
@@ -683,7 +683,7 @@ void CDrawApp::CTimeToShortDate(const CTime& tData, CString& sData)
 
 void CDrawApp::OnHelp()
 {
-    theApp.OpenWebBrowser(_T("http://gwspacer.agora.pl"));
+    CDrawApp::OpenWebBrowser(_T("http://gwspacer.agora.pl"));
 }
 
 void CDrawApp::OnSendmsg()

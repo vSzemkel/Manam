@@ -52,7 +52,7 @@ public:
     void EmbedContents(CFile& src, unsigned long offset);
     void EmbedRef(CFile& src, unsigned int srcObjNr);
     void EmbedKey(const char *buf, char *key);
-    void EmbedSection(const char *lbound, BOOL innerOnly = FALSE);
+    void EmbedSection(const char* str, bool innerOnly = false);
     inline void EmbedTextRight(const char *font, unsigned int fsize, float px, float py, const char *text, CStringA& buf);
     unsigned int GetRefNr(char *buf);
     unsigned long GetMainXref(CFile& f);

@@ -28,7 +28,7 @@ public:
     // Implementation
 protected:
     ~CSplitFrame() noexcept override = default;
-    BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext *pContext) override;
+    BOOL OnCreateClient(LPCREATESTRUCT cs, CCreateContext *pContext) override;
 
     // Generated message map functions
     //{{AFX_MSG(CSplitFrame)

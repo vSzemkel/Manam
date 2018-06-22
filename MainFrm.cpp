@@ -148,7 +148,8 @@ BOOL CMainFrame::CreateManamToolBar()
     if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC)) {
         TRACE("Failed to create toolbar\n");
         return FALSE;
-    } else if (!m_wndToolBar.LoadToolBar(IDR_TOOL_MAIN)) {
+    }
+    if (!m_wndToolBar.LoadToolBar(IDR_TOOL_MAIN)) {
         TRACE("Failed to load toolbar\n");
         return FALSE;
     }
@@ -164,7 +165,7 @@ BOOL CMainFrame::CreateManamToolBar()
     return TRUE;
 }
 
-LRESULT CMainFrame::OnToolBarReset(WPARAM wp, LPARAM)
+LRESULT CMainFrame::OnToolBarReset(WPARAM wp, LPARAM /*unused*/)
 {
     auto uiToolBarId = (UINT)wp;
     switch (uiToolBarId) {
@@ -274,7 +275,7 @@ void CMainFrame::InsComboNrSpotow(int new_i)
         for (int i = old_i - 1; i >= new_i; i--)
             m_KolorBox->DeleteString(i);
     else if (old_i >= 0)
-        for (int i = old_i; i < new_i; i++)
+        for (int i = old_i; i < new_i; ++i)
             m_KolorBox->InsertString(i, (LPCTSTR)_T("SPOT ") + CDrawObj::Rzymska(i + 1));
     m_KolorBox->Invalidate();
 }

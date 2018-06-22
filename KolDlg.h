@@ -1072,7 +1072,7 @@ public:
 protected:
     void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
     BOOL OnInitDialog() override;
-    void OnCancel() override;
+    void OnCancel() override {};
 
     DECLARE_MESSAGE_MAP()
 private:

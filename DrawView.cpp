@@ -232,7 +232,7 @@ void CDrawView::InvalObj(CDrawObj *pObj)
     InvalidateRect(rect, TRUE);
 }
 
-void CDrawView::OnUpdate(CView *, LPARAM lHint, CObject *pHint)
+void CDrawView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject *pHint)
 {
     switch (lHint) {
         case HINT_UPDATE_WINDOW:   // redraw entire window
@@ -409,7 +409,7 @@ void CDrawView::OnCancelEdit()
 
     CDrawTool *pTool = CDrawTool::FindTool(CDrawTool::c_drawShape);
     if (pTool != nullptr)
-        pTool->OnCancel();
+        CDrawTool::OnCancel();
 
     CDrawTool::c_drawShape = DrawShape::select;
 }
@@ -478,7 +478,7 @@ void CDrawView::Select(CDrawObj *pObj, BOOL bAdd)
     if (pObj == nullptr || IsSelected(pObj))
         return;
 
-    if (m_selection.size()) {
+    if (!m_selection.empty()) {
         auto pAdd = dynamic_cast<CDrawAdd *>(pObj);
         if (pAdd && pAdd->fizpage) return;
 
@@ -487,12 +487,12 @@ void CDrawView::Select(CDrawObj *pObj, BOOL bAdd)
             const int iHitPos = GetDocument()->GetIPage(pPage);
             for (int i = iHitPos - 1; i >= 0; i--)
                 if (IsSelected(GetDocument()->m_pages[i]))
-                    for (int j = i + 1; j < iHitPos; j++)
+                    for (int j = i + 1; j < iHitPos; ++j)
                         Select((CDrawObj *)GetDocument()->m_pages[j], TRUE);
             const size_t iPC = GetDocument()->m_pages.size();
-            for (size_t i = iHitPos + 1; i < iPC; i++)
+            for (size_t i = iHitPos + 1; i < iPC; ++i)
                 if (IsSelected(GetDocument()->m_pages[i]))
-                    for (size_t j = iHitPos + 1; j < i; j++)
+                    for (size_t j = iHitPos + 1; j < i; ++j)
                         Select((CDrawObj *)GetDocument()->m_pages[j], TRUE);
         }
     }
@@ -781,7 +781,7 @@ void CDrawView::OnUpdateImportOpcje(CCmdUI *pCmdUI)
     }
 }
 
-BOOL CDrawView::OnEraseBkgnd(CDC *)
+BOOL CDrawView::OnEraseBkgnd(CDC* /*unused*/)
 {
     return TRUE;
 }
@@ -1016,13 +1016,13 @@ BOOL CDrawView::OnPreparePrinting(CPrintInfo *pInfo)
     return doPrint;
 }
 
-void CDrawView::OnBeginPrinting(CDC *, CPrintInfo *)
+void CDrawView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
     theApp.SetScale(1);
     GetDocument()->ComputeCanvasSize();
 }
 
-void CDrawView::OnEndPrinting(CDC *, CPrintInfo *)
+void CDrawView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 {
     theApp.SetScale(CLIENT_SCALE);
     GetDocument()->UpdateAllViews(nullptr);
@@ -1330,7 +1330,7 @@ void CDrawView::OnCheckEps()
     CheckPrintEps(FALSE);
 }
 
-void CALLBACK CDrawView::DelegateGenEPS(PTP_CALLBACK_INSTANCE, PVOID parameter, PTP_WORK work)
+void CALLBACK CDrawView::DelegateGenEPS(PTP_CALLBACK_INSTANCE /*unused*/, PVOID parameter, PTP_WORK work)
 {
     auto pA = static_cast<PGENEPSARG>(parameter);
     CDrawPage* pPage = pA->pPage;
@@ -1384,12 +1384,12 @@ void CDrawView::CheckPrintEps(BOOL isprint)
             if (p < 0 || k < 0) goto subseterr;
             if (k == 0) k = pc;
             if (p == 0) p = pc;
-            for (int i = p; i <= k; i++)
+            for (int i = p; i <= k; ++i)
                 wyborStron.SetBit(i % pc);
             break;
         case 2:
             int liczbaA, liczbaB;
-            TCHAR *tok;
+            TCHAR* tok;
             const TCHAR septok[] = { ',', '-' };
             ::StringCchCopy(theApp.bigBuf, n_size, d.m_subset);
             tok = _tcstok(theApp.bigBuf, septok);
@@ -1412,7 +1412,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
                             goto subseterr;
                         else if (liczbaB == 0)
                             liczbaB = pc;
-                        for (int i = liczbaA; i <= liczbaB; i++)
+                        for (int i = liczbaA; i <= liczbaB; ++i)
                             wyborStron.SetBit(i % pc);
                         tok = _tcstok(nullptr, septok);
                         break;
@@ -1450,6 +1450,7 @@ subseterr:
             theManODPNET.GetManamEps();
     }
 
+    LPBYTE bigBufArr;
     HANDLE *waitEvents;
     GENEPSARG *threadArgs;
     WORD iCpuCnt, iThreadCnt = 0;
@@ -1464,6 +1465,12 @@ subseterr:
 
         waitEvents = (HANDLE *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(HANDLE));
         threadArgs = (GENEPSARG *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(GENEPSARG));
+        bigBufArr = (LPBYTE)VirtualAlloc(nullptr, bigSize * iCpuCnt, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        if (!bigBufArr) {
+            AfxMessageBox(_T("Zbyt ma³o pamiêci do uruchomienia potokowego"), MB_ICONSTOP);
+            return;
+        }
+
         for (WORD i = 0; i < iCpuCnt; ++i) {
             auto& ta = threadArgs[i];
             ta.iChannelId = i;
@@ -1473,11 +1480,7 @@ subseterr:
             ta.bDoKorekty = d.m_korekta;
             ta.pDlg = (CGenEpsInfoDlg *)pDlg;
             ta.hCompletedEvent = waitEvents[i] = ::CreateEvent(nullptr, FALSE, FALSE, nullptr);
-            ta.cBigBuf = i == 0 ? theApp.bigBuf : (TCHAR *)VirtualAlloc(nullptr, bigSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-            if (!ta.cBigBuf) {
-                AfxMessageBox(_T("Zbyt ma³o pamiêci do uruchomienia dodatkowego potoku (Buf)"), MB_ICONSTOP);
-                return;
-            }
+            ta.cBigBuf = (TCHAR*)(bigBufArr + bigSize * i);
         }
     }
 
@@ -1541,11 +1544,10 @@ subseterr:
         for (WORD i = 0; i < iCpuCnt; ++i) {
             auto& arg = threadArgs[i];
             ::CloseHandle(arg.hCompletedEvent);
-            if (i > 0)
-                ::VirtualFree(arg.cBigBuf, 0, MEM_RELEASE);
         }
         ::LocalFree(waitEvents);
         ::LocalFree(threadArgs);
+        ::VirtualFree(bigBufArr, 0, MEM_RELEASE);
     }
     AfxGetMainWnd()->ActivateTopParent();
     EndWaitCursor();
@@ -1631,7 +1633,7 @@ void CDrawView::OnPrevKolumnaDruk() // single Page selected
     auto pPage = dynamic_cast<CDrawPage *>(m_selection.front());
     const int iNrPorz = theApp.activeDoc->GetIPage(pPage);
     sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s&nrstrony=%i&format=pdf&rozmiar=1"), theApp.activeDoc->gazeta.Left(3), theApp.activeDoc->gazeta.Mid(4, 2), theApp.activeDoc->dayws, iNrPorz == 0 ? (int)theApp.activeDoc->m_pages.size() : iNrPorz);
-    theApp.OpenWebBrowser(4, sURL);
+    CDrawApp::OpenWebBrowser(4, sURL);
 }
 
 void CDrawView::OnPrevPdf() // single Add or Page selected
@@ -1640,7 +1642,8 @@ void CDrawView::OnPrevPdf() // single Add or Page selected
     if (!pAdd) {
         OnPrevKolumnaDruk();
         return;
-    } else if (pAdd->nreps < MIN_VALID_ADNO) {
+    }
+    if (pAdd->nreps < MIN_VALID_ADNO) {
         AfxMessageBox(_T("Brak prawid³owego numeru atexowego"));
         return;
     }
@@ -1666,8 +1669,8 @@ void CDrawView::OnPrevPdf() // single Add or Page selected
             if (tEdycja > CTime::GetCurrentTime()) {
                 AfxMessageBox(doc->symWydawcy == _T("-") ? _T("Brak zsy³aj¹cego") : _T("Brak materia³u"));
                 return;
-            } else
-                sUrl.Format(IDS_ARCH_URL, tEdycja.Format(c_ctimeDataWs), pAdd->nreps);
+            }
+            sUrl.Format(IDS_ARCH_URL, tEdycja.Format(c_ctimeDataWs), pAdd->nreps);
         }
     } else // powtorka jest pokazywana z katalogu docelowego
         sUrl.Format(IDS_ARCH_URL, doc->dayws, pAdd->nreps);
@@ -1675,7 +1678,7 @@ void CDrawView::OnPrevPdf() // single Add or Page selected
     if (sUrl.IsEmpty())
         AfxMessageBox(_T("Brak materia³u"));
     else
-        theApp.OpenWebBrowser(sUrl);
+        CDrawApp::OpenWebBrowser(sUrl);
 }
 
 void CDrawView::OnPrevDig()
@@ -1741,7 +1744,7 @@ void CDrawView::OnAtexSyg() //single Add selected
 
     CString sUrl;
     sUrl.Format(_T("t=%s&m=%s&k=%s&a=%li"), GetDocument()->gazeta.Left(3), pAdd->flags.derived ? "RP" : GetDocument()->gazeta.Mid(4, 2), GetDocument()->data, pAdd->nreps);
-    theApp.OpenWebBrowser(7, sUrl);
+    CDrawApp::OpenWebBrowser(7, sUrl);
 }
 
 void CDrawView::OnPrevKor()
@@ -1766,7 +1769,7 @@ void CDrawView::OnPrevKor()
                 fname = fname.Left(lnr_porz + 1);
             fname = theApp.GetProfileString(_T("GenEPS"), _T("KorektaDobre"), _T("")) + pDoc->daydir + pDoc->gazeta.Left(3) + pDoc->gazeta.Mid(4, 2) + fname + "pdf";
 
-            theApp.OpenWebBrowser(fname);
+            CDrawApp::OpenWebBrowser(fname);
         }
     }
 }

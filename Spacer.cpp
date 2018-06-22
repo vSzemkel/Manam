@@ -159,7 +159,7 @@ BOOL CSpacerDlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
 
-    for (const auto& k : theApp.activeDoc->kolory)
+    for (const auto& k : CDrawDoc::kolory)
         m_kolorcombo.AddString(k);
 
     // TODO: Add extra initialization here
@@ -257,7 +257,7 @@ void CSpacerDlg::OnDealappend()
     GetDlgItem(IDC_SPACER)->SetFocus();
 }
 
-void CSpacerDlg::OnCloseupLastemision(NMHDR *, LRESULT *pResult)
+void CSpacerDlg::OnCloseupLastemision(NMHDR * /*unused*/, LRESULT *pResult)
 {
     CTime t;
     m_lastemisionctl.GetTime(t);
@@ -784,7 +784,8 @@ void CSpacerDlg::InsertRequestNoDup(CString& kiedy, CString& mut)
     };
     theManODPNET.EI("select spacer.check_mak_exists(:mak_xx,:kiedy,:mut) from dual", orapar);
 
-    for (int i = 0; i < m_emisjelist.GetCount(); i++)
+    const int rc = m_emisjelist.GetCount();
+    for (int i = 0; i < rc; ++i)
         if (abs((long)m_emisjelist.GetItemData(i)) == xx) return;
     if (xx != -1L)
         m_emisjelist.SetItemData(m_emisjelist.AddString(kiedy + _T(" (") + mut + _T(")")), xx);

@@ -148,7 +148,7 @@ void CPageDlg::OnOK()
     if (theApp.swCZV == ToolbarMode::tryb_studia && m_prn_mak.GetCount()) {
         int prn_flag = 0L;
         long lBit = 1L;
-        for (int i = 0; i < m_prn_fun.GetCount(); i++, lBit <<= 1)
+        for (int i = 0; i < m_prn_fun.GetCount(); ++i, lBit <<= 1)
             if (m_prn_fun.GetSel(i))
                 prn_flag |= lBit;
         CDialog::OnOK();
@@ -183,7 +183,7 @@ void CPageDlg::OnOK()
     // mutred
     m_mutred.Empty();
     int i, rc = m_mutredcombo.GetCount();
-    for (i = 0; i < rc; i++)
+    for (i = 0; i < rc; ++i)
         if (m_mutredcombo.GetSel(i)) {
             m_mutredcombo.GetText(i, rs);
             m_mutred += rs;
@@ -199,7 +199,8 @@ void CPageDlg::OnOK()
 
     unsigned long mask = 1L;
     m_drukarnie = 0L;
-    for (i = 0; i < m_drukarniecombo.GetCount(); i++, mask <<= 1)
+    rc = m_drukarniecombo.GetCount();
+    for (i = 0; i < rc; ++i, mask <<= 1)
         if (m_drukarniecombo.GetSel(i))
             m_drukarnie |= mask;
 
@@ -326,7 +327,7 @@ BOOL CPageDlg::OnInitDialog()
     // captions
     CComboBox *vCB = m_iscaption ? &m_captioncombo : &m_namecombo;
     if (theApp.swCZV != ToolbarMode::tryb_studia && theApp.activeDoc->isRED == (BOOL)(theApp.GetProfileInt(_T("General"), _T("Captions"), 1)))
-        for (j = 0; j < ((CMainFrame*)AfxGetMainWnd())->GetCaptionBoxSize(); j++) {
+        for (j = 0; j < ((CMainFrame*)AfxGetMainWnd())->GetCaptionBoxSize(); ++j) {
             vCB->AddString(((CMainFrame*)AfxGetMainWnd())->GetCaption(j));
             vCB->SetItemData(j, ((CMainFrame*)AfxGetMainWnd())->GetCaptionDataItem(j));
         }
@@ -358,7 +359,8 @@ BOOL CPageDlg::OnInitDialog()
             if (p >= 0 && (p | 1) != p) {
                 m_mutredcombo.SetSel(ind);
                 break;
-            } else if (p > 0) p++;
+            }
+            if (p > 0) p++;
         }
     }
 
@@ -417,7 +419,7 @@ BOOL CPageDlg::OnInitDialog()
         for (const auto& d : theApp.drukarnie)
             m_drukarniecombo.AddString(d);
         unsigned long mask = 1L;
-        for (i = 0; i < m_drukarniecombo.GetCount(); i++, mask <<= 1)
+        for (i = 0; i < m_drukarniecombo.GetCount(); ++i, mask <<= 1)
             if (m_drukarnie & mask)
                 m_drukarniecombo.SetSel(i);
     }
@@ -723,7 +725,7 @@ void CAddDlg::OnDelsel()
         CString s;
         int i, pub_xx, rc = m_emisjelist.GetCount();
         CManODPNETParms orapar { CManODPNET::DbTypeInt32, &pub_xx };
-        for (i = 0; i < rc; i++)
+        for (i = 0; i < rc; ++i)
             if (m_emisjelist.GetSel(i)) {
                 m_emisjelist.GetText(i, s);
                 if (s.Find(theApp.activeDoc->data) >= 0) refresh = TRUE;
@@ -770,8 +772,8 @@ void CAddDlg::OnKratowe()
             CheckDlgButton(IDC_KRATOWE, BST_UNCHECKED);
             GetDlgItem(IDC_KRATOWE)->EnableWindow(FALSE);
             return;
-        } else
-            m_wymiarowe = FALSE;
+        } 
+        m_wymiarowe = FALSE;
     }
     GetDlgItem(IDC_TYP_OGL)->ShowWindow(m_wymiarowe ? SW_HIDE : SW_SHOW);
     GetDlgItem(IDC_SIZEX)->ShowWindow(m_wymiarowe ? SW_SHOW : SW_HIDE);
@@ -847,7 +849,7 @@ BOOL CAddDlg::AtexVerify(LPCTSTR adno)
     if (m_fullView && m_emisjelist.GetSelCount()) {
         const int rc = m_emisjelist.GetCount();
         CFlag f(0, 0, 1, rc);
-        for (int i = 0; i < rc; i++)
+        for (int i = 0; i < rc; ++i)
             if (m_emisjelist.GetSel(i))
                 f.SetBit(i);
         sURL = f.Print();
@@ -862,32 +864,31 @@ BOOL CAddDlg::AtexVerify(LPCTSTR adno)
     auto pFile = theApp.OpenURL(6, sURL);
     if (!pFile)
         return FALSE;
-    else {
-        auto buf = reinterpret_cast<char*>(theApp.bigBuf);
-        while (pFile->ReadString(theApp.bigBuf, bigSize))
-            if (!strncmp(buf, "&atex begin", 11)) break;
-        while (pFile->ReadString(theApp.bigBuf, bigSize)) {
-            if (!strncmp(buf, "&atex end", 9)) {
-                if (buf[9] > 10) SetDlgItemText(IDC_ALIKE, CString(buf + 9)); // pobiera uwagi z atexa
-                break;
-            }
-            sMsg += CString(buf);
-        }
-        pFile->Close();
 
-        if (!sMsg.IsEmpty()) {
-            AfxMessageBox(CString(_T("Nie wprowadzono poprawnie danych w ATEXie na emisje z\n")) + sMsg, MB_ICONEXCLAMATION);
-            return FALSE;
-        } else {
-            m_initAdno = adno;
-            CheckDlgButton(IDC_ALWAYS, BST_CHECKED);
-            SetDlgItemText(IDC_LOGPAGE, _T(""));
-            if (dupNoSpacer != nullptr) { // usuñ emisjê wylan¹ za wczeœnie, dubluj¹c¹ spacer
-                dupNoSpacer->m_pub_xx = -1;
-                theApp.activeDoc->Remove(dupNoSpacer);
-                delete dupNoSpacer;
-            }
+    auto buf = reinterpret_cast<char*>(theApp.bigBuf);
+    while (pFile->ReadString(theApp.bigBuf, bigSize))
+        if (!strncmp(buf, "&atex begin", 11)) break;
+    while (pFile->ReadString(theApp.bigBuf, bigSize)) {
+        if (!strncmp(buf, "&atex end", 9)) {
+            if (buf[9] > 10) SetDlgItemText(IDC_ALIKE, CString(buf + 9)); // pobiera uwagi z atexa
+            break;
         }
+        sMsg += CString(buf);
+    }
+    pFile->Close();
+
+    if (!sMsg.IsEmpty()) {
+        AfxMessageBox(CString(_T("Nie wprowadzono poprawnie danych w ATEXie na emisje z\n")) + sMsg, MB_ICONEXCLAMATION);
+        return FALSE;
+    }
+
+    m_initAdno = adno;
+    CheckDlgButton(IDC_ALWAYS, BST_CHECKED);
+    SetDlgItemText(IDC_LOGPAGE, _T(""));
+    if (dupNoSpacer != nullptr) { // usuñ emisjê wylan¹ za wczeœnie, dubluj¹c¹ spacer
+        dupNoSpacer->m_pub_xx = -1;
+        theApp.activeDoc->Remove(dupNoSpacer);
+        delete dupNoSpacer;
     }
 
     return TRUE;
@@ -1104,7 +1105,7 @@ BOOL CInfoDlg::OnInitDialog()
     for (const auto& d : theApp.drukarnie)
         m_drukarniecombo.AddString(d);
     unsigned long mask = 1L;
-    for (i = 0; i < m_drukarniecombo.GetCount(); i++, mask <<= 1)
+    for (i = 0; i < m_drukarniecombo.GetCount(); ++i, mask <<= 1)
         if (m_drukarnie & mask)
             m_drukarniecombo.SetSel(i);
     if (m_drukarnie < 0) {
@@ -1211,7 +1212,7 @@ void CInfoDlg::OnShowPageDeadlines()
 {
     CString sUrl;
     sUrl.Format(_T("m=%i"), theApp.activeDoc->m_mak_xx);
-    theApp.OpenWebBrowser(8, sUrl);
+    CDrawApp::OpenWebBrowser(8, sUrl);
 }
 
 BEGIN_MESSAGE_MAP(CInfoDlg, CDialog)
@@ -1568,16 +1569,18 @@ void CDBOpenDlg::OnOK()
     if (m_mutacja.IsEmpty()) m_mutacja = _T(" ");
     if (!IsDlgButtonChecked(IDC_LIB))
         m_dt = m_dtime.Format(c_ctimeData);
-    const BOOL ignoreSel = m_date_combo.GetSelCount() == 0;
-    for (int i = 0; i < m_date_combo.GetCount(); i++)
+    const bool ignoreSel = m_date_combo.GetSelCount() == 0;
+    const int rc = m_date_combo.GetCount();
+    for (int i = 0; i < rc; ++i)
         if (ignoreSel || m_date_combo.GetSel(i)) {
             m_date_combo.GetText(i, s);
             s.SetAt(2, _T('-'));
             s.SetAt(5, _T('-'));
             m_arrDaty.emplace_back(m_tytul + _T(" ") + m_mutacja + _T("_") + s);
             if (IsDlgButtonChecked(IDC_MEMSTAT)) {
-                const BOOL ignoreSelMut = m_mutacja_combo.GetSelCount() == 0;
-                for (int j = 0; j < m_mutacja_combo.GetCount(); j++)
+                const bool ignoreSelMut = m_mutacja_combo.GetSelCount() == 0;
+                const int rc2 = m_mutacja_combo.GetCount();
+                for (int j = 0; j < rc2; ++j)
                     if (ignoreSelMut || m_mutacja_combo.GetSel(j)) {
                         m_mutacja_combo.GetText(j, m);
                         m_arrDaty.emplace_back(m_tytul + _T(" ") + m + _T("_") + s);
@@ -1585,11 +1588,12 @@ void CDBOpenDlg::OnOK()
             }
         }
 
-    if (m_date_combo.GetCount() == 0 && IsDlgButtonChecked(IDC_MEMSTAT)) {
-        const BOOL ignoreSelMut = m_mutacja_combo.GetSelCount() == 0;
+    if (rc == 0 && IsDlgButtonChecked(IDC_MEMSTAT)) {
+        const bool ignoreSelMut = m_mutacja_combo.GetSelCount() == 0;
         m_dt.SetAt(2, _T('-'));
         m_dt.SetAt(5, _T('-'));
-        for (int j = 0; j < m_mutacja_combo.GetCount(); j++)
+        const int rc2 = m_mutacja_combo.GetCount();
+        for (int j = 0; j < rc2; ++j)
             if (ignoreSelMut || m_mutacja_combo.GetSel(j)) {
                 m_mutacja_combo.GetText(j, m);
                 m_arrDaty.emplace_back(m_tytul + _T(" ") + m + _T("_") + m_dt);
@@ -2882,8 +2886,6 @@ void COstWer::OnOk()
     for (const auto& a : to_del)
         delete a;
 }
-
-void COstWer::OnCancel() { return; }
 
 void COstWer::OnNMClickAddlist(NMHDR *pNMHDR, LRESULT *pResult)
 {

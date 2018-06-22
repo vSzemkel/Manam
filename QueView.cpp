@@ -39,7 +39,7 @@ void CQueView::OnInitialUpdate()
     SetScrollSizes(MM_TEXT, CSize(100, 100));
 }
 
-void CQueView::OnUpdate(CView *, LPARAM lHint, CObject *)
+void CQueView::OnUpdate(CView * /*pSender*/, LPARAM lHint, CObject * /*pHint*/)
 {
     switch (lHint) {
         case HINT_UPDATE_WINDOW: // redraw entire window

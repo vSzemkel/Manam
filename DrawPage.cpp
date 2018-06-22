@@ -16,7 +16,7 @@ IMPLEMENT_SERIAL(CDrawPage, CDrawObj, 0)
 
 CDrawPage::CDrawPage(const CRect& position) noexcept :
     CDrawObj(position), id_str(-1), szpalt_x(pszpalt_x), szpalt_y(pszpalt_y),
-    nr(PaginaType::arabic), prn_mak_xx(0), wyd_xx(-1), m_typ_pary(0), space(), space_locked(), space_red(),
+    nr(PaginaType::arabic), prn_mak_xx(0), wyd_xx(-1), m_typ_pary(0),
     niemakietuj(0), m_mutczas(1), m_drukarnie(0), m_deadline(CTime::GetCurrentTime()), m_dervlvl(DervType::none),
     m_ac_red(0), m_ac_fot(0), m_ac_kol(0)
 {
@@ -451,7 +451,7 @@ CDrawObj* CDrawPage::Clone(CDrawDoc *pDoc) const
     return pClone;
 }
 
-BOOL CDrawPage::OnOpen(CDrawView*)
+BOOL CDrawPage::OnOpen(CDrawView* /*pView*/)
 {
     ASSERT_VALID(this);
 
@@ -532,7 +532,7 @@ BOOL CDrawPage::OnOpen(CDrawView*)
     int i, pom_nr = (dlg.m_nr << 16) + (dlg.m_rzymska ? PaginaType::roman : PaginaType::arabic);
     if (nr != pom_nr) {
         // sprawdz czy istnieje juz taka strona - bo numer/typ_num nie moze sie powtarzac
-        for (i = 0; i < pc; i++)
+        for (i = 0; i < pc; ++i)
             if ((m_pDocument->m_pages[i])->nr == pom_nr) break;
         if (i < pc)
             AfxMessageBox(_T("Strona o podanym numerze i typie numeracji ju¿ istnieje. Numer nie zostanie zmieniony."), MB_ICONEXCLAMATION);
@@ -635,13 +635,13 @@ void CDrawPage::AddAdd(CDrawAdd *pAdd)
     SetDirty();
 }
 
-void CDrawPage::RemoveAdd(CDrawAdd *pAdd, BOOL bRemodeFromAdds)
+void CDrawPage::RemoveAdd(CDrawAdd* pAdd, bool removeFromAdds)
 {
     auto itAdd = std::find(m_adds.cbegin(), m_adds.cend(), pAdd);
     if (itAdd != m_adds.end()) {
         SetBaseKrata((*itAdd)->szpalt_x, (*itAdd)->szpalt_y);
         RealizeSpace(*itAdd);
-        if (bRemodeFromAdds)
+        if (removeFromAdds)
             m_adds.erase(itAdd);
     } else { // gdy dwie strony maja ten sam numer - to nie ma prawa sie zdarzyc
         for (const auto& p : m_pDocument->m_pages)
@@ -770,7 +770,7 @@ BOOL CDrawPage::CheckSpaceDiffKraty(const CDrawAdd *pObj, const int x, const int
     return TRUE;
 }
 
-void CDrawPage::SetBaseKrata(int s_x, int s_y, BOOL refresh)
+void CDrawPage::SetBaseKrata(int s_x, int s_y, bool refresh)
 {
     /*  poszukaj czy taka krata jest juz zdefiniowana na tej stronie.
         jezli nie to zmien krate bazowa. jeeli incremental to dopisz */
@@ -1037,10 +1037,12 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
     if (isDrobEPS && dirty) {
         ::MessageBox(pArg->pDlg->m_hWnd, _T("Przed wyeksportowaniem strony z drobnymi nale¿y zachowaæ makietê"), APP_NAME, MB_OK | MB_ICONINFORMATION);
         return FALSE;
-    } else if (m_drukarnie == 0 && pArg->bIsPRN == 1 && pArg->bDoKorekty == 0) {
+    }
+    if (m_drukarnie == 0 && pArg->bIsPRN == 1 && pArg->bDoKorekty == 0) {
         ::MessageBox(pArg->pDlg->m_hWnd, "Proszê wybraæ drukarnie dla strony " + num, _T("Brak danych"), MB_OK);
         return FALSE;
-    } else if (!CheckRozmKrat(pArg)) {
+    }
+    if (!CheckRozmKrat(pArg)) {
         ::MessageBox(pArg->pDlg->m_hWnd, "Brak wymiarów dla wszystkich krat strony " + num, _T("Brak danych"), MB_OK);
         return FALSE;
     }
@@ -1105,7 +1107,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
 
     CStdioFile fManamEps;
     if (!fManamEps.Open(theApp.sManamEpsName, CFile::modeRead | CFile::typeText | CFile::shareDenyWrite)) {
-        theApp.SetErrorMessage(pArg->cBigBuf);
+        CDrawApp::SetErrorMessage(pArg->cBigBuf);
         ::MessageBox(pArg->pDlg->m_hWnd, CString("Otwarcie pliku Manam.eps nie powiod³o siê\n") + pArg->cBigBuf, _T("B³¹d"), MB_ICONERROR);
         return FALSE;
     }
@@ -1150,7 +1152,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
         if (!pArg->bIsPRN)
             dest.Write("%%EndPageSetup\r\n/STAN_STR save def\r\n", 36);
     } catch (CException* e2) {
-        theApp.SetErrorMessage(pArg->cBigBuf);
+        CDrawApp::SetErrorMessage(pArg->cBigBuf);
         ::MessageBox(pArg->pDlg->m_hWnd, CString("B³¹d przepisywania plików\n") + pArg->cBigBuf, _T("B³¹d"), MB_ICONERROR);
         e2->Delete();
         ok = FALSE;
@@ -1177,17 +1179,17 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
                     if (dervSpace[i]) break;
                 if (i >= 0) {
                     externAdd.posy = szpalt_y - i / szpalt_x;
-                    for (j = 0; j <= i; j++)
+                    for (j = 0; j <= i; ++j)
                         if (dervSpace[j]) break;
                     externAdd.sizey = szpalt_y - j / szpalt_x - externAdd.posy + 1;
                     const int endy = externAdd.posy + externAdd.sizey - 1;
-                    for (i = 1; i <= szpalt_x; i++)
-                        for (j = externAdd.posy; j <= endy; j++)
+                    for (i = 1; i <= szpalt_x; ++i)
+                        for (j = externAdd.posy; j <= endy; ++j)
                             if (dervSpace[szpalt_x*(szpalt_y - j + 1) - i]) goto foundposx;
 foundposx:
                     externAdd.posx = i;
-                    for (i = szpalt_x; i > 0; i--)
-                        for (j = externAdd.posy; j <= endy; j++)
+                    for (i = szpalt_x; i > 0; --i)
+                        for (j = externAdd.posy; j <= endy; ++j)
                             if (dervSpace[szpalt_x*(szpalt_y - j + 1) - i]) goto foundsizex;
 foundsizex:
                     externAdd.sizex = i - externAdd.posx + 1;
@@ -1223,7 +1225,7 @@ foundsizex:
             dest.Write(cThreadBuf, br);
         dest.Write("\r\n", 2);
     } catch (CFileException* e2) {
-        theApp.SetErrorMessage(pArg->cBigBuf);
+        CDrawApp::SetErrorMessage(pArg->cBigBuf);
         ::MessageBox(pArg->pDlg->m_hWnd, CString("B³¹d przepisywania plików 2\n") + pArg->cBigBuf, _T("B³¹d"), MB_ICONERROR);
         e2->Delete();
         ok = FALSE;
@@ -1244,7 +1246,7 @@ foundsizex:
                 CDrawPage::MoveMemFileContent(page, std::move(dest));
                 page.Close();
             } else {
-                theApp.SetErrorMessage(pArg->cBigBuf);
+                CDrawApp::SetErrorMessage(pArg->cBigBuf);
                 ::MessageBox(pArg->pDlg->m_hWnd, CString(pArg->cBigBuf) + _T("\n") + dest_name, _T("B³¹d"), MB_OK);
                 ok = FALSE;
             }
@@ -1280,36 +1282,36 @@ BOOL CDrawPage::MovePageToOpiServer(PGENEPSARG pArg, CMemFile&& pOpiFile) const
     if (!AfxParseURL(m_pDocument->sOpiServerUrl, dwServiceType, strServerName, strObject, nPort)) {
         ::MessageBox(pArg->pDlg->m_hWnd, _T("Nieprawid³owy adres OPI: ") + m_pDocument->sOpiServerUrl, _T("B³¹d"), MB_ICONEXCLAMATION);
         return false;
-    } else {
-        theApp.BeginWaitCursor();
-        CInternetSession ses(sAppId, PRE_CONFIG_INTERNET_ACCESS);
-        std::unique_ptr<CHttpConnection> pSrv(ses.GetHttpConnection(strServerName, nPort));
-        std::unique_ptr<CHttpFile> pFile(pSrv->OpenRequest(CHttpConnection::HTTP_VERB_POST, strObject, NULL, 1, NULL, NULL, INTERNET_FLAG_EXISTING_CONNECT | INTERNET_FLAG_NO_AUTO_REDIRECT));
-        pFile->AddRequestHeaders(_T("Content-Type: multipart/form-data; boundary=") + CString(sOpiSeparator));
+    }
 
-        const int iReqLen = (int)attachmentLength + sFormBody.GetLength() + sOpiSeparator.GetLength() + 4; /* cztery minusy wokol ostatniego sOpiSeparator */
-        try {
-            pFile->SendRequestEx(iReqLen);
-            pFile->Write(sFormBody, sFormBody.GetLength());
-            CDrawPage::MoveMemFileContent(*pFile, std::move(pOpiFile));
-            pFile->Write(sOpiLine, sOpiLine.GetLength());
-            pFile->EndRequest();
-            pFile->ReadString(pArg->cBigBuf, bigSize);
-        } catch (CInternetException* iex) {
-            iex->GetErrorMessage(pArg->cBigBuf, DLGMSG_MAX_LEN);
-            ::StringCchCat(pArg->cBigBuf, n_size, m_pDocument->sOpiServerUrl);
-            iex->Delete();
-        }
+    theApp.BeginWaitCursor();
+    CInternetSession ses(sAppId, PRE_CONFIG_INTERNET_ACCESS);
+    std::unique_ptr<CHttpConnection> pSrv(ses.GetHttpConnection(strServerName, nPort));
+    std::unique_ptr<CHttpFile> pFile(pSrv->OpenRequest(CHttpConnection::HTTP_VERB_POST, strObject, NULL, 1, NULL, NULL, INTERNET_FLAG_EXISTING_CONNECT | INTERNET_FLAG_NO_AUTO_REDIRECT));
+    pFile->AddRequestHeaders(_T("Content-Type: multipart/form-data; boundary=") + CString(sOpiSeparator));
 
-        theApp.EndWaitCursor();
-        if (pFile != nullptr) pFile->Close();
-        if (pSrv != nullptr) pSrv->Close();
-        ses.Close();
+    const int iReqLen = (int)attachmentLength + sFormBody.GetLength() + sOpiSeparator.GetLength() + 4; /* cztery minusy wokol ostatniego sOpiSeparator */
+    try {
+        pFile->SendRequestEx(iReqLen);
+        pFile->Write(sFormBody, sFormBody.GetLength());
+        CDrawPage::MoveMemFileContent(*pFile, std::move(pOpiFile));
+        pFile->Write(sOpiLine, sOpiLine.GetLength());
+        pFile->EndRequest();
+        pFile->ReadString(pArg->cBigBuf, bigSize);
+    } catch (CInternetException* iex) {
+        iex->GetErrorMessage(pArg->cBigBuf, DLGMSG_MAX_LEN);
+        ::StringCchCat(pArg->cBigBuf, n_size, m_pDocument->sOpiServerUrl);
+        iex->Delete();
+    }
 
-        if (*reinterpret_cast<short*>(pArg->cBigBuf) != 0x4b4f) { // "OK"
-            ::MessageBox(pArg->pDlg->m_hWnd, CString(reinterpret_cast<char*>(pArg->cBigBuf)), _T("OPI Error"), MB_ICONERROR | MB_OK);
-            return false;
-        }
+    theApp.EndWaitCursor();
+    if (pFile != nullptr) pFile->Close();
+    if (pSrv != nullptr) pSrv->Close();
+    ses.Close();
+
+    if (*reinterpret_cast<short*>(pArg->cBigBuf) != 0x4b4f) { // "OK"
+        ::MessageBox(pArg->pDlg->m_hWnd, CString(reinterpret_cast<char*>(pArg->cBigBuf)), _T("OPI Error"), MB_ICONERROR | MB_OK);
+        return false;
     }
 
     return true;

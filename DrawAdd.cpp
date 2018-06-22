@@ -1113,7 +1113,7 @@ int CDrawAdd::CkPageLocation(int vFizPage)
     ParseLogpage(op_zew, sekcja, op_sekcji, &nr_sek, pl, op_pl, &nr_pl);
     // przejdz liste stron w dokumencie, zeby zapamietac jaki numer ma strona w danej sekcji 
     const auto pc = (int)m_pDocument->m_pages.size();
-    for (int j = 1; j <= pc; j++) {
+    for (int j = 1; j <= pc; ++j) {
         vPage = m_pDocument->m_pages[j % pc];
         CString vStrLog(vPage->name);
         vStrLog.MakeUpper();
@@ -1169,7 +1169,8 @@ int CDrawAdd::CkPageLocation(int vFizPage)
     if (hashpos >= 0) {
         int j, k = 0;
         TCHAR tail[20];
-        for (j = hashpos + 1; j < logpage.GetLength(); j++)
+        const int rc = logpage.GetLength();
+        for (j = hashpos + 1; j < rc; ++j)
             if (isupper((int)logpage[j])) tail[k++] = logpage[j];
         tail[k] = TCHAR(0);
         if (_tcsstr(tail, _T("G")))
@@ -1204,54 +1205,54 @@ void CDrawAdd::SetEstPagePos(TCHAR* description, CRect* vRect, CDrawPage* pPage)
     int i, j;
     dirty = TRUE;
 
-    if (!_tcscmp(description, _T("P")))  			//na prawo - domyslnie od dolu
-        for (i = 0; i <= szpalt_x - sizex; i++)  			//dla kazdego polozenia w poziomie
-            for (j = 0; j <= szpalt_y - sizey; j++)			//dla kazdego polozenia w pionie
+    if (!_tcscmp(description, _T("P")))               //na prawo - domyslnie od dolu
+        for (i = 0; i <= szpalt_x - sizex; ++i)       //dla kazdego polozenia w poziomie
+            for (j = 0; j <= szpalt_y - sizey; ++j)   //dla kazdego polozenia w pionie
                 if (pPage->CheckSpace(this, szpalt_x - sizex + 1 - i, szpalt_y - sizey + 1 - j))
                     goto postaw;
 
-    if (!_tcscmp(description, _T("L")))  			//na lewo - domyslnie od dolu
-        for (i = szpalt_x - sizex; i >= 0; i--)  			//dla kazdego polozenia w poziomie
-            for (j = 0; j <= szpalt_y - sizey; j++)			//dla kazdego polozenia w pionie
+    if (!_tcscmp(description, _T("L")))               //na lewo - domyslnie od dolu
+        for (i = szpalt_x - sizex; i >= 0; --i)       //dla kazdego polozenia w poziomie
+            for (j = 0; j <= szpalt_y - sizey; ++j)   //dla kazdego polozenia w pionie
                 if (pPage->CheckSpace(this, szpalt_x - sizex + 1 - i, szpalt_y - sizey + 1 - j))
                     goto postaw;
 
-    if (!_tcscmp(description, _T("D")))  			//u dolu - domyslnie od prawej
-        for (j = 0; j <= szpalt_y - sizey; j++)  			//dla kazdego polozenia w pionie
-            for (i = 0; i <= szpalt_x - sizex; i++)			//dla kazdego polozenia w poziomie
+    if (!_tcscmp(description, _T("D")))               //u dolu - domyslnie od prawej
+        for (j = 0; j <= szpalt_y - sizey; ++j)       //dla kazdego polozenia w pionie
+            for (i = 0; i <= szpalt_x - sizex; ++i)   //dla kazdego polozenia w poziomie
                 if (pPage->CheckSpace(this, szpalt_x - sizex + 1 - i, szpalt_y - sizey + 1 - j))
                     goto postaw;
 
-    if (!_tcscmp(description, _T("G")))  			//u gory - domyslnie od prawej
-        for (j = szpalt_y - sizey; j >= 0; j--)  			//dla kazdego polozenia w pionie
-            for (i = 0; i <= szpalt_x - sizex; i++)			//dla kazdego polozenia w poziomie
+    if (!_tcscmp(description, _T("G")))               //u gory - domyslnie od prawej
+        for (j = szpalt_y - sizey; j >= 0; --j)       //dla kazdego polozenia w pionie
+            for (i = 0; i <= szpalt_x - sizex; ++i)   //dla kazdego polozenia w poziomie
                 if (pPage->CheckSpace(this, szpalt_x - sizex + 1 - i, szpalt_y - sizey + 1 - j))
                     goto postaw;
 
-    if (!_tcscmp(description, _T("DP")))  			//na dole i na prawo - domyslnie na NE
-        for (i = 0; i <= szpalt_x - sizex; i++)	  			//dla kazdego polozenia w poziomie
-            for (j = 0; j <= i; j++)						//dla kazdego polozenia w pionie
+    if (!_tcscmp(description, _T("DP")))              //na dole i na prawo - domyslnie na NE
+        for (i = 0; i <= szpalt_x - sizex; ++i)       //dla kazdego polozenia w poziomie
+            for (j = 0; j <= i; ++j)                  //dla kazdego polozenia w pionie
                 if (pPage->CheckSpace(this, szpalt_x - sizex + 1 - i + j, szpalt_y - sizey + 1 - j)) {
                     i -= j; goto postaw;
                 }
 
-    if (!_tcscmp(description, _T("DL")))  			//na dole i na lewo - domyslnie na NW
-        for (i = szpalt_x - sizex; i >= 0; i--)  			//dla kazdego polozenia w poziomie
-            for (j = 0; j <= szpalt_x - sizex - i; j++) 		//dla kazdego polozenia w pionie
+    if (!_tcscmp(description, _T("DL")))             //na dole i na lewo - domyslnie na NW
+        for (i = szpalt_x - sizex; i >= 0; --i)      //dla kazdego polozenia w poziomie
+            for (j = 0; j <= szpalt_x - sizex - i; ++j) //dla kazdego polozenia w pionie
                 if (pPage->CheckSpace(this, szpalt_x - sizex + 1 - i - j, szpalt_y - sizey + 1 - j)) {
                     i += j; goto postaw;
                 }
 
-    if (!_tcscmp(description, _T("GP")))  			//na gorze i na lewo - domyslnie na EW
-        for (i = 0; i <= szpalt_x - sizex + 1; i++)  			//dla kazdego polozenia w poziomie
-            for (j = szpalt_y - sizey; j >= szpalt_y - sizey - i; j--)	//dla kazdego polozenia w pionie
+    if (!_tcscmp(description, _T("GP")))             //na gorze i na lewo - domyslnie na EW
+        for (i = 0; i <= szpalt_x - sizex + 1; ++i)  //dla kazdego polozenia w poziomie
+            for (j = szpalt_y - sizey; j >= szpalt_y - sizey - i; --j) //dla kazdego polozenia w pionie
                 if (pPage->CheckSpace(this, szpalt_x - sizex + 1 - i + szpalt_y - sizey + 1 - j, szpalt_y - sizey + 1 - j)) {
                     i -= szpalt_y - sizey + 1 - j; goto postaw;
                 }
 
-    if (!_tcscmp(description, _T("GL")))  			//na gorze i na lewo - domyslnie na EW
-        for (i = szpalt_x - sizex - 1; i >= -1; i--)  		//dla kazdego polozenia w poziomie
-            for (j = szpalt_y - sizey; j >= i - szpalt_x + sizex + szpalt_y - sizey; j--)	//dla kazdego polozenia w pionie
+    if (!_tcscmp(description, _T("GL")))             //na gorze i na lewo - domyslnie na EW
+        for (i = szpalt_x - sizex - 1; i >= -1; --i) //dla kazdego polozenia w poziomie
+            for (j = szpalt_y - sizey; j >= i - szpalt_x + sizex + szpalt_y - sizey; --j) //dla kazdego polozenia w pionie
                 if (pPage->CheckSpace(this, szpalt_x - sizex - i - szpalt_y + sizey + j, szpalt_y - sizey + 1 - j)) {
                     i += szpalt_y - sizey + 1 - j; goto postaw;
                 }
@@ -1270,7 +1271,7 @@ postaw:
     pPage->AddAdd(this);
 }
 
-bool CDrawAdd::SetPagePosition(CRect* pRect, CDrawPage* vPage)
+bool CDrawAdd::SetPagePosition(CRect* pRect, CDrawPage* pPage)
 {
     /*	vRect ? stawia : sprawdza */
     int j, k = 0;
@@ -1278,25 +1279,26 @@ bool CDrawAdd::SetPagePosition(CRect* pRect, CDrawPage* vPage)
     BOOL mozna = FALSE;
     TCHAR tail[20];
     const int hashpos = logpage.ReverseFind('#');
-    for (j = hashpos + 1; j < logpage.GetLength(); j++)
+    const int rc = logpage.GetLength();
+    for (j = hashpos + 1; j < rc; ++j)
         if (isupper((int)logpage[j])) tail[k++] = logpage[j];
     tail[k] = '\0';
     if (_tcsstr(tail, _T("DL")))
-        mozna = SetStrictDescPos(_T("DL"), pRect, vPage);
+        mozna = SetStrictDescPos(_T("DL"), pRect, pPage);
     else if (_tcsstr(tail, _T("DP")))
-        mozna = SetStrictDescPos(_T("DP"), pRect, vPage);
+        mozna = SetStrictDescPos(_T("DP"), pRect, pPage);
     else if (_tcsstr(tail, _T("D")))
-        mozna = SetStrictDescPos(_T("D"), pRect, vPage);
+        mozna = SetStrictDescPos(_T("D"), pRect, pPage);
     else if (_tcsstr(tail, _T("GP")))
-        mozna = SetStrictDescPos(_T("GP"), pRect, vPage);
+        mozna = SetStrictDescPos(_T("GP"), pRect, pPage);
     else if (_tcsstr(tail, _T("GL")))
-        mozna = SetStrictDescPos(_T("GL"), pRect, vPage);
+        mozna = SetStrictDescPos(_T("GL"), pRect, pPage);
     else if (_tcsstr(tail, _T("G")))
-        mozna = SetStrictDescPos(_T("G"), pRect, vPage);
+        mozna = SetStrictDescPos(_T("G"), pRect, pPage);
     else if (_tcsstr(tail, _T("L")))
-        mozna = SetStrictDescPos(_T("L"), pRect, vPage);
+        mozna = SetStrictDescPos(_T("L"), pRect, pPage);
     else if (_tcsstr(tail, _T("P")))
-        mozna = SetStrictDescPos(_T("P"), pRect, vPage);
+        mozna = SetStrictDescPos(_T("P"), pRect, pPage);
     return mozna;
 }
 
@@ -1311,47 +1313,47 @@ bool CDrawAdd::SetStrictDescPos(LPCTSTR description, CRect* pRect, CDrawPage* pP
 
     int i, j;
 
-    if (!_tcscmp(description, _T("P")))  				//na prawo - domyslnie od dolu
-        for (j = 0; j <= szpalt_y - sizey; j++)			//dla kazdego polozenia w pionie     
+    if (!_tcscmp(description, _T("P")))          //na prawo - domyslnie od dolu
+        for (j = 0; j <= szpalt_y - sizey; ++j)  //dla kazdego polozenia w pionie     
             if (pPage->CheckSpace(this, szpalt_x - sizex + 1, szpalt_y - sizey + 1 - j)) {
                 i = szpalt_x - sizex + 1; j = szpalt_y - sizey + 1 - j; goto postaw;
             }
 
 
-    if (!_tcscmp(description, _T("L")))  				//na lewo - domyslnie od dolu
-        for (j = 0; j <= szpalt_y - sizey; j++)			//dla kazdego polozenia w pionie
+    if (!_tcscmp(description, _T("L")))            //na lewo - domyslnie od dolu
+        for (j = 0; j <= szpalt_y - sizey; ++j)    //dla kazdego polozenia w pionie
             if (pPage->CheckSpace(this, 1, szpalt_y - sizey + 1 - j)) {
                 i = 1; j = szpalt_y - sizey + 1 - j; goto postaw;
             }
 
-    if (!_tcscmp(description, _T("D")))  				//u dolu - domyslnie od prawej
-        for (i = 0; i <= szpalt_x - sizex; i++)			//dla kazdego polozenia w poziomie
+    if (!_tcscmp(description, _T("D")))            //u dolu - domyslnie od prawej
+        for (i = 0; i <= szpalt_x - sizex; ++i)    //dla kazdego polozenia w poziomie
             if (pPage->CheckSpace(this, szpalt_x - sizex + 1 - i, szpalt_y - sizey + 1)) {
                 i = szpalt_x - sizex + 1 - i; j = szpalt_y - sizey + 1; goto postaw;
             }
 
-    if (!_tcscmp(description, _T("G")))  				//u gory - domyslnie od prawej
-        for (i = 0; i <= szpalt_x - sizex; i++)			//dla kazdego polozenia w poziomie 
+    if (!_tcscmp(description, _T("G")))            //u gory - domyslnie od prawej
+        for (i = 0; i <= szpalt_x - sizex; ++i)    //dla kazdego polozenia w poziomie 
             if (pPage->CheckSpace(this, szpalt_x - sizex + 1 - i, 1)) {
                 i = szpalt_x - sizex + 1 - i; j = 1; goto postaw;
             }
 
-    if (!_tcscmp(description, _T("DP")))  				//na dole i na prawo - domyslnie na NE
+    if (!_tcscmp(description, _T("DP")))           //na dole i na prawo - domyslnie na NE
         if (pPage->CheckSpace(this, szpalt_x - sizex + 1, szpalt_y - sizey + 1)) {
             i = szpalt_x - sizex + 1; j = szpalt_y - sizey + 1; goto postaw;
         }
 
-    if (!_tcscmp(description, _T("DL")))  				//na dole i na lewo - domyslnie na NW
+    if (!_tcscmp(description, _T("DL")))           //na dole i na lewo - domyslnie na NW
         if (pPage->CheckSpace(this, 1, szpalt_y - sizey + 1)) {
             i = 1; j = szpalt_y - sizey + 1; goto postaw;
         }
 
-    if (!_tcscmp(description, _T("GP")))  				//na gorze i na lewo - domyslnie na EW
+    if (!_tcscmp(description, _T("GP")))           //na gorze i na lewo - domyslnie na EW
         if (pPage->CheckSpace(this, szpalt_x - sizex + 1, 1)) {
             i = szpalt_x - sizex + 1; j = 1; goto postaw;
         }
 
-    if (!_tcscmp(description, _T("GL")))  				//na gorze i na lewo - domyslnie na EW
+    if (!_tcscmp(description, _T("GL")))           //na gorze i na lewo - domyslnie na EW
         if (pPage->CheckSpace(this, 1, 1)) {
             i = 1; j = 1; goto postaw;
         }
@@ -1443,7 +1445,7 @@ bool CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by
         if (eps_name.Left(2) == _T("::"))
             f5_errInfo += eps_name.Mid(3) + (bReqProdInfo ? _T(" zamówiono dodatkowe sprawdzenie, ") : _T(" brak materia³u, "));
         else {
-            theApp.SetErrorMessage(pArg->cBigBuf);
+            CDrawApp::SetErrorMessage(pArg->cBigBuf);
             f5_errInfo.AppendFormat(_T(" %li: %s"), nreps, pArg->cBigBuf);
         }
 
@@ -1912,7 +1914,7 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
     ::StringCchPrintfA(s, n_size, "%%%%EndDocument\r\nendManamEPS\r\n");
     dest.Write(s, (UINT)strlen(s));
     } CATCH(CFileException, e) {
-        theApp.SetErrorMessage(pArg->cBigBuf);
+        CDrawApp::SetErrorMessage(pArg->cBigBuf);
         ::MessageBox(pArg->pDlg->m_hWnd, CString("B³¹d przy przepisywaniu eps'a ") + eps_name + _T("\n ") + pArg->cBigBuf, _T("B³¹d"), MB_OK | MB_ICONERROR);
         return false;
     } END_CATCH
@@ -1955,7 +1957,7 @@ bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
     if (!bReadFromATEX) {
         CFile eps;
         if (!eps.Open(nazwa, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
-            theApp.SetErrorMessage(pArg->cBigBuf);
+            CDrawApp::SetErrorMessage(pArg->cBigBuf);
             ::MessageBox(pArg->pDlg->m_hWnd, CString("Brakuje strony z Drobnixa: ") + nazwa + _T("\n") + pArg->cBigBuf, APP_NAME, MB_OK | MB_ICONERROR);
             return false;
         }
@@ -1989,7 +1991,7 @@ bool CDrawAdd::EmbedEpsFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcP
 {
     CFile srcFile;
     if (!srcFile.Open(srcPath, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
-        theApp.SetErrorMessage(pArg->cBigBuf);
+        CDrawApp::SetErrorMessage(pArg->cBigBuf);
         ::MessageBox(pArg->pDlg->m_hWnd, _T("Brakuje pliku: ") + srcPath + _T("\n") + pArg->cBigBuf, APP_NAME, MB_OK | MB_ICONERROR);
         return false;
     }
@@ -2033,13 +2035,13 @@ void CDrawAdd::Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const
     auto c2 = (BYTE)85;   //34
     BYTE ci = c1;
 
-    for (i = 1; i < 3; i++)
+    for (i = 1; i < 3; ++i)
         *(p + (y1 + 1)*szer + x2.quot - i) = (BYTE)255;   //podpis  
 
     for (i = y2; i <= y1; ++i) {
         *(p + i*szer + x1.quot) |= (m1 | p1) & ci;       //0000100000 
         *(p + i*szer + x2.quot) |= (m2 | p2) & ci;
-        for (j = x1.quot + 1; j < x2.quot; j++)
+        for (j = x1.quot + 1; j < x2.quot; ++j)
             *(p + i*szer + j) = ci;      //11111111 
         ci = (ci == c1) ? c2 : c1;
     }

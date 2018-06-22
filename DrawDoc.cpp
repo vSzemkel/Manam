@@ -579,7 +579,7 @@ void CDrawDoc::RemovePage(CDrawPage *pObj)
         }
 
     // przesuwam strony na obrazku by nie zostala dziura
-    for (size_t ii = i + 1; ii <= m_pages.size() - 1; ii++)
+    for (size_t ii = i + 1; ii <= m_pages.size() - 1; ++ii)
         MoveOpisAfterPage(&m_pages[ii]->m_position, &m_pages[ii - 1]->m_position);
     for (size_t ii = m_pages.size() - 1; ii > (size_t)i; ii--)
         m_pages[ii]->MoveTo(&m_pages[ii - 1]->m_position);
@@ -1120,7 +1120,7 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
             continue;
         l_modogl = l_modred = l_modrez = 0;
         int pmods = vPage->szpalt_x * vPage->szpalt_y;
-        for (int j = 0; j < pmods; j++) {
+        for (int j = 0; j < pmods; ++j) {
             if (vPage->space_red[j]) l_modred++;
             else if (vPage->space_locked[j]) l_modrez++;
             else if (vPage->space[j]) l_modogl++;
@@ -1142,7 +1142,7 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
             vPage->SetBaseKrata(sx, sy, TRUE);
             l_modogl = l_modred = l_modrez = 0;
             pmods = sx * sy;
-            for (int j = 0; j < pmods; j++)
+            for (int j = 0; j < pmods; ++j)
                 if (vPage->space[j] && !vPage->space_red[j] && !vPage->space_locked[j])
                     l_modogl++;
             if (pmods != pmodcnt)
@@ -1606,7 +1606,7 @@ second_paper:
             vAdd = dynamic_cast<CDrawAdd*>(pObj);
             if (vAdd && vAdd->nreps > 0) {
                 adno = vAdd->nreps;
-                for (i = 0; i < ac; i++)
+                for (i = 0; i < ac; ++i)
                     if (syncATEX[i] == adno) break;
                 if (i == ac && !vAdd->flags.derived && vAdd->wersja.Find('z') == -1 && (vAdd->flags.isok == 3 || (bOstateczna && vAdd->flags.isok < 3))) { // nie ma w ATEX'ie
                     SelectAdd(vAdd, TRUE);
@@ -1631,7 +1631,7 @@ second_paper:
         for (const auto& a : m_addsque)
             if (a->nreps > 0) {
                 adno = a->nreps;
-                for (i = 0; i < ac; i++)
+                for (i = 0; i < ac; ++i)
                     if (syncATEX[i] == adno) break;
                 if (i == ac)
                     sQueMissed.AppendFormat(_T(", %ld"), adno);
@@ -1660,7 +1660,7 @@ second_paper:
             if (ac = (int)dirtyATEX.size()) {
                 j = 1;
                 adnos += _T("Zmieniono w ATEXie nastêpuj¹ce og³oszenia:\n\n");
-                for (i = 0; i < ac; i++)
+                for (i = 0; i < ac; ++i)
                     adnos.AppendFormat((j++ & 3) ? _T("%li,\t") : _T("%li\n\t"), (long)dirtyATEX[i]);
                 adnos += _T("\n\n");
             }
@@ -1677,7 +1677,7 @@ second_paper:
                 AfxMessageBox(adnos, MB_OK);
 
             if (!zaporaATEX.empty())
-                theManODPNET.Zapora(&zaporaATEX);
+                theManODPNET.Zapora(zaporaATEX);
         }
     }
 

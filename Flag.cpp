@@ -101,7 +101,7 @@ CFlag::CFlag(const CByteArray& bArr)
     } else {
         flag = 0;
         auto buf = reinterpret_cast<BYTE*>(&flag);
-        for (size_t i = 0; i < size; i++)
+        for (size_t i = 0; i < size; ++i)
             buf[i] = bArr[i];
     }
 }
@@ -121,8 +121,9 @@ uintptr_t CFlag::operator! () const noexcept
         for (size_t i = 0; i < blocks; ++i)
             iszero &= !src[i];
         return iszero;
-    } else
-        return !flag;
+    }
+
+    return !flag;
 }
 
 const CFlag& CFlag::operator= (const CFlag& f)
@@ -321,7 +322,7 @@ CFlag CFlag::operator<< (size_t shift) const noexcept
             size_t i;
             for (i = 8 * size - 1 - shift; i != (size_t)-1; --i)
                 ret.SetBit(i + shift, operator[](i));
-            for (i = 0; i < shift; i++)
+            for (i = 0; i < shift; ++i)
                 ret.SetBit(i, false);
         }
     } else

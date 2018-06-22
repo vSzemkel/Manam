@@ -47,7 +47,7 @@ DWORD WINAPI CGenEpsInfoDlg::CreateGenEPSDialog(PMESPUMPDLGARG pArg)
     return 0;
 }
 
-INT_PTR CALLBACK CGenEpsInfoDlg::DialogProc(HWND, UINT iMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK CGenEpsInfoDlg::DialogProc(HWND /*unused*/, UINT iMsg, WPARAM wParam, LPARAM /*unused*/)
 {
     if (iMsg == WM_COMMAND && wParam == IDCANCEL) {
         m_instance.OnInterruptProcessing();

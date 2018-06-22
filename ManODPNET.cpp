@@ -1344,7 +1344,7 @@ BOOL CManODPNET::GrbSaveMutczas(CDrawDoc* doc)
 {
     const auto pc = (int)doc->m_pages.size();
     auto mutArr = gcnew array<int>(pc);
-    for (int i = 0; i < pc; i++)
+    for (int i = 0; i < pc; ++i)
         mutArr[i] = doc->m_pages[i]->m_mutczas;
 
     auto conn = gcnew OracleConnection(g_ConnectionString);
@@ -1458,7 +1458,7 @@ BOOL CManODPNET::F4(CDrawDoc* doc, CListCtrl* list, BOOL initialize)
             odr->Close();
         } else {
             rc = list->GetItemCount();
-            for (int i = 0; i < rc; i++)
+            for (int i = 0; i < rc; ++i)
                 if (list->GetItemData(i) && list->GetCheck(i)) {
                     list->SetCheck(i, FALSE);
                     list->SetItem(i, 0, LVIF_IMAGE, _T(""), 2, LVIF_IMAGE, LVIF_IMAGE, 0);
@@ -1648,12 +1648,12 @@ BOOL CManODPNET::SpacerMulti(const std::vector<int>& mak_xxArr, std::vector<CStr
     return TRUE;
 }
 
-BOOL CManODPNET::Zapora(std::vector<int>* pub_xxArr)
+BOOL CManODPNET::Zapora(const std::vector<int>& pub_xxArr)
 {
-    const int cnt = (int)pub_xxArr->size();
+    const int cnt = (int)pub_xxArr.size();
     auto man_pub_xxArr = gcnew array<int>(cnt);
     for (int i = 0; i < cnt; ++i)
-        man_pub_xxArr[i] = (*pub_xxArr)[i];
+        man_pub_xxArr[i] = pub_xxArr[i];
 
     auto m = gcnew OracleParameter("pub_xxArr", OracleDbType::Int32, ParameterDirection::Input);
     m->Value = man_pub_xxArr;

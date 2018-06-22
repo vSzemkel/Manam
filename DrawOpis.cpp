@@ -44,7 +44,7 @@ void CDrawOpis::DrawInternal(CDC *pDC, CRect& rect) const
         const auto& initExt = pDC->GetWindowExt();
         auto edge = reinterpret_cast<LONG*>(&rect);
         pDC->SetWindowExt((int)(initExt.cx * scale), (int)(initExt.cy * scale));
-        for (size_t i = 0; i < 4; ++i, edge++)
+        for (size_t i = 0; i < 4; ++i, ++edge)
             *edge = (LONG)(*edge * scale);
 
         rect.OffsetRect(1, -1);
@@ -114,7 +114,7 @@ CDrawObj* CDrawOpis::Clone(CDrawDoc *pDoc) const
     return pClone;
 }
 
-BOOL CDrawOpis::OnOpen(CDrawView*)
+BOOL CDrawOpis::OnOpen(CDrawView* /*pView*/)
 {
     ASSERT_VALID(this);
 

@@ -57,7 +57,7 @@ char* CManPDF::pdftok(char *str)
         char* e = p;
         int foundIndex = -1;
         while (e[0] && foundIndex < 0) {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 5; ++i)
                 if (e[0] == seppdf[i] && (e != p || i != 2)) { // znaku / na pocz¹tku nie traktuj jako specjalny
                     foundIndex = i;
                     break;
@@ -71,10 +71,8 @@ char* CManPDF::pdftok(char *str)
                 e++;
             if (e[1] == '\0') // znaleziono token specjalny
                 return p;
-            else {
-                e++;
-                goto nextToken;
-            }
+            e++;
+            goto nextToken;
         } else // znalezono znak specjalny wewn¹trz p
             nextToken:
         iPdfTokenSlot++;
@@ -175,7 +173,7 @@ unsigned long CManPDF::FindObjEntry(CFile& f, unsigned int obj)
                 f.Read(cStore, bigSize);
                 a = strtok(cStore, septok);
             } else {
-                for (unsigned int j = 0; j < xreflen; j++)
+                for (unsigned int j = 0; j < xreflen; ++j)
                     a = strtok(nullptr, sepline);
                 a = strtok(nullptr, septok);
             }
@@ -195,7 +193,7 @@ unsigned long CManPDF::FindObjEntry(CFile& f, unsigned int obj)
             f.Read(cStore, bigSize);
             return atol(strtok(cStore, septok));
         }
-        for (unsigned int i = 0; i < obj - xrefstart; i++)
+        for (unsigned int i = 0; i < obj - xrefstart; ++i)
             a = strtok(nullptr, sepline);
         return atol(strtok(nullptr, septok));
     }
@@ -222,10 +220,10 @@ unsigned int CManPDF::GetRefNr(char *buf)
 // przepisuje s³ownik podmianiaj¹c numery obiektów Ÿród³owych na docelowe, 
 // innerOnly okreœla, czy maj¹ zostaæ przepisane znaczniki pocz¹tku i koñca sekcji
 // str jest tokenem uzyskanym przez strtok i kolejne wywo³anie da nastêpny w kolejnoœci token
-void CManPDF::EmbedSection(const char *str, BOOL innerOnly)
+void CManPDF::EmbedSection(const char* str, bool innerOnly)
 {
-    //ostatnie wywolanie strtok dalo token, który jest pocz¹tkiem sekcji
-    //utworz liste tokenow ze slownika i podmien referencje
+    // ostatnie wywolanie strtok dalo token, który jest pocz¹tkiem sekcji
+    // utworz liste tokenow ze slownika i podmien referencje
     char *p;
     int i, pocz, posInCstore = 0, depth = 1;
     std::vector<char*> a;
@@ -593,8 +591,9 @@ BOOL CManPDF::GenProlog()
         mbs = cs;
     trg.Write(mbs, mbs.GetLength());
     cs = trg.GetFilePath();
-    for (int i = 0; i < cs.GetLength(); i++)
-        fname += (cs[i] == '\\' ? "\\\\" : cs.Mid(i, 1));
+    const int rc = cs.GetLength();
+    for (int i = 0; i < rc; ++i)
+        fname += (cs[i] == '\\' ? "\\\\" : CString{cs[i]});
     cs.Format(_T("/Creator (%s)\n/CreationDate (D:%s)\n/Title (%s)\n"), static_cast<const TCHAR*>(theManODPNET.m_userName), static_cast<const TCHAR*>(CTime::GetCurrentTime().Format("%Y%m%d%H%M%S")), static_cast<const TCHAR*>(fname));
 
     mbs = cs;
@@ -648,7 +647,7 @@ void CManPDF::GenPDFTail(unsigned int howMany)
     StringCchPrintfA(cStore, bigSize, "xref\n0 %u\n0000000000 65535 f \x0a", objnr + 1);
     trg.Write(cStore, (UINT)strlen(cStore));
 
-    for (unsigned int i = 0; i < objnr; i++)
+    for (unsigned int i = 0; i < objnr; ++i)
         trg.Write(CStringA(offsetArr[i]), 20);
 
     if (traillen) { //popraw /Size

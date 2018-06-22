@@ -55,7 +55,7 @@ private:
     void InvalObj(CDrawAdd *pObj, int idx);
     void InvalAll();
 
-    static BOOL bSortAsc;
+    static bool bSortAsc;
     static GridSortCol eSortCol;
 public:
     //{{AFX_DATA(CGridFrm)

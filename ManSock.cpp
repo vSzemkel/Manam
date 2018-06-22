@@ -109,8 +109,8 @@ void CManSock::HandleSysMsg1(TCHAR *sysmsg) const
     if (pAdd == nullptr) {
         ::MessageBox(nullptr, _T("Nie odnalezion og³oszenia. Skontaktuj siê ze sprzedawc¹, który wprowadzi³ zmianê lub zamknij makietê bez zapisywania zmian"), APP_NAME, MB_OK | MB_ICONINFORMATION);
         return;
-    } else
-        pActiveWnd->SetActiveWindow();
+    }
+    pActiveWnd->SetActiveWindow();
 
     p = _tcstok(nullptr, septok);
     int ivar = _ttoi(p);

@@ -77,7 +77,7 @@ void CDrawTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& poi
         pView->OpenSelected();
 }
 
-void CDrawTool::OnLButtonUp(CDrawView*, UINT, const CPoint& point)
+void CDrawTool::OnLButtonUp(CDrawView* /*unused*/, UINT /*unused*/, const CPoint& point)
 {
     ReleaseCapture();
 
@@ -85,7 +85,7 @@ void CDrawTool::OnLButtonUp(CDrawView*, UINT, const CPoint& point)
         OnCancel();
 }
 
-void CDrawTool::OnMouseMove(CDrawView*, UINT, const CPoint& point)
+void CDrawTool::OnMouseMove(CDrawView* /*unused*/, UINT /*unused*/, const CPoint& point)
 {
     c_last = point;
 }
@@ -319,7 +319,7 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
     CDrawTool::OnLButtonUp(pView, nFlags, point);
 }
 
-void CSelectTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
+void CSelectTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& point)
 {
     c_last = point;
     CDrawObj* pObj;
@@ -433,7 +433,7 @@ void CRectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
     lastPoint = local;
 }
 
-void CRectTool::OnLButtonDblClk(CDrawView*, UINT, const CPoint&)
+void CRectTool::OnLButtonDblClk(CDrawView* /*unused*/, UINT /*unused*/, const CPoint& /*point*/)
 {
 }
 
@@ -518,7 +518,7 @@ void CKolorTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& poin
         }
 }
 
-void CKolorTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
+void CKolorTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& point)
 {
     c_last = point;
 
@@ -532,7 +532,7 @@ void CKolorTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
         ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo((LPCTSTR)_T("ekran"));
 }
 
-void CKolorTool::OnLButtonUp(CDrawView*, UINT, const CPoint&)
+void CKolorTool::OnLButtonUp(CDrawView* /*unused*/, UINT /*unused*/, const CPoint& /*point*/)
 {
 }
 
@@ -572,7 +572,7 @@ void CLockTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
     }
 }
 
-void CLockTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
+void CLockTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& point)
 {
     c_last = point;
     // pokazywanie na status barze co to za obiekt
@@ -602,7 +602,7 @@ void CSpaceTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poin
     CDrawTool::OnLButtonDown(pView, nFlags, point);
 }
 
-void CSpaceTool::OnMouseMove(CDrawView *pView, UINT, const CPoint& point)
+void CSpaceTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& point)
 {
     //..,,pokazywanie na status barze co to za obiekt
     CPoint l = point;

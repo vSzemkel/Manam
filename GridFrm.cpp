@@ -14,7 +14,7 @@ TCHAR CGridFrm::studioStats[][8] = { _T("Brak"), _T("Jest"), _T("Akcept."), _T("
 
 IMPLEMENT_DYNCREATE(CGridFrm, CFormView)
 
-BOOL CGridFrm::bSortAsc = TRUE;
+bool CGridFrm::bSortAsc{true};
 GridSortCol CGridFrm::eSortCol = GridSortCol::lp;
 GridSortCol CGridFrm::eLastOrder = GridSortCol::lp;
 

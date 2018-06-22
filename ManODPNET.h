@@ -34,7 +34,7 @@ public:
     void IniKolorTable();
     BOOL GetManamEps();                                               // pobiera z bazy plik z definicj¹ postscriptu
     BOOL FillArr(std::vector<CString>* arr, LPCSTR sql, CManODPNETParms& ps, BOOL comboArray = FALSE);
-    BOOL FillListArr(CListBox* list, LPCSTR sql, CManODPNETParms& ps, BOOL comboArray = FALSE);
+    BOOL FillListArr(CListBox* combo, LPCSTR sql, CManODPNETParms& ps, BOOL comboArray = FALSE);
     BOOL FillList(CListBox *list, LPCSTR sql, CManODPNETParms& ps, int indexPos = -1);
     BOOL FillCombo(CComboBox *combo, LPCSTR sql, CManODPNETParms& ps, int indexPos = -1);
     BOOL FillNiekratowe(CSpacerDlg *dlg, int szpalt_x, int szpalt_y);
@@ -49,7 +49,7 @@ public:
     BOOL InitRozm(CDrawDoc* doc);
     BOOL GetAcceptStatus(int grb_xx, CString& ldrz, CString& cdrz, CString& org);
     BOOL SpacerMulti(const std::vector<int>& mak_xxArr, std::vector<CString>& arr, CManODPNETParms& ps);
-    BOOL Zapora(std::vector<int> *pub_xxArr);
+    BOOL Zapora(const std::vector<int>& pub_xxArr);
     BOOL Deploy(const CString& filepath);
     const CRozm* AddRozmTypu(std::vector<CRozm>& roz, int typ_xx);
     CString GetProdInfo(int pub_xx, LPTSTR kolor, int *ileMat);

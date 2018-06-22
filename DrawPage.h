@@ -50,7 +50,7 @@ class CDrawPage final : public CDrawObj
     void Serialize(CArchive &ar) override;
     void UpdateInfo() override;
     void DrawKolor(CDC *pDC, const CRect &pos) const override;
-    void MoveTo(const CRect &positon, CDrawView *pView = nullptr) override;
+    void MoveTo(const CRect& position, CDrawView *pView = nullptr) override;
     BOOL OnOpen(CDrawView *pView) override;
     CDrawObj *Clone(CDrawDoc *pDoc) const override;
 
@@ -100,10 +100,10 @@ class CDrawPage final : public CDrawObj
 
     void SetNr(int i);
     void AddAdd(CDrawAdd *pAdd);
-    void RemoveAdd(CDrawAdd *pAdd, BOOL bRemodeFromAdds = TRUE);
+    void RemoveAdd(CDrawAdd *pAdd, bool removeFromAdds = true);
     void SetSpace(const CDrawAdd *pObj);
     void SetSpotKolor(UINT spot_kolor);
-    void SetBaseKrata(int s_x, int s_y, BOOL refresh = TRUE);
+    void SetBaseKrata(int s_x, int s_y, bool refresh = true);
     void RealizeSpace(const CDrawAdd *pObj);
     void ChangeMark(size_t module, SpaceMode mode);
     void ChangeCaption(BOOL iscaption, const CString& cap);

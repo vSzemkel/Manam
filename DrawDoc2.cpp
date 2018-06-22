@@ -51,7 +51,7 @@ BOOL CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
                 cnt = 52;
             }
 
-            for (size_t i = 0; i < cnt; i++)
+            for (size_t i = 0; i < cnt; ++i)
                 theApp.OpenDocumentFile(dlg.m_arrDaty[i] + CDrawDoc::asDocTypeExt[(int)iDocType]);
 
             return FALSE;
@@ -167,7 +167,7 @@ void CDrawDoc::DBSaveAs(BOOL isSaveAs)
     if (theManODPNET.SaveManamDoc(this, isSaveAs, doSaveAdds)) {
         if (!doSaveAdds) {
             auto pos = std::remove_if(m_objects.begin(), m_objects.end(), [](CDrawObj*& pObj) {
-                if (dynamic_cast<CDrawAdd*>(pObj)) { delete pObj; return true; } else return false;
+                if (dynamic_cast<CDrawAdd*>(pObj)) { delete pObj; return true; } return false;
             });
             m_objects.erase(pos, m_objects.end());
         }
@@ -307,7 +307,7 @@ void CDrawDoc::OnVuMakietowanie()
         auto viAdd = (CDrawAdd*)vAdds.GetAt(i);
         maxLen = viAdd->logpage.GetLength();
         maxWeight = viAdd->sizex*viAdd->sizey;
-        for (j = i + 1; j < vAddsCount; j++) {
+        for (j = i + 1; j < vAddsCount; ++j) {
             auto vjAdd = (CDrawAdd*)vAdds.GetAt(j);
             if (vjAdd->logpage.GetLength() > maxLen) {
                 maxLen = vjAdd->logpage.GetLength();
@@ -340,68 +340,68 @@ aSecondRun:
         TCHAR op_zew[2], op_sekcji[2], op_pl[2], sekcja[30], pl[2];
         castval = (CDrawAdd*)vAdds.GetAt(i);
         castval->logpage.Trim().MakeUpper();
-        //parsuj napis i ustaw zmienne 
+        // parsuj napis i ustaw zmienne 
         castval->ParseLogpage(op_zew, sekcja, op_sekcji, &nr_sek, pl, op_pl, &nr_pl);
-        //przygotuj liste stron, pamietaj jaki numer ma strona w danej sekcji 
+        // przygotuj liste stron, pamietaj jaki numer ma strona w danej sekcji 
         CObArray vPages;
-        for (j = 1; j <= pc; j++) {
+        for (j = 1; j <= pc; ++j) {
             vPage = m_pages[j % pc];
-            //interesuj¹ nas tylko strony makietowane
+            // interesuj¹ nas tylko strony makietowane
             if (vPage->niemakietuj) continue;
-            CString vStrLog = CString(vPage->name);
+            CString vStrLog{vPage->name};
             vStrLog.MakeUpper();
-            //zliczaj strony z odpowiedni¹ sekcj¹
+            // zliczaj strony z odpowiedni¹ sekcj¹
             if (_tcsstr(vStrLog, sekcja))
                 vnr_sek++;
-            //ró¿ne kratki
+            // ró¿ne kratki
             if (castval->szpalt_x != vPage->szpalt_x || castval->szpalt_y != vPage->szpalt_y) continue;
-            //nie zgodne kolory - kolor strony 2 oznacza spot anonimowy
+            // nie zgodne kolory - kolor strony 2 oznacza spot anonimowy
             if ((castval->kolor & 7) > (vPage->kolor & 7) ||
                 ((castval->kolor&ColorId::spot) && (vPage->kolor&ColorId::spot) && (castval->kolor >> 3) != m_spot_makiety[(vPage->kolor >> 3)] && m_spot_makiety[(vPage->kolor >> 3)])) continue;
-            //nie na sciezce
+            // nie na sciezce
             if (sekcja[0]) {
                 CString sSekOgl("/");
-                sSekOgl.Append(sekcja);							//nie dopasowujemy czêœciowych wêz³ów œcie¿ki
-                int iPos = vStrLog.Find(sSekOgl);				//pierwsze dopasowanie wyszukuje podci¹g
-                if (iPos == -1) continue;						//drugi dok³adnie, na koñcu œcie¿ki
+                sSekOgl.Append(sekcja);              // nie dopasowujemy czêœciowych wêz³ów œcie¿ki
+                int iPos = vStrLog.Find(sSekOgl);    // pierwsze dopasowanie wyszukuje podci¹g
+                if (iPos == -1) continue;            // drugi dok³adnie, na koñcu œcie¿ki
                 while (vStrLog.Find(sSekOgl, iPos + 1) > 0)
                     iPos = vStrLog.Find(sSekOgl, iPos + 1);
                 if (bSecondRun && iPos + sSekOgl.GetLength() != vStrLog.GetLength()) continue;
             }
-            //lewa - nieparzysty numer
+            // lewa - nieparzysty numer
             if (!_tcscmp(pl, _T("L")) && (vPage->pagina % 2)) continue;
-            //prawa - parzysty numer
+            // prawa - parzysty numer
             if (!_tcscmp(pl, _T("P")) && !(vPage->pagina % 2)) continue;
-            //polozenie pl
+            // polozenie pl
             if (pl[0] && op_pl[0]) {
-                //brak numeru
+                // brak numeru
                 if (nr_pl < 1) continue;
                 if ((vPage->pagina - vnr_sek) % 2)	//czy sekcja zaczyna sie na stronie o parzstym numerze
                     nr_off = (sekcja[0] ? ((vPage->pagina % 2) ? vnr_sek - 1 : vnr_sek + 1) : vPage->pagina); //czy numer odnosi sie do sekcji czy do gazety
                 else
                     nr_off = (sekcja[0] ? vnr_sek : vPage->pagina); //czy numer odnosi sie do sekcji czy do gazety
-                //inna strona prawa/lewa niz zadano
+                // inna strona prawa/lewa niz zadano
                 if (!_tcscmp(op_pl, _T("=")) && !_tcscmp(pl, _T("P")) && nr_off != 2 * nr_pl - 1) continue;
                 if (!_tcscmp(op_pl, _T("=")) && !_tcscmp(pl, _T("L")) && nr_off != 2 * nr_pl) continue;
-                //strona prawa/lewa o mniejszym numerze niz zadano
+                // strona prawa/lewa o mniejszym numerze niz zadano
                 if (!_tcscmp(op_pl, _T(">")) && !_tcscmp(pl, _T("P")) && nr_off <= 2 * nr_pl - 1) continue;
                 if (!_tcscmp(op_pl, _T(">")) && !_tcscmp(pl, _T("L")) && nr_off <= 2 * nr_pl) continue;
-                //strona prawa/lewa o wiekszym numerze niz zadano
+                // strona prawa/lewa o wiekszym numerze niz zadano
                 if (!_tcscmp(op_pl, _T("<")) && !_tcscmp(pl, _T("P")) && nr_off >= 2 * nr_pl - 1) continue;
                 if (!_tcscmp(op_pl, _T("<")) && !_tcscmp(pl, _T("L")) && nr_off >= 2 * nr_pl) continue;
             }
-            //polozenie w sekcji
+            // polozenie w sekcji
             if (sekcja[0] && op_sekcji[0]) {
-                //brak numeru
+                // brak numeru
                 if (nr_sek < 1) continue;
-                //inna strona w sekcji niz zadano
+                // inna strona w sekcji niz zadano
                 if (!_tcscmp(op_sekcji, _T("=")) && vnr_sek != nr_sek) continue;
-                //strona o mniejszym numerze w sekcji niz zadano
+                // strona o mniejszym numerze w sekcji niz zadano
                 if (!_tcscmp(op_sekcji, _T(">")) && vnr_sek <= nr_sek) continue;
-                //strona o wiekszym numerze w sekcji niz zadano
+                // strona o wiekszym numerze w sekcji niz zadano
                 if (!_tcscmp(op_sekcji, _T("<")) && vnr_sek >= nr_sek) continue;
             }
-            //polozenie na stronie
+            // polozenie na stronie
             hashed = castval->logpage.ReverseFind('#') >= 0;
             if (hashed) {
                 if (!castval->SetPagePosition(nullptr, vPage))
@@ -411,7 +411,7 @@ aSecondRun:
                 if (!vPage->FindSpace(castval, &k, &k, castval->sizex, castval->sizey))
                     continue;
             }
-            //ta strona spe³nia wszystkie warunki
+            // ta strona spe³nia wszystkie warunki
             vPages.Add(vPage);
         }
 
@@ -428,7 +428,7 @@ aSecondRun:
 
         // wybierz najmniej lub najbardziej zajeta strone z listy - makietujDoKupy
         maxWeight = (int)1E4;
-        for (j = 0; j < k; j++) {
+        for (j = 0; j < k; ++j) {
             vTmpPage = (CDrawPage*)vPages.GetAt(j);
             int m = 0, ile_mod = vTmpPage->szpalt_x*vTmpPage->szpalt_y;
             for (int l = 0; l < ile_mod; l++)
@@ -444,7 +444,7 @@ aSecondRun:
 
         if (hashed) // ustaw na zadanym miejscu na stronie
             castval->SetPagePosition(&vRect, vPage);
-        else if (vPage) //ustaw ogloszenie w prawym dolnym rogu strony
+        else if (vPage) // ustaw ogloszenie w prawym dolnym rogu strony
             vRect = CRect(vPage->m_position.right - (int)((castval->sizex)*CDrawObj::modx(castval->szpalt_x)), vPage->m_position.bottom + (int)(castval->sizey*CDrawObj::mody(castval->szpalt_y)), vPage->m_position.right, vPage->m_position.bottom);
 
         castval->SetPosition(&vRect, vPage);
@@ -497,7 +497,7 @@ void CDrawDoc::MakietujStrone(CDrawPage *pPage)
         // pasek ma najwyzszy priorytet
         if (hashedi && (viAdd->sizex == viAdd->szpalt_x && viAdd->sizey == 1) || (viAdd->sizey == viAdd->szpalt_y && viAdd->sizex == 1)) continue;
         int maxWeight = viAdd->sizex*viAdd->sizey;
-        for (j = i + 1; j < vAddsCount; j++) {
+        for (j = i + 1; j < vAddsCount; ++j) {
             auto vjAdd = (CDrawAdd*)vAdds.GetAt(j);
             const bool hashedj = vjAdd->logpage.ReverseFind('#') >= 0;
             if (hashedi && !hashedj) continue;
@@ -551,7 +551,8 @@ void CDrawDoc::MakietujStrone(CDrawPage *pPage)
         if (hashpos >= 0) {
             k = 0;
             TCHAR tail[20];
-            for (j = hashpos + 1; j < castval->logpage.GetLength(); j++)
+            const int rc = castval->logpage.GetLength();
+            for (j = hashpos + 1; j < rc; ++j)
                 if (isupper((int)castval->logpage[j])) tail[k++] = castval->logpage[j];
             tail[k] = '\0';
             if (_tcsstr(tail, _T("DL")))
@@ -781,7 +782,7 @@ void CDrawDoc::OnDrawOpcje()
 
 int CDrawDoc::GetIPage(int n) const noexcept
 {
-    for (int i = 0; i < (int)m_pages.size(); i++)
+    for (int i = 0; i < (int)m_pages.size(); ++i)
         if (m_pages[i]->nr == n)
             return i;
     return -1;
@@ -918,7 +919,7 @@ void CDrawDoc::DerivePages(CDrawPage *pPage)
                 if (pPage->m_dervlvl == DervType::none && dlg.m_idervlvl == DervType::none)
                     return;
                 if (dlg.m_idervlvl != DervType::none && dlg.m_idervlvl != DervType::proh && dlg.m_idervlvl != DervType::druk)
-                    for (int i = 0; i < dlg.m_ilekol; i++)
+                    for (int i = 0; i < dlg.m_ilekol; ++i)
                         if (!(m_pages[(dlg.m_nr + i) % npages])->m_adds.empty()) {
                             AfxMessageBox(_T("Przed dziedziczeniem nale¿y zdj¹æ og³oszenia ze zmienianych stron"), MB_ICONEXCLAMATION);
                             return;

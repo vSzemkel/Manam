@@ -20,7 +20,7 @@ class CDrawTool
 {
     // Constructors
 public:
-    CDrawTool(DrawShape nDrawShape);
+    CDrawTool(DrawShape drawShape);
 
     // Overridables
     virtual void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point);
@@ -94,7 +94,7 @@ class CSpaceTool : public CDrawTool
 {
     // Constructors
 public:
-    CSpaceTool(DrawShape nDrawShape);
+    CSpaceTool(DrawShape dsh);
     // Implementation
     void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
     void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point) override;

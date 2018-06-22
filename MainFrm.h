@@ -65,7 +65,7 @@ protected:
     CString m_LastSessionKolor;
     CEdit* m_CaptionEditBox;
     BOOL CreateManamToolBar();
-    LRESULT OnToolBarReset(WPARAM wp, LPARAM);
+    LRESULT OnToolBarReset(WPARAM wp, LPARAM /*unused*/);
     //void InitRibbon ();
 // Generated message map functions
 protected:

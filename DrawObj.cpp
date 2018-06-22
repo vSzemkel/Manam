@@ -79,10 +79,6 @@ void CDrawObj::Remove()
     delete this;
 }
 
-void CDrawObj::Draw(CDC*)
-{
-}
-
 void CDrawObj::DrawTracker(CDC *pDC, TrackerState state) const
 {
     ASSERT_VALID(this);
@@ -318,7 +314,7 @@ void CDrawObj::Invalidate()
     m_pDocument->UpdateAllViews(nullptr, HINT_UPDATE_DRAWOBJ, this);
 }
 
-BOOL CDrawObj::OnOpen(CDrawView*)
+BOOL CDrawObj::OnOpen(CDrawView* /*unused*/)
 {
     ASSERT_VALID(this);
     return TRUE;
@@ -401,7 +397,7 @@ int CDrawObj::Arabska(LPCTSTR rz)
 
     if (li_len == 0) return 0;
 
-    for (i = 0; i < li_len; i++)
+    for (i = 0; i < li_len; ++i)
         switch (rz[i]) {
             case 'I':
                 li_sum += 1;

@@ -30,7 +30,7 @@ class CDrawView : public CScrollView
     DECLARE_DYNCREATE(CDrawView)
 
     // Operations
-    static void CALLBACK CDrawView::DelegateGenEPS(PTP_CALLBACK_INSTANCE, PVOID parameter, PTP_WORK work);
+    static void CALLBACK CDrawView::DelegateGenEPS(PTP_CALLBACK_INSTANCE /*unused*/, PVOID parameter, PTP_WORK work);
 
     ~CDrawView() noexcept override = default;
     void OnDraw(CDC* pDC) override; // overridden to draw this view
