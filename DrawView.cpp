@@ -1346,19 +1346,17 @@ void CALLBACK CDrawView::DelegateGenEPS(PTP_CALLBACK_INSTANCE /*unused*/, PVOID 
 
 void CDrawView::CheckPrintEps(BOOL isprint)
 {
-    int p = -1, k = -1;
     CPrnEpsDlg d;
     auto pDoc = GetDocument();
 
     if (pDoc->m_pages.empty()) return;
-
-    theManODPNET.LoadMakietaDirs(pDoc->m_mak_xx);
+    const auto pc = (int)pDoc->m_pages.size();
 
     auto pPage = pDoc->m_pages[0];
     d.m_isprint = isprint;
     d.m_signall = 1;
     d.m_do = pPage->GetNrPaginy();
-    d.m_od = pDoc->m_pages.size() == 1 ? d.m_do : pDoc->m_pages[1]->GetNrPaginy();
+    d.m_od = pc == 1 ? d.m_do : pDoc->m_pages[1]->GetNrPaginy();
     d.m_streamed = (BOOL)theApp.isParalellGen;
     d.m_markfound = (BOOL)theApp.GetProfileInt(_T("GenEPS"), _T("autoMark"), 0);
 
@@ -1369,68 +1367,13 @@ void CDrawView::CheckPrintEps(BOOL isprint)
         d.m_page = 0;
 
     if (d.DoModal() == IDCANCEL) return;
+    if (isprint && !pDoc->SaveModified()) return;
+    if (pDoc->m_Rozm.empty()) pDoc->IniRozm();
     theApp.isParalellGen = d.m_streamed ? 1 : 0;
     theApp.WriteProfileInt(_T("GenEPS"), _T("autoMark"), theApp.autoMark = d.m_markfound);
 
-    const auto pc = (int)pDoc->m_pages.size();
-    CFlag wyborStron(0, 0, 1, pc);
-    switch (d.m_page) {
-        case 0:
-            wyborStron = CFlag(1, pc, 1, pc);
-            break;
-        case 1:
-            p = pDoc->Nr2NrPorz(d.m_od);
-            k = pDoc->Nr2NrPorz(d.m_do);
-            if (p < 0 || k < 0) goto subseterr;
-            if (k == 0) k = pc;
-            if (p == 0) p = pc;
-            for (int i = p; i <= k; ++i)
-                wyborStron.SetBit(i % pc);
-            break;
-        case 2:
-            int liczbaA, liczbaB;
-            TCHAR* tok;
-            const TCHAR septok[] = { ',', '-' };
-            ::StringCchCopy(theApp.bigBuf, n_size, d.m_subset);
-            tok = _tcstok(theApp.bigBuf, septok);
-            while (tok != nullptr) {
-                liczbaA = pDoc->Nr2NrPorz(tok);
-                if (liczbaA == -1)
-                    goto subseterr;
-                else if (liczbaA == 0)
-                    liczbaA = pc;
-                switch (d.m_subset.GetAt((int)(tok - theApp.bigBuf + _tcslen(tok)))) {
-                    case '\0':
-                    case ',':
-                        wyborStron.SetBit(liczbaA % pc);
-                        tok = _tcstok(nullptr, septok);
-                        break;
-                    case '-':
-                        tok = _tcstok(nullptr, septok);
-                        liczbaB = pDoc->Nr2NrPorz(tok);
-                        if (liczbaB == -1)
-                            goto subseterr;
-                        else if (liczbaB == 0)
-                            liczbaB = pc;
-                        for (int i = liczbaA; i <= liczbaB; ++i)
-                            wyborStron.SetBit(i % pc);
-                        tok = _tcstok(nullptr, septok);
-                        break;
-                    default:
-                        goto subseterr;
-                }
-            }
-            break;
-subseterr:
-            AfxMessageBox(_T("Nie okreœlono poprawnego podzbioru stron"));
-            return;
-    }
-
-    if (pDoc->m_Rozm.empty())
-        pDoc->IniRozm();
-    if (isprint && !pDoc->SaveModified()) return;
-
     BeginWaitCursor();
+    theManODPNET.LoadMakietaDirs(pDoc->m_mak_xx);
 
     if (isprint) {
         CString err(' ', 1024);
@@ -1457,6 +1400,7 @@ subseterr:
     bool streamed = d.m_streamed;
     CGenEpsInfoDlg *pDlg = CGenEpsInfoDlg::GetGenEpsInfoDlg(isprint);
 
+    const CFlag wyborStron = d.GetChoosenPages(pDoc);
     if (streamed) {
         iCpuCnt = CGenEpsInfoDlg::GetCpuCnt();
         const int iIleStron = wyborStron.GetBitCnt(true);

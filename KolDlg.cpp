@@ -2046,6 +2046,64 @@ void CPrnEpsDlg::DoDataExchange(CDataExchange *pDX)
     //}}AFX_DATA_MAP
 }
 
+CFlag CPrnEpsDlg::GetChoosenPages(CDrawDoc* pDoc) const noexcept
+{
+    const auto pc = (int)pDoc->m_pages.size();
+    if (m_page == 0) return {1, pc, 1, pc};
+
+    CFlag wyborStron{0, 0, 1, pc};
+    switch (m_page) {
+        case 1:
+            int p, k;
+            p = pDoc->Nr2NrPorz(m_od);
+            k = pDoc->Nr2NrPorz(m_do);
+            if (p < 0 || k < 0) goto subseterr;
+            if (k == 0) k = pc;
+            if (p == 0) p = pc;
+            for (int i = p; i <= k; ++i)
+                wyborStron.SetBit(i % pc);
+            break;
+        case 2:
+            int liczbaA, liczbaB;
+            TCHAR* tok;
+            const TCHAR septok[] = {',', '-'};
+            ::StringCchCopy(theApp.bigBuf, n_size, m_subset);
+            tok = _tcstok(theApp.bigBuf, septok);
+            while (tok != nullptr) {
+                liczbaA = pDoc->Nr2NrPorz(tok);
+                if (liczbaA == -1)
+                    goto subseterr;
+                else if (liczbaA == 0)
+                    liczbaA = pc;
+                switch (m_subset.GetAt((int)(tok - theApp.bigBuf + _tcslen(tok)))) {
+                    case '\0':
+                    case ',':
+                        wyborStron.SetBit(liczbaA % pc);
+                        tok = _tcstok(nullptr, septok);
+                        break;
+                    case '-':
+                        tok = _tcstok(nullptr, septok);
+                        liczbaB = pDoc->Nr2NrPorz(tok);
+                        if (liczbaB == -1)
+                            goto subseterr;
+                        else if (liczbaB == 0)
+                            liczbaB = pc;
+                        for (int i = liczbaA; i <= liczbaB; ++i)
+                            wyborStron.SetBit(i % pc);
+                        tok = _tcstok(nullptr, septok);
+                        break;
+                    default:
+                        goto subseterr;
+                }
+            }
+            break;
+        subseterr:
+            AfxMessageBox(_T("Nie okreœlono poprawnego podzbioru stron"));
+    }
+
+    return wyborStron;
+}
+
 BEGIN_MESSAGE_MAP(CPrnEpsDlg, CDialog)
     //{{AFX_MSG_MAP(CPrnEpsDlg)
     ON_WM_LBUTTONDOWN()

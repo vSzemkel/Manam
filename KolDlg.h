@@ -741,7 +741,9 @@ public:
     //}}AFX_DATA
 
 // Implementation
-protected:
+    CFlag GetChoosenPages(CDrawDoc* pDoc) const noexcept;
+
+  protected:
     void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
 
     // Generated message map functions
