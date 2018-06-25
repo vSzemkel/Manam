@@ -2117,7 +2117,7 @@ END_MESSAGE_MAP()
 
 void CPrnEpsDlg::OnAllPages()
 {
-    BOOL all = IsDlgButtonChecked(IDC_ALLPAGES);
+    const BOOL all = IsDlgButtonChecked(IDC_ALLPAGES);
     GetDlgItem(IDC_FROMPAGE)->EnableWindow(!all);
     GetDlgItem(IDC_TOPAGE)->EnableWindow(!all);
     GetDlgItem(IDC_DWARLOG)->EnableWindow(!all);
@@ -2125,7 +2125,7 @@ void CPrnEpsDlg::OnAllPages()
 
 void CPrnEpsDlg::OnFmteps()
 {
-    BOOL bIsEPS = IsDlgButtonChecked(IDC_FMTEPS);
+    const BOOL bIsEPS = IsDlgButtonChecked(IDC_FMTEPS);
     if (m_isprint) {
         GetDlgItem(IDC_PREV)->EnableWindow(bIsEPS);
         CheckDlgButton(IDC_PREV, bIsEPS ? BST_CHECKED : BST_UNCHECKED);

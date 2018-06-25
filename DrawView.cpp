@@ -1407,7 +1407,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
         if (iIleStron < iCpuCnt)
             iCpuCnt = (WORD)iIleStron;
 
-        if (iCpuCnt > 1) {
+        if (iCpuCnt > 1 && d.m_format != F_PDF) {
             pDlg->SetChannelCount(iCpuCnt);
             waitEvents = (HANDLE *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(HANDLE));
             threadArgs = (PGENEPSARG)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(GENEPSARG));
@@ -1448,46 +1448,34 @@ void CDrawView::CheckPrintEps(BOOL isprint)
         genEpsArg.pDlg = (CGenEpsInfoDlg *)pDlg;
     }
 
-    const auto submitWorkOnPage = [&]() noexcept {
-        WORD channId;
-        if (iThreadCnt >= iCpuCnt)
-            channId = (WORD)::WaitForMultipleObjects(iCpuCnt, waitEvents, FALSE, INFINITE) - WAIT_OBJECT_0;
-        else
-            channId = iThreadCnt++;
-
-        auto& channelArg = threadArgs[channId];
-        channelArg.pPage = pPage;
-        PTP_WORK work = ::CreateThreadpoolWork(CDrawView::DelegateGenEPS, &channelArg, nullptr);
-        ::SubmitThreadpoolWork(work);
-    };
-
-    for (int i = 0; !pDlg->cancelGenEPS && i < pc; ++i) {
+    for (int i = 0; !pDlg->cancelGenEPS && i < pc; ++i)
         if (wyborStron[i]) {
             pPage = pDoc->m_pages[i];
             const auto dl = pPage->m_dervlvl;
             if (dl == DervType::fixd || dl == DervType::proh || (d.m_exclude_emptypages && pPage->m_adds.empty() && pPage->name.Find(_T("DROB")) == -1))
                 continue;
 
-            if (isprint) { // generate
-                if (d.m_format != F_PDF) {
-                    if (streamed)
-                        submitWorkOnPage();
-                    else if (!pPage->GenEPS(&genEpsArg)) {
-                        pDlg->cancelGenEPS = TRUE;
-                        break;
-                    }
-                } else {
-                    if (!pPage->GenPDF(&genEpsArg))
-                        break;
-                }
-            } else { // check
-                if (streamed)
-                    submitWorkOnPage();
+            if (streamed) {                      // delegate
+                WORD channId;
+                if (iThreadCnt >= iCpuCnt)
+                    channId = (WORD)::WaitForMultipleObjects(iCpuCnt, waitEvents, FALSE, INFINITE) - WAIT_OBJECT_0;
                 else
-                    pPage->CheckSrcFile(&genEpsArg);
+                    channId = iThreadCnt++;
+
+                auto& channelArg = threadArgs[channId];
+                channelArg.pPage = pPage;
+                PTP_WORK work = ::CreateThreadpoolWork(CDrawView::DelegateGenEPS, &channelArg, nullptr);
+                ::SubmitThreadpoolWork(work);
+            } else if (!isprint)                 // check
+                pPage->CheckSrcFile(&genEpsArg);
+            else {                               // generate
+                const auto generator = d.m_format != F_PDF ? &CDrawPage::GenEPS : &CDrawPage::GenPDF;
+                if (!(pPage->*generator)(&genEpsArg)) {
+                    pDlg->cancelGenEPS = TRUE;
+                    break;
+                }
             }
         }
-    }
 
     if (streamed) {
         ::WaitForMultipleObjects(iCpuCnt, waitEvents, TRUE, INFINITE);
