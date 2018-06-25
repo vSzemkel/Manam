@@ -1359,7 +1359,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
     d.m_signall = 1;
     d.m_do = pPage->GetNrPaginy();
     d.m_od = pDoc->m_pages.size() == 1 ? d.m_do : pDoc->m_pages[1]->GetNrPaginy();
-    d.m_bPotokowe = (BOOL)theApp.isParalellGen;
+    d.m_streamed = (BOOL)theApp.isParalellGen;
     d.m_markfound = (BOOL)theApp.GetProfileInt(_T("GenEPS"), _T("autoMark"), 0);
 
     if (m_selection.size() == 1 && (pPage = dynamic_cast<CDrawPage *>(m_selection.front()))) {
@@ -1369,7 +1369,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
         d.m_page = 0;
 
     if (d.DoModal() == IDCANCEL) return;
-    theApp.isParalellGen = d.m_bPotokowe ? 1 : 0;
+    theApp.isParalellGen = d.m_streamed ? 1 : 0;
     theApp.WriteProfileInt(_T("GenEPS"), _T("autoMark"), theApp.autoMark = d.m_markfound);
 
     const auto pc = (int)pDoc->m_pages.size();
@@ -1450,53 +1450,59 @@ subseterr:
             theManODPNET.GetManamEps();
     }
 
-    LPBYTE bigBufArr;
+    PBYTE bigBufArr;
     HANDLE *waitEvents;
-    GENEPSARG *threadArgs;
+    PGENEPSARG threadArgs;
     WORD iCpuCnt, iThreadCnt = 0;
+    bool streamed = d.m_streamed;
     CGenEpsInfoDlg *pDlg = CGenEpsInfoDlg::GetGenEpsInfoDlg(isprint);
 
-    if (d.m_bPotokowe) {
+    if (streamed) {
         iCpuCnt = CGenEpsInfoDlg::GetCpuCnt();
-        pDlg->SetChannelCount(iCpuCnt);
         const int iIleStron = wyborStron.GetBitCnt(true);
         if (iIleStron < iCpuCnt)
             iCpuCnt = (WORD)iIleStron;
 
-        waitEvents = (HANDLE *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(HANDLE));
-        threadArgs = (GENEPSARG *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(GENEPSARG));
-        bigBufArr = (LPBYTE)VirtualAlloc(nullptr, bigSize * iCpuCnt, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-        if (!bigBufArr) {
-            AfxMessageBox(_T("Zbyt ma³o pamiêci do uruchomienia potokowego"), MB_ICONSTOP);
-            return;
-        }
+        if (iCpuCnt > 1) {
+            pDlg->SetChannelCount(iCpuCnt);
+            waitEvents = (HANDLE *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(HANDLE));
+            threadArgs = (PGENEPSARG)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(GENEPSARG));
+            bigBufArr  = (PBYTE)VirtualAlloc(nullptr, bigSize * iCpuCnt, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+            if (!bigBufArr) {
+                AfxMessageBox(_T("Zbyt ma³o pamiêci do uruchomienia potokowego"), MB_ICONSTOP);
+                return;
+            }
 
-        for (WORD i = 0; i < iCpuCnt; ++i) {
-            auto& ta = threadArgs[i];
-            ta.iChannelId = i;
-            ta.bIsPRN = (BOOL)d.m_format;
-            ta.bIsPreview = d.m_preview;
-            ta.bSignAll = d.m_signall;
-            ta.bDoKorekty = d.m_korekta;
-            ta.pDlg = (CGenEpsInfoDlg *)pDlg;
-            ta.hCompletedEvent = waitEvents[i] = ::CreateEvent(nullptr, FALSE, FALSE, nullptr);
-            ta.cBigBuf = (TCHAR*)(bigBufArr + bigSize * i);
-        }
+            for (WORD i = 0; i < iCpuCnt; ++i) {
+                auto& ta = threadArgs[i];
+                ta.iChannelId = i;
+                ta.bIsPRN = (BOOL)d.m_format;
+                ta.bIsPreview = d.m_preview;
+                ta.bSignAll = d.m_signall;
+                ta.bDoKorekty = d.m_korekta;
+                ta.pDlg = (CGenEpsInfoDlg *)pDlg;
+                ta.hCompletedEvent = waitEvents[i] = ::CreateEvent(nullptr, FALSE, FALSE, nullptr);
+                ta.cBigBuf = (TCHAR*)(bigBufArr + bigSize * i);
+            }
+        } else
+            streamed = false;
     }
 
+    pDoc->ovEPS = FALSE;
     const BOOL bInitOpiMode = theApp.isOpiMode;
     if (isprint && d.m_format == F_EPS) theApp.isOpiMode = FALSE; // Dla F_EPS nie u¿ywaj OPI
 
     GENEPSARG genEpsArg;
-    genEpsArg.iChannelId = 0;
-    genEpsArg.bIsPRN = (BOOL)d.m_format;
-    genEpsArg.bIsPreview = d.m_preview;
-    genEpsArg.bSignAll = d.m_signall;
-    genEpsArg.bDoKorekty = d.m_korekta;
-    genEpsArg.cBigBuf = theApp.bigBuf;
-    genEpsArg.pPage = pPage;
-    genEpsArg.pDlg = (CGenEpsInfoDlg *)pDlg;
-    pDoc->ovEPS = FALSE;
+    if (!streamed) {
+        genEpsArg.iChannelId = 0;
+        genEpsArg.bIsPRN = (BOOL)d.m_format;
+        genEpsArg.bIsPreview = d.m_preview;
+        genEpsArg.bSignAll = d.m_signall;
+        genEpsArg.bDoKorekty = d.m_korekta;
+        genEpsArg.cBigBuf = theApp.bigBuf;
+        genEpsArg.pPage = pPage;
+        genEpsArg.pDlg = (CGenEpsInfoDlg *)pDlg;
+    }
 
     const auto submitWorkOnPage = [&]() noexcept {
         WORD channId;
@@ -1520,7 +1526,7 @@ subseterr:
 
             if (isprint) { // generate
                 if (d.m_format != F_PDF) {
-                    if (d.m_bPotokowe)
+                    if (streamed)
                         submitWorkOnPage();
                     else if (!pPage->GenEPS(&genEpsArg)) {
                         pDlg->cancelGenEPS = TRUE;
@@ -1531,7 +1537,7 @@ subseterr:
                         break;
                 }
             } else { // check
-                if (d.m_bPotokowe)
+                if (streamed)
                     submitWorkOnPage();
                 else
                     pPage->CheckSrcFile(&genEpsArg);
@@ -1539,7 +1545,7 @@ subseterr:
         }
     }
 
-    if (d.m_bPotokowe) {
+    if (streamed) {
         ::WaitForMultipleObjects(iCpuCnt, waitEvents, TRUE, INFINITE);
         for (WORD i = 0; i < iCpuCnt; ++i) {
             auto& arg = threadArgs[i];

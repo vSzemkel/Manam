@@ -732,7 +732,7 @@ public:
     BOOL	m_preview;
     BOOL	m_signall;
     BOOL	m_markfound;
-    BOOL	m_bPotokowe;
+    BOOL	m_streamed;
     BOOL	m_korekta;
     BOOL	m_exclude_emptypages;
     BOOL	m_isprint;
@@ -1082,7 +1082,7 @@ private:
     std::vector<CDrawAdd*> *m_aNewAdds, *m_aOldAdds, *m_aModifAdds, *m_aDelAdds;
     void AppendAdd(CDrawAdd *pAdd, int status);
 public:
-    afx_msg void OnOk();
+    afx_msg void OnOK() override;
     afx_msg void OnSelectAll();
     afx_msg void OnNMClickAddlist(NMHDR *pNMHDR, LRESULT *pResult);
 };

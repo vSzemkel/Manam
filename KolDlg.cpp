@@ -2022,7 +2022,7 @@ CPrnEpsDlg::CPrnEpsDlg(CWnd *pParent /*=NULL*/)
     m_page = -1;
     m_format = 0;
     //m_korekta = TRUE;
-    m_exclude_emptypages = m_korekta = m_isprint = m_bPotokowe = m_markfound = m_signall = m_preview = FALSE;
+    m_exclude_emptypages = m_korekta = m_isprint = m_streamed = m_markfound = m_signall = m_preview = FALSE;
     //}}AFX_DATA_INIT
 }
 
@@ -2039,7 +2039,7 @@ void CPrnEpsDlg::DoDataExchange(CDataExchange *pDX)
     DDX_Check(pDX, IDC_SIGNALL, m_signall);
     DDX_Radio(pDX, IDC_FMTEPS, m_format);
     DDX_Check(pDX, IDC_MARKFOUND, m_markfound);
-    DDX_Check(pDX, IDC_SEND, m_bPotokowe);
+    DDX_Check(pDX, IDC_SEND, m_streamed);
     DDX_Check(pDX, IDC_WHERE, m_korekta);
     DDX_Text(pDX, IDC_DWARLOG, m_subset);
     DDX_Check(pDX, IDC_STRCNT, m_exclude_emptypages);
@@ -2761,7 +2761,7 @@ void COstWer::DoDataExchange(CDataExchange *pDX)
 }
 
 BEGIN_MESSAGE_MAP(COstWer, CDialog)
-    ON_BN_CLICKED(IDOK, &COstWer::OnOk)
+    ON_BN_CLICKED(IDOK, &COstWer::OnOK)
     ON_BN_CLICKED(IDC_SIGNALL, &COstWer::OnSelectAll)
     ON_NOTIFY(NM_CLICK, IDC_ADDLIST, &COstWer::OnNMClickAddlist)
 END_MESSAGE_MAP()
@@ -2841,7 +2841,7 @@ BOOL COstWer::OnInitDialog()
     return TRUE;
 }
 
-void COstWer::OnOk()
+void COstWer::OnOK()
 {
     CDialog::OnOK();
 
