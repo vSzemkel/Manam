@@ -579,27 +579,27 @@ BOOL CDrawAdd::OnOpen(CDrawView* pView)
     if (szpalt_x != dlg.m_szpalt_x || szpalt_y != dlg.m_szpalt_y) {
         szpalt_x = dlg.m_szpalt_x;
         szpalt_y = dlg.m_szpalt_y;
-        space = CFlag(sizex, sizey, szpalt_x, szpalt_y);
-        const CRect vPos(m_position.left, m_position.top, m_position.left + (int)(sizex*modulx), m_position.top - (int)(sizey*moduly));
-        MoveTo(vPos);
+        space = CFlag{sizex, sizey, szpalt_x, szpalt_y};
+        const CRect pos{m_position.left, m_position.top, m_position.left + (int)(sizex*modulx), m_position.top - (int)(sizey*moduly)};
+        MoveTo(pos);
     }
     if (!dlg.m_fromQue && (((theApp.grupa&UserRole::dea) > 0) || (theApp.grupa&UserRole::kie && m_pDocument->isRO)))
         if (m_add_xx > 0) {
-            int eok = this->flags.epsok;
-            int powt = (int)(this->powtorka == 0 ? 0 : (this->powtorka - CTime(POWTSEED_0)).GetDays());
-            int ik = ((this->kolor) & ColorId::full) == ColorId::full ? ColorId::full : (((this->kolor) & ColorId::brak) == ColorId::brak ? ColorId::brak : ColorId::spot);
+            uint8_t eok = this->flags.epsok;
+            auto powt = (int)(this->powtorka == 0 ? 0 : (this->powtorka - CTime(POWTSEED_0)).GetDays());
+            uint8_t ile_kol = this->kolor & 0x07;
             CString czk = this->flags.reserv == 1 ? _T("") : this->czaskto;
 
             CManODPNETParms orapar {
-                { CManODPNET::DbTypeInt32, &this->m_pub_xx },
-                { CManODPNET::DbTypeInt32, &ik },
-                { CManODPNET::DbTypeInt32, &CDrawDoc::spoty[this->kolor >> 3]},
-                { CManODPNET::DbTypeInt32, &powt },
-                { CManODPNET::DbTypeInt32, &this->oldAdno },
-                { CManODPNET::DbTypeVarchar2, &this->remarks },
-                { CManODPNET::DbTypeVarchar2, &this->wersja },
-                { CManODPNET::DbTypeVarchar2, &czk },
-                { CManODPNET::DbTypeInt32, &eok }
+                { CManDbType::DbTypeInt32, &this->m_pub_xx },
+                { CManDbType::DbTypeByte,  &ile_kol },
+                { CManDbType::DbTypeInt32, &CDrawDoc::spoty[this->kolor >> 3]},
+                { CManDbType::DbTypeInt32, &powt },
+                { CManDbType::DbTypeInt32, &this->oldAdno },
+                { CManDbType::DbTypeVarchar2, &this->remarks },
+                { CManDbType::DbTypeVarchar2, &this->wersja },
+                { CManDbType::DbTypeVarchar2, &czk },
+                { CManDbType::DbTypeByte, &eok }
             };
             theManODPNET.EI("begin spacer.update_reservation(:pub_xx,:ile_kol,:nr_spotu,:powtorka,:old_adno,:uwagi,:wersja,:czaskto,:eps_present); end;", orapar);
         } else
@@ -630,7 +630,7 @@ void CDrawAdd::SetPosition(int fizp, int px, int py, int sx, int sy)
         UpdateInfo(); return;
     }
 
-    CRect m_pos = m_position;
+    CRect m_pos{m_position};
     auto pPage = m_pDocument->GetPage(fizp);
     sx = min(szpalt_x, sx); px = min(px, szpalt_x + 1 - sx);
     sy = min(szpalt_y, sy); py = min(py, szpalt_y + 1 - sy);
@@ -1423,8 +1423,8 @@ bool CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by
             pArg->bStatus = _stscanf_s(sBBox, _T("%f %f %f %f"), bx1, by1, bx2, by2) == 4;
             if (!pArg->bStatus) { // przesz³o przez EpsTest, ale nie ma ProdInfo
                 bReqProdInfo = true;
-                if (powtorka > 0) EpsName(F_EPS, FALSE);
-                CManODPNETParms orapar { CManODPNET::DbTypeInt32, &m_pub_xx };
+                if (powtorka > 0) EpsName(CManFormat::EPS, FALSE);
+                CManODPNETParms orapar { CManDbType::DbTypeInt32, &m_pub_xx };
                 theManODPNET.EI("begin epstest.request_prod_info(:pub_xx); end;", orapar);
             } else
                 return true;
@@ -1433,7 +1433,7 @@ bool CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by
 
     // szukaj BoundingBox w pliku
     if (powtorka > 0) pArg->pDlg->OglInfo(pArg->iChannelId, CString(_T("Pobieranie pliku z archiwum")));
-    const CString& eps_name = EpsName(F_EPS, FALSE);
+    const CString& eps_name = EpsName(CManFormat::EPS, FALSE);
     pArg->pDlg->OglInfo(pArg->iChannelId, eps_name);
     if (eps_name.Mid(1, 1) != _T(":")) {
         f5_errInfo += (eps_name + _T(", "));
@@ -1505,7 +1505,7 @@ dajWymiarKraty:
 
     // check scale
     float x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
-    if (pArg->bIsPRN != F_PDF) {
+    if (pArg->bIsPRN != CManFormat::PDF) {
         int ileMat;
         TCHAR cKolor[2];
         if (!GetProdInfo(pArg, cKolor, &x1, &y1, &x2, &y2, &ileMat))
@@ -1639,7 +1639,7 @@ bool CDrawAdd::LocatePreview(CFile& fEps, unsigned long* lOffset, unsigned long*
     return true;
 }
 
-CString CDrawAdd::EpsName(int format, BOOL copyOldEPS, BOOL bModifTest)
+CString CDrawAdd::EpsName(uint8_t format, BOOL copyOldEPS, BOOL bModifTest)
 {
     static const TCHAR* aExt[] = { _T(".eps"), _T(".ps"), _T(".pdf") };
     const bool czy_zajawka = wersja.Find(_T("z")) >= 0;
@@ -1657,8 +1657,8 @@ CString CDrawAdd::EpsName(int format, BOOL copyOldEPS, BOOL bModifTest)
     if (czy_zajawka) {
         int status;
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &status },
-            { CManODPNET::DbTypeInt32, &nreps }
+            { CManDbType::DbTypeInt32, CManDbDir::ParameterOut, &status },
+            { CManDbType::DbTypeInt32, &nreps }
         };
         orapar.outParamsCount = 1;
         theManODPNET.EI("begin :cc := check_emisja_zajawki(:adno); end;", orapar);
@@ -1681,7 +1681,7 @@ CString CDrawAdd::EpsName(int format, BOOL copyOldEPS, BOOL bModifTest)
             if (ff.FindFile(s + aExt[format])) goto modifTest;
             ff.Close();
             if (ff.FindFile(s + _T(".tif"))) return num + t2e;
-            if (format != F_PDF && EpsFromATEX(num, s))
+            if (format != CManFormat::PDF && EpsFromATEX(num, s))
                 goto modifTest;
         } else { // powtorka
             if (oldAdno > 0) // z numeru
@@ -1741,7 +1741,7 @@ CString CDrawAdd::EpsName(int format, BOOL copyOldEPS, BOOL bModifTest)
             ff.Close();
             if (ff.FindFile(s + _T(".tif"))) return num + t2e;
         }
-        if (format != F_PDF && EpsFromATEX(num, s))
+        if (format != CManFormat::PDF && EpsFromATEX(num, s))
             goto modifTest;
     }
     return (num + _T(" brak ") + aExt[format]);
@@ -1773,9 +1773,9 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
             return false;
         }
         pLeftAdd = pPrevPage->m_adds.front();
-        if (pLeftAdd) eps_name = pLeftAdd->EpsName(F_EPS, copyEps);
+        if (pLeftAdd) eps_name = pLeftAdd->EpsName(CManFormat::EPS, copyEps);
     } else
-        eps_name = wersja == DERV_TMPL_WER ? nazwa : EpsName(F_EPS, copyEps); // albo nazwa pliku ze sciezka, albo info o bledzie
+        eps_name = wersja == DERV_TMPL_WER ? nazwa : EpsName(CManFormat::EPS, copyEps); // albo nazwa pliku ze sciezka, albo info o bledzie
     pArg->pDlg->OglInfo(pArg->iChannelId, eps_name);
 
     auto x = (float)((posx - 1)*(pRozKraty->w + pRozKraty->sw)*mm2pkt);
@@ -1820,8 +1820,8 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
         if (theApp.activeDoc->gazeta.Left(3) == _T("TBP")) {
             CString uPodpis(_T(' '), 64);
             CManODPNETParms orapar {
-                { CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &uPodpis },
-                { CManODPNET::DbTypeInt32, &this->m_pub_xx }
+                { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &uPodpis },
+                { CManDbType::DbTypeInt32, &this->m_pub_xx }
             };
             orapar.outParamsCount = 1;
             theManODPNET.EI("begin :pod := pagina.podpis(:pub_xx); end;", orapar);
@@ -1863,11 +1863,11 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
         CString uTrans(_T(' '), 8);
         CString uReklama(_T(' '), 32);
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeInt32, &m_pDocument->m_mak_xx },
-            { CManODPNET::DbTypeInt32, &pPage->id_str },
-            { CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &uTrans },
-            { CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &uReklama },
-            { CManODPNET::DbTypeDouble, CManODPNET::ParameterOut, &dMargDoGrb }
+            { CManDbType::DbTypeInt32, &m_pDocument->m_mak_xx },
+            { CManDbType::DbTypeInt32, &pPage->id_str },
+            { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &uTrans },
+            { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &uReklama },
+            { CManDbType::DbTypeDouble, CManDbDir::ParameterOut, &dMargDoGrb }
         };
         orapar.outParamsCount = 3;
         theManODPNET.EI("begin pagina.get_ppole_trans(:mak_xx,:str_xx,:trans,:rekl,:mdg); end;", orapar);

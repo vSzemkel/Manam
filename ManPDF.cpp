@@ -704,7 +704,7 @@ BOOL CManPDF::CreatePDF(CDrawPage *page, const TCHAR *trgName)
         unsigned int i, dziury = 0;
         for (i = pocz; i < kon; ++i) {
             pAdd = page->m_adds[i - pocz];
-            fname = pAdd->EpsName(F_PDF, FALSE);
+            fname = pAdd->EpsName(CManFormat::PDF, FALSE);
             filePath.emplace_back(fname);
             if (fname.Mid(1, 1) != _T(":")) {
                 embAlias.emplace_back("");

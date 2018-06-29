@@ -154,11 +154,11 @@ void CPageDlg::OnOK()
         CDialog::OnOK();
 
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeInt32, &m_mak_xx },
-            { CManODPNET::DbTypeInt32, &m_id_str },
-            { CManODPNET::DbTypeInt32, &m_prn_mak_xx },
-            { CManODPNET::DbTypeInt32, &prn_flag },
-            { CManODPNET::DbTypeInt32, &m_topage }
+            { CManDbType::DbTypeInt32, &m_mak_xx },
+            { CManDbType::DbTypeInt32, &m_id_str },
+            { CManDbType::DbTypeInt32, &m_prn_mak_xx },
+            { CManDbType::DbTypeInt32, &prn_flag },
+            { CManDbType::DbTypeInt32, &m_topage }
         };
         theManODPNET.EI("begin pagina.set_config(:mak_xx,:str_xx,:prn_mak_xx,:prn_flag,:cnt); end;", orapar);
     } else {
@@ -256,7 +256,7 @@ void CPageDlg::SetFunListBox(BOOL setDefaults)
 {
     m_prn_fun.ResetContent();
 
-    CManODPNETParms orapar { CManODPNET::DbTypeInt32, &m_prn_mak_xx };
+    CManODPNETParms orapar { CManDbType::DbTypeInt32, &m_prn_mak_xx };
     theManODPNET.FillList(&m_prn_fun, "select opis,deflag from makfun where mak_xx=:mak_xx", orapar, 1);
 
     if (setDefaults) m_prn_flag.SetZero();
@@ -297,11 +297,11 @@ void CPageDlg::OnBnClickedAcdead()
         CDrawApp::CTimeToShortDate(m_kol, sDataKol);
 
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeInt32, &m_mak_xx },
-            { CManODPNET::DbTypeInt32, &m_id_str },
-            { CManODPNET::DbTypeVarchar2, &sDataRed },
-            { CManODPNET::DbTypeVarchar2, &sDataFot },
-            { CManODPNET::DbTypeVarchar2, &sDataKol }
+            { CManDbType::DbTypeInt32, &m_mak_xx },
+            { CManDbType::DbTypeInt32, &m_id_str },
+            { CManDbType::DbTypeVarchar2, &sDataRed },
+            { CManDbType::DbTypeVarchar2, &sDataFot },
+            { CManDbType::DbTypeVarchar2, &sDataKol }
         };
         theManODPNET.EI("begin save_ac_deadlines(:mak_xx,:str_xx,:data_red,:data_fot,:data_kol); end;", orapar);
     }
@@ -377,10 +377,10 @@ BOOL CPageDlg::OnInitDialog()
         // odczytaj ustawienia strony
         int prn_flag;
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &prn_flag },
-            { CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &m_prn_mak_xx },
-            { CManODPNET::DbTypeInt32, &m_mak_xx },
-            { CManODPNET::DbTypeInt32, &m_id_str }
+            { CManDbType::DbTypeInt32, CManDbDir::ParameterOut, &prn_flag },
+            { CManDbType::DbTypeInt32, CManDbDir::ParameterOut, &m_prn_mak_xx },
+            { CManDbType::DbTypeInt32, &m_mak_xx },
+            { CManDbType::DbTypeInt32, &m_id_str }
         };
         orapar.outParamsCount = 2;
         theManODPNET.EI("begin select nvl(prn_flag,0),nvl(prn_mak_xx,0) into :flag,:prn_mak_xx from spacer_strona where mak_xx=:mak_xx and str_xx=:str_xx; end;", orapar);
@@ -388,8 +388,8 @@ BOOL CPageDlg::OnInitDialog()
 
         // inicjalizacja listy dostêpnych pagin
         CManODPNETParms orapar2 {
-            { CManODPNET::DbTypeInt32, &m_mak_xx },
-            { CManODPNET::DbTypeInt32, &m_id_str }
+            { CManDbType::DbTypeInt32, &m_mak_xx },
+            { CManDbType::DbTypeInt32, &m_id_str }
         };
         m_prn_mak.SetItemData(m_prn_mak.AddString(_T("Bez paginy")), 0);
         if (!theManODPNET.FillCombo(&m_prn_mak, "select xx,nazwa from makprn where mak_xx=:mak_xx and str_xx=:str_xx", orapar2, 0)) return FALSE;
@@ -656,11 +656,11 @@ void CAddDlg::OnEnChangeWersja()
     if (isZajwMode && m_zajawkacombo.GetCount() == 0) {
         GetDlgItem(IDC_KRATKA)->GetWindowText(sWersja);
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeInt32, &theApp.activeDoc->m_mak_xx },
-            { CManODPNET::DbTypeVarchar2, &sWersja },
-            { CManODPNET::DbTypeInt32, &m_sizex },
-            { CManODPNET::DbTypeInt32, &m_sizey },
-            { CManODPNET::DbTypeRefCursor, CManODPNET::ParameterOut, nullptr }
+            { CManDbType::DbTypeInt32, &theApp.activeDoc->m_mak_xx },
+            { CManDbType::DbTypeVarchar2, &sWersja },
+            { CManDbType::DbTypeInt32, &m_sizex },
+            { CManDbType::DbTypeInt32, &m_sizey },
+            { CManDbType::DbTypeRefCursor, CManDbDir::ParameterOut, nullptr }
         };
         theManODPNET.FillCombo(&m_zajawkacombo, "begin zajawki4mak(:mak_xx,:kra_sym,:sizex,:sizey,:retCur); end;", orapar, 1);
 
@@ -708,7 +708,7 @@ void CAddDlg::OnEmisje()
         SetDlgItemText(IDEMISJE, _T("&Powrót"));
         m_emisjelist.ResetContent();
 
-        CManODPNETParms orapar { CManODPNET::DbTypeInt32, &add_xx };
+        CManODPNETParms orapar { CManDbType::DbTypeInt32, &add_xx };
         theManODPNET.FillList(&m_emisjelist, "select pub_xx,emisja from spapub where add_xx=:add_xx", orapar, 0);
     } else {
         m_fullView = FALSE;
@@ -724,7 +724,7 @@ void CAddDlg::OnDelsel()
     if (IDYES == AfxMessageBox(_T("Czy usun¹æ zaznaczone emisje tego og³oszenia"), MB_YESNO)) {
         CString s;
         int i, pub_xx, rc = m_emisjelist.GetCount();
-        CManODPNETParms orapar { CManODPNET::DbTypeInt32, &pub_xx };
+        CManODPNETParms orapar { CManDbType::DbTypeInt32, &pub_xx };
         for (i = 0; i < rc; ++i)
             if (m_emisjelist.GetSel(i)) {
                 m_emisjelist.GetText(i, s);
@@ -742,7 +742,7 @@ void CAddDlg::OnDelall()
     if (!m_fullView) return;
     if (IDYES == AfxMessageBox(_T("Czy usun¹æ wszystkie emisje tego og³oszenia"), MB_YESNO)) {
         int add_xx = GetDlgItemInt(ID_SPACER_IDA);
-        CManODPNETParms orapar { CManODPNET::DbTypeInt32, &add_xx };
+        CManODPNETParms orapar { CManDbType::DbTypeInt32, &add_xx };
         theManODPNET.EI("begin spacer.del_all(:xx); end;", orapar);
         OnCancel();
         if (!m_fromQue)
@@ -918,10 +918,10 @@ void CAddDlg::OnBnClickedOdblokuj()
         if (adno < 0x1000000) return;
         CString tytul(theApp.activeDoc->gazeta.Left(3)), mutacja(theApp.activeDoc->gazeta.Mid(4, 2));
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeVarchar2, &tytul },
-            { CManODPNET::DbTypeVarchar2, &mutacja },
-            { CManODPNET::DbTypeVarchar2, &theApp.activeDoc->data },
-            { CManODPNET::DbTypeInt32, &adno }
+            { CManDbType::DbTypeVarchar2, &tytul },
+            { CManDbType::DbTypeVarchar2, &mutacja },
+            { CManDbType::DbTypeVarchar2, &theApp.activeDoc->data },
+            { CManDbType::DbTypeInt32, &adno }
         };
         theManODPNET.EI("begin atex.spacer.odblokuj@oraent(:tytul,:mutacja,:kiedy,:adno); end;", orapar);
     }
@@ -945,9 +945,9 @@ void CAddDlg::OnEnUpdateOldadno()
 
     if (!m_candidateAdnoDate.IsEmpty()) { //odczytaj kandyduj¹ce do powtórki numery adno
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeVarchar2, &m_candidateAdnoDate },
-            { CManODPNET::DbTypeInt32, &m_pub_xx },
-            { CManODPNET::DbTypeRefCursor, CManODPNET::ParameterOut, nullptr }
+            { CManDbType::DbTypeVarchar2, &m_candidateAdnoDate },
+            { CManDbType::DbTypeInt32, &m_pub_xx },
+            { CManDbType::DbTypeRefCursor, CManDbDir::ParameterOut, nullptr }
         };
         theManODPNET.FillArr(&m_candidateAdno, "begin select_candidate_adno(:kiedy,:pub_xx,:retCur); end;", orapar);
         m_candidateAdnoDate.Empty();
@@ -1359,8 +1359,8 @@ void CDrzDlg::SelectDrzewo(const CTime& t)
 {
     CString kiedy = t.Format(c_ctimeData);
     CManODPNETParms orapar {
-        { CManODPNET::DbTypeVarchar2, &kiedy },
-        { CManODPNET::DbTypeRefCursor, CManODPNET::ParameterOut, nullptr }
+        { CManDbType::DbTypeVarchar2, &kiedy },
+        { CManDbType::DbTypeRefCursor, CManDbDir::ParameterOut, nullptr }
     };
 
     int iCurSel = m_drz_combo.GetCurSel();
@@ -1465,8 +1465,8 @@ BOOL CDrz1Dlg::OnInitDialog()
     if (!theApp.isRDBMS || !CDialog::OnInitDialog()) return FALSE;
 
     CManODPNETParms orapar {
-        { CManODPNET::DbTypeVarchar2, &theApp.activeDoc->data },
-        { CManODPNET::DbTypeRefCursor, CManODPNET::ParameterOut, nullptr }
+        { CManDbType::DbTypeVarchar2, &theApp.activeDoc->data },
+        { CManDbType::DbTypeRefCursor, CManDbDir::ParameterOut, nullptr }
     };
 
     auto cur = ::SetCursor(theApp.LoadStandardCursor(IDC_WAIT));
@@ -1622,8 +1622,8 @@ void CDBOpenDlg::RefreshCombo()
     GetDlgItemText(ID_MUTACJA, mut);
     if (mut.IsEmpty()) mut = _T(" ");
     CManODPNETParms orapar {
-        { CManODPNET::DbTypeVarchar2, &tyt },
-        { CManODPNET::DbTypeVarchar2, &mut }
+        { CManDbType::DbTypeVarchar2, &tyt },
+        { CManDbType::DbTypeVarchar2, &mut }
     };
 
     if (isON) {
@@ -1641,13 +1641,13 @@ void CDBOpenDlg::RefreshCombo()
             int isGrb = IsDlgButtonChecked(IDC_GRZBIET);
 
             CManODPNETParms orapar2 {
-                { CManODPNET::DbTypeVarchar2, &tyt },
-                { CManODPNET::DbTypeVarchar2, &mut },
-                { CManODPNET::DbTypeVarchar2, &kiedy },
-                { CManODPNET::DbTypeInt32, &iIleDni },
-                { CManODPNET::DbTypeInt32, &isGrb },
-                { CManODPNET::DbTypeRefCursor, CManODPNET::ParameterOut, nullptr },
-                { CManODPNET::DbTypeRefCursor, CManODPNET::ParameterOut, nullptr }
+                { CManDbType::DbTypeVarchar2, &tyt },
+                { CManDbType::DbTypeVarchar2, &mut },
+                { CManDbType::DbTypeVarchar2, &kiedy },
+                { CManDbType::DbTypeInt32, &iIleDni },
+                { CManDbType::DbTypeInt32, &isGrb },
+                { CManDbType::DbTypeRefCursor, CManDbDir::ParameterOut, nullptr },
+                { CManDbType::DbTypeRefCursor, CManDbDir::ParameterOut, nullptr }
             };
             CListBox* carr[] = { &m_date_combo, &m_mutacja_combo };
             theManODPNET.FillListArr(carr[0], "begin list_emisje_mutacje2(:tytul,:mutacja,:kiedy,:ileDni,:is_grb,:dateCur,:mutCur); end;", orapar2, IsDlgButtonChecked(IDC_MEMSTAT));
@@ -2584,9 +2584,9 @@ BOOL CPageDerv::OnInitDialog()
     m_drw_xx = m_mak_xx;
     m_base_nr = m_nr;
     CManODPNETParms orapar {
-        { CManODPNET::DbTypeInt32, CManODPNET::ParameterInOut, &m_drw_xx },
-        { CManODPNET::DbTypeInt32, CManODPNET::ParameterInOut, &m_base_nr },
-        { CManODPNET::DbTypeRefCursor, CManODPNET::ParameterOut, nullptr }
+        { CManDbType::DbTypeInt32, CManDbDir::ParameterInOut, &m_drw_xx },
+        { CManDbType::DbTypeInt32, CManDbDir::ParameterInOut, &m_base_nr },
+        { CManDbType::DbTypeRefCursor, CManDbDir::ParameterOut, nullptr }
     };
     orapar.outParamsCount = 2;
     theManODPNET.FillList(&m_tytmut, "begin derv.info(:mak_xx,:nr_porz,:retCur); end;", orapar, 0);
@@ -2704,9 +2704,9 @@ BOOL CGrzbDlg::OnInitDialog()
     GetDlgItem(IDC_ILEKOLUMN)->EnableWindow(theApp.activeDoc->m_mak_xx > 0 && theApp.activeDoc->m_pages.size() == 4);
 
     CManODPNETParms orapar {
-        { CManODPNET::DbTypeVarchar2, &theApp.activeDoc->data },
-        { CManODPNET::DbTypeInt32, &theApp.activeDoc->m_mak_xx },
-        { CManODPNET::DbTypeRefCursor, CManODPNET::ParameterOut, nullptr }
+        { CManDbType::DbTypeVarchar2, &theApp.activeDoc->data },
+        { CManDbType::DbTypeInt32, &theApp.activeDoc->m_mak_xx },
+        { CManDbType::DbTypeRefCursor, CManDbDir::ParameterOut, nullptr }
     };
 
     return theManODPNET.FillCombo(&m_tytmut, "begin grb.open_drw(:kiedy,:grb_xx,:retCur); end;", orapar, 0);
@@ -2741,9 +2741,9 @@ void CGrzbDlg::OnBnClicked4x4()
     CString tytul = theApp.activeDoc->gazeta.Left(3);
     CString mutacja = theApp.activeDoc->gazeta.Mid(4, 2);
     CManODPNETParms orapar {
-        { CManODPNET::DbTypeVarchar2, &tytul },
-        { CManODPNET::DbTypeVarchar2, &mutacja },
-        { CManODPNET::DbTypeVarchar2, &theApp.activeDoc->data }
+        { CManDbType::DbTypeVarchar2, &tytul },
+        { CManDbType::DbTypeVarchar2, &mutacja },
+        { CManDbType::DbTypeVarchar2, &theApp.activeDoc->data }
     };
     theManODPNET.EI("call create_grb_4x4(:tytul,:mutacja,:kiedy)", orapar);
 

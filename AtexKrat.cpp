@@ -229,10 +229,10 @@ void CKratCalc::OnDefineModelid()
 
     GetDlgItem(IDC_MODELID)->GetWindowText(m_modelid);
     CManODPNETParms orapar {
-        { CManODPNET::DbTypeInt32, bCalcMode ? &m_x : &m_userdef_sizex },
-        { CManODPNET::DbTypeInt32, bCalcMode ? &m_y : &m_userdef_sizey },
-        { CManODPNET::DbTypeVarchar2, &m_kra_sym },
-        { CManODPNET::DbTypeVarchar2, &m_modelid },
+        { CManDbType::DbTypeInt32, bCalcMode ? &m_x : &m_userdef_sizex },
+        { CManDbType::DbTypeInt32, bCalcMode ? &m_y : &m_userdef_sizey },
+        { CManDbType::DbTypeVarchar2, &m_kra_sym },
+        { CManDbType::DbTypeVarchar2, &m_modelid },
     };
 
     if (theManODPNET.EI("begin spacer_adm.define_modelid(:sizex,:sizey,:sym,:modelid); end;", orapar))

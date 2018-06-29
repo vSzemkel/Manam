@@ -30,10 +30,6 @@ constexpr float pkt2mm = 0.3527f; // 1pt = 0.3527mm
 constexpr float pkt_10m = 2.835f;
 constexpr int podpisH = 6; // 2.1162 [mm]
 constexpr int preview_offset = 30;
-// format materialu
-constexpr int F_EPS = 0;
-constexpr int F_PS = 1;
-constexpr int F_PDF = 2;
 
 constexpr auto DERV_TMPL_WER = "$c";
 constexpr auto OPI_TAG = "%%MANAM-OPI ";
@@ -41,6 +37,31 @@ constexpr auto APP_NAME = _T("Manam");
 constexpr int bigSize = 0x8000;   // 32kB
 constexpr size_t n_size = 0x7FFF; // (bigSize-1)
 #pragma endregion constants
+
+#pragma region namespacedconstants
+namespace CManFormat { // format materialu
+    constexpr uint8_t EPS = 0;
+    constexpr uint8_t PS  = 1;
+    constexpr uint8_t PDF = 2;
+}
+
+namespace CManDbType // ODP.NET datatypes for unmanaged code
+{
+    constexpr uint8_t DbTypeByte      = 103; // OracleDbType::Byte
+    constexpr uint8_t DbTypeInt32     = 112; // OracleDbType::Int32
+    constexpr uint8_t DbTypeDouble    = 108; // OracleDbType::Double
+    constexpr uint8_t DbTypeVarchar2  = 126; // OracleDbType::Varchar2
+    constexpr uint8_t DbTypeRefCursor = 121; // OracleDbType::RefCursor
+};
+
+namespace CManDbDir // ODP.NET parameter directions for unmanaged code
+{
+    constexpr uint8_t ParameterIn     = 1;   // ParameterDirection::Input
+    constexpr uint8_t ParameterOut    = 2;   // ParameterDirection::Output
+    constexpr uint8_t ParameterInOut  = 3;   // ParameterDirection::InputOutput
+    constexpr uint8_t ReturnValue     = 6;   // ParameterDirection::ReturnValue
+};
+#pragma endregion namespacedconstants
 
 #pragma region flag_enums
 namespace UserRole // grupy

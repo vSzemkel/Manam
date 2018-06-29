@@ -70,8 +70,8 @@ void CManSock::SendManamMessage(CString& msg, CString& login, BOOL broadcast)
     int num;
     if (broadcast) {
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeInt32, CManODPNET::ReturnValue, &num },
-            { CManODPNET::DbTypeVarchar2, &msg }
+            { CManDbType::DbTypeInt32, CManDbDir::ReturnValue, &num },
+            { CManDbType::DbTypeVarchar2, &msg }
         };
         if (theManODPNET.EI("select space_reservation.manam_msg.send_broadcast(:msg) from dual", orapar)) {
             CString s;
@@ -81,9 +81,9 @@ void CManSock::SendManamMessage(CString& msg, CString& login, BOOL broadcast)
     } else {
         CString ip(' ', 16);
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeVarchar2, &login },
-            { CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &ip },
-            { CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &num }
+            { CManDbType::DbTypeVarchar2, &login },
+            { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &ip },
+            { CManDbType::DbTypeInt32, CManDbDir::ParameterOut, &num }
         };
         orapar.outParamsCount = 2;
         BOOL doSend = theManODPNET.EI("begin get_manam_socket(:loginname,:ip,:port); end;", orapar);

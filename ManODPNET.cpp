@@ -29,19 +29,6 @@ gcroot<String^> g_ConnectionString;
 CManODPNET theManODPNET;
 CManODPNETParms CManODPNET::emptyParm({});
 
-// ODP.NET datatypes for unmanaged code
-constexpr int CManODPNET::DbTypeByte = static_cast<int>(OracleDbType::Byte);                  // 103
-constexpr int CManODPNET::DbTypeInt32 = static_cast<int>(OracleDbType::Int32);                // 112
-constexpr int CManODPNET::DbTypeDouble = static_cast<int>(OracleDbType::Double);              // 108
-constexpr int CManODPNET::DbTypeVarchar2 = static_cast<int>(OracleDbType::Varchar2);          // 126
-constexpr int CManODPNET::DbTypeRefCursor = static_cast<int>(OracleDbType::RefCursor);        // 121
-
-// ODP.NET parameter directions for unmanaged code
-constexpr int CManODPNET::ParameterIn = static_cast<int>(ParameterDirection::Input);          // 1
-constexpr int CManODPNET::ParameterOut = static_cast<int>(ParameterDirection::Output);        // 2
-constexpr int CManODPNET::ParameterInOut = static_cast<int>(ParameterDirection::InputOutput); // 3
-constexpr int CManODPNET::ReturnValue = static_cast<int>(ParameterDirection::ReturnValue);    // 6
-
 struct OdpHelper final
 {
     static const gcroot<String^> DbNull;
@@ -89,13 +76,13 @@ struct OdpHelper final
             return System::DBNull::Value;
 
         switch (p.m_odptype) {
-            case CManODPNET::DbTypeInt32:
+            case CManDbType::DbTypeInt32:
                 return *static_cast<int*>(p.m_value);
-            case CManODPNET::DbTypeVarchar2:
+            case CManDbType::DbTypeVarchar2:
                 return gcnew String(static_cast<CString*>(p.m_value)->GetBuffer());
-            case CManODPNET::DbTypeDouble:
+            case CManDbType::DbTypeDouble:
                 return *static_cast<double*>(p.m_value);
-            case CManODPNET::DbTypeByte:
+            case CManDbType::DbTypeByte:
               return *static_cast<uint8_t*>(p.m_value);
             default:
                 return System::DBNull::Value;
@@ -105,17 +92,17 @@ struct OdpHelper final
     static void __clrcall RetrieveOdpParam(CManODPNETParm *p, OracleParameter^ op)
     {
         switch (p->m_odptype) {
-            case CManODPNET::DbTypeInt32:
+            case CManDbType::DbTypeInt32:
                 *static_cast<int*>(p->m_value) = op->Value->GetType() == OracleDecimal::typeid
                     ? static_cast<int>(IntegerValue(op))
                     : Convert::ToInt32(op->Value);
                 break;
-            case CManODPNET::DbTypeDouble:
+            case CManDbType::DbTypeDouble:
                 *static_cast<double*>(p->m_value) = op->Value->GetType() == OracleDecimal::typeid
                     ? static_cast<OracleDecimal^>(op->Value)->ToDouble()
                     : static_cast<double>(IntegerValue(op));
                 break;
-            case CManODPNET::DbTypeVarchar2:
+            case CManDbType::DbTypeVarchar2:
                 String^ ret = Convert::ToString(op->Value);
                 if (!String::CompareOrdinal(ret, DbNull))
                     ret = String::Empty;
@@ -130,7 +117,7 @@ struct OdpHelper final
             const auto dir = static_cast<ParameterDirection>(p.m_direction);
             switch (dir) {
                 case ParameterDirection::Output:
-                    if (p.m_odptype == CManODPNET::DbTypeVarchar2) {
+                    if (p.m_odptype == CManDbType::DbTypeVarchar2) {
                         cmd->Parameters->Add(String::Empty, static_cast<OracleDbType>(p.m_odptype), static_cast<CString*>(p.m_value)->GetLength(), nullptr, dir)->Value = PrepareOdpParam(p);
                         break;
                     } /* else do not break */
@@ -149,7 +136,7 @@ struct OdpHelper final
     {
         if (ps.outParamsCount > 0)
             for (int i = 0; i < static_cast<int>(ps.params.size()); ++i)
-                if (ps.params[i].m_direction != CManODPNET::ParameterIn) {
+                if (ps.params[i].m_direction != CManDbDir::ParameterIn) {
                     RetrieveOdpParam(&ps.params[i], cmd->Parameters[i]);
                     if (--ps.outParamsCount == 0) break;
                 }

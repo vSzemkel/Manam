@@ -11,19 +11,6 @@ struct CManODPNETParms;
 class CManODPNET
 {
   public:
-#pragma region managed constants forward
-    static const int DbTypeByte;
-    static const int DbTypeInt32;
-    static const int DbTypeDouble;
-    static const int DbTypeVarchar2;
-    static const int DbTypeRefCursor;
-
-    static const int ParameterIn;
-    static const int ParameterOut;
-    static const int ParameterInOut;
-    static const int ReturnValue;
-#pragma endregion
-
     CString m_lastErrorMsg;
     CString m_userName;
     CString m_databaseName;
@@ -63,27 +50,27 @@ private:
 
 struct CManODPNETParm
 {
-    CManODPNETParm(int odptype, void *val) : m_value(val), m_odptype(odptype), m_direction(CManODPNET::ParameterIn) {}
-    CManODPNETParm(int odptype, int direction, void *val) : m_value(val), m_odptype(odptype), m_direction(direction) {}
+    CManODPNETParm(uint8_t odptype, void* val) : m_value(val), m_odptype(odptype), m_direction(CManDbDir::ParameterIn) {}
+    CManODPNETParm(uint8_t odptype, uint8_t direction, void *val) : m_value(val), m_odptype(odptype), m_direction(direction) {}
 
     void *m_value;
-    int m_odptype;
-    int m_direction;
+    uint8_t m_odptype;
+    uint8_t m_direction;
 };
 
 struct CManODPNETParms
 {
-    CManODPNETParms(int odptype, void *val) : CManODPNETParms({{odptype, CManODPNET::ParameterIn, val}}) {}
-    CManODPNETParms(int odptype, int direction, void *val) : CManODPNETParms({{odptype, direction, val}}) {}
+    CManODPNETParms(uint8_t odptype, void* val) : CManODPNETParms({{odptype, CManDbDir::ParameterIn, val}}) {}
+    CManODPNETParms(uint8_t odptype, uint8_t direction, void* val) : CManODPNETParms({{odptype, direction, val}}) {}
     CManODPNETParms(const std::initializer_list<CManODPNETParm>& pl) : outParamsCount(0), params(pl), hasReturnValue(false) {}
 
     friend struct OdpHelper;
     friend BOOL CManODPNET::SpacerMulti(const std::vector<int>& mak_xxArr, std::vector<CString>& arr, CManODPNETParms& ps);
 
-    int outParamsCount;						// liczba parametrów typu Out lub InOut nie licz¹c RefCursorów
-private:
-    std::vector<CManODPNETParm> params;		// kolekcja parametrów
-    bool hasReturnValue;					// wskazanie do eykonania ExecuteScalar
+    uint8_t outParamsCount;             // liczba parametrów typu Out lub InOut nie licz¹c RefCursorów
+  private:
+    std::vector<CManODPNETParm> params; // kolekcja parametrów
+    bool hasReturnValue;                // wskazanie do eykonania ExecuteScalar
 };
 
 extern CManODPNET theManODPNET;

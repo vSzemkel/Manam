@@ -366,9 +366,9 @@ void CDrawPage::DBChangeName(int id_drw)
     if (caption.IsEmpty()) return;
 
     CManODPNETParms orapar {
-        { CManODPNET::DbTypeVarchar2, CManODPNET::ReturnValue, &name },
-        { CManODPNET::DbTypeInt32, &id_drw },
-        { CManODPNET::DbTypeVarchar2, &caption }
+        { CManDbType::DbTypeVarchar2, CManDbDir::ReturnValue, &name },
+        { CManDbType::DbTypeInt32, &id_drw },
+        { CManDbType::DbTypeVarchar2, &caption }
     };
     if (!theManODPNET.EI("select sciezka from strukt_drzewa where drw_xx=:drw_xx and str_log=:capt", orapar)) {
         caption.Empty(); name.Empty();
@@ -458,8 +458,8 @@ BOOL CDrawPage::OnOpen(CDrawView* /*pView*/)
     if (m_pDocument->docmutred.IsEmpty() && m_pDocument->gazeta.GetLength() > 5) {
         CString mr = m_pDocument->gazeta.Left(1) == _T("Z") ? _T("Z1") : _T("RP");
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeVarchar2, CManODPNET::ReturnValue, &m_pDocument->docmutred },
-            { CManODPNET::DbTypeVarchar2, &mr }
+            { CManDbType::DbTypeVarchar2, CManDbDir::ReturnValue, &m_pDocument->docmutred },
+            { CManDbType::DbTypeVarchar2, &mr }
         };
         theManODPNET.EI("select grb.get_mutred(:rootmut) from dual", orapar);
     }
@@ -928,9 +928,9 @@ BOOL CDrawPage::StaleElementy(PGENEPSARG pArg, CFile& handle)
     BOOL isOK = TRUE;
     std::vector<CString> elementy;
     CManODPNETParms orapar {
-        { CManODPNET::DbTypeInt32, &m_pDocument->m_mak_xx },
-        { CManODPNET::DbTypeInt32, &id_str },
-        { CManODPNET::DbTypeRefCursor, CManODPNET::ParameterOut, nullptr }
+        { CManDbType::DbTypeInt32, &m_pDocument->m_mak_xx },
+        { CManDbType::DbTypeInt32, &id_str },
+        { CManDbType::DbTypeRefCursor, CManDbDir::ParameterOut, nullptr }
     };
     if (theManODPNET.FillArr(&elementy, "begin pagina.gen_ps(:mak_xx,:str_xx,:retCur); end;", orapar)) {
         for (auto& elem : elementy) {
@@ -986,9 +986,9 @@ BOOL CDrawPage::GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destN
     if (pArg->bIsPRN) {
         CString dbDestName = CString(' ', 20);
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeInt32, &m_pDocument->m_mak_xx },
-            { CManODPNET::DbTypeInt32, &id_str },
-            { CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &dbDestName }
+            { CManDbType::DbTypeInt32, &m_pDocument->m_mak_xx },
+            { CManDbType::DbTypeInt32, &id_str },
+            { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &dbDestName }
         };
         orapar.outParamsCount = 1;
         theManODPNET.EI("begin pagina.get_dest_name(:mak_xx,:str_xx,:name); end;", orapar);
@@ -1127,9 +1127,9 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
                         if (sBoundingBox.IsEmpty()) { // pobierz BoundingBox z formatu papieru
                             CStringW wBoundingBox(' ', 32);
                             CManODPNETParms orapar {
-                                { CManODPNET::DbTypeInt32, &m_pDocument->m_mak_xx },
-                                { CManODPNET::DbTypeInt32, &this->id_str },
-                                { CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &wBoundingBox }
+                                { CManDbType::DbTypeInt32, &m_pDocument->m_mak_xx },
+                                { CManDbType::DbTypeInt32, &this->id_str },
+                                { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &wBoundingBox }
                             };
                             orapar.outParamsCount = 1;
                             theManODPNET.EI("begin pagina.get_boundingbox(:mak_xx,:str_xx,:bb); end;", orapar);
@@ -1175,7 +1175,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
             const CFlag dervSpace = GetReservedFlag();
             if (dervSpace.IsSet()) { //ustal posx,posy,sizex,sizey
                 int i, j;
-                for (i = szpalt_x*szpalt_y - 1; i >= 0; i--)
+                for (i = szpalt_x*szpalt_y - 1; i >= 0; --i)
                     if (dervSpace[i]) break;
                 if (i >= 0) {
                     externAdd.posy = szpalt_y - i / szpalt_x;

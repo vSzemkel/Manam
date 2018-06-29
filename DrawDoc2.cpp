@@ -201,7 +201,7 @@ void CDrawDoc::OnDBDelete()
 
     auto sql = reinterpret_cast<char*>(theApp.bigBuf);
     ::StringCchPrintfA(sql, bigSize, "begin %s%s(:mak_xx); end;", isGRB ? "grb.delete_grzbiet" : "delete_makieta", isLIB ? "_lib" : "");
-    CManODPNETParms orapar { CManODPNET::DbTypeInt32, &m_mak_xx };
+    CManODPNETParms orapar { CManDbType::DbTypeInt32, &m_mak_xx };
     if (theManODPNET.EI(sql, orapar)) {
         m_mak_xx = -1;
         SetModifiedFlag(FALSE);
@@ -231,9 +231,9 @@ int CDrawDoc::DBReadSpot(int n)
 
     int ile_spotow = -1;
     CManODPNETParms orapar {
-        { CManODPNET::DbTypeInt32, &id_drw },
-        { CManODPNET::DbTypeInt32, &n },
-        { CManODPNET::DbTypeInt32, CManODPNET::ParameterOut, &ile_spotow } };
+        { CManDbType::DbTypeInt32, &id_drw },
+        { CManDbType::DbTypeInt32, &n },
+        { CManDbType::DbTypeInt32, CManDbDir::ParameterOut, &ile_spotow } };
     orapar.outParamsCount = 1;
 
     theManODPNET.EI("begin select_spot(:drw_xx,:obj,:ile); end;", orapar);
@@ -750,13 +750,13 @@ void CDrawDoc::OnDrawOpcje()
 
     if (dlg.m_save_dirs) {
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeInt32, &m_mak_xx },
-            { CManODPNET::DbTypeVarchar2, &dlg.m_epsdst },
-            { CManODPNET::DbTypeVarchar2, &dlg.m_psdst },
-            { CManODPNET::DbTypeVarchar2, &dlg.m_epszaj },
-            { CManODPNET::DbTypeVarchar2, &dlg.m_epspod },
-            { CManODPNET::DbTypeVarchar2, &dlg.m_epsdro },
-            { CManODPNET::DbTypeVarchar2, &dlg.m_epsuzu }
+            { CManDbType::DbTypeInt32, &m_mak_xx },
+            { CManDbType::DbTypeVarchar2, &dlg.m_epsdst },
+            { CManDbType::DbTypeVarchar2, &dlg.m_psdst },
+            { CManDbType::DbTypeVarchar2, &dlg.m_epszaj },
+            { CManDbType::DbTypeVarchar2, &dlg.m_epspod },
+            { CManDbType::DbTypeVarchar2, &dlg.m_epsdro },
+            { CManDbType::DbTypeVarchar2, &dlg.m_epsuzu }
         };
 
         theManODPNET.EI("begin dir.makieta_save(:mak_xx,:wynik_eps,:wynik_ps,:zajawki,:podwaly,:drobne,:uzupel); end;", orapar);
@@ -937,12 +937,12 @@ void CDrawDoc::DerivePages(CDrawPage* pPage)
             SetModifiedFlag(FALSE);
 
             CManODPNETParms orapar {
-                { CManODPNET::DbTypeInt32, &this->m_mak_xx },
-                { CManODPNET::DbTypeInt32, &dlg.m_nr },
-                { CManODPNET::DbTypeInt32, &dlg.m_drw_xx },
-                { CManODPNET::DbTypeInt32, &dlg.m_base_nr },
-                { CManODPNET::DbTypeByte,  &dlg.m_idervlvl },
-                { CManODPNET::DbTypeInt32, &dlg.m_ilekol }
+                { CManDbType::DbTypeInt32, &this->m_mak_xx },
+                { CManDbType::DbTypeInt32, &dlg.m_nr },
+                { CManDbType::DbTypeInt32, &dlg.m_drw_xx },
+                { CManDbType::DbTypeInt32, &dlg.m_base_nr },
+                { CManDbType::DbTypeByte,  &dlg.m_idervlvl },
+                { CManDbType::DbTypeInt32, &dlg.m_ilekol }
             };
 
             const char* sql = "begin derv.derive_pages(:dst_mak_xx,:dst_nr_porz,:base_drw_xx,:base_nr_porz,:dervlvl,:ile_kol); end;";

@@ -1379,9 +1379,9 @@ void CDrawView::CheckPrintEps(BOOL isprint)
         pDoc->sOpiServerUrl = CString(' ', 64);
 
         CManODPNETParms orapar {
-            { CManODPNET::DbTypeInt32, &pDoc->m_mak_xx },
-            { CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &pDoc->sOpiServerUrl },
-            { CManODPNET::DbTypeVarchar2, CManODPNET::ParameterOut, &err } };
+            { CManDbType::DbTypeInt32, &pDoc->m_mak_xx },
+            { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &pDoc->sOpiServerUrl },
+            { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &err } };
         orapar.outParamsCount = 2;
         theManODPNET.EI("begin epstest.check_makieta_prod2(:mak_xx,:opi_url,:err); end;", orapar);
 
@@ -1406,7 +1406,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
         if (iIleStron < iCpuCnt)
             iCpuCnt = (WORD)iIleStron;
 
-        if (iCpuCnt > 1 && d.m_format != F_PDF) {
+        if (iCpuCnt > 1 && d.m_format != CManFormat::PDF) {
             pDlg->SetChannelCount(iCpuCnt);
             waitEvents = (HANDLE *)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(HANDLE));
             threadArgs = (PGENEPSARG)LocalAlloc(LMEM_FIXED, iCpuCnt * sizeof(GENEPSARG));
@@ -1433,7 +1433,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
 
     pDoc->ovEPS = FALSE;
     const BOOL bInitOpiMode = theApp.isOpiMode;
-    if (isprint && d.m_format == F_EPS) theApp.isOpiMode = FALSE; // Dla F_EPS nie u¿ywaj OPI
+    if (isprint && d.m_format == CManFormat::EPS) theApp.isOpiMode = FALSE; // Dla F_EPS nie u¿ywaj OPI
 
     GENEPSARG genEpsArg;
     if (!streamed) {
@@ -1468,7 +1468,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
             } else if (!isprint)                 // check
                 pPage->CheckSrcFile(&genEpsArg);
             else {                               // generate
-                const auto generator = d.m_format != F_PDF ? &CDrawPage::GenEPS : &CDrawPage::GenPDF;
+                const auto generator = d.m_format != CManFormat::PDF ? &CDrawPage::GenEPS : &CDrawPage::GenPDF;
                 if (!(pPage->*generator)(&genEpsArg)) {
                     pDlg->cancelGenEPS = TRUE;
                     break;
@@ -1500,7 +1500,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
     } else if (isprint && theApp.isOpiMode && !pDlg->cancelGenEPS) {
         pDlg->ShowWindow(SW_HIDE);
         ::MessageBox(nullptr, _T("Kolumny zosta³y wys³ane do serwera OPI"), APP_NAME, MB_OK);
-    } else if (isprint && d.m_format == F_EPS)
+    } else if (isprint && d.m_format == CManFormat::EPS)
         theApp.isOpiMode = bInitOpiMode;
 
     CGenEpsInfoDlg::ReleaseGenEpsInfoDlg(pDlg);
@@ -1552,7 +1552,7 @@ BOOL CDrawView::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CDrawView::OnIrfan() // single Add selected
 {
-    CString eps_name = dynamic_cast<CDrawAdd *>(m_selection.front())->EpsName(NULL, F_EPS, FALSE);
+    CString eps_name = dynamic_cast<CDrawAdd*>(m_selection.front())->EpsName(NULL, CManFormat::EPS, FALSE);
     if (eps_name.Mid(1, 1) != _T(":")) {
         AfxMessageBox(_T("Preview niedostêpne. Brak materia³u"));
         return;

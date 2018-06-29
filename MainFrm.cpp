@@ -364,7 +364,7 @@ BOOL CMainFrame::DBIniCaptionCombo(BOOL iscaption, int id_drw)
     const int ind = m_CaptionBox->AddString(_T(""));
     m_CaptionBox->SetItemData(ind, (WORD)0);
 
-    CManODPNETParms orapar { CManODPNET::DbTypeInt32, &id_drw };
+    CManODPNETParms orapar { CManDbType::DbTypeInt32, &id_drw };
     if (!theManODPNET.FillCombo(m_CaptionBox, sql, orapar, czyListaPagin ? 1 : -1)) return FALSE;
 
     m_CaptionBox->SetCurSel(0);
