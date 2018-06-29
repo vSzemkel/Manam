@@ -175,7 +175,7 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
 {
     CDrawObj *pObj = nullptr;
 
-    if (pView->GetCapture() == pView && point != c_down) // czy kliknelismy w to samo miejsce
+    if (CDrawView::GetCapture() == pView && point != c_down) // czy kliknelismy w to samo miejsce
         switch (selectMode) {
             default:
                 pView->GetDocument()->UpdateAllViews(pView);
@@ -340,7 +340,7 @@ void CSelectTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& p
 
     ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo(pObj ? pObj->info : "");
 
-    if (pView->GetCapture() != pView) {
+    if (CDrawView::GetCapture() != pView) {
         if (c_drawShape == DrawShape::select && pView->m_selection.size() == 1) {
             pObj = pView->m_selection.front();
             CPoint local = point;
@@ -627,7 +627,7 @@ void CSpaceTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& po
 
 void CSpaceTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point)
 {
-    if (pView->GetCapture() == pView && point != c_down && spaceMode != SpaceMode::avail) { // czy kliknelismy w to samo miejsce
+    if (CDrawView::GetCapture() == pView && point != c_down && spaceMode != SpaceMode::avail) { // czy kliknelismy w to samo miejsce
         CClientDC dc(pView);
         CRect rect(c_down.x, c_down.y, c_last.x, c_last.y);
         rect.NormalizeRect();

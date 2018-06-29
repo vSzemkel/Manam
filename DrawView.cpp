@@ -1346,13 +1346,12 @@ void CALLBACK CDrawView::DelegateGenEPS(PTP_CALLBACK_INSTANCE /*unused*/, PVOID 
 
 void CDrawView::CheckPrintEps(BOOL isprint)
 {
-    CPrnEpsDlg d;
     auto pDoc = GetDocument();
-
     if (pDoc->m_pages.empty()) return;
     const auto pc = (int)pDoc->m_pages.size();
-
     auto pPage = pDoc->m_pages[0];
+
+    CPrnEpsDlg d;
     d.m_isprint = isprint;
     d.m_signall = 1;
     d.m_do = pPage->GetNrPaginy();

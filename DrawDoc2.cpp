@@ -900,7 +900,7 @@ const CRozm* CDrawDoc::GetCRozm(PGENEPSARG pArg, int s_x, int s_y, int typ_xx)
     return pR == m_Rozm.cend() ? (typ_xx ? GetCRozm(pArg, s_x, s_y, 0) : nullptr) : &*pR;
 }
 
-void CDrawDoc::DerivePages(CDrawPage *pPage)
+void CDrawDoc::DerivePages(CDrawPage* pPage)
 {
     int nr_porz, npages = (int)m_pages.size();
     if (!npages) return;
@@ -941,7 +941,7 @@ void CDrawDoc::DerivePages(CDrawPage *pPage)
                 { CManODPNET::DbTypeInt32, &dlg.m_nr },
                 { CManODPNET::DbTypeInt32, &dlg.m_drw_xx },
                 { CManODPNET::DbTypeInt32, &dlg.m_base_nr },
-                { CManODPNET::DbTypeInt32, &dlg.m_idervlvl },
+                { CManODPNET::DbTypeByte,  &dlg.m_idervlvl },
                 { CManODPNET::DbTypeInt32, &dlg.m_ilekol }
             };
 

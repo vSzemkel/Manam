@@ -10,8 +10,9 @@ struct CManODPNETParms;
 
 class CManODPNET
 {
-public:
+  public:
 #pragma region managed constants forward
+    static const int DbTypeByte;
     static const int DbTypeInt32;
     static const int DbTypeDouble;
     static const int DbTypeVarchar2;

@@ -30,10 +30,11 @@ CManODPNET theManODPNET;
 CManODPNETParms CManODPNET::emptyParm({});
 
 // ODP.NET datatypes for unmanaged code
-constexpr int CManODPNET::DbTypeInt32 = static_cast<int>(OracleDbType::Int32);
-constexpr int CManODPNET::DbTypeDouble = static_cast<int>(OracleDbType::Double);
-constexpr int CManODPNET::DbTypeVarchar2 = static_cast<int>(OracleDbType::Varchar2);
-constexpr int CManODPNET::DbTypeRefCursor = static_cast<int>(OracleDbType::RefCursor);
+constexpr int CManODPNET::DbTypeByte = static_cast<int>(OracleDbType::Byte);                  // 103
+constexpr int CManODPNET::DbTypeInt32 = static_cast<int>(OracleDbType::Int32);                // 112
+constexpr int CManODPNET::DbTypeDouble = static_cast<int>(OracleDbType::Double);              // 108
+constexpr int CManODPNET::DbTypeVarchar2 = static_cast<int>(OracleDbType::Varchar2);          // 126
+constexpr int CManODPNET::DbTypeRefCursor = static_cast<int>(OracleDbType::RefCursor);        // 121
 
 // ODP.NET parameter directions for unmanaged code
 constexpr int CManODPNET::ParameterIn = static_cast<int>(ParameterDirection::Input);          // 1
@@ -90,10 +91,12 @@ struct OdpHelper final
         switch (p.m_odptype) {
             case CManODPNET::DbTypeInt32:
                 return *static_cast<int*>(p.m_value);
-            case CManODPNET::DbTypeDouble:
-                return *static_cast<double*>(p.m_value);
             case CManODPNET::DbTypeVarchar2:
                 return gcnew String(static_cast<CString*>(p.m_value)->GetBuffer());
+            case CManODPNET::DbTypeDouble:
+                return *static_cast<double*>(p.m_value);
+            case CManODPNET::DbTypeByte:
+              return *static_cast<uint8_t*>(p.m_value);
             default:
                 return System::DBNull::Value;
         }
@@ -403,7 +406,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
         p = PtrToStringChars(strCur->GetString(16));
         if (swscanf_s(p, c_formatCzasu, &d, &m, &r, &g, &min) == 5 && r > 1900)
             pPage->m_deadline = CTime(r, m, d, g, min, 0);
-        pPage->m_dervlvl = (DervType)(strCur->IsDBNull(17) ? 0 : strCur->GetInt32(17)); // dervlvl
+        pPage->m_dervlvl = (DervType)(strCur->IsDBNull(17) ? 0 : strCur->GetByte(17)); // dervlvl
         pPage->m_dervinfo = OdpHelper::ReadOdrString(strCur, 18);
         pPage->mutred = OdpHelper::ReadOdrString(strCur, 19);
         // 20 - pap_xx, obsolete
@@ -591,7 +594,7 @@ private:
     void SaveOpisyMakiety(OracleConnection^ conn, BOOL isSaveAs);
     void SaveSpotyMakiety(OracleConnection^ conn);
     void SaveStrony(OracleConnection^ conn, BOOL isSaveAs, BOOL doSaveAdds);
-    void SaveOgloszenie(OracleCommand^ conn, CDrawAdd *pAdd);
+    void SaveOgloszenie(OracleCommand^ conn, CDrawAdd* pAdd);
 };
 
 CDrawDocDbWriter::CDrawDocDbWriter(CDrawDoc* doc) : m_doc(doc)
@@ -764,7 +767,7 @@ void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, BOOL isSaveAs, BOOL do
     par->Add("studio", OracleDbType::Byte);
     par->Add("uwagi_atex", OracleDbType::Varchar2);
     par->Add("eps_present", OracleDbType::Int32);
-    par->Add("spad", OracleDbType::Int32);
+    par->Add("spad", OracleDbType::Byte);
     par->Add("nag_xx", OracleDbType::Int32);
     par->Add("is_digital", OracleDbType::Int32);
 
@@ -777,8 +780,8 @@ void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, BOOL isSaveAs, BOOL do
     par->Add("szpalt_y", OracleDbType::Int32);
     par->Add("nr_porz", OracleDbType::Int32);
     par->Add("nr", OracleDbType::Int32);
-    par->Add("typ_num", OracleDbType::Int32);
-    par->Add("ile_kolorow", OracleDbType::Int32);
+    par->Add("typ_num", OracleDbType::Int16);
+    par->Add("ile_kolorow", OracleDbType::Byte);
     par->Add("nr_spotu", OracleDbType::Int32);
     par->Add("sciezka", OracleDbType::Varchar2);
     par->Add("str_log", OracleDbType::Varchar2);
@@ -789,7 +792,7 @@ void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, BOOL isSaveAs, BOOL do
     par->Add("deadline", OracleDbType::Varchar2);
     par->Add("mutred", OracleDbType::Varchar2);
     par->Add("pap_xx", OracleDbType::Int32);
-    par->Add("is_rozk", OracleDbType::Int32);
+    par->Add("is_rozk", OracleDbType::Byte);
     par->Add("wyd_xx", OracleDbType::Int32);
 
     size_t i;
