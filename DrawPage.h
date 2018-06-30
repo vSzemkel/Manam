@@ -10,7 +10,6 @@ class CGenEpsInfoDlg;
 
 typedef struct _GENEPSARG
 {
-    BOOL bIsPRN;
     BOOL bStatus;
     BOOL bSignAll;
     BOOL bIsPreview;
@@ -18,6 +17,7 @@ typedef struct _GENEPSARG
     WORD iChannelId;
     TCHAR* cBigBuf;
     CDrawPage* pPage;
+    CManFormat format;
     CGenEpsInfoDlg* pDlg;
     HANDLE hCompletedEvent;
 } GENEPSARG, *PGENEPSARG;

@@ -1505,7 +1505,7 @@ dajWymiarKraty:
 
     // check scale
     float x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
-    if (pArg->bIsPRN != CManFormat::PDF) {
+    if (pArg->format != CManFormat::PDF) {
         int ileMat;
         TCHAR cKolor[2];
         if (!GetProdInfo(pArg, cKolor, &x1, &y1, &x2, &y2, &ileMat))
@@ -1523,8 +1523,8 @@ dajWymiarKraty:
             msg.Format(_T("%li nie dostarczono treœci cyfrowej lub papierowej, "), nreps);
         }
     } else { // PDF
-        CManPDF pdf(pArg);
-        CString eps_name = EpsName(pArg->bIsPRN, FALSE);
+        CManPDF pdf{pArg};
+        CString eps_name = EpsName(pArg->format, FALSE);
         if (!pdf.GetMediaBox(eps_name, &x1, &y1, &x2, &y2)) {
             msg.Format(_T("%li z³e MediaBox, "), nreps);
             f5_errInfo += msg;
@@ -1639,19 +1639,20 @@ bool CDrawAdd::LocatePreview(CFile& fEps, unsigned long* lOffset, unsigned long*
     return true;
 }
 
-CString CDrawAdd::EpsName(uint8_t format, BOOL copyOldEPS, BOOL bModifTest)
+CString CDrawAdd::EpsName(CManFormat format, BOOL copyOldEPS, BOOL bModifTest)
 {
     static const TCHAR* aExt[] = { _T(".eps"), _T(".ps"), _T(".pdf") };
+    const TCHAR* extension = aExt[(uint8_t)format];
     const bool czy_zajawka = wersja.Find(_T("z")) >= 0;
     if (nreps == -1 && !czy_zajawka) return CString(_T("brak nr atexa"));
     theApp.SetRegistryBase(_T("GenEPS"));
 
     CFileFind ff;
     CString s, num, oldnum, t2e(_T(" zamieñ .tif na ")), eps_path(theApp.GetString(_T("EpsSrc"), _T("")));
-    t2e += aExt[format];
+    t2e += extension;
     num.Format(_T("%ld"), nreps);
     if (eps_path.IsEmpty() && theApp.isOpiMode && powtorka == 0 && !czy_zajawka)
-        return _T("::\\") + num + aExt[format];
+        return _T("::\\") + num + extension;
     eps_path += ((eps_path.Right(1) == _T("\\")) ? _T("") : _T("\\"));
 
     if (czy_zajawka) {
@@ -1664,11 +1665,11 @@ CString CDrawAdd::EpsName(uint8_t format, BOOL copyOldEPS, BOOL bModifTest)
         theManODPNET.EI("begin :cc := check_emisja_zajawki(:adno); end;", orapar);
 
         if (status == 0) { // zajawka nie przesz³a przez interface Zajawki 
-            const auto& zaj_path = FindZajawka(theApp.GetString(_T("EpsZajawki"), _T(".")), CString(aExt[format]));
-            return zaj_path.IsEmpty() ? nazwa + CString(aExt[format]) + _T(" - brak zajawki") : zaj_path;
+            const auto& zaj_path = FindZajawka(theApp.GetString(_T("EpsZajawki"), _T(".")), CString(extension));
+            return zaj_path.IsEmpty() ? nazwa + CString(extension) + _T(" - brak zajawki") : zaj_path;
         } else if (powtorka == 0) { // adno_seed zajawki
             num.Format(_T("%i"), status);
-            return (theApp.isOpiMode ? _T("::\\") : eps_path) + m_pDocument->daydir + num + aExt[format];
+            return (theApp.isOpiMode ? _T("::\\") : eps_path) + m_pDocument->daydir + num + extension;
         }
     }
 
@@ -1678,7 +1679,7 @@ CString CDrawAdd::EpsName(uint8_t format, BOOL copyOldEPS, BOOL bModifTest)
             goto modifTest;
         } else if (powtorka == 0) { //nowy material
             s = eps_path + m_pDocument->daydir + num;
-            if (ff.FindFile(s + aExt[format])) goto modifTest;
+            if (ff.FindFile(s + extension)) goto modifTest;
             ff.Close();
             if (ff.FindFile(s + _T(".tif"))) return num + t2e;
             if (format != CManFormat::PDF && EpsFromATEX(num, s))
@@ -1690,11 +1691,11 @@ CString CDrawAdd::EpsName(uint8_t format, BOOL copyOldEPS, BOOL bModifTest)
             CString pathtail = powtorka.Format(c_ctimeDataWs) + _T("\\") + sFileName;
             s = eps_path + pathtail;
 
-            if (ff.FindFile(s + aExt[format])) { // znaleziono plik z powtórk¹
+            if (ff.FindFile(s + extension)) { // znaleziono plik z powtórk¹
                 WIN32_FILE_ATTRIBUTE_DATA actualAttr;
                 if (copyOldEPS && ::GetFileAttributesEx(eps_path + m_pDocument->daydir + num + _T(".eps"), GetFileExInfoStandard, &actualAttr)) { // mo¿e wgrano nowy material i nie zdjeto flagi powtorki
                     WIN32_FILE_ATTRIBUTE_DATA powtAttr;
-                    if (::GetFileAttributesEx(s + aExt[format], GetFileExInfoStandard, &powtAttr))
+                    if (::GetFileAttributesEx(s + extension, GetFileExInfoStandard, &powtAttr))
                         if (actualAttr.ftLastWriteTime.dwHighDateTime > powtAttr.ftLastWriteTime.dwHighDateTime ||
                             (actualAttr.ftLastWriteTime.dwHighDateTime == powtAttr.ftLastWriteTime.dwHighDateTime && actualAttr.ftLastWriteTime.dwLowDateTime > powtAttr.ftLastWriteTime.dwLowDateTime)) {
                             CString msg;
@@ -1705,7 +1706,7 @@ CString CDrawAdd::EpsName(uint8_t format, BOOL copyOldEPS, BOOL bModifTest)
                 }
 
                 if (copyOldEPS /*&& !inArch*/) { // skopiuj powtórkê
-                    CopyNewFile(s + aExt[format], eps_path + m_pDocument->daydir + num + _T(".eps"));
+                    CopyNewFile(s + extension, eps_path + m_pDocument->daydir + num + _T(".eps"));
                     s = eps_path + m_pDocument->daydir + num;
                 }
                 goto modifTest;
@@ -1722,14 +1723,14 @@ CString CDrawAdd::EpsName(uint8_t format, BOOL copyOldEPS, BOOL bModifTest)
 
         if (theApp.GetInt(_T("SubDirSearch"), 1)) {
             s = eps_path + num.Left(poIle) + zera + _T("\\") + num;
-            if (ff.FindFile(s + aExt[format])) goto modifTest;
+            if (ff.FindFile(s + extension)) goto modifTest;
             ff.Close();
             if (ff.FindFile(s + ".tif")) return num + t2e;
             ff.Close();
             zera = theApp.GetString(_T("EpsOld"), _T("!!stare"));
             zera += ((zera.Right(1) == _T("\\")) ? _T("") : _T("\\"));
             zera = eps_path + zera + num;
-            if (ff.FindFile(zera + aExt[format])) {
+            if (ff.FindFile(zera + extension)) {
                 s = zera;
                 goto modifTest;
             }
@@ -1737,20 +1738,20 @@ CString CDrawAdd::EpsName(uint8_t format, BOOL copyOldEPS, BOOL bModifTest)
             if (ff.FindFile(zera + _T(".tif"))) return num + t2e;
         } else {
             s = eps_path + num;
-            if (ff.FindFile(s + aExt[format])) goto modifTest;
+            if (ff.FindFile(s + extension)) goto modifTest;
             ff.Close();
             if (ff.FindFile(s + _T(".tif"))) return num + t2e;
         }
         if (format != CManFormat::PDF && EpsFromATEX(num, s))
             goto modifTest;
     }
-    return (num + _T(" brak ") + aExt[format]);
+    return (num + _T(" brak ") + extension);
 modifTest:
     if (bModifTest) {
         ff.FindNextFile();
         ff.GetLastWriteTime(epsDate);
     }
-    return s + aExt[format];
+    return s + extension;
 } // EpsName
 
 bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
@@ -1784,7 +1785,7 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
     const auto gpy = (float)((sizey*(pRozAdd->h + pRozAdd->sh) - pRozAdd->sh)*mm2pkt);
 
     if (eps_name.Mid(1, 1) != _T(":")) {
-        if (pArg->bIsPRN == 1 && pArg->bDoKorekty == 0)
+        if (pArg->format == CManFormat::PS && pArg->bDoKorekty == 0)
             ::MessageBox(pArg->pDlg->m_hWnd, _T("Na produkcyjnej wersji kolumny brakuje materia³u: ") + eps_name, _T("Brak og³oszenia"), MB_ICONWARNING);
 
         ::StringCchPrintfA(s, n_size, ".25 .1 .9 %.2f %.2f %.2f %.2f R\r\n", gpx, gpy, x, y); dest.Write(s, (UINT)strlen(s));

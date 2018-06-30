@@ -2020,7 +2020,7 @@ CPrnEpsDlg::CPrnEpsDlg(CWnd *pParent /*=NULL*/)
 {
     //{{AFX_DATA_INIT(CPrnEpsDlg)
     m_page = -1;
-    m_format = 0;
+    m_format_padded = 0;
     //m_korekta = TRUE;
     m_exclude_emptypages = m_korekta = m_isprint = m_streamed = m_markfound = m_signall = m_preview = FALSE;
     //}}AFX_DATA_INIT
@@ -2037,7 +2037,7 @@ void CPrnEpsDlg::DoDataExchange(CDataExchange *pDX)
     DDX_Check(pDX, IDC_PREV, m_preview);
     DDX_Text(pDX, IDC_TOPAGE, m_do);
     DDX_Check(pDX, IDC_SIGNALL, m_signall);
-    DDX_Radio(pDX, IDC_FMTEPS, m_format);
+    DDX_Radio(pDX, IDC_FMTEPS, m_format_padded);
     DDX_Check(pDX, IDC_MARKFOUND, m_markfound);
     DDX_Check(pDX, IDC_SEND, m_streamed);
     DDX_Check(pDX, IDC_WHERE, m_korekta);
@@ -2157,7 +2157,7 @@ void CPrnEpsDlg::OnLButtonDown(UINT nFlags, CPoint point)
 
 BOOL CPrnEpsDlg::OnInitDialog()
 {
-    if (m_isprint) m_format = theApp.GetProfileInt(_T("GenEPS"), _T("Format"), 0);
+    if (m_isprint) m_format_padded = theApp.GetProfileInt(_T("GenEPS"), _T("Format"), 0);
     CDialog::OnInitDialog();
     if (!m_isprint) SetWindowText(_T("Sprawdzanie postscriptu"));
     GetDlgItem(IDC_SEND)->EnableWindow(CGenEpsInfoDlg::GetCpuCnt() > 1);
@@ -2177,7 +2177,7 @@ BOOL CPrnEpsDlg::OnInitDialog()
 void CPrnEpsDlg::OnOK()
 {
     CDialog::OnOK();
-    if (m_isprint) theApp.WriteProfileInt(_T("GenEPS"), _T("Format"), m_format);
+    if (m_isprint) theApp.WriteProfileInt(_T("GenEPS"), _T("Format"), m_format_padded);
 }
 
 /////////////////////////////////////////////////////////////////////////////

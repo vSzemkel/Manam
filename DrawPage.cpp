@@ -980,10 +980,10 @@ BOOL CDrawPage::CheckRozmKrat(PGENEPSARG pArg)
 BOOL CDrawPage::GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destName)
 {
     TCHAR* aExt[3] = { _T(".eps"), _T(".ps"), _T(".pdf") };
-    destName = theApp.GetProfileString(_T("GenEPS"), pArg->bIsPRN ? _T("PsDst") : _T("EpsDst"), _T(""));
+    destName = theApp.GetProfileString(_T("GenEPS"), pArg->format == CManFormat::EPS ? _T("EpsDst") : _T("PsDst"), _T(""));
     destName += ((destName.Right(1) == _T("\\")) ? _T("") : _T("\\"));
     int pos = m_pDocument->gazeta.Find(_T(" "));
-    if (pArg->bIsPRN) {
+    if (pArg->format > CManFormat::EPS) {
         CString dbDestName = CString(' ', 20);
         CManODPNETParms orapar {
             { CManDbType::DbTypeInt32, &m_pDocument->m_mak_xx },
@@ -998,10 +998,10 @@ BOOL CDrawPage::GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destN
                 dbDestName.SetAt(16, _T('e'));
         }
         destName.Append(dbDestName);
-        destName.Append(aExt[pArg->bIsPRN]);
+        destName.Append(aExt[(uint8_t)pArg->format]);
     } else
         destName += m_pDocument->dayws + (pos < 0 ? m_pDocument->gazeta : m_pDocument->gazeta.Left(pos) + m_pDocument->gazeta.Mid(pos + 1))
-        + sNum + aExt[pArg->bIsPRN];
+        + sNum + aExt[(uint8_t)pArg->format];
     CFileFind ff;
     return !m_pDocument->ovEPS && ff.FindFile(destName);
 }
@@ -1011,7 +1011,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
     CString num;
     auto wThreadBuf = pArg->cBigBuf;
     auto cThreadBuf = reinterpret_cast<char*>(pArg->cBigBuf);
-    if (pArg->bIsPRN) {
+    if (pArg->format > CManFormat::EPS) {
         const int lnr_porz = m_pDocument->GetIPage(this);
         num.Format(_T("%03i"), lnr_porz ? lnr_porz : (int)m_pDocument->m_pages.size());
     } else
@@ -1038,7 +1038,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
         ::MessageBox(pArg->pDlg->m_hWnd, _T("Przed wyeksportowaniem strony z drobnymi nale¿y zachowaæ makietê"), APP_NAME, MB_OK | MB_ICONINFORMATION);
         return FALSE;
     }
-    if (m_drukarnie == 0 && pArg->bIsPRN == 1 && pArg->bDoKorekty == 0) {
+    if (m_drukarnie == 0 && pArg->format == CManFormat::PS && pArg->bDoKorekty == 0) {
         ::MessageBox(pArg->pDlg->m_hWnd, "Proszê wybraæ drukarnie dla strony " + num, _T("Brak danych"), MB_OK);
         return FALSE;
     }
@@ -1098,7 +1098,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
     }
 
     int bx1 = 0, by1 = 0, bx2 = 0, by2 = 0;
-    if (!pArg->bIsPRN) {
+    if (pArg->format > CManFormat::EPS) {
         if (isDrobEPS) { bx1 = 0; bx2 = 709; by1 = 0; by2 = (int)m_pDocument->GetDrobneH() + 5; } else BoundingBox(pArg, &bx1, &by1, &bx2, &by2);
         pArg->bIsPreview = (pArg->bIsPreview && bx1 != bx2 && by1 != by2);
     }
@@ -1121,9 +1121,10 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
             CStringA line = wThreadBuf;
             if (strstr(line, tofind[i]) != nullptr) {
                 switch (i) {
-                    case 0: line = (pArg->bIsPRN) ? towrite[i] : tofind[i];
+                    case 0:
+                        line = (pArg->format > CManFormat::EPS) ? towrite[i] : tofind[i];
                         break;
-                    case 1: if (pArg->bIsPRN) {
+                    case 1: if (pArg->format > CManFormat::EPS) {
                         if (sBoundingBox.IsEmpty()) { // pobierz BoundingBox z formatu papieru
                             CStringW wBoundingBox(' ', 32);
                             CManODPNETParms orapar {
@@ -1149,7 +1150,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
             }
             dest.Write(line, line.GetLength());
         }
-        if (!pArg->bIsPRN)
+        if (pArg->format > CManFormat::EPS)
             dest.Write("%%EndPageSetup\r\n/STAN_STR save def\r\n", 36);
     } catch (CException* e2) {
         CDrawApp::SetErrorMessage(pArg->cBigBuf);
@@ -1158,7 +1159,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
         ok = FALSE;
     }
 
-    if (ok && pArg->bIsPRN) {
+    if (ok && pArg->format > CManFormat::EPS) {
         CMemFile fPagina;
         if (!StaleElementy(pArg, fPagina))
             return FALSE;
@@ -1215,7 +1216,7 @@ foundsizex:
     auto itAdd = m_adds.cbegin();
     while (ok && itAdd != m_adds.cend() && !pArg->pDlg->cancelGenEPS) {
         BOOL bAddOK = (*itAdd++)->RewriteEps(pArg, dest);
-        if (!bAddOK && pArg->bIsPRN == 1 && pArg->bDoKorekty == 0)
+        if (!bAddOK && pArg->format == CManFormat::PS && pArg->bDoKorekty == 0)
             return FALSE;
     }
 
@@ -1369,13 +1370,14 @@ void CDrawPage::Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2,
     dest.Write(header, sizeof(header));
     const auto w = (WORD)0xFFFF;
     dest.Write(&w, sizeof(WORD));
+    dest.SeekToEnd();
 }
 
 BOOL CDrawPage::GenPDF(PGENEPSARG pArg)
 {
     CString dstName, num = GetNrPaginy();
 
-    CManPDF pdf(pArg);
+    CManPDF pdf{pArg};
     dstName.Format(_T("%02i"), pagina);
 
     if (!CheckRozmKrat(pArg)) {

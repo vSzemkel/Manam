@@ -1419,7 +1419,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
             for (WORD i = 0; i < iCpuCnt; ++i) {
                 auto& ta = threadArgs[i];
                 ta.iChannelId = i;
-                ta.bIsPRN = (BOOL)d.m_format;
+                ta.format = d.m_format;
                 ta.bIsPreview = d.m_preview;
                 ta.bSignAll = d.m_signall;
                 ta.bDoKorekty = d.m_korekta;
@@ -1438,7 +1438,7 @@ void CDrawView::CheckPrintEps(BOOL isprint)
     GENEPSARG genEpsArg;
     if (!streamed) {
         genEpsArg.iChannelId = 0;
-        genEpsArg.bIsPRN = (BOOL)d.m_format;
+        genEpsArg.format = d.m_format;
         genEpsArg.bIsPreview = d.m_preview;
         genEpsArg.bSignAll = d.m_signall;
         genEpsArg.bDoKorekty = d.m_korekta;
@@ -1552,7 +1552,7 @@ BOOL CDrawView::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CDrawView::OnIrfan() // single Add selected
 {
-    CString eps_name = dynamic_cast<CDrawAdd*>(m_selection.front())->EpsName(NULL, CManFormat::EPS, FALSE);
+    CString eps_name = dynamic_cast<CDrawAdd*>(m_selection.front())->EpsName(CManFormat::EPS, FALSE);
     if (eps_name.Mid(1, 1) != _T(":")) {
         AfxMessageBox(_T("Preview niedostêpne. Brak materia³u"));
         return;
@@ -1695,16 +1695,13 @@ void CDrawView::OnPrevKor()
             num.Format(_T("%03i"), lnr_porz ? lnr_porz : (int)pDoc->m_pages.size());
             GENEPSARG genEpsArg;
             genEpsArg.cBigBuf = theApp.bigBuf;
-            genEpsArg.bIsPRN = TRUE;
+            genEpsArg.format = CManFormat::PDF;
             genEpsArg.bDoKorekty = TRUE;
             pPage->GetDestName(&genEpsArg, num, fname);
             lnr_porz = fname.ReverseFind('\\');
             if (lnr_porz > 0)
                 fname = fname.Mid(lnr_porz);
-            lnr_porz = fname.ReverseFind('.');
-            if (lnr_porz > 0)
-                fname = fname.Left(lnr_porz + 1);
-            fname = theApp.GetProfileString(_T("GenEPS"), _T("KorektaDobre"), _T("")) + pDoc->daydir + pDoc->gazeta.Left(3) + pDoc->gazeta.Mid(4, 2) + fname + "pdf";
+            fname = theApp.GetProfileString(_T("GenEPS"), _T("KorektaDobre"), _T("")) + pDoc->daydir + pDoc->gazeta.Left(3) + pDoc->gazeta.Mid(4, 2) + fname;
 
             CDrawApp::OpenWebBrowser(fname);
         }

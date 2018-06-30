@@ -39,12 +39,6 @@ constexpr size_t n_size = 0x7FFF; // (bigSize-1)
 #pragma endregion constants
 
 #pragma region namespacedconstants
-namespace CManFormat { // format materialu
-    constexpr uint8_t EPS = 0;
-    constexpr uint8_t PS  = 1;
-    constexpr uint8_t PDF = 2;
-}
-
 namespace CManDbType // ODP.NET datatypes for unmanaged code
 {
     constexpr uint8_t DbTypeByte      = 103; // OracleDbType::Byte
@@ -89,6 +83,13 @@ namespace PaginaType // numeracja - odpowiada PK s³ownika TYP_NUMERACJI z bazy
 #pragma endregion flag_enums
 
 #pragma region enums
+enum class CManFormat : uint8_t // format materialu
+{
+    EPS = 0,
+    PS  = 1,
+    PDF = 2,
+};
+
 enum class DrawShape : uint8_t
 {
     add = ID_DRAW_ADD,

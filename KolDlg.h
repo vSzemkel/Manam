@@ -725,7 +725,11 @@ public:
     //{{AFX_DATA(CPrnEpsDlg)
     enum { IDD = IDD_PRNEPS };
     int		m_page;
-    int		m_format;
+    union
+    {
+        CManFormat m_format;
+        int m_format_padded;
+    };
     CString	m_od;
     CString	m_do;
     CString m_subset;
