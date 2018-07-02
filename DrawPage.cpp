@@ -864,9 +864,9 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
 }
 
 // GN *****************************************************************************************
-void CDrawPage::BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *by2) const
+void CDrawPage::BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *by2) const noexcept
 {
-    BOOL first = TRUE;
+    bool first = true;
     for (const auto& pAdd : m_adds) {
         auto pRozAdd = m_pDocument->GetCRozm(pArg, pAdd->szpalt_x, pAdd->szpalt_y, pAdd->spad_flag ? 0 : pAdd->typ_xx); // gdy zaznaczono spad, to montuj do kraty
         auto pRozKraty = pAdd->typ_xx ? m_pDocument->GetCRozm(pArg, pAdd->szpalt_x, pAdd->szpalt_y, 0) : pRozAdd;       // pobierz rozmiar kraty, jesli dotychczas nie jest znany
@@ -877,10 +877,10 @@ void CDrawPage::BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *
         const auto gpy = (int)(pAdd->sizey * (pRozAdd->h + pRozAdd->sh) - pRozAdd->sh + 3);
 
         if (first) { // liczymy w mm
-            *bx1 = x; *bx2 = x + gpx; *by1 = y; *by2 = y + gpy; first = FALSE;
+            *bx1 = x; *bx2 = x + gpx; *by1 = y; *by2 = y + gpy; first = false;
         } else {
-            *bx1 = min(*bx1, x);		*by1 = min(*by1, y);
-            *bx2 = max(*bx2, x + gpx);	*by2 = max(*by2, y + gpy);
+            *bx1 = min(*bx1, x);       *by1 = min(*by1, y);
+            *bx2 = max(*bx2, x + gpx); *by2 = max(*by2, y + gpy);
         }
     }
     *bx1 = (int)nearbyintf(*bx1 * mm2pkt);
@@ -921,7 +921,7 @@ BOOL CDrawPage::CheckSrcFile(PGENEPSARG pArg)
     if (!f5_errInfo.IsEmpty())
         f5_errInfo = (sNrStr + f5_errInfo + _T("\n"));
     return isOK;
-} //CheckSrcFile
+} // CheckSrcFile
 
 BOOL CDrawPage::StaleElementy(PGENEPSARG pArg, CFile& handle)
 {
@@ -1255,7 +1255,7 @@ foundsizex:
     }
 
     return ok;
-}
+} // GenEPS
 
 BOOL CDrawPage::MovePageToOpiServer(PGENEPSARG pArg, CMemFile&& pOpiFile) const
 {
@@ -1316,7 +1316,7 @@ BOOL CDrawPage::MovePageToOpiServer(PGENEPSARG pArg, CMemFile&& pOpiFile) const
     }
 
     return true;
-}
+} // MovePageToOpiServer
 
 void CDrawPage::MoveMemFileContent(CFile& dst, CMemFile&& src)
 {
@@ -1326,7 +1326,7 @@ void CDrawPage::MoveMemFileContent(CFile& dst, CMemFile&& src)
     free(buf); // CMemFile::Free
 }
 
-void CDrawPage::TiffHeader(CFile& dest, const int dx, const int dy, const int milimeterPerByte) const noexcept
+int CDrawPage::TiffHeader(CFile& dest, const int dx, const int dy, const int bytesPerScanline) const noexcept
 {
     constexpr short T_SHORT    = 3;
     constexpr short T_LONG     = 4;
@@ -1346,7 +1346,7 @@ void CDrawPage::TiffHeader(CFile& dest, const int dx, const int dy, const int mi
     dest.Write(&header, sizeof(header));
     // IFD Image File Directory
     // 8::number of entries in directory
-    short w = ifd_size;
+    short w{ifd_size};
     dest.Write(&w, sizeof(short));
     IFDEntry entry[ifd_size] = {
         // 10::ImageWidth
@@ -1362,11 +1362,11 @@ void CDrawPage::TiffHeader(CFile& dest, const int dx, const int dy, const int mi
         // 70::RowsPerStrip
         {278, T_LONG, 1, dy},
         // 82::StripByteCounts
-        {279, T_LONG, 1, dy * milimeterPerByte},
+        {279, T_LONG, 1, dy * bytesPerScanline},
         // 94::XResolution
-        {282, T_RATIONAL, 1, 134},
+        {282, T_RATIONAL, 1, 10},
         // 106::YResolution
-        {283, T_RATIONAL, 1, 142},
+        {283, T_RATIONAL, 1, 10},
         // 118::ResolutionUnit; Centimeter
         {296, T_SHORT, 1, 3}
     };
@@ -1375,46 +1375,46 @@ void CDrawPage::TiffHeader(CFile& dest, const int dx, const int dy, const int mi
     int32_t d{0};
     dest.Write(&d, sizeof(int32_t));
     // 134::ImageData
-}
+    return 134;
+} // TiffHeader
 
-void CDrawPage::Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2, int by2) const noexcept
+void CDrawPage::Preview(PGENEPSARG pArg, CFile& dest, const int bx1, const int by1, const int bx2, const int by2) const noexcept
 { //GN     //x,y dx dy w 0.1 mm
     const auto initLen = (int32_t)dest.GetLength();
     const auto x = (int)nearbyint(bx1 / pkt_10m);
     const auto y = (int)nearbyint(by1 / pkt_10m);
-    const auto dx = (int)nearbyint((bx2 - bx1) / pkt_10m);
-    const int  dy = (int)nearbyint((by2 - by1 - podpisH) / pkt_10m) + 2;
-    const div_t szer_t = div(dx, 8);
-    const int milimeterPerByte = szer_t.quot + min(szer_t.rem, 1);
-    const auto p_size = (int)(dy * milimeterPerByte * sizeof(BYTE));
+    const auto colsPerScanline = (int)nearbyint((bx2 - bx1) / pkt_10m);
+    const int  scanlinesCount = (int)nearbyint((by2 - by1 - podpisH) / pkt_10m) + 2;
+    const div_t szer_t = div(colsPerScanline, 8);
+    const int bytesPerScanline = szer_t.quot + min(szer_t.rem, 1);
+    const auto imageLen = (int)(scanlinesCount * bytesPerScanline);
 
-    if (p_size > n_size) {
+    if (imageLen > n_size) {
         ::MessageBox(pArg->pDlg->m_hWnd, _T("Zbyt gêsta krata. Proszê wy³¹czyæ opcjê generowania preview"), _T("B³¹d"), MB_OK | MB_ICONINFORMATION);
         dest.SetLength(0);
         return;
     }
 
-    TiffHeader(dest, dx, dy, milimeterPerByte);
-
-    memset(pArg->cBigBuf, 0, p_size);
+    memset(pArg->cBigBuf, 0, imageLen);
     for (const auto& pAdd : m_adds)
-        pAdd->Preview(pArg, x, y, dy, milimeterPerByte);
+        pAdd->Preview(pArg, x, y, scanlinesCount, bytesPerScanline);
 
-    dest.Write(pArg->cBigBuf, p_size);
+    const int headerLen = TiffHeader(dest, colsPerScanline, scanlinesCount, bytesPerScanline);
+    dest.Write(pArg->cBigBuf, imageLen);
 
     int32_t tiffHeader[8];
     tiffHeader[0] = 0xC6D3D0C5L;              // eps z preview
     tiffHeader[1] = preview_offset;           // poczatek eps'a
     tiffHeader[2] = initLen - preview_offset; // dlugosc eps'a
-    tiffHeader[3] = 0;
+    tiffHeader[3] = 0;                        // no metafile preview
     tiffHeader[4] = 0;
     tiffHeader[5] = initLen;                  // pozycja tifa
-    tiffHeader[6] = p_size;                   // dlugosc tiff
+    tiffHeader[6] = headerLen + imageLen;     // dlugosc tiff
     tiffHeader[7] = 0xffff;
     dest.SeekToBegin();
     dest.Write(tiffHeader, preview_offset);
     dest.SeekToEnd();
-}
+} // Preview
 
 BOOL CDrawPage::GenPDF(PGENEPSARG pArg)
 {

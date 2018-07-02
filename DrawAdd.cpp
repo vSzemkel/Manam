@@ -2016,7 +2016,7 @@ bool CDrawAdd::EmbedEpsFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcP
     return ret;
 }
 
-void CDrawAdd::Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const
+void CDrawAdd::Preview(PGENEPSARG pArg, int x, int y, int scanlinesCount, int bytesPerScanline) const
 {
     auto target = (BYTE*)pArg->cBigBuf;
     auto pRoz = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, typ_xx);
@@ -2025,25 +2025,26 @@ void CDrawAdd::Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const
     div_t x2 = div((int)(((posx - 1 + sizex)*(pRoz->w + pRoz->sw) - pRoz->sw) / 10) - x, 8);
     int i, y1 = (int)(((szpalt_y + 1 - posy - sizey)*(pRoz->h + pRoz->sh)) / 10) - y + 2;
     int j, y2 = (int)(((szpalt_y + 1 - posy)*(pRoz->h + pRoz->sh) - pRoz->sh) / 10) - y + 2;
-    y1 = min(dy - y1, dy - 2);   // koniec
-    y2 = max(dy - y2, 0);   //poczatek
+    y1 = min(scanlinesCount - y1, scanlinesCount - 2);   // koniec
+    y2 = max(scanlinesCount - y2, 0);   //poczatek
 
     auto p1 = (BYTE)((1 << (8 - x1.rem)) - 1);
     auto p2 = (BYTE)(255 ^ (BYTE)((1 << (8 - x2.rem)) - 1));
     auto m1 = (BYTE)(1 << (7 - x1.rem));
     auto m2 = (BYTE)(1 << (7 - x2.rem));
-    auto c1 = (BYTE)170; //136
-    auto c2 = (BYTE)85;  //34
+    auto c1 = (BYTE)170;
+    auto c2 = (BYTE)85;
     BYTE ci = c1;
 
     for (i = 1; i < 3; ++i)
-        *(target + (y1 + 1)*szer + x2.quot - i) = (BYTE)255; // podpis
+        *(target + (y1 + 1)*bytesPerScanline + x2.quot - i) = (BYTE)255; // podpis
 
     for (i = y2; i <= y1; ++i) {
-        *(target + i*szer + x1.quot) |= (m1 | p1) & ci;      // 0000100000 
-        *(target + i*szer + x2.quot) |= (m2 | p2) & ci;
-        for (j = x1.quot + 1; j < x2.quot; ++j)
-            *(target + i*szer + j) = ci;      //11111111 
+        const PBYTE currentScanLine = target + i * bytesPerScanline;
+        *(currentScanLine + x1.quot) |= (m1 | p1) & ci; // edges
+        *(currentScanLine + x2.quot) |= (m2 | p2) & ci;
+        for (j = x1.quot + 1; j < x2.quot; ++j) // shape
+            *(currentScanLine + j) = ci;
         ci = (ci == c1) ? c2 : c1;
     }
 } // Preview

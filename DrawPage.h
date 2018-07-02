@@ -114,9 +114,8 @@ class CDrawPage final : public CDrawObj
     BOOL CheckSpace(const CDrawAdd *pObj, int px, int py) const;
     BOOL CheckSpaceDiffKraty(const CDrawAdd *pObj, int x, int y) const;
 
-    void BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *by2) const;
+    void BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *by2) const noexcept;
     void Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2, int by2) const noexcept;
-    void TiffHeader(CFile& dest, int dx, int dy, int milimeterPerByte) const noexcept;
     BOOL CheckRozmKrat(PGENEPSARG pArg);
     BOOL GenPDF(PGENEPSARG pArg);
     BOOL CheckSrcFile(PGENEPSARG pArg);
@@ -128,9 +127,10 @@ class CDrawPage final : public CDrawObj
     CString GetNrPaginy() const;
 
 private:
-    CFlag GetReservedFlag();                                    // Pobiera flagê szarych modu³ów
     static CString GenerateGUIDString();                        // Konwertuje wygenerowany GIUD do stringu
     static void MoveMemFileContent(CFile& dst, CMemFile&& src); // Przenosi zawartoœæ src od poczatku do aktualnej pozycji
+    CFlag GetReservedFlag();                                    // Pobiera flagê szarych modu³ów
+    int  TiffHeader(CFile& dest, int dx, int dy, int bytesPerScanline) const noexcept;
 };
 
 // CRozm

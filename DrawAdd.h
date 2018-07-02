@@ -107,7 +107,7 @@ class CDrawAdd final : public CDrawObj
     bool RewriteDrob(PGENEPSARG pArg, CFile& dest);
     CString FindZajawka(CString& root, const CString& ext) const;
     CString EpsName(CManFormat format, BOOL copyOldEPS, BOOL bModifTest = FALSE);
-    void Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const;
+    void Preview(PGENEPSARG pArg, int x, int y, int scanlinesCount, int bytesPerScanline) const;
     void SetDotM(BOOL setFlag); // parsuje wersjê i ustawia lub cofa .m
 
   private:
