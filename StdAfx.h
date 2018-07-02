@@ -36,7 +36,10 @@
 
 // Manam
 #include "resource.h"
+#include "ManConst.h"
+
+#include "Flag.h"
 #include "DrawObj.h"
 #include "ManODPNET.h"
 
-/* Napisy wyswietlane w GUI, ktore sa osadzone w kodzie powinny byc edytowane jako Windows 1250*/
+/* Napisy wyswietlane w GUI, ktore sa osadzone w kodzie powinny byc edytowane jako Windows 1250 */

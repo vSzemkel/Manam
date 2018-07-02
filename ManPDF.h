@@ -15,12 +15,12 @@ public:
     static const char sepline[];
     static const char seppdf[];
     static const unsigned long ulNotFound;
-    static const char* memstr(const char *str, const char *sub, size_t len);
+    static const char* memstr(const char* str, const char* sub, size_t len);
     CManPDF(PGENEPSARG pArg);
     virtual ~CManPDF() = default;
     unsigned long GetMediaBox(const TCHAR* fpath, float* x1, float* y1, float* x2, float* y2, HANDLE hFile = nullptr);
-    unsigned long SearchPattern(CFile& f, const char *pat) const;
-    BOOL CreatePDF(CDrawPage *page, const TCHAR *trgName);
+    unsigned long SearchPattern(CFile& f, const char* pat) const;
+    bool CreatePDF(CDrawPage* page, const TCHAR* trgName);
 
   private:
     static const long estTailLen;
@@ -65,9 +65,9 @@ public:
 class CManPDFExc
 {
 public:
-    CManPDFExc(const TCHAR *msg) { errMsg = CString(msg); }
+    CManPDFExc(const TCHAR* msg) { errMsg = CString(msg); }
     ~CManPDFExc() = default;
-    const TCHAR *ShowReason() const { return errMsg; }
+    const TCHAR* ShowReason() const { return errMsg; }
 private:
     CString errMsg;
 };

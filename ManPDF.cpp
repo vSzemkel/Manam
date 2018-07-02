@@ -38,7 +38,7 @@ CManPDF::CManPDF(PGENEPSARG pArg)
 // CManPDF message handlers
 
 // rozszerza mo¿liwoœci funkcji strtok o wydzielanie tokenów PDF nierozdzielonych od siebie
-char* CManPDF::pdftok(char *str)
+char* CManPDF::pdftok(char* str)
 {
     if (str)  // wywo³anie, które nie jest kontynuacj¹
         cNextPdfToken[0] = '\0';
@@ -84,7 +84,7 @@ char* CManPDF::pdftok(char *str)
     return cPdfToken[iPdfTokenSlot];
 }
 
-const char* CManPDF::memstr(const char *str, const char *sub, size_t len)
+const char* CManPDF::memstr(const char* str, const char* sub, size_t len)
 {
     size_t l = 0;
     char *p;
@@ -102,7 +102,7 @@ const char* CManPDF::memstr(const char *str, const char *sub, size_t len)
     return nullptr;
 } //memstr
 
-unsigned long CManPDF::SearchPattern(CFile &f, const char *pat) const
+unsigned long CManPDF::SearchPattern(CFile& f, const char* pat) const
 {
     char *p;
     size_t res = 1;
@@ -186,7 +186,7 @@ unsigned long CManPDF::FindObjEntry(CFile& f, unsigned int obj)
             xreflen = atoi(strtok(nullptr, septok));
         }
         if (xrefstart == bigSize) continue;
-        //znaleziono
+        // znaleziono
         if ((a - cStore) + (2 + obj - xrefstart) * 20 > bigSize) {
             a = strtok(nullptr, sepline);
             f.Seek(currentxrefOffset + (a - cStore) + (obj - xrefstart) * 20, CFile::begin);
@@ -201,10 +201,10 @@ unsigned long CManPDF::FindObjEntry(CFile& f, unsigned int obj)
 } //FindObjEntry
 
 // podaje najbli¿szy numer objNr z sekwencji "objNr 0 R"
-unsigned int CManPDF::GetRefNr(char *buf)
+unsigned int CManPDF::GetRefNr(char* buf)
 {
     std::vector<char*> a;
-    char *p = pdftok(buf);
+    char* p = pdftok(buf);
     do
         a.push_back(p = pdftok(nullptr));
     while (p && strcmp(p, "R"));
@@ -214,8 +214,9 @@ unsigned int CManPDF::GetRefNr(char *buf)
     int i = 0;
     while (!isdigit((int)objNr[i]) && objNr[i] != '\0')
         objNr[i++] = ' ';
+
     return atoi(objNr);
-} //GetRefNr
+} // GetRefNr
 
 // przepisuje s³ownik podmianiaj¹c numery obiektów Ÿród³owych na docelowe, 
 // innerOnly okreœla, czy maj¹ zostaæ przepisane znaczniki pocz¹tku i koñca sekcji
@@ -224,7 +225,7 @@ void CManPDF::EmbedSection(const char* str, bool innerOnly)
 {
     // ostatnie wywolanie strtok dalo token, który jest pocz¹tkiem sekcji
     // utworz liste tokenow ze slownika i podmien referencje
-    char *p;
+    char* p;
     int i, pocz, posInCstore = 0, depth = 1;
     std::vector<char*> a;
 
@@ -251,7 +252,7 @@ void CManPDF::EmbedSection(const char* str, bool innerOnly)
         if (!strcmp(p, lbound)) depth++;
         if (!strcmp(p, rbound)) depth--;
     } while (p && depth > 0);
-    //przepisz slownik z nowymi numerami referencji
+    // przepisz slownik z nowymi numerami referencji
     pocz = 0;
     depth = (int)a.size();
     p = cStore + posInCstore;
@@ -260,10 +261,10 @@ void CManPDF::EmbedSection(const char* str, bool innerOnly)
         StringCchPrintfA(p, bigSize, "%s%s", a[i], i == depth - 1 ? "\x0a" : " ");
         trg.Write(p, (UINT)strlen(p));
     }
-} //EmbedSection
+} // EmbedSection
 
 // przepisuje definicjê klucza key wystêpuj¹cego najbli¿ej w ci¹gu buf z podmian¹ numerów referencji
-void CManPDF::EmbedKey(const char *buf, char *key)
+void CManPDF::EmbedKey(const char* buf, char* key)
 {
     char *p, *de;
 
@@ -337,7 +338,7 @@ unsigned long CManPDF::EmbedStream(CFile& src, unsigned long offset, BOOL decora
     return ret;
 } //EmbedStream
 
-unsigned long CManPDF::EmbedPakStream(CFile& src, unsigned long offset, unsigned char *pak, unsigned char *niepak, unsigned char *tmp, const unsigned long niepakoff)
+unsigned long CManPDF::EmbedPakStream(CFile& src, unsigned long offset, unsigned char* pak, unsigned char* niepak, unsigned char* tmp, const unsigned long niepakoff)
 {
     src.Seek(offset, CFile::begin);
     src.Read(cStore, bigSize);
@@ -679,7 +680,7 @@ void CManPDF::GenPDFTail(unsigned int howMany)
     trg.SetLength(trg.GetPosition());
 } //GenPDFTail
 
-BOOL CManPDF::CreatePDF(CDrawPage *page, const TCHAR *trgName)
+bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* trgName)
 {
     CFile src;
     std::vector<CString> embAlias, filePath;
@@ -690,7 +691,7 @@ BOOL CManPDF::CreatePDF(CDrawPage *page, const TCHAR *trgName)
             throw CManPDFExc(CString(_T("CreatePDF: ")) + theApp.bigBuf);
         }
 
-        if (!GenProlog()) return FALSE;
+        if (!GenProlog()) return false;
 
         CString cs, fname;
         StringCchPrintfA(cStore, bigSize, "%u 0 obj\x0a<<\x0a", nextObjNr++);
@@ -799,12 +800,13 @@ BOOL CManPDF::CreatePDF(CDrawPage *page, const TCHAR *trgName)
         trg.Close();
     } catch (CManPDFExc &e) {
         AfxMessageBox(e.ShowReason(), MB_ICONSTOP);
-        return FALSE;
+        return false;
     }
-    return TRUE;
-} //CreatePDF
 
-unsigned long CManPDF::GetMediaBox(const TCHAR *fpath, float *x1, float *y1, float *x2, float *y2, HANDLE hFile)
+    return true;
+} // CreatePDF
+
+unsigned long CManPDF::GetMediaBox(const TCHAR* fpath, float* x1, float* y1, float* x2, float* y2, HANDLE hFile)
 {
     // zwraca offset do /Page
     CFile src(hFile);
@@ -885,7 +887,7 @@ kids:
     return offset;
 } //GetMediaBox
 
-inline void CManPDF::EmbedTextRight(const char *font, unsigned int fsize, float px, float py, const char *text, CStringA& buf)
+inline void CManPDF::EmbedTextRight(const char* font, unsigned int fsize, float px, float py, const char* text, CStringA& buf)
 {
     buf.Format(R"(q BT 1 g\012%s %u Tf\0121 0 0 1 %f %f cm\012-100 Tz (%s) Tj 100 Tz 0 g (%s) Tj\012ET Q\012)", font, fsize, px, py, text, text);
 }

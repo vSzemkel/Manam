@@ -1,9 +1,6 @@
 
 #pragma once
 
-#include "Flag.h"
-#include "ManConst.h"
-
 class CDrawView;
 class CDrawDoc;
 

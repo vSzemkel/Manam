@@ -45,14 +45,14 @@ class CDrawPage final : public CDrawObj
     ~CDrawPage() override;
 
     // Overrides
-    void Draw(CDC *pDC) override;
-    void Print(CDC *pDC) override;
-    void Serialize(CArchive &ar) override;
+    void Draw(CDC* pDC) override;
+    void Print(CDC* pDC) override;
+    void Serialize(CArchive& ar) override;
     void UpdateInfo() override;
-    void DrawKolor(CDC *pDC, const CRect &pos) const override;
-    void MoveTo(const CRect& position, CDrawView *pView = nullptr) override;
-    BOOL OnOpen(CDrawView *pView) override;
-    CDrawObj *Clone(CDrawDoc *pDoc) const override;
+    void DrawKolor(CDC* pDC, const CRect& pos) const override;
+    void MoveTo(const CRect& position, CDrawView* pView = nullptr) override;
+    BOOL OnOpen(CDrawView* pView) override;
+    CDrawObj* Clone(CDrawDoc* pDoc) const override;
 
     // Members
     int id_str;
@@ -110,27 +110,28 @@ class CDrawPage final : public CDrawObj
     void DBChangeName(int id_drw);
     std::vector<int> CleanKraty(BOOL dbSave);
 
-    BOOL FindSpace(CDrawAdd *pObj, int *px, int *py, int sx, int sy) const;
-    BOOL CheckSpace(const CDrawAdd *pObj, int px, int py) const;
-    BOOL CheckSpaceDiffKraty(const CDrawAdd *pObj, int x, int y) const;
+    bool FindSpace(CDrawAdd *pObj, int *px, int *py, int sx, int sy) const;
+    bool CheckSpace(const CDrawAdd *pObj, int px, int py) const;
+    bool CheckSpaceDiffKraty(const CDrawAdd *pObj, int x, int y) const;
 
-    void BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *by2) const noexcept;
-    void Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2, int by2) const noexcept;
-    BOOL CheckRozmKrat(PGENEPSARG pArg);
-    BOOL GenPDF(PGENEPSARG pArg);
-    BOOL CheckSrcFile(PGENEPSARG pArg);
-    BOOL StaleElementy(PGENEPSARG pArg, CFile& handle);
-    BOOL GenEPS(PGENEPSARG pArg);
-    BOOL GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destName);
-    BOOL MovePageToOpiServer(PGENEPSARG pArg, CMemFile&& pOpiFile) const;
-    CRect GetNormalizedModuleRect(size_t module) const;	// Prostok¹t ograniczaj¹cy modu³ o numerze porz¹dkowym module zakresu 0..sx*sy-1
+    bool CheckRozmKrat(PGENEPSARG pArg);
+    bool GenPDF(PGENEPSARG pArg);
+    bool CheckSrcFile(PGENEPSARG pArg);
+    bool GenEPS(PGENEPSARG pArg);
+    bool GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destName);
+    CRect GetNormalizedModuleRect(size_t module) const;         // Prostok¹t ograniczaj¹cy modu³ o numerze porz¹dkowym module zakresu 0..sx*sy-1
     CString GetNrPaginy() const;
 
 private:
     static CString GenerateGUIDString();                        // Konwertuje wygenerowany GIUD do stringu
     static void MoveMemFileContent(CFile& dst, CMemFile&& src); // Przenosi zawartoœæ src od poczatku do aktualnej pozycji
+
     CFlag GetReservedFlag();                                    // Pobiera flagê szarych modu³ów
     int  TiffHeader(CFile& dest, int dx, int dy, int bytesPerScanline) const noexcept;
+    void BoundingBox(PGENEPSARG pArg, int* bx1, int* by1, int* bx2, int* by2) const noexcept;
+    void Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2, int by2) const noexcept;
+    bool StaleElementy(PGENEPSARG pArg, CFile& handle);
+    bool MovePageToOpiServer(PGENEPSARG pArg, CMemFile&& pOpiFile) const;
 };
 
 // CRozm
