@@ -114,8 +114,9 @@ class CDrawPage final : public CDrawObj
     BOOL CheckSpace(const CDrawAdd *pObj, int px, int py) const;
     BOOL CheckSpaceDiffKraty(const CDrawAdd *pObj, int x, int y) const;
 
-    void BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *by2);
-    void Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2, int by2);
+    void BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *by2) const;
+    void Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2, int by2) const noexcept;
+    void TiffHeader(CFile& dest, int dx, int dy, int milimeterPerByte) const noexcept;
     BOOL CheckRozmKrat(PGENEPSARG pArg);
     BOOL GenPDF(PGENEPSARG pArg);
     BOOL CheckSrcFile(PGENEPSARG pArg);

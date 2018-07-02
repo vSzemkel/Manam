@@ -29,7 +29,7 @@ constexpr float mm2pkt = 0.2835f; // 1mm = 2.835pt
 constexpr float pkt2mm = 0.3527f; // 1pt = 0.3527mm
 constexpr float pkt_10m = 2.835f;
 constexpr int podpisH = 6; // 2.1162 [mm]
-constexpr int preview_offset = 30;
+constexpr int preview_offset = 32;
 
 constexpr auto DERV_TMPL_WER = "$c";
 constexpr auto OPI_TAG = "%%MANAM-OPI ";

@@ -2018,7 +2018,7 @@ bool CDrawAdd::EmbedEpsFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcP
 
 void CDrawAdd::Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const
 {
-    auto p = (BYTE*)pArg->cBigBuf;
+    auto target = (BYTE*)pArg->cBigBuf;
     auto pRoz = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, typ_xx);
 
     div_t x1 = div((int)((posx - 1)*(pRoz->w + pRoz->sw)) / 10 - x, 8);
@@ -2033,17 +2033,17 @@ void CDrawAdd::Preview(PGENEPSARG pArg, int x, int y, int dy, int szer) const
     auto m1 = (BYTE)(1 << (7 - x1.rem));
     auto m2 = (BYTE)(1 << (7 - x2.rem));
     auto c1 = (BYTE)170; //136
-    auto c2 = (BYTE)85;   //34
+    auto c2 = (BYTE)85;  //34
     BYTE ci = c1;
 
     for (i = 1; i < 3; ++i)
-        *(p + (y1 + 1)*szer + x2.quot - i) = (BYTE)255;   //podpis  
+        *(target + (y1 + 1)*szer + x2.quot - i) = (BYTE)255; // podpis
 
     for (i = y2; i <= y1; ++i) {
-        *(p + i*szer + x1.quot) |= (m1 | p1) & ci;       //0000100000 
-        *(p + i*szer + x2.quot) |= (m2 | p2) & ci;
+        *(target + i*szer + x1.quot) |= (m1 | p1) & ci;      // 0000100000 
+        *(target + i*szer + x2.quot) |= (m2 | p2) & ci;
         for (j = x1.quot + 1; j < x2.quot; ++j)
-            *(p + i*szer + j) = ci;      //11111111 
+            *(target + i*szer + j) = ci;      //11111111 
         ci = (ci == c1) ? c2 : c1;
     }
-} //Preview
+} // Preview

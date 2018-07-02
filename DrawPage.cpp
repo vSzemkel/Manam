@@ -864,7 +864,7 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
 }
 
 // GN *****************************************************************************************
-void CDrawPage::BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *by2)
+void CDrawPage::BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *by2) const
 {
     BOOL first = TRUE;
     for (const auto& pAdd : m_adds) {
@@ -1098,7 +1098,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
     }
 
     int bx1 = 0, by1 = 0, bx2 = 0, by2 = 0;
-    if (pArg->format > CManFormat::EPS) {
+    if (pArg->format == CManFormat::EPS) {
         if (isDrobEPS) { bx1 = 0; bx2 = 709; by1 = 0; by2 = (int)m_pDocument->GetDrobneH() + 5; } else BoundingBox(pArg, &bx1, &by1, &bx2, &by2);
         pArg->bIsPreview = (pArg->bIsPreview && bx1 != bx2 && by1 != by2);
     }
@@ -1114,7 +1114,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
 
     try {
         if (pArg->bIsPreview) // TIFF header placeholder
-            dest.Seek(28, CFile::begin);
+            dest.Seek(preview_offset, CFile::begin);
 
         int i = 0;
         while (ok && (fManamEps.ReadString(wThreadBuf, n_size) != nullptr)) {
@@ -1150,7 +1150,7 @@ BOOL CDrawPage::GenEPS(PGENEPSARG pArg)
             }
             dest.Write(line, line.GetLength());
         }
-        if (pArg->format > CManFormat::EPS)
+        if (pArg->format == CManFormat::EPS)
             dest.Write("%%EndPageSetup\r\n/STAN_STR save def\r\n", 36);
     } catch (CException* e2) {
         CDrawApp::SetErrorMessage(pArg->cBigBuf);
@@ -1326,50 +1326,93 @@ void CDrawPage::MoveMemFileContent(CFile& dst, CMemFile&& src)
     free(buf); // CMemFile::Free
 }
 
-void CDrawPage::Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2, int by2)
+void CDrawPage::TiffHeader(CFile& dest, const int dx, const int dy, const int milimeterPerByte) const noexcept
+{
+    constexpr short T_SHORT    = 3;
+    constexpr short T_LONG     = 4;
+    constexpr short T_RATIONAL = 5;
+    constexpr short ifd_size   = 10;
+    constexpr int64_t header   = 0x08002A4949; // byte order 0-1; magic 2-3; IFD offset 4-7
+
+    struct IFDEntry
+    {
+        short tag;
+        short type;
+        int count;
+        int value;
+    };
+
+    // 0::tiff header
+    dest.Write(&header, sizeof(header));
+    // IFD Image File Directory
+    // 8::number of entries in directory
+    short w = ifd_size;
+    dest.Write(&w, sizeof(short));
+    IFDEntry entry[ifd_size] = {
+        // 10::ImageWidth
+        {256, T_LONG, 1, dx},
+        // 22::ImageLength
+        {257, T_LONG, 1, dy},
+        // 34::Compression
+        {259, T_SHORT, 1, 1},
+        // 46::PhotometricInterpretation; WhiteIsZero
+        {262, T_SHORT, 1, 0},
+        // 58::StripOffsets
+        {273, T_LONG, 1, 134},
+        // 70::RowsPerStrip
+        {278, T_LONG, 1, dy},
+        // 82::StripByteCounts
+        {279, T_LONG, 1, dy * milimeterPerByte},
+        // 94::XResolution
+        {282, T_RATIONAL, 1, 134},
+        // 106::YResolution
+        {283, T_RATIONAL, 1, 142},
+        // 118::ResolutionUnit; Centimeter
+        {296, T_SHORT, 1, 3}
+    };
+    dest.Write(&entry, ifd_size * sizeof(IFDEntry));
+    // 130::Next IFD offset
+    int32_t d{0};
+    dest.Write(&d, sizeof(int32_t));
+    // 134::ImageData
+}
+
+void CDrawPage::Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2, int by2) const noexcept
 { //GN     //x,y dx dy w 0.1 mm
-    DWORD header[7];
-    header[0] = 0xC6D3D0C5L; // eps z preview
-    header[1] = (DWORD)preview_offset; // poczatek eps'a 
-    header[2] = (DWORD)(dest.GetLength() - preview_offset);  //dl eps'a
-    header[3] = (DWORD)0;
-    header[4] = (DWORD)0;
-    header[5] = (DWORD)dest.GetLength(); // pozycja tifa
-    const auto x = (int)ceil(bx1 / pkt_10m - 0.5);
-    const auto y = (int)ceil(by1 / pkt_10m - 0.5);
-    const auto dx = (int)ceil((bx2 - bx1) / pkt_10m - 0.5);
-    const int dy = 2 + (int)ceil((by2 - by1 - podpisH) / pkt_10m - 0.5);
+    const auto initLen = (int32_t)dest.GetLength();
+    const auto x = (int)nearbyint(bx1 / pkt_10m);
+    const auto y = (int)nearbyint(by1 / pkt_10m);
+    const auto dx = (int)nearbyint((bx2 - bx1) / pkt_10m);
+    const int  dy = (int)nearbyint((by2 - by1 - podpisH) / pkt_10m) + 2;
     const div_t szer_t = div(dx, 8);
-    const int szer = szer_t.quot + min(szer_t.rem, 1);
-    const auto p_size = (int)(dy*szer * sizeof(BYTE));
+    const int milimeterPerByte = szer_t.quot + min(szer_t.rem, 1);
+    const auto p_size = (int)(dy * milimeterPerByte * sizeof(BYTE));
 
     if (p_size > n_size) {
-        const TCHAR* errMsg = _T("Zbyt gêsta krata. Proszê wy³¹czyæ opcjê generowania preview");
-        if (p_size < 10 * n_size) {
-            pArg->cBigBuf = (TCHAR*)LocalReAlloc(pArg->cBigBuf, p_size, LMEM_MOVEABLE);
-            if (pArg->cBigBuf == nullptr) {
-                ::MessageBox(pArg->pDlg->m_hWnd, errMsg, _T("Brak pamiêci"), MB_OK | MB_ICONERROR);
-                return;
-            }
-        } else {
-            ::MessageBox(pArg->pDlg->m_hWnd, errMsg, _T("B³¹d"), MB_OK | MB_ICONINFORMATION);
-            dest.SetLength(0);
-            return;
-        }
+        ::MessageBox(pArg->pDlg->m_hWnd, _T("Zbyt gêsta krata. Proszê wy³¹czyæ opcjê generowania preview"), _T("B³¹d"), MB_OK | MB_ICONINFORMATION);
+        dest.SetLength(0);
+        return;
     }
+
+    TiffHeader(dest, dx, dy, milimeterPerByte);
 
     memset(pArg->cBigBuf, 0, p_size);
     for (const auto& pAdd : m_adds)
-        pAdd->Preview(pArg, x, y, dy, szer);
+        pAdd->Preview(pArg, x, y, dy, milimeterPerByte);
 
-    // CManTiff::TiffHeader(dest, dx, dy, szer);
     dest.Write(pArg->cBigBuf, p_size);
 
-    header[6] = (DWORD)dest.GetLength() - header[5];
+    int32_t tiffHeader[8];
+    tiffHeader[0] = 0xC6D3D0C5L;              // eps z preview
+    tiffHeader[1] = preview_offset;           // poczatek eps'a
+    tiffHeader[2] = initLen - preview_offset; // dlugosc eps'a
+    tiffHeader[3] = 0;
+    tiffHeader[4] = 0;
+    tiffHeader[5] = initLen;                  // pozycja tifa
+    tiffHeader[6] = p_size;                   // dlugosc tiff
+    tiffHeader[7] = 0xffff;
     dest.SeekToBegin();
-    dest.Write(header, sizeof(header));
-    const auto w = (WORD)0xFFFF;
-    dest.Write(&w, sizeof(WORD));
+    dest.Write(tiffHeader, preview_offset);
     dest.SeekToEnd();
 }
 
