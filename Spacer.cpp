@@ -55,7 +55,7 @@ BOOL CSpacerDlg::Deal(CDrawAdd *vAdd)
     return TRUE;
 }
 
-CSpacerDlg::CSpacerDlg(CDrawAdd *vAdd, CWnd *pParent /*=NULL*/)
+CSpacerDlg::CSpacerDlg(CDrawAdd *vAdd, CWnd* pParent /*=NULL*/)
     : CDialog(CSpacerDlg::IDD, pParent)
 {
     _stscanf_s(vAdd->m_pDocument->data, c_formatDaty, &dd, &mm, &rrrr);
@@ -92,7 +92,7 @@ CSpacerDlg::CSpacerDlg(CDrawAdd *vAdd, CWnd *pParent /*=NULL*/)
     }
 }
 
-void CSpacerDlg::DoDataExchange(CDataExchange *pDX)
+void CSpacerDlg::DoDataExchange(CDataExchange* pDX)
 {
     CDialog::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CSpacerDlg)
@@ -541,7 +541,7 @@ void CSpacerDlg::OnQue()
     if (queDeal) {
         if (!theManODPNET.EI(sql, orapar))
             return;
-        for (i = 1; i < rc; ++i) { //wieloemisyjny queDeal
+        for (i = 1; i < rc; ++i) { // wieloemisyjny queDeal
             next_mak_xx = static_cast<int>(m_emisjelist.GetItemData(i));
             if (!theManODPNET.EI(sql, orapar))
                 return;

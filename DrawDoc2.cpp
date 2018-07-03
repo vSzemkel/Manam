@@ -313,7 +313,7 @@ void CDrawDoc::OnVuMakietowanie()
                 maxLen = vjAdd->logpage.GetLength();
                 k = j;
             }
-            if (vjAdd->logpage.GetLength() == maxLen) { //warunek z '=' ma wiekszy prirytet
+            if (vjAdd->logpage.GetLength() == maxLen) { // warunek z '=' ma wiekszy prirytet
                 if (_tcsstr(vjAdd->logpage, _T("=")) && !_tcsstr(viAdd->logpage, _T("=")))
                     k = j;
                 else if (maxWeight < vjAdd->sizex*vjAdd->sizey) {
@@ -625,7 +625,7 @@ void CDrawDoc::AsideAdds()
 
 CPoint CDrawDoc::GetAsideAddPos(BOOL opening) const
 {
-    const int addsAsideCnt = opening ? 1 : 1 + (int)std::count_if(cbegin(m_objects), cend(m_objects), [](CDrawObj *pObj) noexcept { const auto a = dynamic_cast<CDrawAdd*>(pObj); return a && a->posx == 0; });
+    const int addsAsideCnt = opening ? 1 : 1 + (int)std::count_if(cbegin(m_objects), cend(m_objects), [](CDrawObj* pObj) noexcept { const auto a = dynamic_cast<CDrawAdd*>(pObj); return a && a->posx == 0; });
     const auto marginPageMinX = (int)(pmodulx*(1 + iPagesInRow / 2 + (pszpalt_x*iPagesInRow)));
     const auto marginPageMaxX = (int)(nearbyint((float)(m_size.cx * vscale * 100) / (theApp.m_initZoom * pmodulx)) - (pszpalt_x + 2)) * pmodulx;
     return {max(marginPageMinX, marginPageMaxX), -pmoduly * addsAsideCnt};
@@ -702,7 +702,7 @@ void CDrawDoc::OnEditFindNext()
     AddFind(lastSearchNrAtex, lastSearchNrSpacer, lastSearchNazwa);
 }
 
-void CDrawDoc::OnUpdateEditFindNext(CCmdUI *pCmdUI)
+void CDrawDoc::OnUpdateEditFindNext(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(!disableMenu && findNextInd > -1);
 }

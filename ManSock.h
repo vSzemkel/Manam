@@ -39,7 +39,7 @@ class CSendDlg : public CDialog
 {
     // Construction
 public:
-    CSendDlg(CWnd *pParent = nullptr);   // standard constructor
+    CSendDlg(CWnd* pParent = nullptr);   // standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CSendDlg)
@@ -55,7 +55,7 @@ public:
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CSendDlg)
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
 // Implementation

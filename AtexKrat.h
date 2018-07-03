@@ -47,7 +47,7 @@ public:
     enum { IDD = IDD_KRATCALC };
 
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 
     DECLARE_MESSAGE_MAP()
 public:
@@ -58,7 +58,7 @@ public:
     afx_msg void OnDefineModelid();
 private:
     BOOL bCalcMode;                //tryb kalkulatora czy rêczny
-    static const double TOLERANCE; //wzgledna tolerancja rozmiaru
+    static const double TOLERANCE; // wzgledna tolerancja rozmiaru
     CComboBox m_kratycombo;
     CString m_sizex;
     CString m_sizey;

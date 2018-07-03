@@ -19,7 +19,7 @@ CDrawObj::CDrawObj(const CRect& position) noexcept : CDrawObj::CDrawObj()
     m_position = position;
 }
 
-void CDrawObj::DrawNapis(CDC *pDC, LPCTSTR napis, int cnt, LPRECT r, UINT format, int bkMode)
+void CDrawObj::DrawNapis(CDC* pDC, LPCTSTR napis, int cnt, LPRECT r, UINT format, int bkMode)
 {
     const auto saved = pDC->SetBkMode(bkMode);
     if (vscale == 1) 
@@ -79,7 +79,7 @@ void CDrawObj::Remove()
     delete this;
 }
 
-void CDrawObj::DrawTracker(CDC *pDC, TrackerState state) const
+void CDrawObj::DrawTracker(CDC* pDC, TrackerState state) const
 {
     ASSERT_VALID(this);
 
@@ -328,7 +328,7 @@ void CDrawObj::ChangeKolor(UINT new_kolor)
     Invalidate();
 }
 
-void CDrawObj::DrawKolor(CDC *pDC, const CRect& pos) const
+void CDrawObj::DrawKolor(CDC* pDC, const CRect& pos) const
 {
     CRect r1, r2, r3;
     if (kolor == ColorId::full) {

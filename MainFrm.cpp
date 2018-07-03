@@ -12,9 +12,9 @@ IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWndEx)
 BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
     //{{AFX_MSG_MAP(CMainFrame)
     ON_WM_CREATE()
-    ON_COMMAND(ID_VIEW_CUST_TLB, OnToolBarCustomize)
+    ON_COMMAND(ID_VIEW_CUST_TLB, &CMainFrame::OnToolBarCustomize)
     ON_COMMAND(ID_FULLSCREEN, &CMainFrame::OnFullScreen)
-    ON_REGISTERED_MESSAGE(AFX_WM_RESETTOOLBAR, OnToolBarReset)
+    ON_REGISTERED_MESSAGE(AFX_WM_RESETTOOLBAR, &CMainFrame::OnToolBarReset)
     //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -119,7 +119,7 @@ void inline CMainFrame::StoreComboHandlers()
     m_CaptionEditBox = cbHeadCombo->GetEditCtrl();
 }
 
-BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd *pParentWnd, CCreateContext* pContext)
+BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParentWnd, CCreateContext* pContext)
 {
     BOOL bRet = CMDIFrameWndEx::LoadFrame(nIDResource, dwDefaultStyle, pParentWnd, pContext);
 

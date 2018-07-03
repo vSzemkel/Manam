@@ -48,7 +48,7 @@ void CQueView::OnUpdate(CView * /*pSender*/, LPARAM lHint, CObject * /*pHint*/)
     }
 }
 
-void CQueView::OnPrepareDC(CDC *pDC, CPrintInfo *pInfo)
+void CQueView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo)
 {
     CScrollView::OnPrepareDC(pDC, pInfo);
     pDC->SetMapMode(MM_ANISOTROPIC);
@@ -56,9 +56,9 @@ void CQueView::OnPrepareDC(CDC *pDC, CPrintInfo *pInfo)
     pDC->SetWindowExt(CSize(100 * vscale, -100 * vscale));
 }
 
-void CQueView::OnDraw(CDC *pDC)
+void CQueView::OnDraw(CDC* pDC)
 {
-    CDrawDoc *pDoc = GetDocument();
+    CDrawDoc* pDoc = GetDocument();
     ASSERT_VALID(pDoc);
 
     CBitmap bitmap;
@@ -199,7 +199,7 @@ void CQueView::OnMouseMove(UINT nFlags, CPoint point)
         theApp.unQueing = FALSE;
     }
 
-    CDrawObj *pObj = GetDocument()->ObjectAtQue(point);
+    CDrawObj* pObj = GetDocument()->ObjectAtQue(point);
     ((CMainFrame *)AfxGetMainWnd())->SetStatusBarInfo(pObj ? pObj->info : "");
 }
 

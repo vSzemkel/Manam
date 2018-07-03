@@ -35,15 +35,15 @@ public:
 
     CFile trg;
     CFileException fileErr;
-    CGenEpsInfoDlg *dlg;
+    CGenEpsInfoDlg* dlg;
 
-    uintmap renumMap;		// numerowi obiektu z pliku Ÿród³owego przyporz¹dkowuje nowy numer z pliku wynikowego
+    uintmap renumMap;         // numerowi obiektu z pliku Ÿród³owego przyporz¹dkowuje nowy numer z pliku wynikowego
 
-    int	  iPdfTokenSlot;		// numer aktywnego buforu, w którym zwraca siê wynik funkcji pdftok
-    bool  bSearchInPdfToken;	// wskaŸnik trybu dzia³ania funkcji pdftok - gdy ustawiony, to nie wywo³uje strtok
-    char  cNextPdfToken[256];	// tablica, do której pdftok przepisuje kontynuacjê znalezionego tokenu, ma rozmiar maxTokenSize
-    char  cPdfToken[5][256];	// tablica, do której pdftok przepisuje znaleziony token, ma rozmiar maxTokenSize, jest ich 5 by utworzy³y bufor cykliczny, nastêpne 4 wywo³ania nie zamazuj¹ wyniku
-    char* pdftok(char *str);   // zachowuje siê podobnie jak strtok, ale rozpoznaje tokeny PDF nie rozdzielone niczym - przepisuje je do bufora cPdfToken w takim przypadku
+    int	  iPdfTokenSlot;      // numer aktywnego buforu, w którym zwraca siê wynik funkcji pdftok
+    bool  bSearchInPdfToken;  // wskaŸnik trybu dzia³ania funkcji pdftok - gdy ustawiony, to nie wywo³uje strtok
+    char  cNextPdfToken[256]; // tablica, do której pdftok przepisuje kontynuacjê znalezionego tokenu, ma rozmiar maxTokenSize
+    char  cPdfToken[5][256];  // tablica, do której pdftok przepisuje znaleziony token, ma rozmiar maxTokenSize, jest ich 5 by utworzy³y bufor cykliczny, nastêpne 4 wywo³ania nie zamazuj¹ wyniku
+    char* pdftok(char *str);  // zachowuje siê podobnie jak strtok, ale rozpoznaje tokeny PDF nie rozdzielone niczym - przepisuje je do bufora cPdfToken w takim przypadku
 
     char* cStore;
     BOOL GenProlog();

@@ -81,7 +81,7 @@ void CSplitFrame::OnShowDtls()
     pView->OpenSelected();
 }
 
-void CSplitFrame::OnUpdateShowDtls(CCmdUI *pCmdUI)
+void CSplitFrame::OnUpdateShowDtls(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(!disableMenu && ((CDrawView*)m_Splitter2.GetPane(0, 0))->m_selection.size() == 1);
 }

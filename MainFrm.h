@@ -13,7 +13,7 @@ class CMainFrame : public CMDIFrameWndEx
 public:
     CMainFrame();
     ~CMainFrame() override;
-    BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd *pParentWnd = nullptr, CCreateContext* pContext = nullptr) override;
+    BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = nullptr, CCreateContext* pContext = nullptr) override;
 #ifdef _DEBUG
     void AssertValid() const override;
     void Dump(CDumpContext& dc) const override;

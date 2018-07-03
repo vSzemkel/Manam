@@ -39,7 +39,7 @@ class CDrawDoc final : public COleDocument
     static std::vector<CBrush*> brushe;             // cache pêdzli u¿ywanych w widoku makiety
 
     static void IniKolorTable();
-    static void DrawPageCross(CDC *pDC);
+    static void DrawPageCross(CDC* pDC);
     static int ValidKolor(const CString& k) noexcept;
     static int GetIdxfromSpotID(UINT spot_id) noexcept;
     static CBrush* GetSpotBrush(int i) noexcept;
@@ -72,16 +72,16 @@ class CDrawDoc final : public COleDocument
     void AddFind(long nrAtex, long nrSpacer, LPCTSTR nazwa);	// wyszukiwanie og³oszeñ
     void DerivePages(CDrawPage *pPage);			// dziedziczenie stron
 
-    void Draw(CDC *pDC, CDrawView *pView);
-    void DrawQue(CDC *pDC, CQueView *pView);
-    void Print(CDC *pDC);
-    void PrintPage(CDC *pDC, CDrawPage *pPage);
-    void Add(CDrawObj *pObj);
+    void Draw(CDC* pDC, CDrawView *pView);
+    void DrawQue(CDC* pDC, CQueView *pView);
+    void Print(CDC* pDC);
+    void PrintPage(CDC* pDC, CDrawPage *pPage);
+    void Add(CDrawObj* pObj);
     void AddQue(CDrawAdd *pObj);
     void RemoveQue(CDrawAdd *pObj);
     void RemoveFromHead(int n);
     void RemoveFromTail(int n);
-    void Remove(CDrawObj *pObj);
+    void Remove(CDrawObj* pObj);
     int GetAdPosition(const CDrawAdd *pAdd) const;
     CDrawObj *ObjectAt(const CPoint &point) const;
     CDrawAdd* ObjectAtQue(const CPoint& point) const;
@@ -122,7 +122,7 @@ class CDrawDoc final : public COleDocument
 
     void OnFileInfo();
     void OnFileDrzewo();
-    void PrintInfo(CDC *pDC, int max_n, int wspol_na_str);
+    void PrintInfo(CDC* pDC, int max_n, int wspol_na_str);
 
     void OnAdd4Pages();
     BOOL Add4Pages();									// dodaje strony tzn obiekty
@@ -193,27 +193,27 @@ protected:
     afx_msg void OnAddFind();
     afx_msg void OnAddSynchronize();
     afx_msg void OnEditFindNext();
-    afx_msg void OnUpdateEditFindNext(CCmdUI *pCmdUI);
+    afx_msg void OnUpdateEditFindNext(CCmdUI* pCmdUI);
     afx_msg void OnFileSave();
-    afx_msg void OnDisableMenuRO(CCmdUI *pCmdUI);
-    afx_msg void OnDisableGrbNotSaved(CCmdUI *pCmdUI);
+    afx_msg void OnDisableMenuRO(CCmdUI* pCmdUI);
+    afx_msg void OnDisableGrbNotSaved(CCmdUI* pCmdUI);
     afx_msg void OnSyncpow();
-    afx_msg void OnUpdateSyncpow(CCmdUI *pCmdUI);
+    afx_msg void OnUpdateSyncpow(CCmdUI* pCmdUI);
     afx_msg void OnDelremarks();
     afx_msg void OnCheckrep();
-    afx_msg void OnDisableDB(CCmdUI *pCmdUI);
+    afx_msg void OnDisableDB(CCmdUI* pCmdUI);
     afx_msg void OnEpsdate();
-    afx_msg void OnUpdateEpsdata(CCmdUI *pCmdUI);
+    afx_msg void OnUpdateEpsdata(CCmdUI* pCmdUI);
     afx_msg void OnPagederv();
     afx_msg void OnInsertGrzbiet();
     afx_msg void OnSyncDrv();
     afx_msg void OnSetPagina();
     afx_msg void OnSetDea();
-    afx_msg void OnUpdateSetDea(CCmdUI *pCmdUI);
+    afx_msg void OnUpdateSetDea(CCmdUI* pCmdUI);
     afx_msg void OnShowTime();
     afx_msg void OnShowAcDeadline();
-    afx_msg void OnUpdateShowTime(CCmdUI *pCmdUI);
-    afx_msg void OnUpdateShowAcDeadline(CCmdUI *pCmdUI);
+    afx_msg void OnUpdateShowTime(CCmdUI* pCmdUI);
+    afx_msg void OnUpdateShowAcDeadline(CCmdUI* pCmdUI);
     afx_msg void OnKratCalc();
     afx_msg void OnAccGrb();
     afx_msg void OnChangeCaptions();

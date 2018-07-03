@@ -637,7 +637,7 @@ void CDrawAdd::SetPosition(int fizp, int px, int py, int sx, int sy)
     auto pPage = m_pDocument->GetPage(fizp);
     sx = min(szpalt_x, sx); px = min(px, szpalt_x + 1 - sx);
     sy = min(szpalt_y, sy); py = min(py, szpalt_y + 1 - sy);
-    BOOL ok;
+    bool ok;
     if (pPage == nullptr)
         ok = (fizp == 0);
     else
@@ -983,9 +983,9 @@ void CDrawAdd::ParseLogpage(TCHAR* op_zew, TCHAR* sekcja, TCHAR* op_sekcji, int*
     logpage.MakeUpper();
     ::StringCchCopy(lp, 50, logpage);
 
-    //wczytaj op_zew jesli jest
+    // wczytaj op_zew jesli jest
     ch = lp[i];
-    op_zew[0] = TCHAR(0);
+    op_zew[0] = TCHAR{0};
     while (ch == _T(' ') || ch == _T('<') || ch == _T('=') || ch == _T('>')) {
         if (ch != _T(' ')) {
             op_zew[0] = ch;
@@ -994,7 +994,7 @@ void CDrawAdd::ParseLogpage(TCHAR* op_zew, TCHAR* sekcja, TCHAR* op_sekcji, int*
         ch = lp[++i];
     }
 
-    //wczytaj sekcje jeœli jest okreœlona
+    // wczytaj sekcje jeœli jest okreœlona
     if (ch != _T('#') && !((ch == _T('L') || ch == _T('P')) && !_istalpha(lp[i + 1]))) { //sekcja okreslona
         j = 0;
         while ((int8_t)ch < 0 || isalnum((int)ch) || ch == _T('/')) { //ch<0 to polski znak
@@ -1003,7 +1003,7 @@ void CDrawAdd::ParseLogpage(TCHAR* op_zew, TCHAR* sekcja, TCHAR* op_sekcji, int*
         }
         sekcja[j] = TCHAR(0);
 
-        //wczytaj op_sekcji
+        // wczytaj op_sekcji
         while (ch != TCHAR(0) && ch != _T('<') && ch != _T('=') && ch != _T('>') && ch != _T('L') && ch != _T('P') && ch != _T('#'))
             ch = lp[++i];
         if (ch == TCHAR(0) || ch == _T('#') || ch == _T('L') || ch == _T('P')) op_sekcji[0] = TCHAR(0);
@@ -1012,7 +1012,7 @@ void CDrawAdd::ParseLogpage(TCHAR* op_zew, TCHAR* sekcja, TCHAR* op_sekcji, int*
             op_sekcji[1] = TCHAR(0);
         }
 
-        //wczytaj nr_sek
+        // wczytaj nr_sek
         if (op_sekcji[0] != TCHAR(0)) {
             j = 0;
             while (ch != _T('#') && ch != TCHAR(0) && !_istdigit(ch))
@@ -1034,15 +1034,15 @@ void CDrawAdd::ParseLogpage(TCHAR* op_zew, TCHAR* sekcja, TCHAR* op_sekcji, int*
         *nr_sek = 0;
     }
 
-    //wczytaj lp
+    // wczytaj lp
     while (ch != '\0' && ch != 'L' && ch != 'P' && ch != '#')
         ch = lp[++i];
-    if (ch != '#' && ch != '\0') { //wczytaj op_lp
+    if (ch != '#' && ch != '\0') { // wczytaj op_lp
         pl[0] = ch;
         pl[1] = '\0';
         while (ch != '#' && ch != '\0' && ch != '<' && ch != '=' && ch != '>')
             ch = lp[++i];
-        if (ch != '#' && ch != '\0') { //wczytaj nr_lp
+        if (ch != '#' && ch != '\0') { // wczytaj nr_lp
             op_pl[0] = ch;
             op_pl[1] = '\0';
             while (ch != '#' && ch != '\0' && !_istdigit(ch))
@@ -1375,7 +1375,7 @@ postaw:
     return true;
 }
 
-void CDrawAdd::SetDotM(BOOL setFlag)
+void CDrawAdd::SetDotM(bool setFlag)
 {
     int p = this->wersja.Find('m');
     if (setFlag) {

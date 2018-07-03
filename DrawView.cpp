@@ -127,32 +127,32 @@ CDrawView::CDrawView() noexcept : m_zoomNum(theApp.m_initZoom, theApp.m_initZoom
 {
 }
 
-int CDrawView::OnDisableMenuInt(CCmdUI *pCmdUI)
+int CDrawView::OnDisableMenuInt(CCmdUI* pCmdUI)
 {
     /* vu: jesli zwroci 0 to ustawienie statusu odbedzie sie w funkcji wolajacej */
     if (disableMenu) pCmdUI->Enable(FALSE);
     return disableMenu;
 }
 
-void CDrawView::OnDisableMenu(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu); }
+void CDrawView::OnDisableMenu(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu); }
 
-void CDrawView::OnDisableMenuRDBMS(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && theApp.isRDBMS); }
+void CDrawView::OnDisableMenuRDBMS(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && theApp.isRDBMS); }
 
-void CDrawView::OnDisableMenuLIB(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB); }
+void CDrawView::OnDisableMenuLIB(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB); }
 
-void CDrawView::OnDisableMenuDEAL(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && !(theApp.grupa & (UserRole::dea))); }
+void CDrawView::OnDisableMenuDEAL(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && !(theApp.grupa & (UserRole::dea))); }
 
-void CDrawView::OnDisableMenuSTU(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && (theApp.grupa & UserRole::stu)); }
+void CDrawView::OnDisableMenuSTU(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && (theApp.grupa & UserRole::stu)); }
 
-void CDrawView::OnDisableMenuAdSel(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && m_selection.size() == 1 && dynamic_cast<CDrawAdd *>(m_selection.front())); }
+void CDrawView::OnDisableMenuAdSel(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && m_selection.size() == 1 && dynamic_cast<CDrawAdd *>(m_selection.front())); }
 
-void CDrawView::OnDisableMenuAdPageSel(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && m_selection.size() == 1 && (dynamic_cast<CDrawAdd *>(m_selection.front()) || dynamic_cast<CDrawPage *>(m_selection.front()))); }
+void CDrawView::OnDisableMenuAdPageSel(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && m_selection.size() == 1 && (dynamic_cast<CDrawAdd *>(m_selection.front()) || dynamic_cast<CDrawPage *>(m_selection.front()))); }
 
-void CDrawView::OnDisableMenuAdSelOPI(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && !theApp.isOpiMode && m_selection.size() == 1 && dynamic_cast<CDrawAdd *>(m_selection.front())); }
+void CDrawView::OnDisableMenuAdSelOPI(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && !theApp.isOpiMode && m_selection.size() == 1 && dynamic_cast<CDrawAdd *>(m_selection.front())); }
 
-void CDrawView::OnDisableMenuAdSelSTU(CCmdUI *pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && (theApp.grupa & UserRole::stu) && m_selection.size() == 1 && dynamic_cast<CDrawAdd *>(m_selection.front())); }
+void CDrawView::OnDisableMenuAdSelSTU(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && (theApp.grupa & UserRole::stu) && m_selection.size() == 1 && dynamic_cast<CDrawAdd *>(m_selection.front())); }
 
-BOOL CDrawView::PreCreateWindow(CREATESTRUCT &cs)
+BOOL CDrawView::PreCreateWindow(CREATESTRUCT& cs)
 {
     ASSERT(cs.style & WS_CHILD);
     if (cs.lpszClass == nullptr)
@@ -160,7 +160,7 @@ BOOL CDrawView::PreCreateWindow(CREATESTRUCT &cs)
     return TRUE;
 }
 
-void CDrawView::OnActivateView(BOOL bActivate, CView *pActiveView, CView *pDeactiveView)
+void CDrawView::OnActivateView(BOOL bActivate, CView* pActiveView, CView* pDeactiveView)
 {
     CView::OnActivateView(bActivate, pActiveView, pDeactiveView);
 
@@ -187,7 +187,7 @@ void CDrawView::OnActivateView(BOOL bActivate, CView *pActiveView, CView *pDeact
     }
 }
 
-BOOL CDrawView::OnSetCursor(CWnd *pWnd, UINT nHitTest, UINT message)
+BOOL CDrawView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 
     if (CDrawTool::c_drawShape == DrawShape::add || CDrawTool::c_drawShape == DrawShape::opis)
@@ -215,7 +215,7 @@ BOOL CDrawView::OnSetCursor(CWnd *pWnd, UINT nHitTest, UINT message)
 
 /////////////////////////////////////////////////////////////////////////////
 // CDrawView drawing
-void CDrawView::InvalObj(CDrawObj *pObj)
+void CDrawView::InvalObj(CDrawObj* pObj)
 {
     CRect rect = pObj->m_position;
     DocToClient(rect);
@@ -232,7 +232,7 @@ void CDrawView::InvalObj(CDrawObj *pObj)
     InvalidateRect(rect, TRUE);
 }
 
-void CDrawView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject *pHint)
+void CDrawView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
     switch (lHint) {
         case HINT_UPDATE_WINDOW:   // redraw entire window
@@ -273,7 +273,7 @@ void CDrawView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject *pHint)
     }
 }
 
-void CDrawView::OnPrepareDC(CDC *pDC, CPrintInfo *pInfo)
+void CDrawView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo)
 {
     if (pInfo && pInfo->GetMaxPage() == 1 && m_pagesPrinted == PRINT_DOC && theApp.GetProfileInt(_T("General"), _T("ForceLandscape"), 0) > 0) {
         LPDEVMODE dm = SetLandscape();
@@ -310,9 +310,9 @@ BOOL CDrawView::OnScrollBy(CSize sizeScroll, BOOL bDoScroll)
     return TRUE;
 }
 
-void CDrawView::OnDraw(CDC *pDC)
+void CDrawView::OnDraw(CDC* pDC)
 {
-    CDrawDoc *pDoc = GetDocument();
+    CDrawDoc* pDoc = GetDocument();
     ASSERT_VALID(pDoc);
 
     CBitmap bitmap;
@@ -363,7 +363,7 @@ void CDrawView::OnDraw(CDC *pDC)
     }
 }
 
-void CDrawView::Remove(CDrawObj *pObj)
+void CDrawView::Remove(CDrawObj* pObj)
 {
     auto iter = std::find(std::begin(m_selection), std::end(m_selection), pObj);
     if (iter != std::end(m_selection))
@@ -387,7 +387,7 @@ void CDrawView::SetPageSize()
 /////////////////////////////////////////////////////////////////////////////
 // OLE Client support and commands
 
-BOOL CDrawView::IsSelected(const CObject *pDocItem) const
+BOOL CDrawView::IsSelected(const CObject* pDocItem) const
 {
     return std::end(m_selection) != std::find(std::begin(m_selection), std::end(m_selection), const_cast<CObject *>(pDocItem));
 }
@@ -414,13 +414,13 @@ void CDrawView::OnCancelEdit()
     CDrawTool::c_drawShape = DrawShape::select;
 }
 
-void CDrawView::OnSetFocus(CWnd *pOldWnd)
+void CDrawView::OnSetFocus(CWnd* pOldWnd)
 {
     COleClientItem *pActiveItem = GetDocument()->GetInPlaceActiveItem(this);
     if (pActiveItem != nullptr &&
         pActiveItem->GetItemState() == COleClientItem::activeUIState) {
         // need to set focus to this item if it is in the same view
-        CWnd *pWnd = pActiveItem->GetInPlaceWindow();
+        CWnd* pWnd = pActiveItem->GetInPlaceWindow();
         if (pWnd != nullptr) {
             pWnd->SetFocus();
             return;
@@ -468,7 +468,7 @@ void CDrawView::DocToClient(CRect& rect)
     rect.NormalizeRect();
 }
 
-void CDrawView::Select(CDrawObj *pObj, BOOL bAdd)
+void CDrawView::Select(CDrawObj* pObj, BOOL bAdd)
 {
     if (!bAdd) {
         OnUpdate(nullptr, HINT_UPDATE_SELECTION, nullptr);
@@ -521,7 +521,7 @@ void CDrawView::OpenSelected()
         m_selection.front()->OnOpen(this);
 }
 
-void CDrawView::Deselect(CDrawObj *pObj)
+void CDrawView::Deselect(CDrawObj* pObj)
 {
     auto iter = std::find(begin(m_selection), end(m_selection), pObj);
     if (iter != end(m_selection)) {
@@ -541,7 +541,7 @@ void CDrawView::CloneSelection()
 
 void CDrawView::UpdateActiveItem()
 {
-    COleClientItem *pActiveItem = GetDocument()->GetInPlaceActiveItem(this);
+    COleClientItem* pActiveItem = GetDocument()->GetInPlaceActiveItem(this);
     if (pActiveItem != nullptr &&
         pActiveItem->GetItemState() == COleClientItem::activeUIState) {
         // this will update the item rectangles by calling
@@ -677,13 +677,13 @@ void CDrawView::OnDrawTool(UINT tool)
         CDrawTool::c_drawShape = selected_tool;
 }
 
-void CDrawView::OnUpdateDrawTool(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateDrawTool(CCmdUI* pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI))
         pCmdUI->SetRadio(CDrawTool::c_drawShape == static_cast<DrawShape>(pCmdUI->m_nID));
 }
 
-void CDrawView::OnUpdateDrawAdd(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateDrawAdd(CCmdUI* pCmdUI)
 {
     if (GetDocument()->isLIB)
         pCmdUI->Enable(FALSE);
@@ -691,7 +691,7 @@ void CDrawView::OnUpdateDrawAdd(CCmdUI *pCmdUI)
         OnUpdateDrawTool(pCmdUI);
 }
 
-void CDrawView::OnUpdateSingleSelect(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateSingleSelect(CCmdUI* pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI))
         pCmdUI->Enable(m_selection.size() == 1);
@@ -703,35 +703,35 @@ void CDrawView::OnEditSelectAll()
         Select(pObj, TRUE);
 }
 
-void CDrawView::OnUpdateEditSelectAll(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateEditSelectAll(CCmdUI* pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI)) pCmdUI->Enable(!GetDocument()->m_objects.empty());
 }
 
 void CDrawView::OnEditClear()
 {
-    BOOL to_tell = FALSE;
+    bool to_tell{false};
     // update all the views before the selection goes away
     OnUpdate(nullptr, HINT_UPDATE_SELECTION, nullptr);
 
     // now remove the selection from the document
     for (auto& pObj : m_selection) {
-        CDrawAdd *pAdd = dynamic_cast<CDrawAdd *>(pObj);
+        auto pAdd = dynamic_cast<CDrawAdd *>(pObj);
         if (pAdd) {
             if (pAdd->flags.derived) continue;
             if (pAdd->m_add_xx > 0) {
                 AfxMessageBox(_T("Wska¿ emisje przeznaczone do usuniêcia"), MB_ICONINFORMATION | MB_OK);
                 continue;
             }
-            to_tell = TRUE;
+            to_tell = true;
         } else {
-            CDrawPage *pPage = dynamic_cast<CDrawPage *>(pObj);
+            auto pPage = dynamic_cast<CDrawPage *>(pObj);
             if (pPage) {
                 if (pPage->m_dervlvl == DervType::adds && !pPage->m_adds.empty())
                     continue;
                 if (std::any_of(pPage->m_adds.cbegin(), pPage->m_adds.cend(), [](auto pAdd) noexcept { return pAdd->flags.derived > 0; }))
                     continue;
-                to_tell = TRUE;
+                to_tell = true;
             }
         }
         
@@ -745,7 +745,7 @@ void CDrawView::OnEditClear()
         GetDocument()->UpdateAllViews(this, HINT_DELETE_FROM_GRID, nullptr); //zeby grid zareagowal
 }
 
-void CDrawView::OnUpdateAnySelect(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateAnySelect(CCmdUI* pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI)) pCmdUI->Enable(!m_selection.empty());
 }
@@ -762,7 +762,7 @@ void CDrawView::OnViewSpaceLocks()
     Invalidate(FALSE);
 }
 
-void CDrawView::OnUpdateViewSpaceLocks(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateViewSpaceLocks(CCmdUI* pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI)) pCmdUI->SetCheck(((CMainFrame *)AfxGetMainWnd())->show_spacelocks);
 }
@@ -773,7 +773,7 @@ void CDrawView::OnImportOpcje()
     Invalidate(FALSE);
 }
 
-void CDrawView::OnUpdateImportOpcje(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateImportOpcje(CCmdUI* pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI)) {
         if (GetDocument()->isLIB) pCmdUI->Enable(FALSE);
@@ -788,8 +788,8 @@ BOOL CDrawView::OnEraseBkgnd(CDC* /*unused*/)
 
 void CDrawView::OnObjectMoveForward()
 {
-    CDrawDoc *pDoc = GetDocument();
-    CDrawObj *pObj = m_selection.front();
+    CDrawDoc* pDoc = GetDocument();
+    CDrawObj* pObj = m_selection.front();
     auto pObjects = &pDoc->m_objects;
 
     auto pos = std::find(pObjects->begin(), pObjects->end(), pObj);
@@ -807,8 +807,8 @@ void CDrawView::OnObjectMoveForward()
 
 void CDrawView::OnObjectMoveBack()
 {
-    CDrawDoc *pDoc = GetDocument();
-    CDrawObj *pObj = m_selection.front();
+    CDrawDoc* pDoc = GetDocument();
+    CDrawObj* pObj = m_selection.front();
     auto pObjects = &pDoc->m_objects;
 
     auto pos = std::find(pObjects->begin(), pObjects->end(), pObj);
@@ -826,8 +826,8 @@ void CDrawView::OnObjectMoveBack()
 
 void CDrawView::OnObjectMoveToFront()
 {
-    CDrawDoc *pDoc = GetDocument();
-    CDrawObj *pObj = m_selection.front();
+    CDrawDoc* pDoc = GetDocument();
+    CDrawObj* pObj = m_selection.front();
     auto pObjects = &pDoc->m_objects;
 
     auto pos = std::find(pObjects->begin(), pObjects->end(), pObj);
@@ -843,8 +843,8 @@ void CDrawView::OnObjectMoveToFront()
 
 void CDrawView::OnObjectMoveToBack()
 {
-    CDrawDoc *pDoc = GetDocument();
-    CDrawObj *pObj = m_selection.front();
+    CDrawDoc* pDoc = GetDocument();
+    CDrawObj* pObj = m_selection.front();
     auto pObjects = &pDoc->m_objects;
 
     auto pos = std::find(pObjects->begin(), pObjects->end(), pObj);
@@ -882,11 +882,11 @@ void CDrawView::OnEditCopy()
     pDataSource->SetClipboard();
 }
 
-void CDrawView::Paste(COleDataObject &dataObject)
+void CDrawView::Paste(COleDataObject& dataObject)
 {
     // get file refering to clipboard data
     std::unique_ptr<CFile> pFile(dataObject.GetFileData(m_cfDraw));
-    if (pFile.get() == nullptr)
+    if (pFile == nullptr)
         return;
 
     // connect the file to the archive
@@ -902,7 +902,7 @@ void CDrawView::Paste(COleDataObject &dataObject)
     ar.Close();
 }
 
-void CDrawView::OnUpdateEditCopy(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateEditCopy(CCmdUI* pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI)) pCmdUI->Enable(!m_selection.empty());
 }
@@ -913,7 +913,7 @@ void CDrawView::OnEditCut()
     OnEditClear();
 }
 
-void CDrawView::OnUpdateEditCut(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateEditCut(CCmdUI* pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI)) pCmdUI->Enable(!m_selection.empty());
 }
@@ -958,7 +958,7 @@ void CDrawView::OnEditPaste()
         GetDocument()->UpdateAllViews(this, HINT_EDIT_PASTE, nullptr); // dla gridu by dodac
 }
 
-void CDrawView::OnUpdateEditPaste(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateEditPaste(CCmdUI* pCmdUI)
 {
     // determine if private or standard OLE formats are on the clipboard
     COleDataObject dataObject;
@@ -994,7 +994,7 @@ LPDEVMODE CDrawView::SetLandscape()
     return dm;
 }
 
-BOOL CDrawView::OnPreparePrinting(CPrintInfo *pInfo)
+BOOL CDrawView::OnPreparePrinting(CPrintInfo* pInfo)
 {
     // default preparation
     const int format = theApp.colsPerPage == 1 ? A4 : A3;
@@ -1028,9 +1028,9 @@ void CDrawView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
     GetDocument()->UpdateAllViews(nullptr);
 };
 
-void CDrawView::OnPrint(CDC *pDC, CPrintInfo *pInfo)
+void CDrawView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 {
-    CDrawDoc *pDoc = GetDocument();
+    CDrawDoc* pDoc = GetDocument();
     ASSERT_VALID(pDoc);
     int pc, wspol = theApp.colsPerPage;
     if (wspol == 2 || m_pagesPrinted != PRINT_PAGE)
@@ -1116,7 +1116,7 @@ void CDrawView::OnEditProperties()
     }
 }
 
-void CDrawView::OnUpdateEditProperties(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateEditProperties(CCmdUI* pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI))
         pCmdUI->Enable(m_selection.size() == 1 && CDrawTool::c_drawShape == DrawShape::select);
@@ -1203,7 +1203,7 @@ void CDrawView::OnViewZoomN(UINT nID)
     SetZoomFactor(zoomNum, zoomDenom);
 }
 
-void CDrawView::OnUpdateViewZoomN(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateViewZoomN(CCmdUI* pCmdUI)
 {
     if (pCmdUI->m_nID != ID_VIEW_ZOOMCUSTOM) {
         const int iZoomFactor = rgiZoomFactor[pCmdUI->m_nID - ID_VIEW_ZOOM100];
@@ -1240,7 +1240,7 @@ void CDrawView::OnDrawMakStrony()
     pDoc->UpdateAllViews(nullptr);
 }
 
-void CDrawView::OnUpdateDrawMakStrony(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateDrawMakStrony(CCmdUI* pCmdUI)
 {
     if (OnDisableMenuInt(pCmdUI)) return;
     if (GetDocument()->isLIB || m_selection.size() != 1) {
@@ -1252,7 +1252,7 @@ void CDrawView::OnUpdateDrawMakStrony(CCmdUI *pCmdUI)
     pCmdUI->Enable(pPage && !pPage->niemakietuj);
 }
 
-void CDrawView::OnUpdateVuCkMakietowanie(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateVuCkMakietowanie(CCmdUI* pCmdUI)
 {
     pCmdUI->SetCheck(drawErrorBoxes);
     OnDisableMenu(pCmdUI);
@@ -1276,13 +1276,13 @@ void CDrawView::OnViewAdddesc()
 
 void CDrawView::OnDrawOpcje() { GetDocument()->OnDrawOpcje(); }
 
-void CDrawView::OnUpdateViewCzasobow(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateViewCzasobow(CCmdUI* pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI))
         pCmdUI->SetCheck(GetDocument()->swCZV == ToolbarMode::czas_obow);
 }
 
-void CDrawView::OnUpdateViewStudio(CCmdUI *pCmdUI)
+void CDrawView::OnUpdateViewStudio(CCmdUI* pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI))
         pCmdUI->SetCheck(GetDocument()->swCZV == ToolbarMode::tryb_studia);

@@ -23,7 +23,7 @@ CDrawOpis::CDrawOpis(const CRect& position, const TCHAR *tx) noexcept :
     info = tx;
 }
 
-void CDrawOpis::DrawInternal(CDC *pDC, CRect& rect) const
+void CDrawOpis::DrawInternal(CDC* pDC, CRect& rect) const
 {
     auto pOldPen = (CPen*)pDC->SelectStockObject(BLACK_PEN);
     auto pOldFont = pDC->SelectObject(&m_pDocument->m_pagefont);
@@ -64,7 +64,7 @@ void CDrawOpis::DrawInternal(CDC *pDC, CRect& rect) const
         pDC->SetTextColor(0);
 }
 
-void CDrawOpis::Draw(CDC *pDC)
+void CDrawOpis::Draw(CDC* pDC)
 {
     ASSERT_VALID(this);
 
@@ -74,7 +74,7 @@ void CDrawOpis::Draw(CDC *pDC)
 
 ////////////////////////////////////////////////////////
 /////////////// PRINT
-void CDrawOpis::Print(CDC *pDC)
+void CDrawOpis::Print(CDC* pDC)
 {
     ASSERT_VALID(this);
 
@@ -95,7 +95,7 @@ void CDrawOpis::Serialize(CArchive& ar)
         ar << m_Scale;
 }
 
-CDrawObj* CDrawOpis::Clone(CDrawDoc *pDoc) const
+CDrawObj* CDrawOpis::Clone(CDrawDoc* pDoc) const
 {
     ASSERT_VALID(this);
 

@@ -28,7 +28,7 @@ CGridFrm::CGridFrm() : CFormView(CGridFrm::IDD), lcPubList(this)
     showLastAdnoUsed = m_bInitialized = m_bEventLockout = FALSE;
 }
 
-void CGridFrm::DoDataExchange(CDataExchange *pDX)
+void CGridFrm::DoDataExchange(CDataExchange* pDX)
 {
     CFormView::DoDataExchange(pDX);
     //{{AFX_DATA_MAP(CGridFrm)
@@ -39,14 +39,14 @@ void CGridFrm::DoDataExchange(CDataExchange *pDX)
 
 BEGIN_MESSAGE_MAP(CGridFrm, CFormView)
     //{{AFX_MSG_MAP(CGridFrm)
-    ON_COMMAND_RANGE(ID_SORT_LP, ID_SORT_WARLOG, OnSort)
-    ON_UPDATE_COMMAND_UI_RANGE(ID_SORT_LP, ID_SORT_WARLOG, OnUpdateSort)
-    ON_COMMAND(IDM_SHOWREPT, OnShowrept)
-    ON_UPDATE_COMMAND_UI(IDM_SHOWREPT, OnUpdateShowrept)
+    ON_COMMAND_RANGE(ID_SORT_LP, ID_SORT_WARLOG, &CGridFrm::OnSort)
+    ON_UPDATE_COMMAND_UI_RANGE(ID_SORT_LP, ID_SORT_WARLOG, &CGridFrm::OnUpdateSort)
+    ON_COMMAND(IDM_SHOWREPT, &CGridFrm::OnShowrept)
+    ON_UPDATE_COMMAND_UI(IDM_SHOWREPT, &CGridFrm::OnUpdateShowrept)
     ON_COMMAND(ID_FILE_PRINT, CView::OnFilePrint)
-    ON_COMMAND(ID_FILE_PRINT_PREVIEW, OnFilePrintPreview)
-    ON_NOTIFY(NM_DBLCLK, IDC_PUBLIST, OnDbClick)
-    ON_NOTIFY(LVN_ITEMCHANGED, IDC_PUBLIST, OnChanged)
+    ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CGridFrm::OnFilePrintPreview)
+    ON_NOTIFY(NM_DBLCLK, IDC_PUBLIST, &CGridFrm::OnDbClick)
+    ON_NOTIFY(LVN_ITEMCHANGED, IDC_PUBLIST, &CGridFrm::OnChanged)
     //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -68,14 +68,14 @@ void CGridFrm::Dump(CDumpContext& dc) const
 /////////////////////////////////////////////////////////////////////////////
 // CGridFrm message handlers
 
-BOOL CGridFrm::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd *pParentWnd, UINT nID, CCreateContext* pContext)
+BOOL CGridFrm::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext)
 {
     BOOL ret = CFormView::Create(lpszClassName, lpszWindowName, dwStyle, rect, pParentWnd, nID, pContext);
     OnInitialUpdate();
     return ret;
 }
 
-void CGridFrm::OnUpdate(CView *pSender, LPARAM lHint, CObject *pHint)
+void CGridFrm::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
     if (m_bEventLockout || (pHint != nullptr && !dynamic_cast<CDrawAdd*>(pHint)))
         return;
@@ -330,7 +330,7 @@ void CGridFrm::OnShowrept()
     InvalAll();
 }
 
-void CGridFrm::OnUpdateShowrept(CCmdUI *pCmdUI)
+void CGridFrm::OnUpdateShowrept(CCmdUI* pCmdUI)
 {
     pCmdUI->SetText(showLastAdnoUsed ? (LPCTSTR)_T("Ukryj powtórki numerów\tF7") : (LPCTSTR)_T("Poka¿ powtórki numerów\tF7"));
 }
@@ -352,7 +352,7 @@ void CGridFrm::OnSort(UINT col)
     }
 }
 
-void CGridFrm::OnUpdateSort(CCmdUI *pCmdUI)
+void CGridFrm::OnUpdateSort(CCmdUI* pCmdUI)
 {
     pCmdUI->SetRadio(eLastOrder == static_cast<GridSortCol>(pCmdUI->m_nID));
 }
@@ -371,7 +371,7 @@ void CGridFrm::OnFilePrintPreview()
     AFXPrintPreview(this);
 }
 
-void CGridFrm::OnPrint(CDC *pDC, CPrintInfo* pInfo)
+void CGridFrm::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 {
     CClientDC dcScreen{nullptr};
     pDC->SetMapMode(MM_ANISOTROPIC);
@@ -403,7 +403,7 @@ void CGridFrm::OnPrint(CDC *pDC, CPrintInfo* pInfo)
 }
 
 /************************* OBS£UGA ZDARZEÑ ***************************/
-void CGridFrm::OnDbClick(NMHDR *pNMHDR, LRESULT *pResult)
+void CGridFrm::OnDbClick(NMHDR* pNMHDR, LRESULT* pResult)
 {
     if (m_bEventLockout)
         return;
@@ -417,7 +417,7 @@ void CGridFrm::OnDbClick(NMHDR *pNMHDR, LRESULT *pResult)
     *pResult = 0;
 }
 
-void CGridFrm::OnChanged(NMHDR *pNMHDR, LRESULT *pResult)
+void CGridFrm::OnChanged(NMHDR* pNMHDR, LRESULT* pResult)
 {
     auto pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
     if (!m_bEventLockout && (pNMLV->uNewState & LVIS_SELECTED) != 0) {

@@ -8,7 +8,7 @@ class CSpacerDlg : public CDialog
 {
     // Construction
 public:
-    CSpacerDlg(CDrawAdd *vAdd, CWnd *pParent = nullptr);   // standard constructor
+    CSpacerDlg(CDrawAdd *vAdd, CWnd* pParent = nullptr);   // standard constructor
     static BOOL Deal(CDrawAdd *vAdd);
 
     // Dialog Data
@@ -71,7 +71,7 @@ protected:
     void OnCancel() override;
     BOOL DestroyWindow() override;
     BOOL OnInitDialog() override;
-    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
     // Generated message map functions

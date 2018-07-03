@@ -72,12 +72,12 @@ public:
     auto GetDocument() const { return reinterpret_cast<CDrawDoc*>(m_pDocument); }
 
 public:
-    BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd *pParentWnd, UINT nID, CCreateContext* pContext = nullptr) override;
+    BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext = nullptr) override;
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
     BOOL OnPreparePrinting(CPrintInfo* pInfo) override;
-    void OnPrint(CDC *pDC, CPrintInfo* pInfo) override;
-    void OnUpdate(CView* pSender, LPARAM lHint, CObject *pHint) override;
+    void OnPrint(CDC* pDC, CPrintInfo* pInfo) override;
+    void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) override;
     //}}AFX_VIRTUAL
 
 // Implementation
@@ -92,11 +92,11 @@ protected:
     //{{AFX_MSG(CGridFrm)
     afx_msg void OnFilePrintPreview();
     afx_msg void OnSort(UINT col);
-    afx_msg void OnUpdateSort(CCmdUI *pCmdUI);
+    afx_msg void OnUpdateSort(CCmdUI* pCmdUI);
     afx_msg void OnShowrept();
-    afx_msg void OnUpdateShowrept(CCmdUI *pCmdUI);
-    afx_msg void OnDbClick(NMHDR *pNMHDR, LRESULT *pResult);
-    afx_msg void OnChanged(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnUpdateShowrept(CCmdUI* pCmdUI);
+    afx_msg void OnDbClick(NMHDR* pNMHDR, LRESULT* pResult);
+    afx_msg void OnChanged(NMHDR* pNMHDR, LRESULT* pResult);
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
 };

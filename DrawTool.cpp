@@ -70,7 +70,7 @@ void CDrawTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& poi
         // Shift+DblClk deselects object...
         CPoint local = point;
         pView->ClientToDoc(local);
-        CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
+        CDrawObj* pObj = pView->GetDocument()->ObjectAt(local);
         if (pObj != nullptr)
             pView->Deselect(pObj);
     } else
@@ -130,7 +130,7 @@ void CSelectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poi
 
     // See if the click was on an object, select and start move if so
     if (selectMode == SelectMode::none) {
-        CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
+        CDrawObj* pObj = pView->GetDocument()->ObjectAt(local);
 
         if (pObj != nullptr) {
             selectMode = SelectMode::move;
@@ -173,7 +173,7 @@ void CSelectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poi
 
 void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point)
 {
-    CDrawObj *pObj = nullptr;
+    CDrawObj* pObj = nullptr;
 
     if (CDrawView::GetCapture() == pView && point != c_down) // czy kliknelismy w to samo miejsce
         switch (selectMode) {
@@ -191,7 +191,7 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
             case SelectMode::move:
             {
                 if (pView->m_selection.empty()) break;
-                CDrawDoc *pDoc = pView->GetDocument();
+                CDrawDoc* pDoc = pView->GetDocument();
                 pObj = pView->m_selection.front();
                 pObj->SetDirty();
                 auto pPage = dynamic_cast<CDrawPage*>(pObj);
@@ -487,7 +487,7 @@ void CKolorTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& poin
             else
                 pPage->SetSpotKolor(kolorek >> 3);
         } else { // CDrawAdd   czyli nic nie robimy gdy wybrany kolor np.spot I
-            if (theApp.swCZV == ToolbarMode::tryb_studia && pAdd != nullptr) { //wersje_eps
+            if (theApp.swCZV == ToolbarMode::tryb_studia && pAdd != nullptr) { // wersje_eps
                 if (pAdd->wersja.IsEmpty() || pAdd->wersja == _T(" "))
                     pAdd->wersja = ("." + frame->GetKolorText());
                 else {
@@ -525,7 +525,7 @@ void CKolorTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& po
     //..,,pokazywanie na status barze co to za obiekt
     CPoint l = point;
     pView->ClientToDoc(l);
-    CDrawObj *pObj = pView->GetDocument()->ObjectAt(l);
+    CDrawObj* pObj = pView->GetDocument()->ObjectAt(l);
     if (pObj != nullptr)
         ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo(pObj->info);
     else
@@ -548,7 +548,7 @@ void CLockTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
     pView->ClientToDoc(local);
 
     // See if the click was on an page
-    CDrawObj *pObj = pView->GetDocument()->ObjectAt(local);
+    CDrawObj* pObj = pView->GetDocument()->ObjectAt(local);
     if (pObj != nullptr) {
         if (!pView->IsSelected(pObj))
             pView->Select(pObj, (nFlags & MK_SHIFT) != 0);
@@ -578,7 +578,7 @@ void CLockTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& poi
     // pokazywanie na status barze co to za obiekt
     CPoint l = point;
     pView->ClientToDoc(l);
-    CDrawObj *pObj = pView->GetDocument()->ObjectAt(l);
+    CDrawObj* pObj = pView->GetDocument()->ObjectAt(l);
     if (pObj != nullptr)
         ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo(pObj->info);
     else
@@ -607,7 +607,7 @@ void CSpaceTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& po
     //..,,pokazywanie na status barze co to za obiekt
     CPoint l = point;
     pView->ClientToDoc(l);
-    CDrawObj *pObj = pView->GetDocument()->ObjectAt(l);
+    CDrawObj* pObj = pView->GetDocument()->ObjectAt(l);
     if (pObj != nullptr)
         ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo(pObj->info);
     else

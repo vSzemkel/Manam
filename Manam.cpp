@@ -51,11 +51,11 @@ BEGIN_MESSAGE_MAP(CDrawApp, CWinAppEx)
     ON_UPDATE_COMMAND_UI(IDM_NEWTITLE, &CDrawApp::OnUpdateAdmin)
     //}}AFX_MSG_MAP
     // Standard file based document commands
-    ON_COMMAND(ID_FILE_NEW, CWinApp::OnFileNew)
+    ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
     ON_COMMAND(ID_FILE_OPEN, &CDrawApp::OnFileOpen)
     ON_COMMAND(ID_FILE_DBOPEN, &CDrawApp::OnDBOpen)
     // Standard print setup command
-    ON_COMMAND(ID_FILE_PRINT_SETUP, CWinApp::OnFilePrintSetup)
+    ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinApp::OnFilePrintSetup)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -382,12 +382,12 @@ void CDrawApp::OnAppAbout()
 /////////////////////////////////////////////////////////////////////////////
 // CDrawApp commands 
 
-void CDrawApp::OnDisableMenu(CCmdUI *pCmdUI)
+void CDrawApp::OnDisableMenu(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(!disableMenu);
 }
 
-void CDrawApp::OnDisableMenuRDBMS(CCmdUI *pCmdUI)
+void CDrawApp::OnDisableMenuRDBMS(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(!disableMenu && isRDBMS);
 }
@@ -413,7 +413,7 @@ void CDrawApp::OnLogin()
     disableMenu = FALSE;
 }
 
-void CDrawApp::OnUpdateLogin(CCmdUI *pCmdUI)
+void CDrawApp::OnUpdateLogin(CCmdUI* pCmdUI)
 {
     pCmdUI->SetText((isRDBMS ? (LPCTSTR)_T("&Przelogowanie") : (LPCTSTR)_T("&Logowanie")));
     pCmdUI->Enable(!disableMenu);
@@ -573,12 +573,12 @@ yesNext:
     }
 }
 
-void CDrawApp::OnUpdateAdmin(CCmdUI *pCmdUI)
+void CDrawApp::OnUpdateAdmin(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(isRDBMS && (grupa & (UserRole::adm | UserRole::mas)));
 }
 
-void CDrawApp::OnUpdateStudio(CCmdUI *pCmdUI)
+void CDrawApp::OnUpdateStudio(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(isRDBMS && (grupa & (UserRole::stu | UserRole::adm | UserRole::mas)));
 }
@@ -590,13 +590,13 @@ void CDrawApp::OnCaptions()
     ((CMainFrame*)m_pMainWnd)->IniCaptionBox(0, INT_MAX);
 }
 
-void CDrawApp::OnUpdateCaptions(CCmdUI *pCmdUI)
+void CDrawApp::OnUpdateCaptions(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(!disableMenu);
     pCmdUI->SetCheck((BOOL)GetProfileInt(_T("General"), _T("Captions"), 1));
 }
 
-void CDrawApp::OnUpdateToolBarCombo(CCmdUI *pCmdUI)
+void CDrawApp::OnUpdateToolBarCombo(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(!disableMenu && theApp.activeDoc != nullptr);
 }

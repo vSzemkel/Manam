@@ -83,22 +83,22 @@ BEGIN_MESSAGE_MAP(CDrawDoc, COleDocument)
     //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-void CDrawDoc::OnDisableMenuRO(CCmdUI *pCmdUI)
+void CDrawDoc::OnDisableMenuRO(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(!isRO && !disableMenu && theApp.isRDBMS);
 }
 
-void CDrawDoc::OnDisableDB(CCmdUI *pCmdUI)
+void CDrawDoc::OnDisableDB(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(!disableMenu && theApp.isRDBMS);
 }
 
-void CDrawDoc::OnUpdateEpsdata(CCmdUI *pCmdUI)
+void CDrawDoc::OnUpdateEpsdata(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(!disableMenu && theApp.isRDBMS && theApp.grupa&(UserRole::mas | UserRole::stu));
 }
 
-void CDrawDoc::OnDisableGrbNotSaved(CCmdUI *pCmdUI)
+void CDrawDoc::OnDisableGrbNotSaved(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(!disableMenu && theApp.activeDoc->m_mak_xx > 0);
 }
@@ -287,7 +287,7 @@ void CDrawDoc::Serialize(CArchive& ar)
 
 ///////////////RYSOWANIE I DRUKOWANIE ////////////////////////////////////////////////////////
 // CDrawDoc implementation
-void CDrawDoc::Draw(CDC *pDC, CDrawView *pView)
+void CDrawDoc::Draw(CDC* pDC, CDrawView *pView)
 {
     if (isRO) {
         CRect r;
@@ -324,11 +324,11 @@ void CDrawDoc::Draw(CDC *pDC, CDrawView *pView)
             p->DrawAcDeadline(pDC, &p->m_position);
 }
 
-void CDrawDoc::DrawQue(CDC *pDC, CQueView *pView)
+void CDrawDoc::DrawQue(CDC* pDC, CQueView *pView)
 {
     for (const auto& a : m_addsque) {
         a->Draw(pDC);
-        if (a == pView->selected_add) a->DrawTracker(pDC, CDrawObj::selected);
+        if (a == CQueView::selected_add) a->DrawTracker(pDC, CDrawObj::selected);
     }
 
     if (theApp.unQueing && CQueView::selected_add) {
@@ -340,7 +340,7 @@ void CDrawDoc::DrawQue(CDC *pDC, CQueView *pView)
     }
 }
 
-void CDrawDoc::DrawPageCross(CDC *pDC)
+void CDrawDoc::DrawPageCross(CDC* pDC)
 {
     CPoint p0(0, 0);
     CPoint p(pDC->GetDeviceCaps(HORZRES), pDC->GetDeviceCaps(VERTRES));
@@ -352,7 +352,7 @@ void CDrawDoc::DrawPageCross(CDC *pDC)
     pDC->LineTo(p0.x, p.y);
 }
 
-void CDrawDoc::Print(CDC *pDC)
+void CDrawDoc::Print(CDC* pDC)
 {
     for (const auto& p : m_pages)
         p->Print(pDC);
@@ -363,7 +363,7 @@ void CDrawDoc::Print(CDC *pDC)
     }
 
     for (const auto& pObj : m_objects) { // opisy maj¹ przykrywaæ og³oszenia
-        CDrawOpis* pOpi = dynamic_cast<CDrawOpis*>(pObj);
+        auto pOpi = dynamic_cast<CDrawOpis*>(pObj);
         if (pOpi) pOpi->Print(pDC);
     }
 
@@ -383,7 +383,7 @@ void CDrawDoc::Print(CDC *pDC)
             p->DrawDeadline(pDC, &p->GetPrintRect());
 }
 
-void CDrawDoc::PrintPage(CDC *pDC, CDrawPage *pPage)
+void CDrawDoc::PrintPage(CDC* pDC, CDrawPage *pPage)
 {
     pPage->Print(pDC);
 
@@ -391,7 +391,7 @@ void CDrawDoc::PrintPage(CDC *pDC, CDrawPage *pPage)
         pAdd->Print(pDC);
 
     for (const auto& pObj : m_objects) { // dodatkowy opis zeby opis byl na wierzchu przed ogl
-        CDrawOpis *pOpi = dynamic_cast<CDrawOpis*>(pObj);
+        auto pOpi = dynamic_cast<CDrawOpis*>(pObj);
         if (pOpi && pPage->Intersects(pOpi->m_position)) pOpi->Print(pDC);
     }
 
@@ -416,7 +416,7 @@ void CDrawDoc::PrintPage(CDC *pDC, CDrawPage *pPage)
 }
 
 ////////// CDRAWOBJ _M_OBJECTS LIST ?/////////////////////////////       
-void CDrawDoc::Add(CDrawObj *pObj)
+void CDrawDoc::Add(CDrawObj* pObj)
 {
     pObj->m_pDocument = this;
     m_objects.push_back(pObj);
@@ -438,7 +438,7 @@ void CDrawDoc::RemoveQue(CDrawAdd *pObj)
     SetModifiedFlag();
 }
 
-void CDrawDoc::Remove(CDrawObj *pObj)
+void CDrawDoc::Remove(CDrawObj* pObj)
 {
     auto pPage = dynamic_cast<CDrawPage*>(pObj);
     if (pPage)
@@ -709,7 +709,7 @@ void CDrawDoc::ComputeCanvasSize()
     // if size changed then iterate over views and reset
     if (new_size != m_size) {
         m_size = new_size;
-        CDrawView *pView = GetPanelView<CDrawView>();
+        auto *pView = GetPanelView<CDrawView>();
         if (pView) pView->SetPageSize();
     }
 }
@@ -774,7 +774,7 @@ void CDrawDoc::OnImport(BOOL fromDB)
     const auto n = (int)m_objects.size();
     if ((fromDB) ? DBImport() : Import(TRUE)) {
         auto pView = GetPanelView<CDrawView>();
-        if (pView && pView->m_bActive) pView->Select(NULL, FALSE);
+        if (pView && pView->m_bActive) pView->Select(nullptr, FALSE);
         RemoveFromHead(n);
         UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
     } else
@@ -1336,7 +1336,7 @@ void CDrawDoc::OnFileInfo()
         // propagacja deadline'u
         const auto pc = m_pages.size();
         if (pc > 1 && (dlg.m_set_deadline || dlg.m_set_kraty || dlg.m_set_papier)) {
-            CDrawPage *pPage = m_pages[1];
+            CDrawPage* pPage = m_pages[1];
             const auto& dt = pPage->m_deadline;
             const auto druk = pPage->m_drukarnie;
             const auto s_x1 = pPage->szpalt_x;
@@ -1347,7 +1347,7 @@ void CDrawDoc::OnFileInfo()
                     p->m_deadline = dt;
                     p->m_drukarnie = druk;
                 }
-                if (dlg.m_set_kraty && !p->m_adds.size())
+                if (dlg.m_set_kraty && p->m_adds.empty())
                     p->SetBaseKrata(s_x1, s_y1);
                 p->SetDirty();
             }
@@ -1386,7 +1386,7 @@ void CDrawDoc::OnFileInfo()
     }
 }
 
-void CDrawDoc::PrintInfo(CDC *pDC, int max_n, int wspol_na_str)  //wspol_na_str =1 lub 2- 50  lub 100 str na wydruku
+void CDrawDoc::PrintInfo(CDC* pDC, int max_n, int wspol_na_str)  // wspol_na_str =1 lub 2- 50  lub 100 str na wydruku
 {
     ASSERT_VALID(this);
     CFont m_font, m_vertfont;
@@ -1501,7 +1501,7 @@ second_paper:
         pFile->Close();
 
         auto reader = CComPtr<IXmlReader> {};
-        CreateXmlReader(__uuidof(reader), reinterpret_cast<void**>(&reader), NULL);
+        CreateXmlReader(__uuidof(reader), reinterpret_cast<void**>(&reader), nullptr);
         auto stream = CComPtr<IStream>(SHCreateMemStream((const BYTE*)buf, bytesRead));
         reader->SetInput(stream);
 
@@ -1805,7 +1805,7 @@ void CDrawDoc::OnSyncpow()
     }
 }
 
-void CDrawDoc::OnUpdateSyncpow(CCmdUI *pCmdUI)
+void CDrawDoc::OnUpdateSyncpow(CCmdUI* pCmdUI)
 {
     if (gazeta.GetLength() > 4) OnDisableMenuRO(pCmdUI); else pCmdUI->Enable(FALSE);
 }
@@ -1882,7 +1882,7 @@ void CDrawDoc::OnInsertGrzbiet()
         if (theManODPNET.EI(sql, orapar)) {
             if (mutacja.IsEmpty()) {
                 AfxMessageBox(_T("W wyniku tej operacji grzbiet przesta³ istnieæ"));
-                CWnd *pWnd = ((CMDIFrameWnd*)AfxGetMainWnd())->MDIGetActive();
+                CWnd* pWnd = ((CMDIFrameWnd*)AfxGetMainWnd())->MDIGetActive();
                 pWnd->PostMessage(WM_CLOSE);
             } else {
                 if (gazeta.Mid(4).Compare(mutacja)) {
@@ -1937,7 +1937,7 @@ void CDrawDoc::OnSetDea()
     }
 }
 
-void CDrawDoc::OnUpdateSetDea(CCmdUI *pCmdUI)
+void CDrawDoc::OnUpdateSetDea(CCmdUI* pCmdUI)
 {
     pCmdUI->Enable(theApp.isRDBMS && theApp.grupa&(UserRole::kie | UserRole::mas));
     pCmdUI->SetCheck(theApp.grupa&UserRole::dea);
@@ -1958,12 +1958,12 @@ void CDrawDoc::OnShowAcDeadline()
     UpdateAllViews(nullptr);
 }
 
-void CDrawDoc::OnUpdateShowTime(CCmdUI *pCmdUI)
+void CDrawDoc::OnUpdateShowTime(CCmdUI* pCmdUI)
 {
     pCmdUI->SetCheck(theApp.showDeadline);
 }
 
-void CDrawDoc::OnUpdateShowAcDeadline(CCmdUI *pCmdUI)
+void CDrawDoc::OnUpdateShowAcDeadline(CCmdUI* pCmdUI)
 {
     pCmdUI->SetCheck(theApp.showAcDeadline);
 }

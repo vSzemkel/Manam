@@ -108,7 +108,7 @@ class CDrawAdd final : public CDrawObj
     CString FindZajawka(CString& root, const CString& ext) const;
     CString EpsName(CManFormat format, BOOL copyOldEPS, BOOL bModifTest = FALSE);
     void Preview(PGENEPSARG pArg, int x, int y, int scanlinesCount, int bytesPerScanline) const;
-    void SetDotM(BOOL setFlag); // parsuje wersjê i ustawia lub cofa .m
+    void SetDotM(bool setFlag); // parsuje wersjê i ustawia lub cofa .m
 
   private:
     static const int ciMaxRings; // maksymalna iloœæ obwodnic precla

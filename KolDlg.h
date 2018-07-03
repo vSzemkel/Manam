@@ -22,7 +22,7 @@ class CConnDlg final : public CDialog
 {
     // Construction
 public:
-    CConnDlg(CWnd *pParent = nullptr);   // standard constructor
+    CConnDlg(CWnd* pParent = nullptr);   // standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CConnDlg)
@@ -37,7 +37,7 @@ public:
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CConnDlg)
 protected:
-    void DoDataExchange(CDataExchange *pDX) override; // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override; // DDX/DDV support
     //}}AFX_VIRTUAL
 
 // Implementation
@@ -59,7 +59,7 @@ class CKolDlg final : public CDialog
 {
     // Construction
 public:
-    CKolDlg(CWnd *pParent = nullptr);	// standard constructor
+    CKolDlg(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CKolDlg)
@@ -70,7 +70,7 @@ public:
 
 // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CKolDlg)
@@ -84,7 +84,7 @@ class CPageDlg final : public CDialog
 {
     // Construction
 public:
-    CPageDlg(CWnd *pParent = nullptr);	// standard constructor
+    CPageDlg(CWnd* pParent = nullptr);	// standard constructor
     void OnOK() override;
     int m_id_str;
     int m_szpalt_x;
@@ -128,7 +128,7 @@ public:
     //}}AFX_DATA
 // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CPageDlg)
@@ -139,8 +139,8 @@ protected:
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
 private:
-    CComboBox   m_wydawcycombo;					// lista potencjalnych wydawców strony
-    void SetFunListBox(BOOL setDefaults);
+    CComboBox m_wydawcycombo; // lista potencjalnych wydawców strony
+    void SetFunListBox(bool setDefaults);
 };
 /////////////////////////////////////////////////////////////////////////////
 // CAddDlg dialog
@@ -150,7 +150,7 @@ class CAddDlg final : public CDialog
     // Construction
 public:
     friend class CManODPNET;
-    CAddDlg(CWnd *pParent = nullptr);	// standard constructor
+    CAddDlg(CWnd* pParent = nullptr);	// standard constructor
     void OnOK() override;
     // Dialog Data
     //{{AFX_DATA(CAddDlg)
@@ -229,7 +229,7 @@ private:
     // Implementation
 protected:
     BOOL OnInitDialog() override;
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CAddDlg)
@@ -247,7 +247,7 @@ protected:
     afx_msg void OnEnUpdateOldadno();
     afx_msg void OnEnChangeWersja();
     afx_msg void OnCbnSelchangeZajawka();
-    afx_msg void OnDtnDatetimechangePowt(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnDtnDatetimechangePowt(NMHDR* pNMHDR, LRESULT* pResult);
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
 };
@@ -258,7 +258,7 @@ class CInfoDlg final : public CDialog
 {
     // Construction
 public:
-    CInfoDlg(CWnd *pParent = nullptr);	// standard constructor
+    CInfoDlg(CWnd* pParent = nullptr);	// standard constructor
 
     BOOL isRO;
     long m_drukarnie;
@@ -312,7 +312,7 @@ public:
     CComboBox m_wydawcyredcombo;
     //}}AFX_DATA
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CInfoDlg)
@@ -330,7 +330,7 @@ class COpisDlg final : public CDialog
 {
     // Construction
 public:
-    COpisDlg(CWnd *pParent = nullptr);	// standard constructor
+    COpisDlg(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
     //{{AFX_DATA(COpisDlg)
@@ -340,7 +340,7 @@ public:
 
 // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(COpisDlg)
@@ -358,7 +358,7 @@ class CZoomDlg final : public CDialog
 {
     // Construction
 public:
-    CZoomDlg(CWnd *pParent = nullptr);	// standard constructor
+    CZoomDlg(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CZoomDlg)
@@ -368,7 +368,7 @@ public:
 
 // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CZoomDlg)
@@ -383,7 +383,7 @@ class CDbDlg final : public CDialog
 {
     // Construction
 public:
-    CDbDlg(CWnd *pParent = nullptr);	// standard constructor
+    CDbDlg(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CDbDlg)
@@ -402,7 +402,7 @@ public:
 
     // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
     void OnOK() override;
     // Generated message map functions
     //{{AFX_MSG(CDbDlg)
@@ -418,7 +418,7 @@ class CDrzDlg final : public CDialog
 {
     // Construction
 public:
-    CDrzDlg(CWnd *pParent = nullptr);	// standard constructor
+    CDrzDlg(CWnd* pParent = nullptr);	// standard constructor
 // Dialog Data
     //{{AFX_DATA(CDrzDlg)
     enum { IDD = IDD_DBKOLUMNY };
@@ -431,13 +431,13 @@ public:
     int m_id_drw;
     // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
     BOOL OnInitDialog() override;
 
     // Generated message map functions
     //{{AFX_MSG(CDrzDlg)
     void OnOK() override;
-    afx_msg void OnKiedyChanged(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnKiedyChanged(NMHDR* pNMHDR, LRESULT* pResult);
     afx_msg void OnCbnEditupdateDrzewo();
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
@@ -451,7 +451,7 @@ class CDrz1Dlg final : public CDialog
 {
     // Construction
 public:
-    CDrz1Dlg(CWnd *pParent = nullptr);	// standard constructor
+    CDrz1Dlg(CWnd* pParent = nullptr);	// standard constructor
 // Dialog Data
     //{{AFX_DATA(CDrz1Dlg)
     enum { IDD = IDD_DRZEWO };
@@ -461,7 +461,7 @@ public:
     int m_id_drw;
     // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
     BOOL OnInitDialog() override;
     void OnOK() override;
 
@@ -480,7 +480,7 @@ class CDBOpenDlg final : public CDialog
 {
     // Construction
 public:
-    CDBOpenDlg(CWnd *pParent = nullptr);	// standard constructor
+    CDBOpenDlg(CWnd* pParent = nullptr);	// standard constructor
 // Dialog Data
     //{{AFX_DATA(CDBOpenDlg)
     enum { IDD = IDD_DB_OPEN };
@@ -500,14 +500,14 @@ private:
     BOOL bEnableCtrls;
     void RefreshCombo();
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
     void OnOK() override;
     // Generated message map functions
     //{{AFX_MSG(CDBOpenDlg)
     afx_msg void OnChangeTytul();
     afx_msg void OnChangeMutacja();
     afx_msg void OnBnClickedAllMut();
-    afx_msg void OnDtnDatetimechangeDt(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnDtnDatetimechangeDt(NMHDR* pNMHDR, LRESULT* pResult);
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
 };
@@ -518,7 +518,7 @@ class CDBSaveAsDlg final : public CDialog
 {
     // Construction
 public:
-    CDBSaveAsDlg(CWnd *pParent = nullptr);	// standard constructor
+    CDBSaveAsDlg(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CDBSaveAsDlg)
@@ -532,7 +532,7 @@ public:
 
     // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
     void OnOK() override;
     BOOL OnInitDialog() override;
     // Generated message map functions
@@ -557,7 +557,7 @@ class CAddDesc final : public CDialog
 {
     // Construction
 public:
-    CAddDesc(int top, int bottom, CWnd *pParent = nullptr);	// standard constructor
+    CAddDesc(int top, int bottom, CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CAddDesc)
@@ -568,7 +568,7 @@ public:
 
 // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CAddDesc)
@@ -583,7 +583,7 @@ class CAddFindDlg final : public CDialog
     // Construction
 public:
     std::vector<CDrawObj*> *m_pObList;
-    CAddFindDlg(CWnd *pParent = nullptr);	// standard constructor
+    CAddFindDlg(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CAddFindDlg)
@@ -595,7 +595,7 @@ public:
 
 // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CAddFindDlg)
@@ -610,7 +610,7 @@ class CInfoDlgLib final : public CDialog
 {
     // Construction
 public:
-    CInfoDlgLib(CWnd *pParent = nullptr);	// standard constructor
+    CInfoDlgLib(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CInfoDlgLib)
@@ -625,7 +625,7 @@ public:
 
 // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CInfoDlgLib)
@@ -640,7 +640,7 @@ class CConfDlg final : public CDialog
 {
     // Construction
 public:
-    CConfDlg(CWnd *pParent = nullptr);	// standard constructor
+    CConfDlg(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CConfDlg)
@@ -674,7 +674,7 @@ public:
 
 // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CConfDlg)
@@ -692,7 +692,7 @@ class CPassDlg final : public CDialog
 {
     // Construction
 public:
-    CPassDlg(CWnd *pParent = nullptr);	// standard constructor
+    CPassDlg(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CPassDlg)
@@ -704,7 +704,7 @@ public:
 
 // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CPassDlg)
@@ -719,7 +719,7 @@ class CPrnEpsDlg final : public CDialog
 {
     // Construction
 public:
-    CPrnEpsDlg(CWnd *pParent = nullptr);	// standard constructor
+    CPrnEpsDlg(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CPrnEpsDlg)
@@ -748,7 +748,7 @@ public:
     CFlag GetChoosenPages(CDrawDoc* pDoc) const noexcept;
 
   protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CPrnEpsDlg)
@@ -767,7 +767,7 @@ class CUserDlg final : public CDialog
 {
     // Construction
 public:
-    CUserDlg(CWnd *pParent = nullptr);	// standard constructor
+    CUserDlg(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CUserDlg)
@@ -784,7 +784,7 @@ public:
     BOOL yesNext;
     // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CUserDlg)
@@ -801,7 +801,7 @@ class CAccDlg final : public CDialog
 {
     // Construction
 public:
-    CAccDlg(CWnd *pParent = nullptr);	// standard constructor
+    CAccDlg(CWnd* pParent = nullptr);	// standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CAccDlg)
@@ -822,7 +822,7 @@ public:
 
     // Implementation
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;	// DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions
     //{{AFX_MSG(CAccDlg)
@@ -842,7 +842,7 @@ class CNewTitleDlg final : public CDialog
 {
     // Construction
 public:
-    CNewTitleDlg(CWnd *pParent = nullptr);   // standard constructor
+    CNewTitleDlg(CWnd* pParent = nullptr);   // standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CNewTitleDlg)
@@ -864,7 +864,7 @@ public:
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CNewTitleDlg)
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
 // Implementation
@@ -883,7 +883,7 @@ class CEPSDateDlg final : public CDialog
 {
     // Construction
 public:
-    CEPSDateDlg(CWnd *pParent = nullptr);   // standard constructor
+    CEPSDateDlg(CWnd* pParent = nullptr);   // standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CEPSDateDlg)
@@ -896,7 +896,7 @@ public:
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CEPSDateDlg)
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
 // Implementation
@@ -918,7 +918,7 @@ class CDirDaysDlg final : public CDialog
 {
     // Construction
 public:
-    CDirDaysDlg(CWnd *pParent = nullptr);   // standard constructor
+    CDirDaysDlg(CWnd* pParent = nullptr);   // standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CDirDaysDlg)
@@ -934,7 +934,7 @@ public:
         // ClassWizard generated virtual function overrides
         //{{AFX_VIRTUAL(CDirDaysDlg)
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
 // Implementation
@@ -955,7 +955,7 @@ class CPageDerv final : public CDialog
 {
     // Construction
 public:
-    CPageDerv(CWnd *pParent = nullptr);   // standard constructor
+    CPageDerv(CWnd* pParent = nullptr);   // standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CPageDerv)
@@ -975,7 +975,7 @@ public:
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CPageDerv)
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
 // Implementation
@@ -1000,7 +1000,7 @@ public:
     long m_drw_xx;
     BOOL m_delete;
     BOOL bRefreshOnClose;				// odœwie¿anie dla funkcji 4x4
-    CGrzbDlg(CWnd *pParent = nullptr);
+    CGrzbDlg(CWnd* pParent = nullptr);
 
     // Dialog Data
         //{{AFX_DATA(CGrzbDlg)
@@ -1018,7 +1018,7 @@ public:
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CGrzbDlg)
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
 // Implementation
@@ -1042,7 +1042,7 @@ class CAccGrbDlg final : public CDialog
     DECLARE_DYNAMIC(CAccGrbDlg)
 
 public:
-    CAccGrbDlg(CWnd *pParent = nullptr);   // standard constructor
+    CAccGrbDlg(CWnd* pParent = nullptr);   // standard constructor
     ~CAccGrbDlg() override = default;
 
     // Dialog Data
@@ -1050,7 +1050,7 @@ public:
 
 protected:
     BOOL OnInitDialog() override;
-    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 
     DECLARE_MESSAGE_MAP()
 public:
@@ -1068,7 +1068,7 @@ class COstWer final : public CDialog
     DECLARE_DYNAMIC(COstWer)
 
 public:
-    COstWer(CWnd *pParent = nullptr);   // standard constructor
+    COstWer(CWnd* pParent = nullptr);   // standard constructor
     COstWer(std::vector<CDrawAdd*> *aNewAdds, std::vector<CDrawAdd*> *aOldAdds, std::vector<CDrawAdd*> *aModifAdds, std::vector<CDrawAdd*> *aDelAdds, BOOL bBankOnly);
     ~COstWer() override = default;
 
@@ -1076,7 +1076,7 @@ public:
     enum { IDD = IDD_ATEXADDS };
 
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
     BOOL OnInitDialog() override;
     void OnCancel() override {};
 
@@ -1090,7 +1090,7 @@ private:
 public:
     afx_msg void OnOK() override;
     afx_msg void OnSelectAll();
-    afx_msg void OnNMClickAddlist(NMHDR *pNMHDR, LRESULT *pResult);
+    afx_msg void OnNMClickAddlist(NMHDR* pNMHDR, LRESULT* pResult);
 };
 
 // CAcDeadDlg dialog
@@ -1103,14 +1103,14 @@ public:
     CTime m_fot;
     CTime m_kol;
 
-    CAcDeadDlg(CWnd *pParent = nullptr);   // standard constructor
+    CAcDeadDlg(CWnd* pParent = nullptr);   // standard constructor
     ~CAcDeadDlg() override = default;
 
     // Dialog Data
     enum { IDD = IDD_ACDEAD };
 
 protected:
-    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 
     DECLARE_MESSAGE_MAP()
 };
@@ -1132,7 +1132,7 @@ public:
 // Implementation
 protected:
     //{{AFX_MSG(CAboutDlg)
-    void DoDataExchange(CDataExchange *pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
     BOOL OnInitDialog() override;
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
