@@ -10,14 +10,13 @@ class CGenEpsInfoDlg;
 
 typedef struct _GENEPSARG
 {
-    BOOL bStatus;
-    BOOL bSignAll;
-    BOOL bIsPreview;
-    BOOL bDoKorekty;
+    CManFormat format;
+    bool bSignAll;
+    bool bIsPreview;
+    bool bDoKorekty;
     WORD iChannelId;
     TCHAR* cBigBuf;
     CDrawPage* pPage;
-    CManFormat format;
     CGenEpsInfoDlg* pDlg;
     HANDLE hCompletedEvent;
 } GENEPSARG, *PGENEPSARG;
@@ -93,26 +92,26 @@ class CDrawPage final : public CDrawObj
     CTime m_ac_kol;			// deadline na kolumnê dla czasopism
 
     // Implementation
-    void DrawGrid(CDC *pDC);
-    void DrawReserved(CDC *pDC);
-    void DrawDeadline(CDC *pDC, const CRect& pos) const;
-    void DrawAcDeadline(CDC *pDC, const CRect& pos) const;
+    void DrawGrid(CDC* pDC);
+    void DrawReserved(CDC* pDC);
+    void DrawDeadline(CDC* pDC, const CRect& pos) const;
+    void DrawAcDeadline(CDC* pDC, const CRect& pos) const;
 
     void SetNr(int i);
-    void AddAdd(CDrawAdd *pAdd);
-    void RemoveAdd(CDrawAdd *pAdd, bool removeFromAdds = true);
-    void SetSpace(const CDrawAdd *pObj);
+    void AddAdd(CDrawAdd* pAdd);
+    void RemoveAdd(CDrawAdd* pAdd, bool removeFromAdds = true);
+    void SetSpace(const CDrawAdd* pObj);
     void SetSpotKolor(UINT spot_kolor);
     void SetBaseKrata(int s_x, int s_y, bool refresh = true);
-    void RealizeSpace(const CDrawAdd *pObj);
+    void RealizeSpace(const CDrawAdd* pObj);
     void ChangeMark(size_t module, SpaceMode mode);
     void ChangeCaption(BOOL iscaption, const CString& cap);
     void DBChangeName(int id_drw);
     std::vector<int> CleanKraty(BOOL dbSave);
 
-    bool FindSpace(CDrawAdd *pObj, int *px, int *py, int sx, int sy) const;
-    bool CheckSpace(const CDrawAdd *pObj, int px, int py) const;
-    bool CheckSpaceDiffKraty(const CDrawAdd *pObj, int x, int y) const;
+    bool FindSpace(CDrawAdd* pObj, int* px, int* py, int sx, int sy) const;
+    bool CheckSpace(const CDrawAdd* pObj, int px, int py) const;
+    bool CheckSpaceDiffKraty(const CDrawAdd* pObj, int x, int y) const;
 
     bool CheckRozmKrat(PGENEPSARG pArg);
     bool GenPDF(PGENEPSARG pArg);
@@ -137,7 +136,7 @@ private:
 // CRozm
 struct CRozm final
 {
-    CRozm() noexcept : CRozm(468, 575, 40, 34, 5, 6, 0, 0) {}
+    CRozm() noexcept : CRozm(468, 575, 40, 34, 5, 6, 0, false) {}
     CRozm(int m_w, int m_h, int m_sw, int m_sh, BYTE m_szpalt_x, BYTE m_szpalt_y, int m_typ_xx, BOOL m_scale_it) noexcept :
         w(m_w),
         h(m_h),
@@ -149,12 +148,12 @@ struct CRozm final
         typ_xx(m_typ_xx)
     {
     }
+    int typ_xx;
     WORD w;
     WORD h;
     WORD sw;
     WORD sh;
     BYTE szpalt_x;
     BYTE szpalt_y;
-    BOOL scale_it;
-    int typ_xx;
+    bool scale_it;
 };

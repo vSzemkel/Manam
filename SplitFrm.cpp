@@ -18,8 +18,8 @@ BEGIN_MESSAGE_MAP(CSplitFrame, CMDIChildWndEx)
     //{{AFX_MSG_MAP(CSplitFrame)
     ON_WM_SIZE()
     ON_WM_MDIACTIVATE()
-    ON_COMMAND(IDM_SHOWDTLS, OnShowDtls)
-    ON_UPDATE_COMMAND_UI(IDM_SHOWDTLS, OnUpdateShowDtls)
+    ON_COMMAND(IDM_SHOWDTLS, &CSplitFrame::OnShowDtls)
+    ON_UPDATE_COMMAND_UI(IDM_SHOWDTLS, &CSplitFrame::OnUpdateShowDtls)
     //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 

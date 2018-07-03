@@ -604,9 +604,12 @@ BOOL CDrawAdd::OnOpen(CDrawView* pView)
             theManODPNET.EI("begin spacer.update_reservation(:pub_xx,:ile_kol,:nr_spotu,:powtorka,:old_adno,:uwagi,:wersja,:czaskto,:eps_present); end;", orapar);
         } else
             AfxMessageBox(_T("Nie mo¿na w ten sposób modyfikowaæ rezerwacji, która nie pochodzi za Spacera"));
-        SetDirty(); UpdateInfo(); Invalidate();
-        if (!pView) m_pDocument->ArrangeQue();
-        return TRUE;
+
+    SetDirty();
+    UpdateInfo();
+    Invalidate();
+    if (!pView) m_pDocument->ArrangeQue();
+    return TRUE;
 }
 
 CFlag CDrawAdd::GetPlacementFlag() const
@@ -1194,7 +1197,7 @@ int CDrawAdd::CkPageLocation(int vFizPage)
     return 0; // wszystko w porz¹dku
 }
 
-void CDrawAdd::SetEstPagePos(TCHAR* description, CRect* vRect, CDrawPage* pPage)
+void CDrawAdd::SetEstPagePos(const TCHAR* description, CRect* vRect, CDrawPage* pPage)
 {
     /* vu : Jako description - opis polozenia ogloszenia na stronie podaje sie
             jeden ze skrotow in ('P','L','G','D','Gl','GP','DL','DP')
@@ -1420,8 +1423,8 @@ bool CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by
     if (m_pub_xx > 0) {
         CString sBBox = theManODPNET.GetProdInfo(m_pub_xx, cKolor, ileMat);
         if (sBBox != _T("!")) {
-            pArg->bStatus = _stscanf_s(sBBox, _T("%f %f %f %f"), bx1, by1, bx2, by2) == 4;
-            if (!pArg->bStatus) { // przesz³o przez EpsTest, ale nie ma ProdInfo
+            bool status = _stscanf_s(sBBox, _T("%f %f %f %f"), bx1, by1, bx2, by2) == 4;
+            if (!status) { // przesz³o przez EpsTest, ale nie ma ProdInfo
                 bReqProdInfo = true;
                 if (powtorka > 0) EpsName(CManFormat::EPS, FALSE);
                 CManODPNETParms orapar { CManDbType::DbTypeInt32, &m_pub_xx };

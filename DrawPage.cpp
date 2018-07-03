@@ -138,7 +138,7 @@ CString CDrawPage::GetNrPaginy() const
     return paginacja;
 }
 
-void CDrawPage::Draw(CDC *pDC)
+void CDrawPage::Draw(CDC* pDC)
 {
     ASSERT_VALID(this);
 
@@ -151,10 +151,10 @@ void CDrawPage::Draw(CDC *pDC)
         pDC->SetBkColor(BIALY);
     }
 
-    CPen *pOldPen = pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->pen));
-    CFont *pOldFont = pDC->SelectObject(&(m_pDocument->m_pagefont));
+    CPen* pOldPen = pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->pen));
+    CFont* pOldFont = pDC->SelectObject(&(m_pDocument->m_pagefont));
 
-    CRect rect = m_position;
+    CRect rect{m_position};
     pDC->Rectangle(rect);
     DrawGrid(pDC);
     DrawKolor(pDC, &m_position);
@@ -186,9 +186,9 @@ void CDrawPage::Draw(CDC *pDC)
     pDC->SelectObject(pOldFont);
 }
 
-void CDrawPage::DrawDeadline(CDC *pDC, const CRect& pos) const
+void CDrawPage::DrawDeadline(CDC* pDC, const CRect& pos) const
 {
-    CFont *oldFont = pDC->SelectObject(&(m_pDocument->m_pagefont));
+    CFont* oldFont = pDC->SelectObject(&(m_pDocument->m_pagefont));
     CRect dlBox(CPoint((int)(pos.left + 1.25*pmodulx), pos.top - 2 * pmoduly), CSize((int)(2.5*pmodulx), -pmoduly - 2));
     pDC->Rectangle(dlBox);
     CString t = this->m_deadline.Format(_T("%H:%M"));
@@ -196,14 +196,14 @@ void CDrawPage::DrawDeadline(CDC *pDC, const CRect& pos) const
     pDC->SelectObject(oldFont);
 }
 
-void CDrawPage::DrawAcDeadline(CDC *pDC, const CRect& pos) const
+void CDrawPage::DrawAcDeadline(CDC* pDC, const CRect& pos) const
 {
     if (m_ac_red == 0L) return;
 
     CString sDeadlines;
     sDeadlines.Format(_T("R: %02i/%02i\r\nF: %02i/%02i\r\nK: %02i/%02i"), m_ac_red.GetDay(), m_ac_red.GetMonth(), m_ac_fot.GetDay(), m_ac_fot.GetMonth(), m_ac_kol.GetDay(), m_ac_kol.GetMonth());
 
-    CFont *oldFont = pDC->SelectObject(&(m_pDocument->m_pagefont));
+    CFont* oldFont = pDC->SelectObject(&(m_pDocument->m_pagefont));
     CRect dlBox(CPoint((int)(pos.left + 0.8*pmodulx), (int)(pos.top - 1.8*pmoduly)), CSize((int)(3.5*pmodulx - 10), (int)-3.5*pmoduly));
     pDC->Rectangle(dlBox);
     DrawNapis(pDC, sDeadlines, sDeadlines.GetLength(), dlBox, DT_CENTER | DT_VCENTER | DT_NOCLIP, TRANSPARENT);
@@ -225,7 +225,7 @@ CFlag CDrawPage::GetReservedFlag()
     return space ^ space_add;
 }
 
-void CDrawPage::DrawReserved(CDC *pDC)
+void CDrawPage::DrawReserved(CDC* pDC)
 {
 
     /*	vu : zaznacza moduly za statusem zajete OZ, na ktorych jeszcze
@@ -242,7 +242,7 @@ void CDrawPage::DrawReserved(CDC *pDC)
     }
 }
 
-void CDrawPage::DrawGrid(CDC *pDC)
+void CDrawPage::DrawGrid(CDC* pDC)
 {
     if (((CMainFrame*)AfxGetMainWnd())->show_spacelocks && (space_red || space_locked)) {
         auto pOldBrush = reinterpret_cast<CBrush*>(pDC->SelectStockObject(WHITE_BRUSH));
@@ -321,7 +321,7 @@ void CDrawPage::SetSpotKolor(UINT spot_kolor) // spot kolor to index spotkoloru 
     }
 }
 
-void CDrawPage::DrawKolor(CDC *pDC, const CRect& pos) const
+void CDrawPage::DrawKolor(CDC* pDC, const CRect& pos) const
 {
     if (kolor == ColorId::brak)
         return;
@@ -378,7 +378,7 @@ void CDrawPage::DBChangeName(int id_drw)
 }
 
 /////////////// PRINT
-void CDrawPage::Print(CDC *pDC)
+void CDrawPage::Print(CDC* pDC)
 {
     ASSERT_VALID(this);
 
@@ -423,7 +423,7 @@ void CDrawPage::Print(CDC *pDC)
 }
 
 // rect must be in logical coordinates
-CDrawObj* CDrawPage::Clone(CDrawDoc *pDoc) const
+CDrawObj* CDrawPage::Clone(CDrawDoc* pDoc) const
 {
     ASSERT_VALID(this);
 
@@ -623,7 +623,7 @@ void CDrawPage::UpdateInfo()
 //////////////////////////////////////////////////////
 ///////// obsluga listy ogloszen ///////////////// myadds    i blokad miejsca
 
-void CDrawPage::AddAdd(CDrawAdd *pAdd)
+void CDrawPage::AddAdd(CDrawAdd* pAdd)
 {
     ASSERT(pAdd != nullptr);
     pAdd->fizpage = this->nr;
@@ -655,7 +655,7 @@ void CDrawPage::RemoveAdd(CDrawAdd* pAdd, bool removeFromAdds)
     SetDirty();
 }
 
-void CDrawPage::MoveTo(const CRect& position, CDrawView *pView)
+void CDrawPage::MoveTo(const CRect& position, CDrawView* pView)
 {
     CDrawObj::MoveTo(position, pView);
     for (const auto& pAdd : m_adds)
@@ -663,19 +663,19 @@ void CDrawPage::MoveTo(const CRect& position, CDrawView *pView)
     dirty = TRUE;
 }
 
-void CDrawPage::SetSpace(const CDrawAdd *pObj)
+void CDrawPage::SetSpace(const CDrawAdd* pObj)
 {
     space |= pObj->GetPlacementFlag();
     dirty = TRUE;
 }
 
-void CDrawPage::RealizeSpace(const CDrawAdd *pObj)
+void CDrawPage::RealizeSpace(const CDrawAdd* pObj)
 {
     space ^= pObj->GetPlacementFlag();
     dirty = TRUE;
 }
 
-bool CDrawPage::FindSpace(CDrawAdd *pObj, int *px, int *py, const int sx, const int sy) const
+bool CDrawPage::FindSpace(CDrawAdd* pObj, int* px, int* py, const int sx, const int sy) const
 {
     bool ret{false};
     if (m_dervlvl == DervType::fixd || m_dervlvl == DervType::proh) return false;
@@ -728,7 +728,7 @@ restoreShape:
     return ret;
 }
 
-bool CDrawPage::CheckSpace(const CDrawAdd *pObj, const int px, const int py) const
+bool CDrawPage::CheckSpace(const CDrawAdd* pObj, const int px, const int py) const
 {
     /* vu : Sprawdza czy dane ogloszenie mozna postawic we wspolrzednych px i py na stronie		end vu */
     if (px < 1 || px + pObj->sizex - 1 > szpalt_x || py < 1 || py + pObj->sizey - 1 > szpalt_y) return false;
@@ -741,7 +741,7 @@ bool CDrawPage::CheckSpace(const CDrawAdd *pObj, const int px, const int py) con
     return (sp & pObj->GetPlacementFlag(px, py)).IsZero();
 }
 
-bool CDrawPage::CheckSpaceDiffKraty(const CDrawAdd *pObj, const int x, const int y) const
+bool CDrawPage::CheckSpaceDiffKraty(const CDrawAdd* pObj, const int x, const int y) const
 {
     if (m_kraty_niebazowe.empty()) return true;
     // sprawdz przecinanie z innymi kratami
@@ -863,8 +863,7 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
     Invalidate();
 }
 
-// GN *****************************************************************************************
-void CDrawPage::BoundingBox(PGENEPSARG pArg, int *bx1, int *by1, int *bx2, int *by2) const noexcept
+void CDrawPage::BoundingBox(PGENEPSARG pArg, int* bx1, int* by1, int* bx2, int* by2) const noexcept
 {
     bool first = true;
     for (const auto& pAdd : m_adds) {
@@ -1019,8 +1018,8 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
         (pagina_type == PaginaType::roman) ? num = Rzymska(pagina) : num.Format(_T("%03i"), pagina);
 
     CString dest_name;
-    BOOL isDrobEPS = name.Find(_T("DR")) > -1;
-    const BOOL fileWarn = GetDestName(pArg, num, dest_name);
+    bool isDrobEPS = name.Find(_T("DR")) > -1;
+    const bool fileWarn = GetDestName(pArg, num, dest_name);
     CString sUid;
     sUid.Format(_T(" guid: %s"), GenerateGUIDString());
     const char* const tofind[] = { "%!PS-Adobe-3.1 EPSF-3.0", "%%BoundingBox:", "%%Creator:", "%%Title:", "%%CreationDate:", "%%Copyright:", "%%DocumentProcessColors:", "MIEJSCE_NA_EPS" };
@@ -1069,15 +1068,15 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
         } else if (fEx.m_cause != CFileException::fileNotFound && fEx.m_cause != CFileException::none) {
             fEx.GetErrorMessage(pArg->cBigBuf, DLGMSG_MAX_LEN);
             AfxMessageBox(pArg->cBigBuf, MB_ICONSTOP);
-            isDrobEPS = FALSE;
+            isDrobEPS = false;
         } else {
             ::MessageBox(pArg->pDlg->m_hWnd, CString("Nie odnaleziono pliku z drobnymi: ") + drobneEpsPath, APP_NAME, MB_OK | MB_ICONERROR);
-            isDrobEPS = FALSE;
+            isDrobEPS = false;
         }
     }
 
     // uzupelnienie dziedziczenia
-    BOOL isUzupEPS = FALSE;
+    bool isUzupEPS{false};
     CString uzupEpsPath;
     if (this->m_dervlvl == DervType::tmpl) {
         uzupEpsPath = theApp.GetProfileString(_T("GenEPS"), _T("EpsUzupel"), _T(""));
@@ -1088,7 +1087,7 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
                 sdervNum.Format(_T("%s%03i"), theApp.activeDoc->dayws, dervNum);
             uzupEpsPath += (((uzupEpsPath.Right(1) == "\\") ? "" : "\\") + m_dervinfo.Left(3) + m_dervinfo.Mid(4, 2) + sdervNum + _T(".eps"));
             if (externFile.Open(uzupEpsPath, CFile::modeRead | CFile::shareDenyWrite, &fEx)) {
-                isUzupEPS = TRUE;
+                isUzupEPS = true;
                 externFile.Close();
             } else if (fEx.m_cause != CFileException::fileNotFound && fEx.m_cause != CFileException::none) {
                 fEx.GetErrorMessage(pArg->cBigBuf, DLGMSG_MAX_LEN);
@@ -1345,8 +1344,7 @@ int CDrawPage::TiffHeader(CFile& dest, const int dx, const int dy, const int byt
 
     // 0::tiff header
     dest.Write(&header, sizeof(header));
-    // IFD Image File Directory
-    // 8::number of entries in directory
+    // 8::number of entries in IFD
     short w{ifd_size};
     dest.Write(&w, sizeof(short));
     IFDEntry entry[ifd_size] = {
