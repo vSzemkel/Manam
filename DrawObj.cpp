@@ -103,7 +103,7 @@ void CDrawObj::DrawTracker(CDC* pDC, TrackerState state) const
 }
 
 // position is in logical
-void CDrawObj::MoveTo(const CRect& position, CDrawView *pView)
+void CDrawObj::MoveTo(const CRect& position, CDrawView* pView)
 {
     ASSERT_VALID(this);
 
@@ -128,7 +128,7 @@ void CDrawObj::MoveTo(const CRect& position, CDrawView *pView)
 // If !bSelected, 0 = no hit, 1 = hit (anywhere)
 
 // point is in logical coordinates
-int CDrawObj::HitTest(const CPoint& point, CDrawView *pView, BOOL bSelected) const
+int CDrawObj::HitTest(const CPoint& point, CDrawView* pView, BOOL bSelected) const
 {
     ASSERT_VALID(this);
     ASSERT(pView != nullptr);
@@ -233,7 +233,7 @@ CPoint CDrawObj::GetHandle(int nHandle) const
 }
 
 // return rectange of handle in logical coords
-CRect CDrawObj::GetHandleRect(int nHandleID, CDrawView *pView) const
+CRect CDrawObj::GetHandleRect(int nHandleID, CDrawView* pView) const
 {
     ASSERT_VALID(this);
     ASSERT(pView != nullptr);
@@ -258,7 +258,7 @@ HCURSOR CDrawObj::GetHandleCursor(int nHandle) const
 }
 
 // point must be in logical
-void CDrawObj::MoveHandleTo(int nHandle, const CPoint& point, CDrawView *pView)
+void CDrawObj::MoveHandleTo(int nHandle, const CPoint& point, CDrawView* pView)
 {
     ASSERT_VALID(this);
 

@@ -700,12 +700,12 @@ bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* trgName)
         kon = pocz + (unsigned int)page->m_adds.size();
 
         nextObjNr = kon;
-        CDrawAdd *pAdd;
+        CDrawAdd* pAdd;
         // lista XObjectow
-        unsigned int i, dziury = 0;
+        unsigned int i, dziury{0};
         for (i = pocz; i < kon; ++i) {
             pAdd = page->m_adds[i - pocz];
-            fname = pAdd->EpsName(CManFormat::PDF, FALSE);
+            fname = pAdd->EpsName(CManFormat::PDF, false);
             filePath.emplace_back(fname);
             if (fname.Mid(1, 1) != _T(":")) {
                 embAlias.emplace_back("");

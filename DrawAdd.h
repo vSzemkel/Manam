@@ -26,16 +26,16 @@ class CDrawAdd final : public CDrawObj
     int szpalt_y;
     int typ_xx;           // FK_TYP_OGLOSZENIA
     int nag_xx{1};        // FK_NAGLOWEK_OGLOSZENIA, identyfikator górnego nag³ówka redakcyjnego
-    long nreps;           //nr eps==adno z atexa
-    long oldAdno;         //adno z którego jest powtórka
-    CString nazwa;        //nazwa ogl
-    CString logpage;      //logiczna strona - powiedzmy ze string war logicznych
-    CString remarks;      //uwagi
-    CString remarks_atex; //uwagi_atex
-    CString wersja;       //scan,eps,el,klisze,odz
-    CString czaskto;      //zawiera sformatowany czas obowi¹zywania i login sprzedawcy
-    CString kodModulu;    //zawiera nazwê pliku z materia³em Ÿród³owym do produkcji, bez œcie¿ki i rozszerzenia
-    CString f5_errInfo;   //komunikat o b³êdzie dotycz¹cym materia³u, wygenerowany przez funkcjê F5
+    long nreps;           // nr eps==adno z atexa
+    long oldAdno;         // adno z którego jest powtórka
+    CString nazwa;        // nazwa ogl
+    CString logpage;      // logiczna strona - powiedzmy ze string war logicznych
+    CString remarks;      // uwagi
+    CString remarks_atex; // uwagi_atex
+    CString wersja;       // scan,eps,el,klisze,odz
+    CString czaskto;      // zawiera sformatowany czas obowi¹zywania i login sprzedawcy
+    CString kodModulu;    // zawiera nazwê pliku z materia³em Ÿród³owym do produkcji, bez œcie¿ki i rozszerzenia
+    CString f5_errInfo;   // komunikat o b³êdzie dotycz¹cym materia³u, wygenerowany przez funkcjê F5
     int sizex;
     int sizey;
     int posx;
@@ -80,7 +80,7 @@ class CDrawAdd final : public CDrawObj
     static bool EpsFromATEX(const CString& num, const CString& dstPath);
     static bool EmbedEpsFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcPath);
 
-    void DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, BOOL top) const;
+    void DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, bool top) const;
     void DrawDesc(CDC* pDC, const CRect& rect) const; // vu : rysuje opis tekstowy og³oszenia
     void DrawPadlock(CDC* pDC, const CRect& rect) const;
     CString PrepareBuf(TCHAR* ch) const;
@@ -106,7 +106,7 @@ class CDrawAdd final : public CDrawObj
     bool RewriteEps(PGENEPSARG pArg, CFile& dest);
     bool RewriteDrob(PGENEPSARG pArg, CFile& dest);
     CString FindZajawka(CString& root, const CString& ext) const;
-    CString EpsName(CManFormat format, BOOL copyOldEPS, BOOL bModifTest = FALSE);
+    CString EpsName(CManFormat format, bool copyOldEPS, bool bModifTest = false);
     void Preview(PGENEPSARG pArg, int x, int y, int scanlinesCount, int bytesPerScanline) const;
     void SetDotM(bool setFlag); // parsuje wersjê i ustawia lub cofa .m
 

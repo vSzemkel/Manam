@@ -12,18 +12,18 @@ extern BOOL drawErrorBoxes;
 extern BOOL disableMenu;
 
 /////////////// DB MAKIETA z DB
-BOOL CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
+bool CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
 {
     if (!theApp.isRDBMS && !theApp.ConnecttoDB())
-        return FALSE;
+        return false;
 
     CDBOpenDlg dlg;
     if (sMakieta) {
         TCHAR *mnam, *sep, *sep2;
         mnam = _tcsrchr(sMakieta, _T('\\'));
-        if (!mnam) return FALSE;
+        if (!mnam) return false;
         sep = _tcschr(++mnam, _T('_'));
-        if (!sep) return FALSE;
+        if (!sep) return false;
         *sep++ = 0;
         sep2 = _tcschr(mnam, _T(' '));
         if (sep2) { // okreœlono mutacjê
@@ -33,14 +33,14 @@ BOOL CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
             dlg.m_mutacja = _T(" ");
         dlg.m_tytul = mnam;
         sep2 = _tcschr(sep, _T('.'));
-        if (!sep2) return FALSE;
+        if (!sep2) return false;
         *sep2 = 0;
         if (!isLIB) //.DB
             sep[2] = sep[5] = '/';
         dlg.m_dt = sep;
         dlg.m_doctype = static_cast<int>(iDocType);
     } else {
-        if (dlg.DoModal() != IDOK) return FALSE;
+        if (dlg.DoModal() != IDOK) return false;
         iDocType = (DocType)dlg.m_doctype;
         isLIB = iDocType == DocType::makieta_lib;
         isGRB = iDocType == DocType::grzbiet_drukowany;
@@ -54,7 +54,7 @@ BOOL CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
             for (size_t i = 0; i < cnt; ++i)
                 theApp.OpenDocumentFile(dlg.m_arrDaty[i] + CDrawDoc::asDocTypeExt[(int)iDocType]);
 
-            return FALSE;
+            return false;
         }
     }
     theApp.default_title = dlg.m_tytul;
@@ -68,13 +68,13 @@ BOOL CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
         if (openDoc == this) continue;
         if (openDoc->data == dlg.m_dt && openDoc->gazeta == dlg.m_tytul + (dlg.m_mutacja == " " ? "" : " " + dlg.m_mutacja) && static_cast<int>(openDoc->iDocType) == dlg.m_doctype) {
             frame->MDIActivate(openDoc->GetFirstFrame());
-            return FALSE;
+            return false;
         }
     }
 
     if (dlg.m_tytul.IsEmpty() || dlg.m_dt.IsEmpty()) {
         MessageBox(nullptr, (LPCTSTR)_T("Proszê podaæ trzyliterowy kod tytu³u i datê emisji lub wersjê"), (LPCTSTR)_T("Brak danych"), MB_ICONSTOP);
-        return FALSE;
+        return false;
     }
 
     frame->SetStatusBarInfo((LPCTSTR)_T("Proszê czekaæ. Trwa otwieranie makiety z bazy danych . . ."));
@@ -91,7 +91,7 @@ BOOL CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
             if (!isGRB) AfxGetMainWnd()->MessageBox(_T("B³¹d czytania stron makiety"), gazeta + _T(" ") + data, MB_OK);
         }
         frame->SetStatusBarInfo(_T(""));
-        return disableMenu = FALSE;
+        return disableMenu = false;
     }
 
     ComputeCanvasSize();
@@ -107,9 +107,9 @@ BOOL CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
     SetTitleAndMru();
     frame->SetStatusBarInfo("Gotowy - Makieta " + gazeta + " " + data);
     theApp.EndWaitCursor();
-    SetModifiedFlag(FALSE);
-    disableMenu = FALSE;
-    return TRUE;
+    SetModifiedFlag(false);
+    disableMenu = false;
+    return true;
 }
 
 void CDrawDoc::OnDBSave()
@@ -123,10 +123,10 @@ void CDrawDoc::OnDBSaveAs()
         pPage->dirty = TRUE;
     for (const auto& pObj : m_objects)
         pObj->dirty = TRUE;
-    DBSaveAs(TRUE);
+    DBSaveAs(true);
 }
 
-void CDrawDoc::DBSaveAs(BOOL isSaveAs)
+void CDrawDoc::DBSaveAs(bool isSaveAs)
 {
     if (!theApp.isRDBMS) return;
 
@@ -464,7 +464,7 @@ aSecondRun:
     theApp.EndWaitCursor();
 }
 
-void CDrawDoc::MakietujStrone(CDrawPage *pPage)
+void CDrawDoc::MakietujStrone(CDrawPage* pPage)
 {
     /* vu: 	Jedynym argumentem jest referencja do strony, ktora zostanie przemakietowana.
             Przemakietowanie polega na przeniesieni ogloszen ze strony do tabeli lokalnej,
@@ -623,7 +623,7 @@ void CDrawDoc::AsideAdds()
     }
 }
 
-CPoint CDrawDoc::GetAsideAddPos(BOOL opening) const
+CPoint CDrawDoc::GetAsideAddPos(bool opening) const
 {
     const int addsAsideCnt = opening ? 1 : 1 + (int)std::count_if(cbegin(m_objects), cend(m_objects), [](CDrawObj* pObj) noexcept { const auto a = dynamic_cast<CDrawAdd*>(pObj); return a && a->posx == 0; });
     const auto marginPageMinX = (int)(pmodulx*(1 + iPagesInRow / 2 + (pszpalt_x*iPagesInRow)));
@@ -788,7 +788,7 @@ int CDrawDoc::GetIPage(int n) const noexcept
     return -1;
 }
 
-int CDrawDoc::GetIPage(CDrawPage *pPage) const noexcept
+int CDrawDoc::GetIPage(CDrawPage* pPage) const noexcept
 {
     auto pos = std::find(std::cbegin(m_pages), std::cend(m_pages), pPage);
     return pos == std::cend(m_pages) ? -1 : static_cast<int>(pos - std::cbegin(m_pages));

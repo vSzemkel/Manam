@@ -23,10 +23,10 @@ public:
     CDrawTool(DrawShape drawShape);
 
     // Overridables
-    virtual void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point);
-    virtual void OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point);
-    virtual void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point);
-    virtual void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point);
+    virtual void OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point);
+    virtual void OnLButtonDblClk(CDrawView* pView, UINT nFlags, const CPoint& point);
+    virtual void OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point);
+    virtual void OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point);
 
     // Attributes
     DrawShape m_drawShape;
@@ -47,9 +47,9 @@ class CSelectTool : public CDrawTool
 public:
     CSelectTool();
     // Implementation
-    void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    void OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    void OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    void OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point) override;
 
     static int m_DragHandle;
 private:
@@ -63,10 +63,10 @@ public:
     CRectTool(DrawShape drawShape);
 
     // Implementation
-    void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    void OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    void OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    void OnLButtonDblClk(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    void OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    void OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point) override;
 };
 
 class CKolorTool : public CDrawTool
@@ -75,9 +75,9 @@ class CKolorTool : public CDrawTool
 public:
     CKolorTool(DrawShape drawShape);
     // Implementation
-    void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    void OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    void OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    void OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point) override;
 };
 
 class CLockTool : public CDrawTool
@@ -86,8 +86,8 @@ class CLockTool : public CDrawTool
 public:
     CLockTool(DrawShape drawShape);
     // Implementation
-    void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    void OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    void OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point) override;
 };
 
 class CSpaceTool : public CDrawTool
@@ -96,8 +96,8 @@ class CSpaceTool : public CDrawTool
 public:
     CSpaceTool(DrawShape dsh);
     // Implementation
-    void OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    void OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point) override;
-    void OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point) override;
+    void OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    void OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point) override;
+    void OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point) override;
 };
 ////////////////////////////////////////////////////////////////////////////

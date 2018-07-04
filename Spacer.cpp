@@ -44,7 +44,7 @@ BOOL CSpacerDlg::Deal(CDrawAdd *vAdd)
     dlg.queDeal = !vAdd->fizpage;
     if (dlg.DoModal() != IDOK && (vAdd->m_add_xx < 1 || dlg.m_quepub_xx > 0)) { //jezeli nie udalo sie sprzedac, to usun ogloszenie z makiety, z kolejki nie usuwaj
         CDrawDoc *vDoc = vAdd->m_pDocument;
-        CDrawPage *pPage = vDoc->GetPage(vAdd->fizpage);
+        CDrawPage* pPage = vDoc->GetPage(vAdd->fizpage);
         vDoc->Remove(vAdd);
         if (vAdd->m_add_xx < 1) delete vAdd;
         if (pPage) pPage->Invalidate();

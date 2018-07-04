@@ -23,40 +23,40 @@ CAtexKrat::CAtexKrat(const TCHAR *atexKratInfo, CDrawDoc *vDoc)
 /////////////////////////////////////////////////////////////////////////////
 // CAtexKrat message handlers
 
-BOOL CAtexKrat::CompX(int *sizex, int *s_x) const
+bool CAtexKrat::CompX(int *sizex, int *s_x) const
 {
     for (*s_x = 1; *s_x < DIM_LIMIT; (*s_x)++) {
         const auto tmpsizex = (float)xcol / szpalt_x * (float)*s_x;
         *sizex = (int)nearbyintf(tmpsizex);
         if (fabs(tmpsizex - *sizex) < *sizex*TOLERANCE)
-            return TRUE;
+            return true;
     }
-    return FALSE;
+    return false;
 }
 
-BOOL CAtexKrat::CompY(int *sizey, int *s_y) const
+bool CAtexKrat::CompY(int *sizey, int *s_y) const
 {
     for (*s_y = 1; *s_y < DIM_LIMIT; (*s_y)++) {
         const auto tmpsizey = (float)ymm / (float)dy * (float)*s_y;
         *sizey = (int)nearbyintf(tmpsizey);
         if (fabs(tmpsizey - *sizey) < *sizey * TOLERANCE)
-            return TRUE;
+            return true;
     }
-    return FALSE;
+    return false;
 }
 
-BOOL CAtexKrat::Compute(int *sizex, int *sizey, int *s_x, int *s_y)
+bool CAtexKrat::Compute(int *sizex, int *sizey, int *s_x, int *s_y)
 {
     isToSmall = (dy / ymm > (float)DIM_LIMIT || szpalt_x / xcol > (float)DIM_LIMIT);
-    if (isToSmall) return FALSE;
-    // dopasowanie	
+    if (isToSmall) return false;
+    // dopasowanie
     if (xcol == floor(xcol)) { // sprzedane do kraty domyslnej
         *sizex = (int)xcol;
         *s_x = (int)szpalt_x;
-        if (!CompY(sizey, s_y)) return FALSE;
+        if (!CompY(sizey, s_y)) return false;
     } else {
-        if (!CompX(sizex, s_x)) return FALSE;
-        if (!CompY(sizey, s_y)) return FALSE;
+        if (!CompX(sizex, s_x)) return false;
+        if (!CompY(sizey, s_y)) return false;
     }
     // krata paskowa
     if (*s_y >= KRATA_PASKOWA && *s_x == *sizex)
@@ -69,9 +69,9 @@ BOOL CAtexKrat::Compute(int *sizex, int *sizey, int *s_x, int *s_y)
                 *s_x *= (x - y + 1);
                 *sizey *= y;
                 *s_y *= y;
-                return TRUE;
+                return true;
             }
-    return FALSE;
+    return false;
 }
 
 #pragma endregion
@@ -152,17 +152,18 @@ void CKratCalc::OnCbnSelchangeKratka()
     if (_stscanf_s(k, _T("%ix%i"), &szpalt_x, &szpalt_y) != 2) return;
     auto r = theApp.activeDoc->GetCRozm(szpalt_x, szpalt_y);
     if (r) {
-        stronax = szpalt_x*(r->w + r->sw) - r->sw;
-        stronay = szpalt_y*(r->h + r->sh) - r->sh;
+        stronax = szpalt_x * (r->w + r->sw) - r->sw;
+        stronay = szpalt_y * (r->h + r->sh) - r->sh;
         Calculate();
-    } else m_wynik.SetWindowText(_T("Brak rozmiaru"));
+    } else
+        m_wynik.SetWindowText(_T("Brak rozmiaru"));
 }
 
 void CKratCalc::Calculate()
 {
     CString s;
     UpdateData(TRUE);
-    BOOL bFound = FALSE;
+    BOOL found{FALSE};
     const double lightx = m_lightx;
     const double lighty = m_lighty;
     const double addx = _ttof(m_sizex) * 10;
@@ -205,7 +206,7 @@ void CKratCalc::Calculate()
             m_y = l;
             m_kra_sym.Format(_T("%ix%i"), i, k);
             s.Format(_T("%ix%i na %s (%.1fx%.1f)"), j, l, (LPCTSTR)m_kra_sym, (j * (w + lightx) - lightx) / 10, (l * (h + lighty) - lighty) / 10 - (pkt2mm * podpisH));
-            bFound = TRUE;
+            found = TRUE;
         } else
             s.Format(_T("%ix# na %ix#"), j, i);
     } else {
@@ -216,7 +217,7 @@ void CKratCalc::Calculate()
     }
 
     m_wynik.SetWindowText(s);
-    GetDlgItem(IDB_DODAJ)->EnableWindow(bFound);
+    GetDlgItem(IDB_DODAJ)->EnableWindow(found);
 }
 
 

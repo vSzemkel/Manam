@@ -57,7 +57,7 @@ INT_PTR CALLBACK CGenEpsInfoDlg::DialogProc(HWND /*unused*/, UINT iMsg, WPARAM w
     return FALSE;
 }
 
-CGenEpsInfoDlg* CGenEpsInfoDlg::GetGenEpsInfoDlg(BOOL bIsGen)
+CGenEpsInfoDlg* CGenEpsInfoDlg::GetGenEpsInfoDlg(const BOOL bIsGen)
 {
     ASSERT(CGenEpsInfoDlg::m_instance.m_hWnd == nullptr);
     MESPUMPDLGARG dlgArg;
@@ -94,7 +94,7 @@ WORD CGenEpsInfoDlg::GetCpuCnt()
 void CGenEpsInfoDlg::SetChannelCount(int iChannelCnt)
 {
     CRect dwr, cwr, dtwr;
-    CWnd *pChildCtrl;
+    CWnd* pChildCtrl;
     CGenEpsInfoDlg::m_instance.GetWindowRect(&dwr);
     ::GetWindowRect(::GetDesktopWindow(), &dtwr);
 

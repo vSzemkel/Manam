@@ -49,7 +49,7 @@ CDrawTool* CDrawTool::FindTool(DrawShape drawShape)
     return nullptr;
 }
 
-void CDrawTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point)
+void CDrawTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point)
 {
     // deactivate any in-place active item on this view!
     COleClientItem* pActiveItem = pView->GetDocument()->GetInPlaceActiveItem(pView);
@@ -64,7 +64,7 @@ void CDrawTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
     c_last = point;
 }
 
-void CDrawTool::OnLButtonDblClk(CDrawView *pView, UINT nFlags, const CPoint& point)
+void CDrawTool::OnLButtonDblClk(CDrawView* pView, UINT nFlags, const CPoint& point)
 {
     if ((nFlags & MK_SHIFT) != 0) {
         // Shift+DblClk deselects object...
@@ -106,7 +106,7 @@ CSelectTool::CSelectTool() : CDrawTool(DrawShape::select)
 {
 }
 
-void CSelectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point)
+void CSelectTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point)
 {
     CPoint local = point;
     pView->ClientToDoc(local);
@@ -171,7 +171,7 @@ void CSelectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poi
     CDrawTool::OnLButtonDown(pView, nFlags, point);
 }
 
-void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point)
+void CSelectTool::OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point)
 {
     CDrawObj* pObj = nullptr;
 
@@ -184,7 +184,7 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
             {
                 CClientDC dc(pView);
                 dc.DrawFocusRect(m_last_rect);
-                pView->SelectWithinRect(m_last_rect, TRUE);
+                pView->SelectWithinRect(m_last_rect, true);
             }
             break;
 
@@ -319,7 +319,7 @@ void CSelectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point
     CDrawTool::OnLButtonUp(pView, nFlags, point);
 }
 
-void CSelectTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& point)
+void CSelectTool::OnMouseMove(CDrawView* pView, UINT /*unused*/, const CPoint& point)
 {
     c_last = point;
     CDrawObj* pObj;
@@ -390,7 +390,7 @@ CRectTool::CRectTool(DrawShape drawShape)
 {
 }
 
-void CRectTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point)
+void CRectTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point)
 {
     CDrawTool::OnLButtonDown(pView, nFlags, point);
 
@@ -437,7 +437,7 @@ void CRectTool::OnLButtonDblClk(CDrawView* /*unused*/, UINT /*unused*/, const CP
 {
 }
 
-void CRectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point)
+void CRectTool::OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point)
 {
     if (point == c_down) {
         // Don't create empty objects...
@@ -451,7 +451,7 @@ void CRectTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point)
     selectTool.OnLButtonUp(pView, nFlags, point);
 }
 
-void CRectTool::OnMouseMove(CDrawView *pView, UINT nFlags, const CPoint& point)
+void CRectTool::OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point)
 {
     selectTool.OnMouseMove(pView, nFlags, point);
 }
@@ -518,7 +518,7 @@ void CKolorTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& poin
         }
 }
 
-void CKolorTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& point)
+void CKolorTool::OnMouseMove(CDrawView* pView, UINT /*unused*/, const CPoint& point)
 {
     c_last = point;
 
@@ -542,7 +542,7 @@ CLockTool::CLockTool(DrawShape drawShape)
 {
 }
 
-void CLockTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point)
+void CLockTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point)
 {
     CPoint local = point;
     pView->ClientToDoc(local);
@@ -572,7 +572,7 @@ void CLockTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point
     }
 }
 
-void CLockTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& point)
+void CLockTool::OnMouseMove(CDrawView* pView, UINT /*unused*/, const CPoint& point)
 {
     c_last = point;
     // pokazywanie na status barze co to za obiekt
@@ -592,7 +592,7 @@ CSpaceTool::CSpaceTool(DrawShape dsh)
 {
 }
 
-void CSpaceTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& point)
+void CSpaceTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point)
 {
     spaceMode = (CDrawTool::c_drawShape == DrawShape::red ? SpaceMode::redlock : SpaceMode::spacelock);
     CClientDC dc(pView);
@@ -602,7 +602,7 @@ void CSpaceTool::OnLButtonDown(CDrawView *pView, UINT nFlags, const CPoint& poin
     CDrawTool::OnLButtonDown(pView, nFlags, point);
 }
 
-void CSpaceTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& point)
+void CSpaceTool::OnMouseMove(CDrawView* pView, UINT /*unused*/, const CPoint& point)
 {
     //..,,pokazywanie na status barze co to za obiekt
     CPoint l = point;
@@ -625,7 +625,7 @@ void CSpaceTool::OnMouseMove(CDrawView *pView, UINT /*unused*/, const CPoint& po
     }
 }
 
-void CSpaceTool::OnLButtonUp(CDrawView *pView, UINT nFlags, const CPoint& point)
+void CSpaceTool::OnLButtonUp(CDrawView* pView, UINT nFlags, const CPoint& point)
 {
     if (CDrawView::GetCapture() == pView && point != c_down && spaceMode != SpaceMode::avail) { // czy kliknelismy w to samo miejsce
         CClientDC dc(pView);

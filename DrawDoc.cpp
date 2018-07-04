@@ -191,7 +191,7 @@ BOOL CDrawDoc::SaveModified()
     return CDocument::SaveModified();
 }
 
-void CDrawDoc::SetTitleAndMru(BOOL addRecentFiles)
+void CDrawDoc::SetTitleAndMru(bool addRecentFiles)
 {
     CString makieta;
     makieta.AppendFormat(_T("%s %s %s"), static_cast<LPCTSTR>(gazeta), static_cast<LPCTSTR>(opis), static_cast<LPCTSTR>(data));
@@ -287,7 +287,7 @@ void CDrawDoc::Serialize(CArchive& ar)
 
 ///////////////RYSOWANIE I DRUKOWANIE ////////////////////////////////////////////////////////
 // CDrawDoc implementation
-void CDrawDoc::Draw(CDC* pDC, CDrawView *pView)
+void CDrawDoc::Draw(CDC* pDC, CDrawView* pView)
 {
     if (isRO) {
         CRect r;
@@ -304,7 +304,7 @@ void CDrawDoc::Draw(CDC* pDC, CDrawView *pView)
 
     const auto psize = m_pages.size();
     if (psize > 0 && ((psize & 1) == 0)) { // makieta ma rozkladowke
-        CDrawPage *pPage = m_pages[psize / 2];
+        CDrawPage* pPage = m_pages[psize / 2];
         const CRect& pRozkl = pPage->m_position;
         CRect r(pRozkl.right - vscale, pRozkl.top - pmoduly - vscale, pRozkl.right + vscale, pRozkl.bottom + vscale);
         pDC->FillRect(r, pPage->pagina_type == PaginaType::roman ? (CBrush*)pDC->SelectStockObject(WHITE_BRUSH) : &((CMainFrame*)AfxGetMainWnd())->rzym);
@@ -383,7 +383,7 @@ void CDrawDoc::Print(CDC* pDC)
             p->DrawDeadline(pDC, &p->GetPrintRect());
 }
 
-void CDrawDoc::PrintPage(CDC* pDC, CDrawPage *pPage)
+void CDrawDoc::PrintPage(CDC* pDC, CDrawPage* pPage)
 {
     pPage->Print(pDC);
 
@@ -423,7 +423,7 @@ void CDrawDoc::Add(CDrawObj* pObj)
     SetModifiedFlag();
 }
 
-void CDrawDoc::AddQue(CDrawAdd *pObj)
+void CDrawDoc::AddQue(CDrawAdd* pObj)
 {
     pObj->fizpage = 0;
     pObj->m_pDocument = this;
@@ -431,7 +431,7 @@ void CDrawDoc::AddQue(CDrawAdd *pObj)
     SetModifiedFlag();
 }
 
-void CDrawDoc::RemoveQue(CDrawAdd *pObj)
+void CDrawDoc::RemoveQue(CDrawAdd* pObj)
 {
     const auto pos = std::find(m_addsque.cbegin(), m_addsque.cend(), pObj);
     if (pos != m_addsque.cend()) m_addsque.erase(pos);
@@ -515,7 +515,7 @@ int CDrawDoc::GetAdPosition(const CDrawAdd *pAdd) const
     return pos == m_objects.cend() ? -1 : n;
 }
 
-void CDrawDoc::SelectAdd(CDrawAdd *pObj, BOOL multiselect) const
+void CDrawDoc::SelectAdd(CDrawAdd* pObj, bool multiselect) const
 {
     auto pView = GetPanelView<CDrawView>();
     if (pView) pView->Select(pObj, multiselect);
@@ -545,14 +545,14 @@ void CDrawDoc::RemoveFromTail(int n)
 
 /////////////////////////////////////////////////////////////////////////////
 //CDrawPage
-void CDrawDoc::AddPageAt(size_t idx, CDrawPage *pObj)
+void CDrawDoc::AddPageAt(size_t idx, CDrawPage* pObj)
 {
     m_pages.insert(m_pages.cbegin() + idx, pObj);
     pObj->m_pDocument = this;
     SetModifiedFlag();
 }
 
-size_t CDrawDoc::AddPage(CDrawPage *pObj)
+size_t CDrawDoc::AddPage(CDrawPage* pObj)
 {
     size_t iNewOrd = m_pages.size();
     m_pages.push_back(pObj);
@@ -566,7 +566,7 @@ size_t CDrawDoc::AddPage(CDrawPage *pObj)
     return iNewOrd;
 }
 
-void CDrawDoc::RemovePage(CDrawPage *pObj)
+void CDrawDoc::RemovePage(CDrawPage* pObj)
 {
     int i = GetIPage(pObj);
     if (i == -1)
@@ -613,7 +613,7 @@ bool CDrawDoc::MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo)
     return found;
 }
 
-void CDrawDoc::SetPageRectFromOrd(CDrawPage *pObj, size_t iOrd) const
+void CDrawDoc::SetPageRectFromOrd(CDrawPage* pObj, size_t iOrd) const
 {
     ASSERT(0 <= iOrd && iOrd < m_pages.size());
 
@@ -769,10 +769,10 @@ void CDrawDoc::OnFileSaveAs()
 //////////////////////////////////////////////////////////////////////
 ////////// IMPORT 
 
-void CDrawDoc::OnImport(BOOL fromDB)
+void CDrawDoc::OnImport(bool fromDB)
 {
     const auto n = (int)m_objects.size();
-    if ((fromDB) ? DBImport() : Import(TRUE)) {
+    if ((fromDB) ? DBImport() : Import(true)) {
         auto pView = GetPanelView<CDrawView>();
         if (pView && pView->m_bActive) pView->Select(nullptr, FALSE);
         RemoveFromHead(n);
@@ -783,51 +783,51 @@ void CDrawDoc::OnImport(BOOL fromDB)
 
 void CDrawDoc::OnFileImportPlus()
 {
-    OnImportPlus(FALSE);
+    OnImportPlus(false);
 }
 
 void CDrawDoc::OnFileImportMinus()
 {
-    Import(TRUE);
+    Import(true);
     UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
 }
 
 void CDrawDoc::OnDBImportMinus()
 {
-    DBImport(FALSE);
+    DBImport(false);
     UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
 }
 
 void CDrawDoc::OnAddSynchronize()
 {
-    DBImport(TRUE);
+    DBImport(true);
     UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
 }
 
 void CDrawDoc::OnDBImportPlus()
 {
-    OnImportPlus(TRUE);
+    OnImportPlus(true);
 }
 
-void CDrawDoc::OnImportPlus(BOOL fromDB)
+void CDrawDoc::OnImportPlus(bool fromDB)
 {
     const auto n = m_objects.size();
-    if (!(fromDB ? DBImport() : Import(TRUE)))
+    if (!(fromDB ? DBImport() : Import(true)))
         RemoveFromTail((int)(m_objects.size() - n));
     UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
 }
 
-BOOL CDrawDoc::Import(BOOL check_exist) // tu dodaje na koncu do m_objects najwyzej sie potem usunie 
+bool CDrawDoc::Import(bool check_exist) // tu dodaje na koncu do m_objects najwyzej sie potem usunie 
 {
     CFileDialog dlg(TRUE, _T("txt"), _T(""), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Og³oszenia (*.txt)|*.txt| Wszystkie pliki (*.*)|*.*||"), nullptr);
     if (dlg.DoModal() != IDOK)
         return 0;
 
-    BOOL ok = TRUE;
+    bool ok{true};
     try {
         auto& buf = theApp.bigBuf;
         CStdioFile file(dlg.m_ofn.lpstrFile, CFile::modeRead | CFile::typeUnicode);
-        CPoint pos = GetAsideAddPos(FALSE);
+        CPoint pos = GetAsideAddPos(false);
         while (file.ReadString(buf, n_size) != nullptr && ok)
             ok = CreateAdd(buf, '\t', pos, check_exist);
 
@@ -842,7 +842,7 @@ BOOL CDrawDoc::Import(BOOL check_exist) // tu dodaje na koncu do m_objects najwy
     return ok;
 }
 
-BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL check_exist)
+bool CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, bool check_exist)
 { // tworzenie ogloszen importowanych z pliku tekstowego
     enum nazcstr : uint8_t
     {
@@ -914,11 +914,11 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL c
             adBuf = ++pdest;
     }
 
-    if (check_exist ? AddExists(p_nreps) : FALSE) {
+    if (check_exist && AddExists(p_nreps) != nullptr) {
         CString msg;
         msg.Format(_T("W danych Ÿród³owych wystêpuje wiêcej ni¿ jedno og³oszenie o numerze %ld. Wczytane zostanie tylko pierwsze z tych og³oszeñ."), p_nreps);
         AfxMessageBox(msg, MB_ICONEXCLAMATION);
-        return FALSE;
+        return false;
     }
 
     const CRect r(pos, CSize(sx * pmodulx, -sy * pmoduly));
@@ -933,7 +933,7 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL c
     pObj->szpalt_x = szpalt_x;
     pObj->szpalt_y = szpalt_y;
     if (fizpage && (szpalt_x != pszpalt_x || szpalt_y != pszpalt_y)) {
-        CDrawPage *vPage = GetPage(fizpage);
+        CDrawPage* vPage = GetPage(fizpage);
         if (vPage) vPage->SetBaseKrata(szpalt_x, szpalt_y, TRUE);
     }
     pObj->SetPosition(fizpage, posx, posy, sx, sy);
@@ -944,7 +944,7 @@ BOOL CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, BOOL c
         }
     }
     pObj->Invalidate();
-    return TRUE;
+    return true;
 }
 
 int CDrawDoc::ValidKolor(const CString& k) noexcept
@@ -1056,11 +1056,11 @@ void CDrawDoc::OnAdd4Pages()
     Add4Pages();
 }
 
-BOOL CDrawDoc::Add4Pages()
+bool CDrawDoc::Add4Pages()
 {
     CKolDlg dlg;
     if (dlg.DoModal() != IDOK)
-        return FALSE;
+        return false;
 
     const CRect r{nullptr};
     const int n = _ttoi(dlg.m_ile_kolumn);
@@ -1082,15 +1082,15 @@ BOOL CDrawDoc::Add4Pages()
     ComputeCanvasSize();
     UpdateAllViews(nullptr);
 
-    return TRUE;
+    return true;
 }
 
-BOOL CDrawDoc::AddDrz4Pages(LPCTSTR ile_kolumn)
+bool CDrawDoc::AddDrz4Pages(LPCTSTR ile_kolumn)
 {
     CDrzDlg dlg;
     dlg.m_ile_kolumn = ile_kolumn;
     if (dlg.DoModal() != IDOK)
-        return FALSE;
+        return false;
 
     gazeta = dlg.m_gazeta;
     id_drw = dlg.m_id_drw;
@@ -1108,10 +1108,10 @@ BOOL CDrawDoc::AddDrz4Pages(LPCTSTR ile_kolumn)
     NumberPages();
     ComputeCanvasSize();
     UpdateAllViews(nullptr);
-    return TRUE;
+    return true;
 }
 
-void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_modwol) const
+void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_modwol) const
 {
     UINT l_modogl, l_modred, l_modrez;
     *m_modogl = *m_modred = *m_modrez = 0;
@@ -1156,7 +1156,7 @@ void CDrawDoc::ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_
     if (*m_modwol > (UINT)m_pages.size()*pmodcnt) *m_modwol = 0;
 }
 
-inline float CDrawDoc::PowAdd2Mod(BOOL bQueStat) const
+inline float CDrawDoc::PowAdd2Mod(bool bQueStat) const
 {
     float pow = 0.0;
     auto mod_count = [](const CDrawAdd* a) noexcept -> float { return (float)(a->sizex * a->sizey * pmodcnt) / (a->szpalt_x * a->szpalt_y); };
@@ -1475,22 +1475,22 @@ CString CDrawDoc::XmlReadText(IXmlReader *reader)
 }
 
 ////////////////// DB ///////////////////////////////////////////////
-BOOL CDrawDoc::DBImport(BOOL synchronize)
+bool CDrawDoc::DBImport(bool synchronize)
 {
     CDbDlg dlg;
     dlg.m_dtime = CTime(_ttoi(data.Mid(6, 4)), _ttoi(data.Mid(3, 2)), _ttoi(data.Mid(0, 2)), 0, 0, 0);
-    if (dlg.DoModal() != IDOK) return FALSE;
+    if (dlg.DoModal() != IDOK) return false;
     BeginWaitCursor();
 
     long adno;
     CDrawAdd *vAdd, *vAdd2;
-    BOOL empSet = TRUE, bBank = FALSE;
+    bool empSet{true}, bBank{false};
     CString xRoz, xNaz, xKol, xStr, xUwa, xKrt;
     std::vector<int> syncATEX, dirtyATEX, zaporaATEX;
     std::vector<CDrawAdd*> aNewAdds, aOldAdds, aModifAdds;
     const bool bOstateczna = dataZamkniecia < CTime::GetCurrentTime();
 
-    if (bOstateczna) synchronize = TRUE;
+    if (bOstateczna) synchronize = true;
 
 second_paper:
     auto buf = reinterpret_cast<char*>(theApp.bigBuf);
@@ -1508,13 +1508,13 @@ second_paper:
         XmlNodeType nodeType;
         if (S_OK != reader->Read(&nodeType)) {
             AfxMessageBox(CString(_T("ATEX nie odpowiada\n\n")) + buf);
-            return FALSE;
+            return false;
         }
 
-        CPoint pos(GetAsideAddPos(FALSE)), pos2;
+        CPoint pos(GetAsideAddPos(false)), pos2;
         while (S_OK == reader->Read(&nodeType) && nodeType != XmlNodeType_EndElement) // read next ad
         {
-            empSet = FALSE;
+            empSet = false;
             pos2 = pos;
 
             adno = _wtoi(XmlReadText(reader));
@@ -1596,7 +1596,7 @@ second_paper:
 
     if (synchronize) { // usuñ z makiety te og³oszenia, które maj¹ nr>0 i nie ma ich w ATEX'ie
         UpdateAllViews(nullptr, HINT_SAVEAS_DELETE_SELECTION, nullptr);
-        BOOL spfluos = FALSE, rejestracjaSpfluos = FALSE;
+        bool spfluos{false}, rejestracjaSpfluos{false};
         int i, j = 1, ac = (int)syncATEX.size();
         std::vector<CDrawAdd*> aDelAdds;
         CString sQueMissed;
@@ -1609,14 +1609,14 @@ second_paper:
                 for (i = 0; i < ac; ++i)
                     if (syncATEX[i] == adno) break;
                 if (i == ac && !vAdd->flags.derived && vAdd->wersja.Find('z') == -1 && (vAdd->flags.isok == 3 || (bOstateczna && vAdd->flags.isok < 3))) { // nie ma w ATEX'ie
-                    SelectAdd(vAdd, TRUE);
+                    SelectAdd(vAdd, true);
                     adnos.AppendFormat(_T("%li, "), adno);
                     aDelAdds.push_back(vAdd);
-                    spfluos = TRUE;
+                    spfluos = true;
                 }
                 if (i == ac && !vAdd->flags.derived && abs(vAdd->flags.isok) < 3) { // nie zarejestrowane
                     doRejetracjiAdnos.AppendFormat(_T("%li, "), adno);
-                    rejestracjaSpfluos = TRUE;
+                    rejestracjaSpfluos = true;
                 }
                 if (i < ac && abs(vAdd->flags.isok) < 3) { // ustaw zapore
                     zaporaATEX.push_back((int)vAdd->m_pub_xx);
@@ -1682,7 +1682,7 @@ second_paper:
     }
 
     EndWaitCursor();
-    return TRUE;
+    return true;
 }
 
 CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, long nr, UINT kolor, CString& warunki, const CString& uwagi, const CString& krt, CPoint& pos)

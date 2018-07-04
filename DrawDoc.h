@@ -59,57 +59,57 @@ class CDrawDoc final : public COleDocument
     void ComputeCanvasSize();
     int AddsCount() const noexcept;
     int GetIPage(int n) const noexcept;
-    int GetIPage(CDrawPage *pPage) const noexcept;
+    int GetIPage(CDrawPage* pPage) const noexcept;
     int Nr2NrPorz(const TCHAR* s) const noexcept;   // dla numeru na paginie liczy numer porz¹dkowy
 
 // Operations
     //dotyczy CDrawObj - obiektow i add ogloszen
     void OnAsideAdds();
-    void AsideAdds();							// ustawia z boku ogloszenia bez okreslonej strony
-    CPoint GetAsideAddPos(BOOL opening) const; // wylicza lewy gorny rog kolejnego ogloszenia z boku makiety
-    void ArrangeQue();							// ustawie og³oszenia na rysunku kolejki
-    void MakietujStrone(CDrawPage *pPage); 		// makietowanie dla wskazanej strony
-    void AddFind(long nrAtex, long nrSpacer, LPCTSTR nazwa);	// wyszukiwanie og³oszeñ
-    void DerivePages(CDrawPage *pPage);			// dziedziczenie stron
+    void AsideAdds();                          // ustawia z boku ogloszenia bez okreslonej strony
+    CPoint GetAsideAddPos(bool opening) const; // wylicza lewy gorny rog kolejnego ogloszenia z boku makiety
+    void ArrangeQue();                         // ustawie og³oszenia na rysunku kolejki
+    void MakietujStrone(CDrawPage* pPage);     // makietowanie dla wskazanej strony
+    void AddFind(long nrAtex, long nrSpacer, LPCTSTR nazwa); // wyszukiwanie og³oszeñ
+    void DerivePages(CDrawPage* pPage);        // dziedziczenie stron
 
-    void Draw(CDC* pDC, CDrawView *pView);
+    void Draw(CDC* pDC, CDrawView* pView);
     void DrawQue(CDC* pDC, CQueView *pView);
     void Print(CDC* pDC);
-    void PrintPage(CDC* pDC, CDrawPage *pPage);
+    void PrintPage(CDC* pDC, CDrawPage* pPage);
     void Add(CDrawObj* pObj);
-    void AddQue(CDrawAdd *pObj);
-    void RemoveQue(CDrawAdd *pObj);
+    void AddQue(CDrawAdd* pObj);
+    void RemoveQue(CDrawAdd* pObj);
     void RemoveFromHead(int n);
     void RemoveFromTail(int n);
     void Remove(CDrawObj* pObj);
     int GetAdPosition(const CDrawAdd *pAdd) const;
-    CDrawObj *ObjectAt(const CPoint &point) const;
+    CDrawObj* ObjectAt(const CPoint &point) const;
     CDrawAdd* ObjectAtQue(const CPoint& point) const;
     CDrawAdd* FindAddAt(int i) const; // szuka ogloszenia na pozycji i wsrod ogl - opisy sie nie numeruje
 
-    void SelectAdd(CDrawAdd *pObj, BOOL multiselect = FALSE) const;
+    void SelectAdd(CDrawAdd* pObj, bool multiselect = false) const;
 
     int ComputePageOrderNr(const CRect& position) const;         // oblicza numer porz¹dkowy strony na podstawie po³o¿enia
-    void SetPageRectFromOrd(CDrawPage *pObj, size_t iOrd) const; // pozycjonuje stronê na podstawie numeru porz¹dkowego
+    void SetPageRectFromOrd(CDrawPage* pObj, size_t iOrd) const; // pozycjonuje stronê na podstawie numeru porz¹dkowego
     void MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt);   // przesuwa ci¹g³y blok stron w obrêbie makiety
 
-    size_t AddPage(CDrawPage *pObj);             // na koncu, zwieksza pamiec na tablice
-    void AddPageAt(size_t idx, CDrawPage *pObj); // pod zadanym idx
-    void RemovePage(CDrawPage *pObj);
+    size_t AddPage(CDrawPage* pObj);             // na koncu, zwieksza pamiec na tablice
+    void AddPageAt(size_t idx, CDrawPage* pObj); // pod zadanym idx
+    void RemovePage(CDrawPage* pObj);
     CDrawPage* PageAt(const CPoint& point) const;
     CDrawPage* GetPage(int n) const;
 
     //..,,inne akcje menu -OGLOSZENIA
-    void OnImport(BOOL fromDB);
-    void OnImportPlus(BOOL fromDB);
+    void OnImport(bool fromDB);
+    void OnImportPlus(bool fromDB);
     void OnFileImportPlus();
     void OnFileImportMinus();
     void OnDBImportPlus();
     void OnDBImportMinus();
     void OnDrawOpcje();
-    BOOL Import(BOOL check_exist);
-    BOOL CreateAdd(LPCTSTR adBuf, TCHAR sepChar, CPoint& pos, BOOL check_exist);
-    BOOL DBImport(BOOL synchronize = FALSE);
+    bool Import(bool check_exist);
+    bool CreateAdd(LPCTSTR adBuf, TCHAR sepChar, CPoint& pos, bool check_exist);
+    bool DBImport(bool synchronize = false);
     CDrawAdd* AddExists(long nr) const;
     CDrawAdd* PubXXExists(int pub_xx) const;
     CDrawAdd* DBCreateAdd(const CString& roz, const CString& nazwa, long nr, UINT kolor, CString& warunki, const CString& uwagi, const CString& krt, CPoint& pos);
@@ -125,13 +125,13 @@ class CDrawDoc final : public COleDocument
     void PrintInfo(CDC* pDC, int max_n, int wspol_na_str);
 
     void OnAdd4Pages();
-    BOOL Add4Pages();									// dodaje strony tzn obiekty
-    BOOL AddDrz4Pages(LPCTSTR ile_kolumn = _T("4"));	// dodaje strony tzn obiekty
+    bool Add4Pages();
+    bool AddDrz4Pages(LPCTSTR ile_kolumn = _T("4"));
 
-    BOOL DBOpenDoc(TCHAR *sMakieta = nullptr);
+    bool DBOpenDoc(TCHAR* sMakieta = nullptr);
     void OnDBSave();
     void OnDBSaveAs();
-    void DBSaveAs(BOOL isSaveAs);
+    void DBSaveAs(bool isSaveAs);
     void OnDBDelete();
 
     int DBReadSpot(int n);
@@ -230,11 +230,11 @@ private:
     long lastSearchNrSpacer;
     CString lastSearchNazwa;
 
-    void SetTitleAndMru(BOOL addRecentFiles = TRUE); // wywo³uje base->SetTitle przekazuj¹c odpowiednie parametry i opcjonalnie dodaje do MRU
+    void SetTitleAndMru(bool addRecentFiles = true); // wywo³uje base->SetTitle przekazuj¹c odpowiednie parametry i opcjonalnie dodaje do MRU
     void AdvanceAsidePos(CPoint& p) const;           // wylicza polozenie kolejnego nastepnego ogloszenia z boku
-    float PowAdd2Mod(BOOL bQueStat) const;
+    float PowAdd2Mod(bool bQueStat) const;
     bool MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo);
-    void ModCount(UINT *m_modogl, UINT *m_modred, UINT *m_modrez, UINT *m_modwol) const;
+    void ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_modwol) const;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -137,7 +137,7 @@ void CQueView::DocToClient(CPoint *point)
 void CQueView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
     ClientToDoc(&point);
-    CDrawAdd *pObj = GetDocument()->ObjectAtQue(point);
+    CDrawAdd* pObj = GetDocument()->ObjectAtQue(point);
     if (pObj)
         pObj->OnOpen(nullptr);
     else {
@@ -150,7 +150,7 @@ void CQueView::OnLButtonDblClk(UINT nFlags, CPoint point)
 void CQueView::OnLButtonDown(UINT nFlags, CPoint point)
 {
     ClientToDoc(&point);
-    CDrawAdd *pObj = GetDocument()->ObjectAtQue(point);
+    CDrawAdd* pObj = GetDocument()->ObjectAtQue(point);
     if (!pObj) {
         if (selected_add) {
             CRect rect = selected_add->m_position;

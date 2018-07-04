@@ -248,58 +248,58 @@ void CDrawAdd::DrawDesc(CDC* pDC, const CRect& rect) const
     CString buf;
     switch (theApp.m_view_top) { // vu : opis gorny
         case TEXT_NAZWA:
-            DrawTx(pDC, rect, nazwa, TRUE);
+            DrawTx(pDC, rect, nazwa, true);
             break;
         case TEXT_PLIK:
-            DrawTx(pDC, rect, kodModulu, TRUE);
+            DrawTx(pDC, rect, kodModulu, true);
             break;
         case TEXT_WARLOG:
-            DrawTx(pDC, rect, logpage, TRUE);
+            DrawTx(pDC, rect, logpage, true);
             break;
         case TEXT_CZASKTO:
-            DrawTx(pDC, rect, czaskto, TRUE);
+            DrawTx(pDC, rect, czaskto, true);
             break;
         case TEXT_UWAGI:
-            DrawTx(pDC, rect, remarks, TRUE);
+            DrawTx(pDC, rect, remarks, true);
             break;
         case TEXT_STUDIO:
-            DrawTx(pDC, rect, CGridFrm::studioStats[(uint8_t)this->flags.studio], TRUE);
+            DrawTx(pDC, rect, CGridFrm::studioStats[(uint8_t)this->flags.studio], true);
             break;
         case TEXT_EPS:
             if (nreps > -1L) {
                 buf.Format(_T("%li"), nreps);
-                DrawTx(pDC, rect, buf, TRUE);
+                DrawTx(pDC, rect, buf, true);
             }
     }
 
     switch (theApp.m_view_bottom) { // vu : opis dolny
         case TEXT_NAZWA:
-            DrawTx(pDC, rect, nazwa, FALSE);
+            DrawTx(pDC, rect, nazwa, false);
             break;
         case TEXT_PLIK:
-            DrawTx(pDC, rect, kodModulu, FALSE);
+            DrawTx(pDC, rect, kodModulu, false);
             break;
         case TEXT_WARLOG:
-            DrawTx(pDC, rect, logpage, FALSE);
+            DrawTx(pDC, rect, logpage, false);
             break;
         case TEXT_CZASKTO:
-            DrawTx(pDC, rect, czaskto, FALSE);
+            DrawTx(pDC, rect, czaskto, false);
             break;
         case TEXT_UWAGI:
-            DrawTx(pDC, rect, remarks, FALSE);
+            DrawTx(pDC, rect, remarks, false);
             break;
         case TEXT_STUDIO:
-            DrawTx(pDC, rect, CGridFrm::studioStats[(uint8_t)this->flags.studio], FALSE);
+            DrawTx(pDC, rect, CGridFrm::studioStats[(uint8_t)this->flags.studio], false);
             break;
         case TEXT_EPS:
             if (nreps > -1L) {
                 buf.Format(_T("%li"), nreps);
-                DrawTx(pDC, rect, buf, FALSE);
+                DrawTx(pDC, rect, buf, false);
             }
     }
 }
 
-void CDrawAdd::DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, BOOL top) const
+void CDrawAdd::DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, const bool top) const
 {
     CRect r{rect};
     r += CPoint(vscale*(txtposx - TXTSHIFT), -vscale*(txtposy - TXTSHIFT));
@@ -1426,7 +1426,7 @@ bool CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by
             bool status = _stscanf_s(sBBox, _T("%f %f %f %f"), bx1, by1, bx2, by2) == 4;
             if (!status) { // przesz³o przez EpsTest, ale nie ma ProdInfo
                 bReqProdInfo = true;
-                if (powtorka > 0) EpsName(CManFormat::EPS, FALSE);
+                if (powtorka > 0) EpsName(CManFormat::EPS, false);
                 CManODPNETParms orapar { CManDbType::DbTypeInt32, &m_pub_xx };
                 theManODPNET.EI("begin epstest.request_prod_info(:pub_xx); end;", orapar);
             } else
@@ -1436,7 +1436,7 @@ bool CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by
 
     // szukaj BoundingBox w pliku
     if (powtorka > 0) pArg->pDlg->OglInfo(pArg->iChannelId, CString(_T("Pobieranie pliku z archiwum")));
-    const CString& eps_name = EpsName(CManFormat::EPS, FALSE);
+    const CString& eps_name = EpsName(CManFormat::EPS, false);
     pArg->pDlg->OglInfo(pArg->iChannelId, eps_name);
     if (eps_name.Mid(1, 1) != _T(":")) {
         f5_errInfo += (eps_name + _T(", "));
@@ -1527,7 +1527,7 @@ dajWymiarKraty:
         }
     } else { // PDF
         CManPDF pdf{pArg};
-        CString eps_name = EpsName(pArg->format, FALSE);
+        CString eps_name = EpsName(pArg->format, false);
         if (!pdf.GetMediaBox(eps_name, &x1, &y1, &x2, &y2)) {
             msg.Format(_T("%li z³e MediaBox, "), nreps);
             f5_errInfo += msg;
@@ -1642,7 +1642,7 @@ bool CDrawAdd::LocatePreview(CFile& fEps, unsigned long* lOffset, unsigned long*
     return true;
 }
 
-CString CDrawAdd::EpsName(CManFormat format, BOOL copyOldEPS, BOOL bModifTest)
+CString CDrawAdd::EpsName(CManFormat format, bool copyOldEPS, const bool bModifTest)
 {
     static const TCHAR* aExt[] = { _T(".eps"), _T(".ps"), _T(".pdf") };
     const TCHAR* extension = aExt[(uint8_t)format];

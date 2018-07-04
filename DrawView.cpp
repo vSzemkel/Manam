@@ -407,7 +407,7 @@ void CDrawView::OnCancelEdit()
     // escape also brings us back into select mode
     ReleaseCapture();
 
-    CDrawTool *pTool = CDrawTool::FindTool(CDrawTool::c_drawShape);
+    CDrawTool* pTool = CDrawTool::FindTool(CDrawTool::c_drawShape);
     if (pTool != nullptr)
         CDrawTool::OnCancel();
 
@@ -468,7 +468,7 @@ void CDrawView::DocToClient(CRect& rect)
     rect.NormalizeRect();
 }
 
-void CDrawView::Select(CDrawObj* pObj, BOOL bAdd)
+void CDrawView::Select(CDrawObj* pObj, const bool bAdd)
 {
     if (!bAdd) {
         OnUpdate(nullptr, HINT_UPDATE_SELECTION, nullptr);
@@ -488,12 +488,12 @@ void CDrawView::Select(CDrawObj* pObj, BOOL bAdd)
             for (int i = iHitPos - 1; i >= 0; i--)
                 if (IsSelected(GetDocument()->m_pages[i]))
                     for (int j = i + 1; j < iHitPos; ++j)
-                        Select((CDrawObj *)GetDocument()->m_pages[j], TRUE);
-            const size_t iPC = GetDocument()->m_pages.size();
-            for (size_t i = iHitPos + 1; i < iPC; ++i)
+                        Select((CDrawObj *)GetDocument()->m_pages[j], true);
+            const auto pc = (int)GetDocument()->m_pages.size();
+            for (int i = iHitPos + 1; i < pc; ++i)
                 if (IsSelected(GetDocument()->m_pages[i]))
-                    for (size_t j = iHitPos + 1; j < i; ++j)
-                        Select((CDrawObj *)GetDocument()->m_pages[j], TRUE);
+                    for (int j = iHitPos + 1; j < i; ++j)
+                        Select((CDrawObj *)GetDocument()->m_pages[j], true);
         }
     }
 
@@ -503,7 +503,7 @@ void CDrawView::Select(CDrawObj* pObj, BOOL bAdd)
 }
 
 // rect is in device coordinates
-void CDrawView::SelectWithinRect(CRect rect, BOOL bAdd)
+void CDrawView::SelectWithinRect(CRect rect, const bool bAdd)
 {
     if (!bAdd)
         Select(nullptr);
@@ -512,7 +512,7 @@ void CDrawView::SelectWithinRect(CRect rect, BOOL bAdd)
 
     for (const auto& pObj : GetDocument()->m_objects)
         if (pObj->Intersects(rect))
-            Select(pObj, TRUE);
+            Select(pObj, true);
 }
 
 void CDrawView::OpenSelected()
@@ -557,7 +557,7 @@ void CDrawView::OnLButtonDown(UINT nFlags, CPoint point)
 {
     if (!m_bActive)
         return;
-    CDrawTool *pTool = CDrawTool::FindTool(CDrawTool::c_drawShape);
+    CDrawTool* pTool = CDrawTool::FindTool(CDrawTool::c_drawShape);
     if (pTool != nullptr)
         pTool->OnLButtonDown(this, nFlags, point);
 }
@@ -566,7 +566,7 @@ void CDrawView::OnLButtonUp(UINT nFlags, CPoint point)
 {
     if (!m_bActive)
         return;
-    CDrawTool *pTool = CDrawTool::FindTool(CDrawTool::c_drawShape);
+    CDrawTool* pTool = CDrawTool::FindTool(CDrawTool::c_drawShape);
     if (pTool != nullptr)
         pTool->OnLButtonUp(this, nFlags, point);
 }
@@ -582,7 +582,7 @@ void CDrawView::OnMouseMove(UINT nFlags, CPoint point)
     }
     if (!m_bActive)
         return;
-    CDrawTool *pTool = CDrawTool::FindTool(CDrawTool::c_drawShape);
+    CDrawTool* pTool = CDrawTool::FindTool(CDrawTool::c_drawShape);
     if (pTool != nullptr)
         pTool->OnMouseMove(this, nFlags, point);
 }
@@ -617,7 +617,7 @@ void CDrawView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
     if (!m_bActive)
         return;
-    CDrawTool *pTool = CDrawTool::FindTool(CDrawTool::c_drawShape);
+    CDrawTool* pTool = CDrawTool::FindTool(CDrawTool::c_drawShape);
     if (pTool != nullptr)
         pTool->OnLButtonDblClk((CDrawView *)this, nFlags, point);
 }
@@ -700,7 +700,7 @@ void CDrawView::OnUpdateSingleSelect(CCmdUI* pCmdUI)
 void CDrawView::OnEditSelectAll()
 {
     for (const auto& pObj : GetDocument()->m_objects)
-        Select(pObj, TRUE);
+        Select(pObj, true);
 }
 
 void CDrawView::OnUpdateEditSelectAll(CCmdUI* pCmdUI)
@@ -1035,7 +1035,7 @@ void CDrawView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
     int pc, wspol = theApp.colsPerPage;
     if (wspol == 2 || m_pagesPrinted != PRINT_PAGE)
         pDoc->PrintInfo(pDC, pInfo->GetMaxPage(), wspol);
-    CDrawPage *pPage;
+    CDrawPage* pPage;
     switch (m_pagesPrinted) {
         case PRINT_PAGE:
             pPage = (GetDocument()->m_pages[pInfo->m_nCurPage - 1]);
@@ -1108,7 +1108,7 @@ void CDrawView::OnFilePrintPreview()
 void CDrawView::OnEditProperties()
 {
     if (m_selection.size() == 1 && CDrawTool::c_drawShape == DrawShape::select) {
-        CDrawTool *pTool = CDrawTool::FindTool(CDrawTool::c_drawShape);
+        CDrawTool* pTool = CDrawTool::FindTool(CDrawTool::c_drawShape);
         if (pTool)
             pTool->OnLButtonDblClk(this, 0, CPoint(0, 0));
 
@@ -1122,8 +1122,7 @@ void CDrawView::OnUpdateEditProperties(CCmdUI* pCmdUI)
         pCmdUI->Enable(m_selection.size() == 1 && CDrawTool::c_drawShape == DrawShape::select);
 }
 
-//FONTY
-void CDrawView::OnChooseFont(CFont& m_font, BOOL IsPageFont)
+void CDrawView::OnChooseFont(CFont& m_font, const bool IsPageFont)
 {
     LOGFONT lf;
     if (m_font.m_hObject != nullptr)
@@ -1144,12 +1143,12 @@ void CDrawView::OnChooseFont(CFont& m_font, BOOL IsPageFont)
 
 void CDrawView::OnChoosePageFont()
 {
-    OnChooseFont(GetDocument()->m_pagefont, TRUE);
+    OnChooseFont(GetDocument()->m_pagefont, true);
 }
 
 void CDrawView::OnChooseAddFont()
 {
-    OnChooseFont(GetDocument()->m_addfont, FALSE);
+    OnChooseFont(GetDocument()->m_addfont, false);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1344,7 +1343,7 @@ void CALLBACK CDrawView::DelegateGenEPS(PTP_CALLBACK_INSTANCE /*unused*/, PVOID 
     ::SetEvent(pA->hCompletedEvent);
 }
 
-void CDrawView::CheckPrintEps(BOOL isprint)
+void CDrawView::CheckPrintEps(const BOOL isprint)
 {
     auto pDoc = GetDocument();
     if (pDoc->m_pages.empty()) return;
@@ -1393,11 +1392,11 @@ void CDrawView::CheckPrintEps(BOOL isprint)
     }
 
     PBYTE bigBufArr;
-    HANDLE *waitEvents;
+    HANDLE* waitEvents;
     PGENEPSARG threadArgs;
     WORD iCpuCnt, iThreadCnt = 0;
     bool streamed = d.m_streamed;
-    CGenEpsInfoDlg *pDlg = CGenEpsInfoDlg::GetGenEpsInfoDlg(isprint);
+    CGenEpsInfoDlg* pDlg = CGenEpsInfoDlg::GetGenEpsInfoDlg(isprint);
 
     const CFlag wyborStron = d.GetChoosenPages(pDoc);
     if (streamed) {
@@ -1505,27 +1504,27 @@ void CDrawView::CheckPrintEps(BOOL isprint)
 
     CGenEpsInfoDlg::ReleaseGenEpsInfoDlg(pDlg);
 
-} //CheckPrintEps
+} // CheckPrintEps
 
 void CDrawView::OnRButtonDown(UINT nFlags, CPoint point)
 {
     CScrollView::OnRButtonDown(nFlags, point);
-    CPoint local = point;
+    CPoint local{point};
     ClientToDoc(local);
-    CDrawDoc *vDoc = GetDocument();
-    CDrawPage *pPage = vDoc->PageAt(local);
+    CDrawDoc* pDoc = GetDocument();
+    CDrawPage* pPage = pDoc->PageAt(local);
     if (!pPage) return;
-    if (theApp.isRDBMS && vDoc->isGRB && !vDoc->isRO) {
+    if (theApp.isRDBMS && pDoc->isGRB && !pDoc->isRO) {
         CMenu mmutczas;
-        Select(pPage, FALSE);
+        Select(pPage, false);
         ClientToScreen(&point);
         mmutczas.LoadMenu(IDR_MENUMUTCZAS);
         mmutczas.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, point.x, point.y, this);
     } else
-        vDoc->DerivePages(pPage);
+        pDoc->DerivePages(pPage);
 }
 
-BOOL CDrawView::ModifyMutczas(int n)
+BOOL CDrawView::ModifyMutczas(const int n)
 {
     auto pPage = (CDrawPage *)m_selection.front();
     if (pPage) {
@@ -1552,7 +1551,7 @@ BOOL CDrawView::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CDrawView::OnIrfan() // single Add selected
 {
-    CString eps_name = dynamic_cast<CDrawAdd*>(m_selection.front())->EpsName(CManFormat::EPS, FALSE);
+    CString eps_name = dynamic_cast<CDrawAdd*>(m_selection.front())->EpsName(CManFormat::EPS, false);
     if (eps_name.Mid(1, 1) != _T(":")) {
         AfxMessageBox(_T("Preview niedostêpne. Brak materia³u"));
         return;

@@ -14,7 +14,7 @@ class CDrawOpis final : public CDrawObj
     void Print(CDC* pDC) override;
     void Serialize(CArchive &ar) override;
 
-    BOOL OnOpen(CDrawView *pView) override;
+    BOOL OnOpen(CDrawView* pView) override;
     CDrawObj *Clone(CDrawDoc* pDoc) const override;
 
     int m_opi_xx;

@@ -52,8 +52,8 @@ class CDrawView : public CScrollView
     void DocToClient(CPoint& point);
     void ClientToDoc(CPoint& point);
     void ClientToDoc(CRect& rect);
-    void Select(CDrawObj* pObj, BOOL bAdd = FALSE);
-    void SelectWithinRect(CRect rect, BOOL bAdd = FALSE);
+    void Select(CDrawObj* pObj, bool bAdd = false);
+    void SelectWithinRect(CRect rect, bool bAdd = false);
     void OpenSelected();
     void Deselect(CDrawObj* pObj);
     void CloneSelection();
@@ -62,7 +62,7 @@ class CDrawView : public CScrollView
     void Remove(CDrawObj* pObj);
     void Paste(COleDataObject& dataObject);
     void CheckPrintEps(BOOL isprint); //GN
-    void OnChooseFont(CFont& m_font, BOOL IsPageFont);
+    void OnChooseFont(CFont& m_font, bool IsPageFont);
     int GetZoomFactor() const noexcept { return m_zoomNum.cx; }
     unsigned char GetPagesPrinted() const noexcept { return m_pagesPrinted; }
     BOOL SetZoomFactor(CSize zoomNum, CSize zoomDenom);

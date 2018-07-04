@@ -149,7 +149,7 @@ void CGridFrm::InvalAll()
     lcPubList.SetRedraw(TRUE);
 }
 
-void CGridFrm::InvalObj(CDrawAdd *pObj, int idx)
+void CGridFrm::InvalObj(CDrawAdd* pObj, int idx)
 {
     if (dynamic_cast<CDrawAdd*>(pObj) == nullptr)
         return;
@@ -161,7 +161,7 @@ void CGridFrm::InvalObj(CDrawAdd *pObj, int idx)
     lcPubList.SetRedraw(TRUE);
 }
 
-void CGridFrm::Select(CDrawAdd *pObj, int i)
+void CGridFrm::Select(CDrawAdd* pObj, int i)
 {
     if (!pObj)
         return;
