@@ -49,7 +49,7 @@ private:
     BOOL m_bEventLockout;
     BOOL m_bInitialized;
     CAddListCtrl lcPubList;
-    void RefreshRow(int nRow, CDrawAdd *vAdd);
+    void RefreshRow(int nRow, CDrawAdd* vAdd);
     int FindRow(DWORD_PTR key) const;
     void Select(CDrawAdd* pObj, int i);
     void InvalObj(CDrawAdd* pObj, int idx);

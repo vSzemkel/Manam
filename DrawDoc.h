@@ -82,7 +82,7 @@ class CDrawDoc final : public COleDocument
     void RemoveFromHead(int n);
     void RemoveFromTail(int n);
     void Remove(CDrawObj* pObj);
-    int GetAdPosition(const CDrawAdd *pAdd) const;
+    int GetAdPosition(const CDrawAdd* pAdd) const;
     CDrawObj* ObjectAt(const CPoint &point) const;
     CDrawAdd* ObjectAtQue(const CPoint& point) const;
     CDrawAdd* FindAddAt(int i) const; // szuka ogloszenia na pozycji i wsrod ogl - opisy sie nie numeruje

@@ -38,14 +38,14 @@ public:
     void LoadKolorCombo();
 
     void IniCaptionBox(int id_drw, int new_id_drw);
-    void IniCaptionCombo(BOOL iscaption);
+    void IniCaptionCombo(bool iscaption);
     BOOL DBIniCaptionCombo(BOOL iscaption, int id_drw);
 
     CPen pen;
     CBrush cyjan, magenta, yellow, rzym, robgcolor;
-    BOOL show_spacelocks;
 
     int lastCapToolBar{0};      // 0==combo zawiera nag³ówki_eps; >0==id_drw
+    bool show_spacelocks{true}; // domyœlnie pokazujemy zablokowane modu³y
     bool lastColToolBar{false}; // czy combo zawiera kolory
 // Implementation
 public:
@@ -64,7 +64,7 @@ protected:
     CComboBox* m_CaptionBox;
     CString m_LastSessionKolor;
     CEdit* m_CaptionEditBox;
-    BOOL CreateManamToolBar();
+    bool CreateManamToolBar();
     LRESULT OnToolBarReset(WPARAM wp, LPARAM /*unused*/);
     //void InitRibbon ();
 // Generated message map functions

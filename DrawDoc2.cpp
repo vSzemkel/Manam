@@ -478,7 +478,7 @@ void CDrawDoc::MakietujStrone(CDrawPage* pPage)
     int i, j, k;
 
     // utworz liste ogloszen na stronie 
-    pPage->m_adds.erase(std::remove_if(pPage->m_adds.begin(), pPage->m_adds.end(), [=, &vAdds](CDrawAdd *pAdd) -> BOOL {
+    pPage->m_adds.erase(std::remove_if(pPage->m_adds.begin(), pPage->m_adds.end(), [=, &vAdds](CDrawAdd* pAdd) -> BOOL {
         if (!pAdd->flags.locked && !pAdd->flags.derived) {
             vAdds.Add(pAdd);
             pAdd->fizpage = 0;
@@ -806,7 +806,7 @@ void CDrawDoc::OnAsideAdds()
         for (size_t i = 0; i < pcount; ++i)
             if (!(m_pages[i])->niemakietuj) {
                 vPage = m_pages[i];
-                vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd *pAdd) -> BOOL {
+                vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd* pAdd) -> BOOL {
                     if (!pAdd->flags.locked && !pAdd->flags.derived) {
                         pAdd->fizpage = 0;
                         pAdd->UpdateInfo();
@@ -820,7 +820,7 @@ void CDrawDoc::OnAsideAdds()
     } else { // zdejmujemy og³oszenia ze wskazanej strony (wiemy, ¿e to strona makietowana)
         int iOffset = iPagesInRow - (GetIPage(vPage) % iPagesInRow);
         iOffset = iOffset*pszpalt_x*pmodulx + (iOffset / 2 + 1)*pmodulx;
-        vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd *pAdd) -> BOOL {
+        vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd* pAdd) -> BOOL {
             if (!pAdd->flags.locked && !pAdd->flags.derived) {
                 pAdd->fizpage = 0;
                 pAdd->m_position.left += iOffset;

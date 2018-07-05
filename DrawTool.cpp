@@ -116,7 +116,7 @@ void CSelectTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& poi
     // Check for resizing ads (only allowed on single selections)
     if (pView->m_selection.size() == 1) {
         const auto pObj = pView->m_selection.front();
-        m_DragHandle = pObj->HitTest(local, pView, TRUE);
+        m_DragHandle = pObj->HitTest(local, pView, true);
         if (m_DragHandle != 0) {
             selectMode = SelectMode::size;
             const auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
@@ -345,7 +345,7 @@ void CSelectTool::OnMouseMove(CDrawView* pView, UINT /*unused*/, const CPoint& p
             pObj = pView->m_selection.front();
             CPoint local = point;
             pView->ClientToDoc(local);
-            m_DragHandle = pObj->HitTest(local, pView, TRUE);
+            m_DragHandle = pObj->HitTest(local, pView, true);
             if (m_DragHandle != 0 && (theApp.grupa & UserRole::dea) == 0)
                 ::SetCursor(pObj->GetHandleCursor(m_DragHandle));
             else
@@ -510,11 +510,12 @@ void CKolorTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& poin
             };
             theManODPNET.EI("begin pagina.set_config(:mak_xx,:str_xx,:prn_mak_xx); end;", orapar);
         } else { // nag³ówki
-            BOOL iscaption = ((CDrawApp*)AfxGetApp())->GetProfileInt(_T("General"), _T("Captions"), 1) == 1;
+            const bool iscaption = ((CDrawApp*)AfxGetApp())->GetProfileInt(_T("General"), _T("Captions"), 1) == 1;
+            const CString& caption = frame->GetCaption();
             if (pPage != nullptr)
-                pPage->ChangeCaption(iscaption, frame->GetCaption());
+                pPage->ChangeCaption(iscaption, caption);
             else if (pAdd != nullptr && pAdd->fizpage != 0)
-                (pView->GetDocument()->GetPage(pAdd->fizpage))->ChangeCaption(iscaption, frame->GetCaption());
+                (pView->GetDocument()->GetPage(pAdd->fizpage))->ChangeCaption(iscaption, caption);
         }
 }
 

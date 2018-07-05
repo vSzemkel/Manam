@@ -1476,7 +1476,7 @@ void CDrawView::CheckPrintEps(const BOOL isprint)
         }
 
     if (streamed) {
-        ::WaitForMultipleObjects(iCpuCnt, waitEvents, TRUE, INFINITE);
+        ::WaitForMultipleObjects(iThreadCnt, waitEvents, TRUE, INFINITE);
         for (WORD i = 0; i < iCpuCnt; ++i) {
             auto& arg = threadArgs[i];
             ::CloseHandle(arg.hCompletedEvent);

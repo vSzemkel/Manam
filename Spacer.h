@@ -8,8 +8,8 @@ class CSpacerDlg : public CDialog
 {
     // Construction
 public:
-    CSpacerDlg(CDrawAdd *vAdd, CWnd* pParent = nullptr);   // standard constructor
-    static BOOL Deal(CDrawAdd *vAdd);
+    CSpacerDlg(CDrawAdd* vAdd, CWnd* pParent = nullptr);   // standard constructor
+    static BOOL Deal(CDrawAdd* vAdd);
 
     // Dialog Data
         //{{AFX_DATA(CSpacerDlg)
@@ -49,8 +49,8 @@ public:
 private:
     static const int narrowcx, widecx, olcx, normalcy;
     static const int qfExact, qfSectionExact, qfSecParExact;
-    BOOL	firstSearch;
-    BOOL	olSelected;
+    bool firstSearch{true};
+    bool olSelected{false};
     int m_mak_xx;
     int m_add_xx;
     int	m_quepub_xx;

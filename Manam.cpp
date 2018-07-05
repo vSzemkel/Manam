@@ -210,13 +210,13 @@ void CDrawApp::SetScale(int scale)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////// polaczenie z baza /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOL CDrawApp::ConnecttoDB()
+bool CDrawApp::ConnecttoDB()
 {
     /*********** ORACLE *********************/
     CConnDlg connDlg;
     connDlg.m_loginname = GetString(_T("user"), _T(""));
     connDlg.m_passwd = GetString(_T("password"), _T(""));
-    if (connDlg.DoModal() != IDOK) return FALSE;
+    if (connDlg.DoModal() != IDOK) return false;
 
     // odczytaj IP
     char sHostName[256];
@@ -257,7 +257,7 @@ BOOL CDrawApp::ConnecttoDB()
     theManODPNET.EI("begin :gru_xx := init_manam_session(:info,:mac,:adapter); end;", orapar);
     grupa = static_cast<BYTE>(gru_xx);
     if (grupa < 1)
-        return FALSE;
+        return false;
 
 #ifndef DEBUG
     if (!connDlg.m_dbtest && !sClientInfo.IsEmpty() && m_app_version.Mid(1).Compare(sClientInfo))
@@ -282,7 +282,7 @@ BOOL CDrawApp::ConnecttoDB()
     }
 
     ((CMainFrame*)m_pMainWnd)->SetLogonStatus(msg);
-    return TRUE;
+    return true;
 }
 
 void CDrawApp::FromIniFile()
@@ -693,14 +693,14 @@ void CDrawApp::OnSendmsg()
         m_sock.SendManamMessage(theManODPNET.m_userName + _T(": ") + dlg.m_msg, dlg.m_login, dlg.m_broadcast);
 }
 
-BOOL CDrawApp::TryUpgradeImage() const
+bool CDrawApp::TryUpgradeImage() const
 {
     CString cmdLine(::GetCommandLine()), sBackupImage;
     cmdLine = cmdLine.Mid(1, cmdLine.Find(_T(".exe")) + 3);
     sBackupImage.Format(_T("%s%s.exe"), cmdLine.Left(cmdLine.GetLength() - 4), m_app_version);
     // nie wiadomo, czy mamy prawo do systemu plików
     if (!::MoveFileEx(cmdLine, sBackupImage, MOVEFILE_REPLACE_EXISTING))
-        return FALSE;
+        return false;
 
     const auto ret = theManODPNET.Deploy(cmdLine);
     if (!ret) ::MoveFile(sBackupImage, cmdLine);

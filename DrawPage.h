@@ -105,9 +105,9 @@ class CDrawPage final : public CDrawObj
     void SetBaseKrata(int s_x, int s_y, bool refresh = true);
     void RealizeSpace(const CDrawAdd* pObj);
     void ChangeMark(size_t module, SpaceMode mode);
-    void ChangeCaption(BOOL iscaption, const CString& cap);
+    void ChangeCaption(bool iscaption, const CString& cap);
     void DBChangeName(int id_drw);
-    std::vector<int> CleanKraty(BOOL dbSave);
+    std::vector<int> CleanKraty(bool dbSave);
 
     bool FindSpace(CDrawAdd* pObj, int* px, int* py, int sx, int sy) const;
     bool CheckSpace(const CDrawAdd* pObj, int px, int py) const;
@@ -137,7 +137,7 @@ private:
 struct CRozm final
 {
     CRozm() noexcept : CRozm(468, 575, 40, 34, 5, 6, 0, false) {}
-    CRozm(int m_w, int m_h, int m_sw, int m_sh, BYTE m_szpalt_x, BYTE m_szpalt_y, int m_typ_xx, BOOL m_scale_it) noexcept :
+    CRozm(int m_w, int m_h, int m_sw, int m_sh, BYTE m_szpalt_x, BYTE m_szpalt_y, int m_typ_xx, bool m_scale_it) noexcept :
         w(m_w),
         h(m_h),
         sw(m_sw),

@@ -43,7 +43,7 @@ class CDrawObj : public CObject
     bool dirty{true};
     UINT kolor{ColorId::brak};
     CDrawDoc* m_pDocument{nullptr};
-    //3 bity na to ile kolorow czyli 100=4 full; 010=2 spot; 001 =1 brak
+    // 3 bity na to ile kolorow czyli 100=4 full; 010=2 spot; 001 =1 brak
     // wyzsze bity dla ogloszenia oznaczaja id_spotu
     // dla strony wyzsze bity oznaczaja nr spotu spotI spotII itp
 
@@ -52,7 +52,7 @@ class CDrawObj : public CObject
     CPoint GetHandle(int nHandle) const;
     CRect GetHandleRect(int nHandleID, CDrawView* pView) const;
     HCURSOR GetHandleCursor(int nHandle) const;
-    int HitTest(const CPoint& point, CDrawView* pView, BOOL bSelected) const;
+    int HitTest(const CPoint& point, CDrawView* pView, bool selected) const;
     void ChangeKolor(UINT new_kolor);
     void SetDirty();
     void SetClean() { dirty = FALSE; }
@@ -65,6 +65,6 @@ class CDrawObj : public CObject
     void MoveHandleTo(int nHandle, const CPoint& point, CDrawView* pView = nullptr);
 
     CRect GetPrintRect() const;
-    BOOL Intersects(const CRect& rect) const;
-    BOOL Contains(const CPoint& point) const;
+    bool Intersects(const CRect& rect) const;
+    bool Contains(const CPoint& point) const;
 };

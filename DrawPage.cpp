@@ -348,7 +348,7 @@ void CDrawPage::DrawKolor(CDC* pDC, const CRect& pos) const
     }
 }
 
-void CDrawPage::ChangeCaption(BOOL iscaption, const CString& cap)
+void CDrawPage::ChangeCaption(bool iscaption, const CString& cap)
 {
     if (iscaption)
         caption = cap;
@@ -568,7 +568,7 @@ BOOL CDrawPage::OnOpen(CDrawView* /*pView*/)
     return TRUE;
 }
 
-std::vector<int> CDrawPage::CleanKraty(BOOL dbSave)
+std::vector<int> CDrawPage::CleanKraty(const bool dbSave)
 {	// lista krat w postaci hiword == szpalt_x, loword == szpalt_y
     std::vector<int> ret;
     auto& adds = m_adds;

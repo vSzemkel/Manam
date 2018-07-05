@@ -102,8 +102,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     if (!robgcolor.CreateBrushIndirect(&m_logbrush))
         return -10;
 
-    show_spacelocks = TRUE;
-
     return 0;
 }
 
@@ -138,20 +136,20 @@ void CMainFrame::OnFullScreen()
 }
 
 ///////////////////////////////// toolbar
-BOOL CMainFrame::CreateManamToolBar()
+bool CMainFrame::CreateManamToolBar()
 {
     if (!m_wndMenuBar.CreateEx(this, CBRS_SIZE_DYNAMIC | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_TOP)) {
         TRACE("Failed to create menubar\n");
-        return FALSE;
+        return false;
     }
 
     if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC)) {
         TRACE("Failed to create toolbar\n");
-        return FALSE;
+        return false;
     }
     if (!m_wndToolBar.LoadToolBar(IDR_TOOL_MAIN)) {
         TRACE("Failed to load toolbar\n");
-        return FALSE;
+        return false;
     }
 
     m_wndToolBar.EnableCustomizeButton(TRUE, ID_VIEW_CUST_TLB, _T("Modyfikuj..."));
@@ -162,7 +160,7 @@ BOOL CMainFrame::CreateManamToolBar()
     DockPane(&m_wndMenuBar);
     DockPane(&m_wndToolBar);
 
-    return TRUE;
+    return true;
 }
 
 LRESULT CMainFrame::OnToolBarReset(WPARAM wp, LPARAM /*unused*/)
@@ -332,7 +330,7 @@ DWORD CMainFrame::GetCaptionDataItem(int ind) const
     return ind == CB_ERR ? 0 : (DWORD)m_CaptionBox->GetItemData(ind);
 }
 
-void CMainFrame::IniCaptionCombo(BOOL iscaption)
+void CMainFrame::IniCaptionCombo(bool iscaption)
 {
     CString bf, tx = (iscaption) ? _T("Caption") : _T("StrLog");
     const int max_col = theApp.GetProfileInt(tx, _T("Amount"), 0);

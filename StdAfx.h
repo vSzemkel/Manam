@@ -34,6 +34,9 @@
 #include <array>
 #include <map>
 
+// 3rd party
+#include "zlib.h"
+
 // Manam
 #include "resource.h"
 #include "ManConst.h"

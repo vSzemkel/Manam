@@ -93,7 +93,7 @@ void CManSock::SendManamMessage(CString& msg, CString& login, BOOL broadcast)
 
 void CManSock::HandleSysMsg1(TCHAR *sysmsg) const
 {	// asynchroniczna obs³uga spacer.update_reservation
-    CDrawAdd *pAdd;
+    CDrawAdd* pAdd;
     TCHAR *p, *septok = _T("^");
     int pub_xx = _ttoi(_tcstok(sysmsg, septok));
     auto pMainWnd = reinterpret_cast<CMainFrame*>(theApp.GetMainWnd());

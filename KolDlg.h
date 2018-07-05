@@ -1086,7 +1086,7 @@ private:
     CListCtrl m_adds;
     CImageList m_SmallImageList, m_StateImageList;
     std::vector<CDrawAdd*> *m_aNewAdds, *m_aOldAdds, *m_aModifAdds, *m_aDelAdds;
-    void AppendAdd(CDrawAdd *pAdd, int status);
+    void AppendAdd(CDrawAdd* pAdd, int status);
 public:
     afx_msg void OnOK() override;
     afx_msg void OnSelectAll();

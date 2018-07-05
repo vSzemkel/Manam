@@ -1,7 +1,6 @@
 #pragma once
 #pragma warning(disable:4786)
 
-#include "StdAfx.h"
 #include "DrawPage.h"
 
 typedef std::map<unsigned int, int, std::less<>> uintmap;
@@ -10,12 +9,13 @@ class CDrawAdd;
 
 class CManPDF
 {
-public:
-    static const char septok[];
-    static const char sepline[];
-    static const char seppdf[];
-    static const unsigned long ulNotFound;
+  public:
+    static constexpr unsigned long ulNotFound = -1L;
+    static constexpr char seppdf[]  = {'<', '>', '/', '[', ']'};
+    static constexpr char sepline[] = {(char)10, (char)13, (char)0};
+    static constexpr char septok[]  = {(char)9, (char)10, (char)13, (char)32, (char)0};
     static const char* memstr(const char* str, const char* sub, size_t len);
+
     CManPDF(PGENEPSARG pArg);
     virtual ~CManPDF() = default;
     unsigned long GetMediaBox(const TCHAR* fpath, float* x1, float* y1, float* x2, float* y2, HANDLE hFile = nullptr);
@@ -23,11 +23,12 @@ public:
     bool CreatePDF(CDrawPage* page, const TCHAR* trgName);
 
   private:
-    static const long estTailLen;
-    static const long pakBufLen;
-    static const int orgX, orgY;
-    static const int maxTokenSize;
-    static const BOOL compressContent;
+    static constexpr unsigned long pakBufLen = 10'000'000L;
+    static constexpr long estTailLen = 30L;
+    static constexpr int orgX = 80;
+    static constexpr int orgY = 1100;
+    static constexpr int maxTokenSize = 256;
+    static constexpr bool compressContent = true;
 
     unsigned int nextObjNr;
     unsigned long xrefOffset;
@@ -39,15 +40,15 @@ public:
 
     uintmap renumMap;         // numerowi obiektu z pliku Ÿród³owego przyporz¹dkowuje nowy numer z pliku wynikowego
 
-    int	  iPdfTokenSlot;      // numer aktywnego buforu, w którym zwraca siê wynik funkcji pdftok
+    int   iPdfTokenSlot;      // numer aktywnego buforu, w którym zwraca siê wynik funkcji pdftok
     bool  bSearchInPdfToken;  // wskaŸnik trybu dzia³ania funkcji pdftok - gdy ustawiony, to nie wywo³uje strtok
     char  cNextPdfToken[256]; // tablica, do której pdftok przepisuje kontynuacjê znalezionego tokenu, ma rozmiar maxTokenSize
     char  cPdfToken[5][256];  // tablica, do której pdftok przepisuje znaleziony token, ma rozmiar maxTokenSize, jest ich 5 by utworzy³y bufor cykliczny, nastêpne 4 wywo³ania nie zamazuj¹ wyniku
     char* pdftok(char *str);  // zachowuje siê podobnie jak strtok, ale rozpoznaje tokeny PDF nie rozdzielone niczym - przepisuje je do bufora cPdfToken w takim przypadku
 
     char* cStore;
-    BOOL GenProlog();
-    BOOL EmbedPDF(CFile& src, unsigned int objNr, CDrawAdd& pAdd);
+    bool GenProlog();
+    bool EmbedPDF(CFile& src, unsigned int objNr, const CDrawAdd& pAdd);
     void GenPDFTail(unsigned int howMany = 0);
     void EmbedContents(CFile& src, unsigned long offset);
     void EmbedRef(CFile& src, unsigned int srcObjNr);
@@ -64,10 +65,10 @@ public:
 
 class CManPDFExc
 {
-public:
+  public:
     CManPDFExc(const TCHAR* msg) { errMsg = CString(msg); }
     ~CManPDFExc() = default;
     const TCHAR* ShowReason() const { return errMsg; }
-private:
+  private:
     CString errMsg;
 };

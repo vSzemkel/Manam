@@ -192,7 +192,7 @@ int CGridFrm::FindRow(DWORD_PTR key) const
     return rc;
 }
 
-void CGridFrm::RefreshRow(int nRow, CDrawAdd *vAdd)
+void CGridFrm::RefreshRow(int nRow, CDrawAdd* vAdd)
 {
     TCHAR bf[64];
 
@@ -281,7 +281,7 @@ void CGridFrm::OnShowrept()
         hcHeader.SetItem(oldadno, &hi);
 
         long adno;
-        CDrawAdd *vAdd;
+        CDrawAdd* vAdd;
         CDrawDoc *vDoc = GetDocument();
         TCHAR *ch, tytul[10], mutacja[5];
         char kiedypowt[32];

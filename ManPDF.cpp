@@ -1,5 +1,3 @@
-// ManPDF.cpp : implementation file
-//
 
 #include "StdAfx.h"
 #include "DrawAdd.h"
@@ -8,21 +6,6 @@
 #include "KolDlg.h"
 #include "Manam.h"
 #include "ManPDF.h"
-
-#include "zlib.h"
-
-const int CManPDF::orgX = 80;
-const int CManPDF::orgY = 1100;
-const int CManPDF::maxTokenSize = 256;
-const long CManPDF::estTailLen = 30L;
-const long CManPDF::pakBufLen = 10'000'000L;
-const BOOL CManPDF::compressContent = TRUE;
-const char CManPDF::sepline[] = { (char)10, (char)13, (char)0 };
-const char CManPDF::septok[] = { (char)9, (char)10, (char)13, (char)32, (char)0 };
-const char CManPDF::seppdf[] = { '<', '>', '/', '[', ']' };
-const unsigned long CManPDF::ulNotFound = -1L;
-/////////////////////////////////////////////////////////////////////////////
-// CManPDF
 
 CManPDF::CManPDF(PGENEPSARG pArg)
 {
@@ -86,8 +69,8 @@ char* CManPDF::pdftok(char* str)
 
 const char* CManPDF::memstr(const char* str, const char* sub, size_t len)
 {
-    size_t l = 0;
-    char *p;
+    char* p;
+    size_t l{0};
 
     if (!str) return nullptr;
     if (strlen(str) == len) return strstr(str, sub);
@@ -100,23 +83,23 @@ const char* CManPDF::memstr(const char* str, const char* sub, size_t len)
         l += strlen(str + l) + 1;
     }
     return nullptr;
-} //memstr
+} // memstr
 
 unsigned long CManPDF::SearchPattern(CFile& f, const char* pat) const
 {
-    char *p;
+    char* p;
     size_t res = 1;
     const auto backLen = (int)strlen(pat);
 
     while (res > 0) { // read block from the file
         const auto filepos = (long)f.GetPosition();
-        res = f.Read(cStore, n_size);    // check if anything was read and no error occurred
+        res = f.Read(cStore, n_size); // check if anything was read and no error occurred
         if (res < 1) break;
         if (res == n_size)
             f.Seek(-backLen, CFile::current); // buffer has to end with zero char to be treated as string
         cStore[res] = 0;
 
-        if ((p = (char*)memstr(cStore, pat, res)) != nullptr) {    // search for substring and get it's position
+        if ((p = (char*)memstr(cStore, pat, res)) != nullptr) { // search for substring and get it's position
             long offset = filepos + (long)(p - cStore);
             f.Seek(offset - 1, CFile::begin);
             f.Read(cStore, 1);
@@ -127,7 +110,7 @@ unsigned long CManPDF::SearchPattern(CFile& f, const char* pat) const
         }
     }
     return CManPDF::ulNotFound;
-} //SearchPattern
+} // SearchPattern
 
 unsigned long CManPDF::GetMainXref(CFile& f)
 {
@@ -135,30 +118,30 @@ unsigned long CManPDF::GetMainXref(CFile& f)
         return xrefOffset;
     f.Seek(-estTailLen, CFile::end);
     f.Read(cStore, estTailLen);
-    char *p = strstr(cStore, "startxref");
+    char* p = strstr(cStore, "startxref");
     if (!p)
         throw CManPDFExc(_T("GetMainXref: nie ma znacznika startxref w ostatnich 30 bajtach"));
     strtok(p, septok);
     return xrefOffset = atol(strtok(nullptr, septok));
-} //GetMainXref
+} // GetMainXref
 
 // podaje poprzedni¹, póŸniej nadpisan¹ wartoœc offsetu do spisu xref
 unsigned long CManPDF::GetPrevXref(CFile& f, unsigned long currentxrefOffset)
 {
     f.Seek(currentxrefOffset, CFile::begin);
     f.Read(cStore, bigSize);
-    char *a = strstr(cStore, "/Prev");
+    char* a = strstr(cStore, "/Prev");
     if (!a) return 0L;
     strtok(a, septok);
     return atol(strtok(nullptr, septok));
-} //GetPrevXref
+} // GetPrevXref
 
 // podaje offset w pliku f pocz¹tku definicji obiektu numer obj
 unsigned long CManPDF::FindObjEntry(CFile& f, unsigned int obj)
 {
     unsigned long currentxrefOffset = GetMainXref(f);
     while (currentxrefOffset != 0L) {
-        //szukaj xref z obj
+        // szukaj xref z obj
         f.Seek(currentxrefOffset, CFile::begin);
         f.Read(cStore, bigSize);
         unsigned int xrefstart, xreflen;
@@ -198,7 +181,7 @@ unsigned long CManPDF::FindObjEntry(CFile& f, unsigned int obj)
         return atol(strtok(nullptr, septok));
     }
     return 0L;
-} //FindObjEntry
+} // FindObjEntry
 
 // podaje najbli¿szy numer objNr z sekwencji "objNr 0 R"
 unsigned int CManPDF::GetRefNr(char* buf)
@@ -292,7 +275,7 @@ void CManPDF::EmbedKey(const char* buf, char* key)
             StringCchPrintfA(cStore, bigSize, "%i 0 R\x0a", abs((*it).second));
         trg.Write(cStore, (UINT)strlen(cStore));
     }
-} //EmbedKey
+} // EmbedKey
 
 // analizuje obiekt wystêpuj¹cy po offset. Jeœli wystêpuje w nim stream to przepisuje go do pliku docelowego
 unsigned long CManPDF::EmbedStream(CFile& src, unsigned long offset, BOOL decorate)
@@ -336,14 +319,14 @@ unsigned long CManPDF::EmbedStream(CFile& src, unsigned long offset, BOOL decora
     if (cStore[wB - 1] > 13) trg.Write("\x0a", 1);
     if (decorate) trg.Write("endstream\x0a", 10);
     return ret;
-} //EmbedStream
+} // EmbedStream
 
 unsigned long CManPDF::EmbedPakStream(CFile& src, unsigned long offset, unsigned char* pak, unsigned char* niepak, unsigned char* tmp, const unsigned long niepakoff)
 {
     src.Seek(offset, CFile::begin);
     src.Read(cStore, bigSize);
-    char *end = strstr(cStore, "endobj");
-    char *str = strstr(cStore, "stream");
+    char* end = strstr(cStore, "endobj");
+    char* str = strstr(cStore, "stream");
     if (!str || (end && end < str)) return 0L;
     if (!strstr(cStore, "/FlateDecode"))
         throw CManPDFExc(_T("EmbedPakStream: spodziewano sie /FlateDecode"));
@@ -526,7 +509,7 @@ void CManPDF::EmbedContents(CFile& src, unsigned long offset)
 } //EmbedContents
 
 //osadza w generowanym pliku og³oszenie pAdd, do którego materia³ jest w pliku src i przypisuje mu numer objNr
-BOOL CManPDF::EmbedPDF(CFile& src, unsigned int objNr, CDrawAdd& pAdd)
+bool CManPDF::EmbedPDF(CFile& src, const unsigned int objNr, const CDrawAdd& pAdd)
 {
     StringCchPrintfA(cStore, bigSize, "%u 0 obj\x0a<<\x0a/Type /XObject\x0a/Subtype /Form\x0a/FormType 1\x0a", objNr);
     trg.Write(cStore, (UINT)strlen(cStore));
@@ -535,24 +518,24 @@ BOOL CManPDF::EmbedPDF(CFile& src, unsigned int objNr, CDrawAdd& pAdd)
     renumMap.clear();
 
     const unsigned long offset = GetMediaBox(nullptr, &bbx1, &bby1, &bbx2, &bby2, (HANDLE)src.m_hFile);
-    if (offset == 0L) return FALSE;
+    if (offset == 0L) return false;
     StringCchPrintfA(cStore, bigSize, "/BBox [ %.2f %.2f %.2f %.2f ]\x0a", bbx1, bby1, bbx2, bby2);
     trg.Write(cStore, (UINT)strlen(cStore));
 
     src.Seek(offset, CFile::begin);
     src.Read(cStore, bigSize);
 
-    //ustal maciez dla ogloszenia
+    // ustal maciez dla ogloszenia
     auto pRozm = pAdd.m_pDocument->GetCRozm(pAdd.szpalt_x, pAdd.szpalt_y, pAdd.typ_xx);
-    if (!pRozm) return FALSE;
+    if (!pRozm) return false;
     auto px = (float)(mm2pkt * (pAdd.posx - 1) * (pRozm->w + pRozm->sw));
     auto py = (float)(-1 * mm2pkt * (pAdd.posy + pAdd.sizey - 1) * (pRozm->h + pRozm->sh));
-    const auto dimx = (float)((pAdd.sizex*(pRozm->w + pRozm->sw) - pRozm->sw)*mm2pkt);
-    const auto dimy = (float)((pAdd.sizey*(pRozm->h + pRozm->sh) - pRozm->sh)*mm2pkt);
+    const auto dimx = (float)((pAdd.sizex * (pRozm->w + pRozm->sw) - pRozm->sw) * mm2pkt);
+    const auto dimy = (float)((pAdd.sizey * (pRozm->h + pRozm->sh) - pRozm->sh) * mm2pkt);
     const float sclx = (bbx2 == bbx1 || pAdd.typ_xx != 0) ? 1 : dimx / (bbx2 - bbx1);
     const float scly = (bby2 == bby1 || pAdd.typ_xx != 0) ? 1 : dimy / (bby2 - bby1);
 
-    if (pAdd.wersja.Find(_T("c")) >= 0) { //centrujemy
+    if (pAdd.wersja.Find(_T("c")) >= 0) { // centrujemy
         px += (float)(0.5 * (dimx - bbx2 + bbx1));
         py += (float)(0.5 * (dimy - bby2 + bby1));
         StringCchPrintfA(cStore, bigSize, "/Matrix [ 1 0 0 1 %.2f %.2f ]\x0a", px, py);
@@ -579,10 +562,10 @@ BOOL CManPDF::EmbedPDF(CFile& src, unsigned int objNr, CDrawAdd& pAdd)
                 cc++;
             }
     } while (cc > 0);
-    return TRUE;
-} //EmbedPDF
+    return true;
+} // EmbedPDF
 
-BOOL CManPDF::GenProlog()
+bool CManPDF::GenProlog()
 {
     CStringA mbs;
     CString cs, fname;
@@ -590,33 +573,33 @@ BOOL CManPDF::GenProlog()
         throw CManPDFExc(_T("GenProlog: nie odnaleziono prologu"));
     TRY {
         mbs = cs;
-    trg.Write(mbs, mbs.GetLength());
-    cs = trg.GetFilePath();
-    const int rc = cs.GetLength();
-    for (int i = 0; i < rc; ++i)
-        fname += (cs[i] == '\\' ? "\\\\" : CString{cs[i]});
-    cs.Format(_T("/Creator (%s)\n/CreationDate (D:%s)\n/Title (%s)\n"), static_cast<const TCHAR*>(theManODPNET.m_userName), static_cast<const TCHAR*>(CTime::GetCurrentTime().Format("%Y%m%d%H%M%S")), static_cast<const TCHAR*>(fname));
+        trg.Write(mbs, mbs.GetLength());
+        cs = trg.GetFilePath();
+        const int rc = cs.GetLength();
+        for (int i = 0; i < rc; ++i)
+            fname += (cs[i] == '\\' ? "\\\\" : CString{cs[i]});
+        cs.Format(_T("/Creator (%s)\n/CreationDate (D:%s)\n/Title (%s)\n"), static_cast<const TCHAR*>(theManODPNET.m_userName), static_cast<const TCHAR*>(CTime::GetCurrentTime().Format("%Y%m%d%H%M%S")), static_cast<const TCHAR*>(fname));
 
-    mbs = cs;
-    trg.Write(mbs, mbs.GetLength());
+        mbs = cs;
+        trg.Write(mbs, mbs.GetLength());
 
-    if (!cs.LoadString(IDS_INITVUPDF2))
-        throw CManPDFExc(_T("GenProlog: nie odnaleziono prologu cz. 2"));
-    mbs = cs;
-    trg.Write(mbs, mbs.GetLength());
-    } CATCH(CFileException, e)
-    {
+        if (!cs.LoadString(IDS_INITVUPDF2))
+            throw CManPDFExc(_T("GenProlog: nie odnaleziono prologu cz. 2"));
+        mbs = cs;
+        trg.Write(mbs, mbs.GetLength());
+    } CATCH(CFileException, e) {
         e->GetErrorMessage(theApp.bigBuf, DLGMSG_MAX_LEN);
         e->Delete();
         throw CManPDFExc(CString("GenProlog: ") + theApp.bigBuf);
     } END_CATCH;
-    return TRUE;
+
+    return true;
 } // GenProlog
 
 void CManPDF::GenPDFTail(unsigned int howMany)
 {
     std::vector<CString> offsetArr;
-    const BOOL noLimit = howMany == 0;
+    const bool noLimit = howMany == 0;
 
     unsigned int objnr = 0;
     unsigned long offset;
@@ -636,8 +619,8 @@ void CManPDF::GenPDFTail(unsigned int howMany)
     objnr--;
 
     trg.SeekToBegin();
-    long trailer = SearchPattern(trg, "trailer");
-    long traillen = SearchPattern(trg, "startxref") - trailer;
+    const long trailer = SearchPattern(trg, "trailer");
+    const long traillen = SearchPattern(trg, "startxref") - trailer;
 
     trg.SeekToBegin();
     unsigned long initxref = SearchPattern(trg, "xref");
@@ -651,7 +634,7 @@ void CManPDF::GenPDFTail(unsigned int howMany)
     for (unsigned int i = 0; i < objnr; ++i)
         trg.Write(CStringA(offsetArr[i]), 20);
 
-    if (traillen) { //popraw /Size
+    if (traillen) { // popraw /Size
         offset = (unsigned long)trg.GetPosition();
         trg.Seek(trailer, CFile::begin);
         trg.Read(cStore, traillen);
@@ -678,7 +661,7 @@ void CManPDF::GenPDFTail(unsigned int howMany)
     StringCchPrintfA(cStore, bigSize, "startxref\n%lu\n%%%%EOF\n", initxref);
     trg.Write(cStore, (UINT)strlen(cStore));
     trg.SetLength(trg.GetPosition());
-} //GenPDFTail
+} // GenPDFTail
 
 bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* trgName)
 {
@@ -707,7 +690,7 @@ bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* trgName)
             pAdd = page->m_adds[i - pocz];
             fname = pAdd->EpsName(CManFormat::PDF, false);
             filePath.emplace_back(fname);
-            if (fname.Mid(1, 1) != _T(":")) {
+            if (fname[1] != _T(':')) {
                 embAlias.emplace_back("");
                 nextObjNr--;
                 dziury++;

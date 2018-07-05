@@ -41,8 +41,8 @@ class CManODPNET
     BOOL Deploy(const CString& filepath);
     const CRozm* AddRozmTypu(std::vector<CRozm>& roz, int typ_xx);
     CString GetProdInfo(int pub_xx, LPTSTR kolor, int *ileMat);
-    CString AdnoDlaZajawki(int *p, int *o);
-    CString GetHttpSource(const CString& gazeta, const CString& kiedy, int *s);
+    CString AdnoDlaZajawki(int* p, int* o);
+    CString GetHttpSource(const CString& gazeta, const CString& kiedy, int* s);
     static CManODPNETParms emptyParm;
 private:
     BOOL FillNiekratoweInternal(int szpalt_x, int szpalt_y, int typ, CComboBox *m_typ_ogl_combo, CWordArray *m_typ_ogl_arr, CByteArray *m_typ_sizex_arr, CByteArray *m_typ_sizey_arr, std::vector<CString> *m_typ_precel_arr);
@@ -53,7 +53,7 @@ struct CManODPNETParm
     CManODPNETParm(uint8_t odptype, void* val) : m_value(val), m_odptype(odptype), m_direction(CManDbDir::ParameterIn) {}
     CManODPNETParm(uint8_t odptype, uint8_t direction, void *val) : m_value(val), m_odptype(odptype), m_direction(direction) {}
 
-    void *m_value;
+    void* m_value;
     uint8_t m_odptype;
     uint8_t m_direction;
 };

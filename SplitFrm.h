@@ -7,9 +7,9 @@ class CSplitFrame : public CMDIChildWndEx
 {
     DECLARE_DYNCREATE(CSplitFrame)
 private:
-    BOOL bInitialized;
+    bool m_initialized{false};
 protected:
-    CSplitFrame();           // protected constructor used by dynamic creation
+    CSplitFrame() {}; // protected constructor used by dynamic creation
 
 // Attributes
 public:

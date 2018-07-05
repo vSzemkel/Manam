@@ -128,12 +128,12 @@ void CDrawObj::MoveTo(const CRect& position, CDrawView* pView)
 // If !bSelected, 0 = no hit, 1 = hit (anywhere)
 
 // point is in logical coordinates
-int CDrawObj::HitTest(const CPoint& point, CDrawView* pView, BOOL bSelected) const
+int CDrawObj::HitTest(const CPoint& point, CDrawView* pView, const bool selected) const
 {
     ASSERT_VALID(this);
     ASSERT(pView != nullptr);
 
-    if (bSelected) {
+    if (selected) {
         const int nHandleCount = GetHandleCount();
         for (int nHandle = 1; nHandle <= nHandleCount; ++nHandle) {
             // GetHandleRect returns in logical coords
@@ -150,7 +150,7 @@ int CDrawObj::HitTest(const CPoint& point, CDrawView* pView, BOOL bSelected) con
 }
 
 // rect must be in logical coordinates
-BOOL CDrawObj::Intersects(const CRect& rect) const
+bool CDrawObj::Intersects(const CRect& rect) const
 {
     ASSERT_VALID(this);
 
@@ -161,7 +161,7 @@ BOOL CDrawObj::Intersects(const CRect& rect) const
     return !(rectT & fixed).IsRectEmpty();
 }
 
-BOOL CDrawObj::Contains(const CPoint& point) const
+bool CDrawObj::Contains(const CPoint& point) const
 {
     CRect fixed = m_position;
     fixed.NormalizeRect();
@@ -262,7 +262,7 @@ void CDrawObj::MoveHandleTo(int nHandle, const CPoint& point, CDrawView* pView)
 {
     ASSERT_VALID(this);
 
-    CRect position = m_position;
+    CRect position{m_position};
     switch (nHandle) {
         default:
             ASSERT(FALSE);

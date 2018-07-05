@@ -697,7 +697,7 @@ void CDrawDocDbWriter::SaveOpisyMakiety(OracleConnection^ conn, BOOL isSaveAs)
 void CDrawDocDbWriter::SaveSpotyMakiety(OracleConnection^ conn)
 {
     auto spot_makiety = m_doc->m_spot_makiety;
-    auto cnt = spot_makiety.size();
+    const auto cnt = (int)spot_makiety.size();
     if (cnt == 0) return;
 
     auto cmd = conn->CreateCommand();
@@ -707,10 +707,10 @@ void CDrawDocDbWriter::SaveSpotyMakiety(OracleConnection^ conn)
     par->Add("nr", OracleDbType::Int32);
     par->Add("spot", OracleDbType::Int32);
 
-    for (size_t i = 0; i < cnt; ++i) // update spotow;
+    for (int i = 0; i < cnt; ++i) // update spotow;
         if (spot_makiety[i] != 0) {
             par[1]->Value = i + 1;
-            par[2]->Value = CDrawDoc::spoty[(spot_makiety[i])];
+            par[2]->Value = CDrawDoc::spoty[spot_makiety[i]];
             cmd->ExecuteNonQuery();
         }
 }
@@ -782,8 +782,9 @@ void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, BOOL isSaveAs, BOOL do
     par->Add("is_rozk", OracleDbType::Byte);
     par->Add("wyd_xx", OracleDbType::Int32);
 
-    size_t i;
-    for (i = 0; i < m_doc->m_pages.size(); ++i) {
+    int i;
+    const auto pc = (int)m_doc->m_pages.size();
+    for (i = 0; i < pc; ++i) {
         String^ plsqlProc;
 
         auto pPage = m_doc->m_pages[i];
@@ -809,7 +810,7 @@ void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, BOOL isSaveAs, BOOL do
         cmdPage->CommandText = String::Format(pageSql, plsqlProc);
 
         { // fake block to validate goto save_adds stmt.
-            auto kraty = pPage->CleanKraty(TRUE);
+            auto kraty = pPage->CleanKraty(true);
             if (!kraty.empty()) {
                 auto cmdKrt = conn->CreateCommand();
                 cmdKrt->CommandText = "begin delete_str_krata(:mak_xx,:str_xx,:szpalt_x,:szpalt_y); end;";
@@ -888,7 +889,7 @@ save_adds:
     }
 }
 
-void CDrawDocDbWriter::SaveOgloszenie(OracleCommand^ cmd, CDrawAdd *pAdd)
+void CDrawDocDbWriter::SaveOgloszenie(OracleCommand^ cmd, CDrawAdd* pAdd)
 {	//:mak_xx,:str_xx ustalone
     if (!pAdd->dirty) return;
 
@@ -1397,7 +1398,7 @@ BOOL CManODPNET::LoadMakietaDirs(int idm)
 BOOL CManODPNET::F4(CDrawDoc* doc, CListCtrl* list, BOOL initialize)
 {
     CString cs;
-    CDrawAdd *vAdd;
+    CDrawAdd* vAdd;
     int id, rc = 0;
     auto adnos = gcnew List<int>();
     auto fileIds = gcnew List<int>();
@@ -1689,7 +1690,7 @@ BOOL CManODPNET::Deploy(const CString& filepath)
     return TRUE;
 }
 
-CString CManODPNET::GetProdInfo(int pub_xx, LPTSTR kolor, int *ileMat)
+CString CManODPNET::GetProdInfo(int pub_xx, LPTSTR kolor, int* ileMat)
 {
     CString sBBox;
     auto conn = gcnew OracleConnection(g_ConnectionString);

@@ -23,11 +23,6 @@ BEGIN_MESSAGE_MAP(CSplitFrame, CMDIChildWndEx)
     //}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-CSplitFrame::CSplitFrame()
-{
-    bInitialized = FALSE;
-}
-
 BOOL CSplitFrame::OnCreateClient(LPCREATESTRUCT cs, CCreateContext* pContext)
 {
     BOOL bSuccess;
@@ -58,7 +53,7 @@ void CSplitFrame::ResizeQueView()
         }
     }
 
-    bInitialized = TRUE;
+    m_initialized = true;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -92,7 +87,7 @@ void CSplitFrame::OnSize(UINT nType, int cx, int cy)
 
     static UINT uiLastType = -1;
 
-    if (nType != uiLastType && (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED) && bInitialized && theApp.activeDoc) {
+    if (nType != uiLastType && (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED) && m_initialized && theApp.activeDoc) {
         CRect r;
         GetClientRect(&r);
         m_Splitter2.SetRowInfo(0, r.Height() - (theApp.activeDoc->m_addsque.empty() ? 0 : NONEMPTY_QUEUE_HEIGHT + 9), 0);

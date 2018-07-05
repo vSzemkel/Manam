@@ -80,8 +80,8 @@ class CDrawApp : public CWinAppEx
     static void OpenWebBrowser(size_t service, const TCHAR* sUrl);    // otwiera przegladarke Internet Explorer i przekazuje jej sUrl
     static void SetErrorMessage(LPTSTR lpBuffer);
 
-    BOOL ConnecttoDB();
-    BOOL TryUpgradeImage() const; // proba upgrade'u wersji programu na podstawie obrazu zapisanego w bazie
+    bool ConnecttoDB();
+    bool TryUpgradeImage() const; // proba upgrade'u wersji programu na podstawie obrazu zapisanego w bazie
     void FromIniFile();
     void SetScale(int scale);
     void InitKratyDrukarnie();

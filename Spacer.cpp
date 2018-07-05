@@ -23,7 +23,7 @@ static CTime emisionlastChoice;
 /////////////////////////////////////////////////////////////////////////////
 // CSpacerDlg dialog
 
-BOOL CSpacerDlg::Deal(CDrawAdd *vAdd)
+BOOL CSpacerDlg::Deal(CDrawAdd* vAdd)
 {
     // Aby zrobic rezerwacje ogloszenie musi byc nowe, stac na konkretnej stronie,
     // makieta musi byc zapisana w bazie a uzytkownik musi miec stosowne uprawnienia
@@ -55,7 +55,7 @@ BOOL CSpacerDlg::Deal(CDrawAdd *vAdd)
     return TRUE;
 }
 
-CSpacerDlg::CSpacerDlg(CDrawAdd *vAdd, CWnd* pParent /*=NULL*/)
+CSpacerDlg::CSpacerDlg(CDrawAdd* vAdd, CWnd* pParent /*=NULL*/)
     : CDialog(CSpacerDlg::IDD, pParent)
 {
     _stscanf_s(vAdd->m_pDocument->data, c_formatDaty, &dd, &mm, &rrrr);
@@ -68,8 +68,7 @@ CSpacerDlg::CSpacerDlg(CDrawAdd *vAdd, CWnd* pParent /*=NULL*/)
     m_dealappend = m_wsekcji = m_sekcja = FALSE;
     m_quepub_xx = m_spacer = 0;
     //}}AFX_DATA_INIT
-    firstSearch = TRUE;
-    queDeal = refreshOnClose = olSelected = FALSE;
+    queDeal = refreshOnClose = FALSE;
     pub = vAdd;
     m_posx = vAdd->posx;
     m_posy = vAdd->posy;
@@ -515,7 +514,7 @@ void CSpacerDlg::OnQue()
         m_add_xx = GetDlgItemInt(IDC_SPACER);
     else if (firstSearch) {
         m_add_xx = 0;
-        firstSearch = FALSE;
+        firstSearch = false;
         GetDlgItem(IDC_DEALAPPEND)->EnableWindow(FALSE);
     }
 
@@ -618,7 +617,7 @@ void CSpacerDlg::OnOK()
         m_add_xx = GetDlgItemInt(IDC_SPACER);
     else if (firstSearch) {
         m_add_xx = 0;
-        firstSearch = FALSE;
+        firstSearch = false;
         GetDlgItem(IDC_DEALAPPEND)->EnableWindow(FALSE);
     }
 

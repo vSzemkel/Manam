@@ -2822,7 +2822,7 @@ BEGIN_MESSAGE_MAP(COstWer, CDialog)
     ON_NOTIFY(NM_CLICK, IDC_ADDLIST, &COstWer::OnNMClickAddlist)
 END_MESSAGE_MAP()
 
-void COstWer::AppendAdd(CDrawAdd *pAdd, int status)
+void COstWer::AppendAdd(CDrawAdd* pAdd, int status)
 {
     const int i = m_adds.InsertItem(m_adds.GetItemCount(), pAdd->logpage, status);
     ::StringCchPrintf(theApp.bigBuf, n_size, _T("%li"), pAdd->nreps);

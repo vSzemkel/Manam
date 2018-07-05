@@ -502,7 +502,7 @@ CDrawAdd* CDrawDoc::FindAddAt(int i) const
     return nullptr;
 }
 
-int CDrawDoc::GetAdPosition(const CDrawAdd *pAdd) const
+int CDrawDoc::GetAdPosition(const CDrawAdd* pAdd) const
 {
     int n = 0;
     const auto count_position = [&](auto p) noexcept->bool {
@@ -1483,7 +1483,7 @@ bool CDrawDoc::DBImport(bool synchronize)
     BeginWaitCursor();
 
     long adno;
-    CDrawAdd *vAdd, *vAdd2;
+    CDrawAdd* vAdd, *vAdd2;
     bool empSet{true}, bBank{false};
     CString xRoz, xNaz, xKol, xStr, xUwa, xKrt;
     std::vector<int> syncATEX, dirtyATEX, zaporaATEX;
@@ -1970,7 +1970,7 @@ void CDrawDoc::OnUpdateShowAcDeadline(CCmdUI* pCmdUI)
 
 /*BOOL CDrawDoc::DearchCompleted(int remnet_xx, BOOL isOK, CString msg) {
     for (const auto& pObj : m_objects) {
-        CDrawAdd *pAdd = dynamic_cast<CDrawAdd*>(pObj);
+        CDrawAdd* pAdd = dynamic_cast<CDrawAdd*>(pObj);
         if (pAdd && pAdd->remnet_xx == remnet_xx) {
             ::InterlockedExchange((volatile LONG*)&pAdd->remnet_xx, 0);
             if (!isOK) {
