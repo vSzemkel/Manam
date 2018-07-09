@@ -61,8 +61,10 @@ void CManSock::OnReceive(int nErrorCode)
 
     CSendDlg dlg;
     dlg.m_rcv = msg;
-    if (dlg.DoModal() == IDOK)
-        if (theApp.isRDBMS) SendManamMessage(theManODPNET.m_userName + ": " + dlg.m_msg, dlg.m_login, dlg.m_broadcast);
+    if (dlg.DoModal() == IDOK && theApp.isRDBMS) {
+        CString msg{theManODPNET.m_userName + ": " + dlg.m_msg};
+        SendManamMessage(msg, dlg.m_login, dlg.m_broadcast);
+    }
 }
 
 void CManSock::SendManamMessage(CString& msg, CString& login, BOOL broadcast)
@@ -94,7 +96,7 @@ void CManSock::SendManamMessage(CString& msg, CString& login, BOOL broadcast)
 void CManSock::HandleSysMsg1(TCHAR *sysmsg) const
 {	// asynchroniczna obs³uga spacer.update_reservation
     CDrawAdd* pAdd;
-    TCHAR *p, *septok = _T("^");
+    const TCHAR* septok{_T("^")};
     int pub_xx = _ttoi(_tcstok(sysmsg, septok));
     auto pMainWnd = reinterpret_cast<CMainFrame*>(theApp.GetMainWnd());
     CMDIChildWnd *pWnd, *pActiveWnd = pMainWnd->MDIGetActive();
@@ -112,7 +114,7 @@ void CManSock::HandleSysMsg1(TCHAR *sysmsg) const
     }
     pActiveWnd->SetActiveWindow();
 
-    p = _tcstok(nullptr, septok);
+    auto p = _tcstok(nullptr, septok);
     int ivar = _ttoi(p);
     UINT arrVal = _ttoi(_tcstok(nullptr, septok));
     arrVal = CDrawDoc::GetIdxfromSpotID(arrVal);

@@ -249,7 +249,7 @@ void CDrawPage::DrawGrid(CDC* pDC)
         auto pOldPen = reinterpret_cast<CPen*>(pDC->SelectStockObject(NULL_PEN));
         const auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
         for (size_t module = 0; module < ilemod; ++module) {
-            CRect& rect = GetNormalizedModuleRect(module);
+            CRect rect = GetNormalizedModuleRect(module);
             if (space_locked[module]) {
                 pDC->SelectStockObject(DKGRAY_BRUSH);
                 pDC->Rectangle(rect);
@@ -979,7 +979,7 @@ bool CDrawPage::CheckRozmKrat(PGENEPSARG pArg)
 
 bool CDrawPage::GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destName)
 {
-    TCHAR* aExt[3] = { _T(".eps"), _T(".ps"), _T(".pdf") };
+    const TCHAR* aExt[3] = { _T(".eps"), _T(".ps"), _T(".pdf") };
     destName = theApp.GetProfileString(_T("GenEPS"), pArg->format == CManFormat::EPS ? _T("EpsDst") : _T("PsDst"), _T(""));
     destName += ((destName.Right(1) == _T("\\")) ? _T("") : _T("\\"));
     int pos = m_pDocument->gazeta.Find(_T(" "));
@@ -1014,8 +1014,10 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
     if (pArg->format > CManFormat::EPS) {
         const int lnr_porz = m_pDocument->GetIPage(this);
         num.Format(_T("%03i"), lnr_porz ? lnr_porz : (int)m_pDocument->m_pages.size());
-    } else
-        (pagina_type == PaginaType::roman) ? num = Rzymska(pagina) : num.Format(_T("%03i"), pagina);
+    } else if (pagina_type == PaginaType::arabic)
+        num.Format(_T("%03i"), pagina);
+    else 
+        num = Rzymska(pagina);
 
     CString dest_name;
     bool isDrobEPS = name.Find(_T("DR")) > -1;
@@ -1122,7 +1124,7 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
             if (strstr(line, tofind[i]) != nullptr) {
                 switch (i) {
                     case 0:
-                        line = (pArg->format > CManFormat::EPS) ? towrite[i] : tofind[i];
+                        line = (pArg->format > CManFormat::EPS) ? (LPCSTR)towrite[i] : tofind[i];
                         break;
                     case 1: if (pArg->format > CManFormat::EPS) {
                         if (sBoundingBox.IsEmpty()) { // pobierz BoundingBox z formatu papieru

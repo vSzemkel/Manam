@@ -83,7 +83,7 @@ class CDrawAdd final : public CDrawObj
     void DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, bool top) const;
     void DrawDesc(CDC* pDC, const CRect& rect) const; // vu : rysuje opis tekstowy og這szenia
     void DrawPadlock(CDC* pDC, const CRect& rect) const;
-    CString PrepareBuf(TCHAR* ch) const;
+    CString PrepareBuf(const TCHAR* ch) const;
 
     CFlag GetPlacementFlag() const; // mapa modu堯w zaj皻ych na stronie przez to og這szenie
     CFlag GetPlacementFlag(int px, int py) const; // mapa modu堯w zaj皻ych na stronie przez to og這szenie, gdyby mia這 wsp馧rz璠ne (posx, posy)

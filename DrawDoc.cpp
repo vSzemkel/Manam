@@ -743,7 +743,7 @@ BOOL CDrawDoc::OnOpenDocument(LPCTSTR pszPathName)
 
 void CDrawDoc::OnFileSave()
 {
-    m_mak_xx > 0 ? OnFileSaveAs() : CDocument::DoSave(GetPathName());
+    m_mak_xx > 0 ? OnFileSaveAs() : (void)CDocument::DoSave(GetPathName());
 }
 
 void CDrawDoc::OnFileSaveAs()

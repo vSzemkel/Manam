@@ -456,11 +456,11 @@ void CDrawAdd::UpdateInfo()
     if (m_add_xx > 0) info.AppendFormat(_T(" | Spacer: %i"), m_add_xx);
     if (!logpage.IsEmpty()) info.AppendFormat(_T(" | %s"), logpage);
     if (!remarks.IsEmpty() || !remarks_atex.IsEmpty()) info.AppendFormat(_T(" | %s"), remarks.IsEmpty() ? remarks_atex : remarks);
-    info.AppendFormat(_T(" | %s"), (kolor == ColorId::full) ? FULL : CDrawDoc::kolory[kolor >> 3]);
+    info.AppendFormat(_T(" | %s"), (kolor == ColorId::full) ? FULL : (LPCTSTR)CDrawDoc::kolory[kolor >> 3]);
     if (fizpage) info.AppendFormat(_T(" | na str: %s (%i,%i)"), m_pDocument->GetPage(fizpage)->GetNrPaginy(), posx, posy);
 }
 
-CString CDrawAdd::PrepareBuf(TCHAR* ch) const
+CString CDrawAdd::PrepareBuf(const TCHAR* ch) const
 {
     CString bufor;
     bufor.AppendFormat(_T("%ix%i%s"), sizex, sizey, ch);
@@ -1617,7 +1617,8 @@ CString CDrawAdd::FindZajawka(CString& root, const CString& ext) const
     while (ff.FindNextFile()) {
         if (ff.IsDots()) continue;
         if (ff.IsDirectory()) {
-            s = FindZajawka(root + ff.GetFileName(), ext);
+            CString newRoot{root + ff.GetFileName()};
+            s = FindZajawka(newRoot, ext);
             if (!s.IsEmpty()) return s;
         }
     }
@@ -1668,7 +1669,8 @@ CString CDrawAdd::EpsName(CManFormat format, bool copyOldEPS, const bool bModifT
         theManODPNET.EI("begin :cc := check_emisja_zajawki(:adno); end;", orapar);
 
         if (status == 0) { // zajawka nie przesz³a przez interface Zajawki 
-            const auto& zaj_path = FindZajawka(theApp.GetString(_T("EpsZajawki"), _T(".")), CString(extension));
+            CString zajawkiDir = theApp.GetString((LPCTSTR) _T("EpsZajawki"), (LPCTSTR) _T("."));
+            const CString zaj_path = FindZajawka(zajawkiDir, CString(extension));
             return zaj_path.IsEmpty() ? nazwa + CString(extension) + _T(" - brak zajawki") : zaj_path;
         } else if (powtorka == 0) { // adno_seed zajawki
             num.Format(_T("%i"), status);

@@ -808,7 +808,8 @@ void CSpacerDlg::OnBnClickedMutacje()
         m_ollist.GetText(olArr[i], mut);
         for (int j = 0; j < emCnt; ++j) {
             m_emisjelist.GetText(emArr[j], kiedy);
-            InsertRequestNoDup(kiedy.Left(10), mut);
+            kiedy = kiedy.Left(10);
+            InsertRequestNoDup(kiedy, mut);
         }
     }
 }

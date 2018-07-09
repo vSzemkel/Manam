@@ -265,7 +265,7 @@ bool CDrawApp::ConnecttoDB()
 #endif
 
     CString errinfo;
-    TCHAR* msg = _T("B£¥D");
+    const TCHAR* msg{_T("B£¥D")};
     if (connDlg.m_passwd.Find(connDlg.m_loginname) >= 0)
         errinfo = _T("Nie wolno u¿ywaæ has³a domyœlnego");
     else if (connDlg.m_passwd.GetLength() < 4)
@@ -689,8 +689,10 @@ void CDrawApp::OnHelp()
 void CDrawApp::OnSendmsg()
 {
     CSendDlg dlg;
-    if (dlg.DoModal() == IDOK)
-        m_sock.SendManamMessage(theManODPNET.m_userName + _T(": ") + dlg.m_msg, dlg.m_login, dlg.m_broadcast);
+    if (dlg.DoModal() == IDOK) {
+        CString msg{theManODPNET.m_userName + _T(": ") + dlg.m_msg};
+        m_sock.SendManamMessage(msg, dlg.m_login, dlg.m_broadcast);
+    }
 }
 
 bool CDrawApp::TryUpgradeImage() const

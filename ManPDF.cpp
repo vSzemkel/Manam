@@ -247,7 +247,7 @@ void CManPDF::EmbedSection(const char* str, bool innerOnly)
 } // EmbedSection
 
 // przepisuje definicjê klucza key wystêpuj¹cego najbli¿ej w ci¹gu buf z podmian¹ numerów referencji
-void CManPDF::EmbedKey(const char* buf, char* key)
+void CManPDF::EmbedKey(const char* buf, const char* key)
 {
     char *p, *de;
 

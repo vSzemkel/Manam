@@ -114,7 +114,7 @@ bool CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
 
 void CDrawDoc::OnDBSave()
 {
-    isGRB ? theManODPNET.GrbSaveMutczas(this) : DBSaveAs(m_mak_xx == -1);
+    isGRB ? (void)theManODPNET.GrbSaveMutczas(this) : DBSaveAs(m_mak_xx == -1);
 }
 
 void CDrawDoc::OnDBSaveAs()
@@ -679,7 +679,7 @@ void CDrawDoc::AddFind(long nrAtex, long nrSpacer, LPCTSTR nazwa)
         if (nrAtex == LONG_MIN) nrAtex = nrSpacer;
         CString snr;
         if (nrAtex > 0) snr.Format(_T("%ld"), nrAtex);
-        AfxMessageBox(CString(_T("Nie odnaleziono og³oszenia: ")) + (snr.IsEmpty() ? nazwa : snr));
+        AfxMessageBox(CString(_T("Nie odnaleziono og³oszenia: ")) + (snr.IsEmpty() ? nazwa : (LPCTSTR)snr));
         findNextInd = -1;
     }
 }

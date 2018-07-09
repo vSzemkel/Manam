@@ -52,7 +52,7 @@ class CManPDF
     void GenPDFTail(unsigned int howMany = 0);
     void EmbedContents(CFile& src, unsigned long offset);
     void EmbedRef(CFile& src, unsigned int srcObjNr);
-    void EmbedKey(const char *buf, char *key);
+    void EmbedKey(const char *buf, const char *key);
     void EmbedSection(const char* str, bool innerOnly = false);
     inline void EmbedTextRight(const char *font, unsigned int fsize, float px, float py, const char *text, CStringA& buf);
     unsigned int GetRefNr(char *buf);
