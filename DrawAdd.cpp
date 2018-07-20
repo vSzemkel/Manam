@@ -460,7 +460,7 @@ void CDrawAdd::UpdateInfo()
     if (fizpage) info.AppendFormat(_T(" | na str: %s (%i,%i)"), m_pDocument->GetPage(fizpage)->GetNrPaginy(), posx, posy);
 }
 
-CString CDrawAdd::PrepareBuf(const TCHAR* ch) const
+CString CDrawAdd::PrepareBuf(const TCHAR* const ch) const
 {
     CString bufor;
     bufor.AppendFormat(_T("%ix%i%s"), sizex, sizey, ch);
@@ -1197,7 +1197,7 @@ int CDrawAdd::CkPageLocation(int vFizPage)
     return 0; // wszystko w porz¹dku
 }
 
-void CDrawAdd::SetEstPagePos(const TCHAR* description, CRect* vRect, CDrawPage* pPage)
+void CDrawAdd::SetEstPagePos(const TCHAR* const description, CRect* vRect, CDrawPage* pPage)
 {
     /* vu : Jako description - opis polozenia ogloszenia na stronie podaje sie
             jeden ze skrotow in ('P','L','G','D','Gl','GP','DL','DP')

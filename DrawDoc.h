@@ -43,7 +43,7 @@ class CDrawDoc final : public COleDocument
     static int ValidKolor(const CString& k) noexcept;
     static int GetIdxfromSpotID(UINT spot_id) noexcept;
     static CBrush* GetSpotBrush(int i) noexcept;
-    static CString XmlReadText(IXmlReader *reader);
+    static CString XmlReadText(IXmlReader* reader);
 
     ~CDrawDoc() override;
     BOOL OnNewDocument() override;

@@ -89,7 +89,7 @@ struct OdpHelper final
         }
     }
 
-    static void __clrcall RetrieveOdpParam(CManODPNETParm *p, OracleParameter^ op)
+    static void __clrcall RetrieveOdpParam(CManODPNETParm* p, OracleParameter^ op)
     {
         switch (p->m_odptype) {
             case CManDbType::DbTypeInt32:

@@ -40,12 +40,12 @@ class CManODPNET
     BOOL Zapora(const std::vector<int>& pub_xxArr);
     BOOL Deploy(const CString& filepath);
     const CRozm* AddRozmTypu(std::vector<CRozm>& roz, int typ_xx);
-    CString GetProdInfo(int pub_xx, LPTSTR kolor, int *ileMat);
+    CString GetProdInfo(int pub_xx, LPTSTR kolor, int* ileMat);
     CString AdnoDlaZajawki(int* p, int* o);
     CString GetHttpSource(const CString& gazeta, const CString& kiedy, int* s);
     static CManODPNETParms emptyParm;
 private:
-    BOOL FillNiekratoweInternal(int szpalt_x, int szpalt_y, int typ, CComboBox *m_typ_ogl_combo, CWordArray *m_typ_ogl_arr, CByteArray *m_typ_sizex_arr, CByteArray *m_typ_sizey_arr, std::vector<CString> *m_typ_precel_arr);
+    BOOL FillNiekratoweInternal(int szpalt_x, int szpalt_y, int typ, CComboBox* m_typ_ogl_combo, CWordArray* m_typ_ogl_arr, CByteArray* m_typ_sizex_arr, CByteArray* m_typ_sizey_arr, std::vector<CString>* m_typ_precel_arr);
 };
 
 struct CManODPNETParm

@@ -1,9 +1,9 @@
+
 #pragma once
-#pragma warning(disable:4786)
 
 #include "DrawPage.h"
 
-typedef std::map<unsigned int, int, std::less<>> uintmap;
+using uintmap = std::map<unsigned int, int, std::less<>>;
 
 class CDrawAdd;
 

@@ -67,7 +67,7 @@ char* CManPDF::pdftok(char* str)
     return cPdfToken[iPdfTokenSlot];
 }
 
-const char* CManPDF::memstr(const char* str, const char* sub, size_t len)
+const char* CManPDF::memstr(const char* const str, const char* const sub, size_t len)
 {
     char* p;
     size_t l{0};
@@ -85,7 +85,7 @@ const char* CManPDF::memstr(const char* str, const char* sub, size_t len)
     return nullptr;
 } // memstr
 
-unsigned long CManPDF::SearchPattern(CFile& f, const char* pat) const
+unsigned long CManPDF::SearchPattern(CFile& f, const char* const pat) const
 {
     char* p;
     size_t res = 1;
@@ -204,7 +204,7 @@ unsigned int CManPDF::GetRefNr(char* buf)
 // przepisuje s³ownik podmianiaj¹c numery obiektów Ÿród³owych na docelowe, 
 // innerOnly okreœla, czy maj¹ zostaæ przepisane znaczniki pocz¹tku i koñca sekcji
 // str jest tokenem uzyskanym przez strtok i kolejne wywo³anie da nastêpny w kolejnoœci token
-void CManPDF::EmbedSection(const char* str, bool innerOnly)
+void CManPDF::EmbedSection(const char* const str, bool innerOnly)
 {
     // ostatnie wywolanie strtok dalo token, który jest pocz¹tkiem sekcji
     // utworz liste tokenow ze slownika i podmien referencje
@@ -247,7 +247,7 @@ void CManPDF::EmbedSection(const char* str, bool innerOnly)
 } // EmbedSection
 
 // przepisuje definicjê klucza key wystêpuj¹cego najbli¿ej w ci¹gu buf z podmian¹ numerów referencji
-void CManPDF::EmbedKey(const char* buf, const char* key)
+void CManPDF::EmbedKey(const char* const buf, const char* const key)
 {
     char *p, *de;
 
@@ -663,7 +663,7 @@ void CManPDF::GenPDFTail(unsigned int howMany)
     trg.SetLength(trg.GetPosition());
 } // GenPDFTail
 
-bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* trgName)
+bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* const trgName)
 {
     CFile src;
     std::vector<CString> embAlias, filePath;
@@ -789,7 +789,7 @@ bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* trgName)
     return true;
 } // CreatePDF
 
-unsigned long CManPDF::GetMediaBox(const TCHAR* fpath, float* x1, float* y1, float* x2, float* y2, HANDLE hFile)
+unsigned long CManPDF::GetMediaBox(const TCHAR* const fpath, float* x1, float* y1, float* x2, float* y2, HANDLE hFile)
 {
     // zwraca offset do /Page
     CFile src(hFile);
@@ -870,7 +870,7 @@ kids:
     return offset;
 } //GetMediaBox
 
-inline void CManPDF::EmbedTextRight(const char* font, unsigned int fsize, float px, float py, const char* text, CStringA& buf)
+inline void CManPDF::EmbedTextRight(const char* const font, unsigned int fsize, float px, float py, const char* const text, CStringA& buf)
 {
     buf.Format(R"(q BT 1 g\012%s %u Tf\0121 0 0 1 %f %f cm\012-100 Tz (%s) Tj 100 Tz 0 g (%s) Tj\012ET Q\012)", font, fsize, px, py, text, text);
 }

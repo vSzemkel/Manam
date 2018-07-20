@@ -8,7 +8,7 @@ class CDrawAdd;
 class CDrawPage;
 class CGenEpsInfoDlg;
 
-typedef struct _GENEPSARG
+struct GENEPSARG
 {
     CManFormat format;
     bool bSignAll;
@@ -19,7 +19,8 @@ typedef struct _GENEPSARG
     CDrawPage* pPage;
     CGenEpsInfoDlg* pDlg;
     HANDLE hCompletedEvent;
-} GENEPSARG, *PGENEPSARG;
+};
+using PGENEPSARG = GENEPSARG *;
 
 struct CKrataNiebazowa final
 {

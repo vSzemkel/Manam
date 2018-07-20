@@ -2,11 +2,12 @@
 
 class CGenEpsInfoDlg;
 
-typedef struct _MESPUMPDLGARG
+struct MESPUMPDLGARG
 {
     HANDLE hEvent;
     CGenEpsInfoDlg* pDlg;
-} MESPUMPDLGARG, *PMESPUMPDLGARG;
+};
+using PMESPUMPDLGARG = MESPUMPDLGARG *;
 
 class CGenEpsInfoDlg : public CDialog /* singleton */
 {

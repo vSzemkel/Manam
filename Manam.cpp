@@ -628,13 +628,13 @@ void CDrawApp::OnDaydirs()
     dlg.DoModal();
 }
 
-bool CDrawApp::OpenWebBrowser(const TCHAR* sUrl)
+bool CDrawApp::OpenWebBrowser(const TCHAR* const sUrl)
 {
     const auto ret = (size_t)::ShellExecute(::GetDesktopWindow(), _T("Open"), sUrl, nullptr, nullptr, SW_SHOWNORMAL);
     return ret > 32;
 }
 
-void CDrawApp::OpenWebBrowser(size_t service, const TCHAR* sUrl)
+void CDrawApp::OpenWebBrowser(size_t service, const TCHAR* const sUrl)
 {
     auto pFile = theApp.OpenURL(service, sUrl);
     if (pFile) {
