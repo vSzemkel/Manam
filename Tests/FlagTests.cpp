@@ -55,3 +55,18 @@ TEST(FlagTests, MaskShift) {
     flag <<= 300;
     EXPECT_EQ(flag.GetBitCnt(1), 1);
 }
+
+TEST(FlagTests, SizeRoundup) {
+    CFlag f1{1};
+    EXPECT_EQ(f1.GetSize(), sizeof(uintptr_t));
+    CFlag f2{sizeof(uintptr_t) / 2};
+    EXPECT_EQ(f2.GetSize(), sizeof(uintptr_t));
+    CFlag f3{sizeof(uintptr_t)};
+    EXPECT_EQ(f3.GetSize(), sizeof(uintptr_t));
+    CFlag f4{ sizeof(uintptr_t) + 1 };
+    EXPECT_EQ(f4.GetSize(), 2 * sizeof(uintptr_t));
+    CFlag f5{ 2 * sizeof(uintptr_t) - 2 };
+    EXPECT_EQ(f5.GetSize(), 2 * sizeof(uintptr_t));
+    CFlag f10{9 * sizeof(uintptr_t) + 1};
+    EXPECT_EQ(f10.GetSize(), 10 * sizeof(uintptr_t));
+}

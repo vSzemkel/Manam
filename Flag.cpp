@@ -27,8 +27,9 @@ CFlag::CFlag(CFlag&& f) noexcept
 
 CFlag::CFlag(size_t s)
 {
-    if (s & (CRITICAL_SIZE - 1))
-        s = (s & (UINT_MAX - CRITICAL_SIZE + 1)) + CRITICAL_SIZE;
+    constexpr int mask = CRITICAL_SIZE - 1;
+    if (s & mask)
+        s = (s + mask) & (~mask);
     size = s;
     if (size > CRITICAL_SIZE)
         flagblob_ptr = malloc(size);
