@@ -1766,8 +1766,8 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
     auto s = reinterpret_cast<char*>(pArg->cBigBuf);
     auto pPage = m_pDocument->GetPage(fizpage);
     const bool bLewaStrona = (m_pDocument->GetIPage(pPage) & 1) == 0;
-    const auto pRozAdd = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, spad_flag ? 0 : typ_xx);	// gdy zaznaczono spad, to montuj do kraty
-    const auto pRozKraty = typ_xx ? m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, 0) : pRozAdd;	// pobierz rozmiar kraty, jeœli dotychczas nie jest znany
+    const auto pRozAdd = m_pDocument->GetCRozm(szpalt_x, szpalt_y, spad_flag ? 0 : typ_xx); // gdy zaznaczono spad, to montuj do kraty
+    const auto pRozKraty = typ_xx ? m_pDocument->GetCRozm(szpalt_x, szpalt_y, 0) : pRozAdd; // pobierz rozmiar kraty, jeœli dotychczas nie jest znany
 
     theApp.SetRegistryBase(_T("GenEPS"));
     const BOOL copyEps = theApp.GetInt(_T("CopyOldEPS"), 0);
@@ -1931,7 +1931,7 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
 bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
 {
     auto s = reinterpret_cast<char*>(pArg->cBigBuf);
-    auto pRoz = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, typ_xx);
+    auto pRoz = m_pDocument->GetCRozm(szpalt_x, szpalt_y, typ_xx);
 
     float x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
     const auto x = (float)((posx - 1)*(pRoz->w + pRoz->sw)*mm2pkt);
@@ -2021,10 +2021,10 @@ bool CDrawAdd::EmbedEpsFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcP
     return ret;
 }
 
-void CDrawAdd::Preview(PGENEPSARG pArg, int x, int y, int scanlinesCount, int bytesPerScanline) const
+void CDrawAdd::Preview(PGENEPSARG pArg, const int x, const int y, const int scanlinesCount, const int bytesPerScanline) const
 {
     auto target = (BYTE*)pArg->cBigBuf;
-    auto pRoz = m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y, typ_xx);
+    auto pRoz = m_pDocument->GetCRozm(szpalt_x, szpalt_y, typ_xx);
 
     div_t x1 = div((int)((posx - 1)*(pRoz->w + pRoz->sw)) / 10 - x, 8);
     div_t x2 = div((int)(((posx - 1 + sizex)*(pRoz->w + pRoz->sw) - pRoz->sw) / 10) - x, 8);

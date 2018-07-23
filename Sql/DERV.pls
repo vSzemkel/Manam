@@ -72,11 +72,12 @@ create or replace PACKAGE BODY                     "DERV" as
          and d.xx=sd.base_drw_xx and sd.parent_drw_xx=d2.xx and exists (select 1 from makieta m2 where m2.drw_xx=d2.xx and m2.kiedy=m.kiedy)
     ) posib, 
        (select md.drw_xx from spacer_strona d,spacer_strona b,makieta mb,makieta md 
-        where b.mak_xx=vmak_xx and b.nr_porz=vnr_porz 
+        where b.mak_xx=vmak_xx and b.nr_porz=decode(vnr_porz,mb.objetosc,0,vnr_porz) 
           and d.derv_mak_xx=b.mak_xx and d.derv_nr_porz=b.nr_porz and d.mak_xx=md.xx and b.mak_xx=mb.xx and mb.kiedy=md.kiedy) derv
     where posib.xx=derv.drw_xx(+);
           
-    select min(drw_xx),min(derv_nr_porz) into vmak_xx,vnr_porz from derv_info where mak_xx=vmak_xx and nr_porz=vnr_porz;
+    select min(di.drw_xx),min(decode(derv_nr_porz,0,m.objetosc,derv_nr_porz)) into vmak_xx,vnr_porz 
+      from makieta m,derv_info di where m.xx=vmak_xx and m.xx=di.mak_xx and di.nr_porz=decode(vnr_porz,m.objetosc,0,vnr_porz);
   end info;
   
   procedure derive_pages (

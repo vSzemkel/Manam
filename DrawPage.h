@@ -114,7 +114,7 @@ class CDrawPage final : public CDrawObj
     bool CheckSpace(const CDrawAdd* pObj, int px, int py) const;
     bool CheckSpaceDiffKraty(const CDrawAdd* pObj, int x, int y) const;
 
-    bool CheckRozmKrat(PGENEPSARG pArg);
+    bool CheckRozmKrat();
     bool GenPDF(PGENEPSARG pArg);
     bool CheckSrcFile(PGENEPSARG pArg);
     bool GenEPS(PGENEPSARG pArg);
@@ -128,7 +128,7 @@ private:
 
     CFlag GetReservedFlag();                                    // Pobiera flagê szarych modu³ów
     int  TiffHeader(CFile& dest, int dx, int dy, int bytesPerScanline) const noexcept;
-    void BoundingBox(PGENEPSARG pArg, int* bx1, int* by1, int* bx2, int* by2) const noexcept;
+    void BoundingBox(int* bx1, int* by1, int* bx2, int* by2) const noexcept;
     void Preview(PGENEPSARG pArg, CFile& dest, int bx1, int by1, int bx2, int by2) const noexcept;
     bool StaleElementy(PGENEPSARG pArg, CFile& handle);
     bool MovePageToOpiServer(PGENEPSARG pArg, CMemFile&& pOpiFile) const;

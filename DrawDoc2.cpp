@@ -880,13 +880,7 @@ void CDrawDoc::IniRozm()
     }
 } // IniRozm
 
-const CRozm* CDrawDoc::GetCRozm(int s_x, int s_y, int typ_xx)
-{
-    GENEPSARG genEpsArg;
-    return GetCRozm(&genEpsArg, s_x, s_y, typ_xx);
-}
-
-const CRozm* CDrawDoc::GetCRozm(PGENEPSARG pArg, int s_x, int s_y, int typ_xx)
+const CRozm* CDrawDoc::GetCRozm(const int s_x, const int s_y, const int typ_xx)
 {
     auto pR = std::find_if(m_Rozm.cbegin(), m_Rozm.cend(), [=](const CRozm& r) noexcept {
         return (typ_xx == 0 && s_x == r.szpalt_x && s_y == r.szpalt_y) || (typ_xx > 0 && typ_xx == r.typ_xx);
@@ -897,7 +891,7 @@ const CRozm* CDrawDoc::GetCRozm(PGENEPSARG pArg, int s_x, int s_y, int typ_xx)
         if (pRozm) return pRozm;
     }
 
-    return pR == m_Rozm.cend() ? (typ_xx ? GetCRozm(pArg, s_x, s_y, 0) : nullptr) : &*pR;
+    return pR == m_Rozm.cend() ? (typ_xx ? GetCRozm(s_x, s_y, 0) : nullptr) : &*pR;
 }
 
 void CDrawDoc::DerivePages(CDrawPage* pPage)

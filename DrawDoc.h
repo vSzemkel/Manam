@@ -140,7 +140,6 @@ class CDrawDoc final : public COleDocument
 
     void IniRozm();
     const CRozm* GetCRozm(int s_x, int s_y, int typ_xx = 0);
-    const CRozm* GetCRozm(PGENEPSARG pArg, int s_x, int s_y, int typ_xx = 0);
 
 #ifdef _DEBUG
     void AssertValid() const override;

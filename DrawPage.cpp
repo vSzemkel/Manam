@@ -863,12 +863,12 @@ void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
     Invalidate();
 }
 
-void CDrawPage::BoundingBox(PGENEPSARG pArg, int* bx1, int* by1, int* bx2, int* by2) const noexcept
+void CDrawPage::BoundingBox(int* bx1, int* by1, int* bx2, int* by2) const noexcept
 {
     bool first = true;
     for (const auto& pAdd : m_adds) {
-        auto pRozAdd = m_pDocument->GetCRozm(pArg, pAdd->szpalt_x, pAdd->szpalt_y, pAdd->spad_flag ? 0 : pAdd->typ_xx); // gdy zaznaczono spad, to montuj do kraty
-        auto pRozKraty = pAdd->typ_xx ? m_pDocument->GetCRozm(pArg, pAdd->szpalt_x, pAdd->szpalt_y, 0) : pRozAdd;       // pobierz rozmiar kraty, jesli dotychczas nie jest znany
+        auto pRozAdd = m_pDocument->GetCRozm(pAdd->szpalt_x, pAdd->szpalt_y, pAdd->spad_flag ? 0 : pAdd->typ_xx); // gdy zaznaczono spad, to montuj do kraty
+        auto pRozKraty = pAdd->typ_xx ? m_pDocument->GetCRozm(pAdd->szpalt_x, pAdd->szpalt_y, 0) : pRozAdd;       // pobierz rozmiar kraty, jesli dotychczas nie jest znany
 
         const auto x = (int)(pAdd->posx - 1) * (pRozKraty->w + pRozKraty->sw);
         const auto y = (int)(pAdd->szpalt_y + 1 - pAdd->posy - pAdd->sizey) * (pRozKraty->h + pRozKraty->sh);
@@ -895,7 +895,7 @@ bool CDrawPage::CheckSrcFile(PGENEPSARG pArg)
     CString sNrStr = _T("Str. ") + GetNrPaginy() + _T(": ");
 
     pArg->pDlg->StrInfo(pArg->iChannelId, sNrStr);
-    if (!CheckRozmKrat(pArg)) {
+    if (!CheckRozmKrat()) {
         isOK = false;
         f5_errInfo = _T("brak wymiarów krat ");
     } else {
@@ -962,14 +962,14 @@ bool CDrawPage::StaleElementy(PGENEPSARG pArg, CFile& handle)
     return isOK;
 } // StaleElementy
 
-bool CDrawPage::CheckRozmKrat(PGENEPSARG pArg)
+bool CDrawPage::CheckRozmKrat()
 {
     bool isValid{true};
 
-    if (!m_pDocument->GetCRozm(pArg, szpalt_x, szpalt_y))
+    if (!m_pDocument->GetCRozm(szpalt_x, szpalt_y))
         isValid = false;
     else for (const auto& kn : m_kraty_niebazowe)
-        if (!m_pDocument->GetCRozm(pArg, kn.m_szpalt_x, kn.m_szpalt_y)) {
+        if (!m_pDocument->GetCRozm(kn.m_szpalt_x, kn.m_szpalt_y)) {
             isValid = false;
             break;
         }
@@ -1044,7 +1044,7 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
         ::MessageBox(pArg->pDlg->m_hWnd, "Proszê wybraæ drukarnie dla strony " + num, _T("Brak danych"), MB_OK);
         return false;
     }
-    if (!CheckRozmKrat(pArg)) {
+    if (!CheckRozmKrat()) {
         ::MessageBox(pArg->pDlg->m_hWnd, "Brak wymiarów dla wszystkich krat strony " + num, _T("Brak danych"), MB_OK);
         return false;
     }
@@ -1101,7 +1101,7 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
 
     int bx1 = 0, by1 = 0, bx2 = 0, by2 = 0;
     if (pArg->format == CManFormat::EPS) {
-        if (isDrobEPS) { bx1 = 0; bx2 = 709; by1 = 0; by2 = (int)m_pDocument->GetDrobneH() + 5; } else BoundingBox(pArg, &bx1, &by1, &bx2, &by2);
+        if (isDrobEPS) { bx1 = 0; bx2 = 709; by1 = 0; by2 = (int)m_pDocument->GetDrobneH() + 5; } else BoundingBox(&bx1, &by1, &bx2, &by2);
         pArg->bIsPreview = (pArg->bIsPreview && bx1 != bx2 && by1 != by2);
     }
 
@@ -1424,7 +1424,7 @@ bool CDrawPage::GenPDF(PGENEPSARG pArg)
     CManPDF pdf{pArg};
     dstName.Format(_T("%02i"), pagina);
 
-    if (!CheckRozmKrat(pArg)) {
+    if (!CheckRozmKrat()) {
         ::MessageBox(pArg->pDlg->m_hWnd, "Brak wymiarów dla wszystkich krat strony: " + num, _T("B³¹d"), MB_ICONERROR | MB_OK);
         return false;
     }
