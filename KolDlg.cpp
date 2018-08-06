@@ -1139,11 +1139,11 @@ void CInfoDlg::OnOK()
             m_drukarnie |= mask;
     if ((i = m_wydawcycombo.GetCurSel()) != CB_ERR) {
         m_wydawcycombo.GetLBText(i, m_wydawca);
-        m_wydawca = m_wydawca.Left(2);
+        m_wydawca.Delete(2, m_wydawca.GetLength() - 2);
     }
     if ((i = m_wydawcyredcombo.GetCurSel()) != CB_ERR) {
         m_wydawcyredcombo.GetLBText(i, m_wydawcared);
-        m_wydawcared = m_wydawcared.Left(2);
+        m_wydawcared.Delete(2, m_wydawcared.GetLength() - 2);
     }
 }
 
@@ -1392,7 +1392,7 @@ void CDrzDlg::OnKiedyChanged(NMHDR* pNMHDR, LRESULT* pResult)
 {
     static CTime oldDate = 0;
     auto pDTChange = reinterpret_cast<LPNMDATETIMECHANGE>(pNMHDR);
-    CTime t = CTime(pDTChange->st);
+    CTime t{pDTChange->st};
     if (t != oldDate) {
         oldDate = t;
         SelectDrzewo(t);
@@ -1408,7 +1408,8 @@ void CDrzDlg::OnOK()
     if (ind != CB_ERR) {
         m_id_drw = (int)m_drz_combo.GetItemData(ind);
         m_drz_combo.GetLBText(ind, m_gazeta);
-        m_gazeta = m_gazeta.Left(m_gazeta.Find(_T(" -"), 0));
+        const int pos = m_gazeta.Find(_T(" -"), 0);
+        m_gazeta.Delete(pos, m_gazeta.GetLength() - pos);
     }
     CDialog::OnOK();
 }
@@ -1482,7 +1483,8 @@ void CDrz1Dlg::OnOK()
     if (ind != CB_ERR) {
         m_id_drw = (int)m_drz_combo.GetItemData(ind);
         m_drz_combo.GetLBText(ind, m_gazeta);
-        m_gazeta = m_gazeta.Left(m_gazeta.Find(_T(" -"), 0));
+        const int pos = m_gazeta.Find(_T(" -"), 0);
+        m_gazeta.Delete(pos, m_gazeta.GetLength() - pos);
     }
     CDialog::OnOK();
 }

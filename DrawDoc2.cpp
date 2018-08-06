@@ -419,7 +419,7 @@ aSecondRun:
         if (!k && castval->logpage.GetLength() == 5) { // nie uda³o siê dopasowaæ wertykalu np. BIZIR
             bSecondRun = TRUE;
             sOrgLogpage = castval->logpage;
-            castval->logpage = castval->logpage.Mid(3); // spróbujemy dopasowaæ do strony IR
+            castval->logpage.Delete(0, 3); // spróbujemy dopasowaæ do strony IR
             goto aSecondRun;
         } else if (bSecondRun)
             castval->logpage = sOrgLogpage;

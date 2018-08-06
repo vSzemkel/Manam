@@ -9,7 +9,7 @@ TEST(FlagTests, DefaultLattice) {
     EXPECT_FALSE(flag[9]) << L"Nieprawid³owy bit";
     EXPECT_TRUE(flag[10]) << L"Nieprawid³owy bit";
     EXPECT_FALSE(flag[11]) << L"Nieprawid³owy bit";
-    EXPECT_STREQ(L"00000400", (LPCTSTR)flag.ToRaw()) << L"Zaburzona flaga";
+    EXPECT_STREQ(L"00000400", (LPCTSTR)(flag.ToRaw().Right(8))) << L"Zaburzona flaga";
 }
 
 TEST(FlagTests, BitMaskInvert) {

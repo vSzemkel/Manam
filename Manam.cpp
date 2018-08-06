@@ -424,7 +424,7 @@ void CDrawApp::OnFileRefresh()
     FileRefresh(nullptr);
 }
 
-void CDrawApp::FileRefresh(CDrawDoc *refreshDoc)
+void CDrawApp::FileRefresh(CDrawDoc* refreshDoc)
 {
     CMDIChildWnd *vWnd;	// pozamykaj okna
     CByteArray aIsRO, aSwCZV;

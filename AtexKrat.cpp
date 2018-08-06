@@ -12,7 +12,7 @@ const int CAtexKrat::KRATA_PASKOWA = 10;
 const float CAtexKrat::TOLERANCE = 0.05f;
 
 #pragma region CAtexKrat
-CAtexKrat::CAtexKrat(const TCHAR *atexKratInfo, CDrawDoc *vDoc)
+CAtexKrat::CAtexKrat(const TCHAR *atexKratInfo, CDrawDoc* vDoc)
 {
     doc = vDoc;
     isValid = _stscanf_s(atexKratInfo, _T("%f#%f#%f#%f#%f"), &xmm, &ymm, &xcol, &szpalt_x, &dy) == 5;

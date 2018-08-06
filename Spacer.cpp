@@ -43,7 +43,7 @@ BOOL CSpacerDlg::Deal(CDrawAdd* vAdd)
     CSpacerDlg dlg(vAdd);
     dlg.queDeal = !vAdd->fizpage;
     if (dlg.DoModal() != IDOK && (vAdd->m_add_xx < 1 || dlg.m_quepub_xx > 0)) { //jezeli nie udalo sie sprzedac, to usun ogloszenie z makiety, z kolejki nie usuwaj
-        CDrawDoc *vDoc = vAdd->m_pDocument;
+        CDrawDoc* vDoc = vAdd->m_pDocument;
         CDrawPage* pPage = vDoc->GetPage(vAdd->fizpage);
         vDoc->Remove(vAdd);
         if (vAdd->m_add_xx < 1) delete vAdd;
@@ -547,7 +547,7 @@ void CSpacerDlg::OnQue()
         }
     } else {
         CString errText;
-        BOOL isDone = rc > 0;
+        bool isDone = rc > 0;
         for (i = rc - 1; i >= 0; i--) {
             if (m_emisjelist.GetSel(i)) {
                 next_mak_xx = (int)m_emisjelist.GetItemData(i);
@@ -555,7 +555,12 @@ void CSpacerDlg::OnQue()
                     if (!theManODPNET.EI(sql, orapar))
                         return;
                     m_emisjelist.GetText(i, errText);
-                    errText = (errText.Find(_T(" # ")) >= 0 ? errText.Left(errText.Find(_T("#")) + 2) : errText + _T(" # ")) + _T("QUED");
+                    const int pos = errText.Find(_T(" # ")) + 3;
+                    if (pos >= 3)
+                        errText.Delete(pos, errText.GetLength() - pos);
+                    else
+                        errText += _T(" # ");
+                    errText += _T("QUED");
                     m_emisjelist.DeleteString(i);
                     m_emisjelist.InsertString(i, errText);
                     m_emisjelist.SetItemData(i, (DWORD_PTR)(-1 * next_mak_xx));
@@ -704,10 +709,10 @@ void CSpacerDlg::OnOK()
 
     if (pub->czaskto[0] == _T('#'))
         pub->czaskto = czas_kto;
+    if (pub->m_add_xx < 0 && m_add_xx > 0)
+        pub->m_add_xx = m_add_xx;
 
     if (saleSucc) {
-        if (pub->m_add_xx < 0)
-            pub->m_add_xx = m_add_xx;
         if (m_first_emision_pub_xx > 0)
             pub->m_pub_xx = m_first_emision_pub_xx;
         if (m_quepub_xx) {
@@ -761,7 +766,7 @@ void CSpacerDlg::OnBnClickedOl()
     };
 }
 
-void CSpacerDlg::EnableMultiCond(BOOL flag) const
+void CSpacerDlg::EnableMultiCond(const BOOL flag) const
 {
     GetDlgItem(IDC_SEKCJA)->EnableWindow(flag);
     GetDlgItem(IDC_WSEKCJI)->EnableWindow(flag);

@@ -224,8 +224,8 @@ private:
     void RefreshNiekrat();
     BOOL AtexVerify(LPCTSTR adno);
     BOOL UniqueAdno(LPCTSTR adno);
-    CDrawAdd *dupNoSpacer;
-    CDrawDoc *vActiveDoc;
+    CDrawAdd* dupNoSpacer;
+    CDrawDoc* vActiveDoc;
     // Implementation
 protected:
     BOOL OnInitDialog() override;
@@ -901,7 +901,7 @@ protected:
 
 // Implementation
 protected:
-    CDrawDoc *vDoc;
+    CDrawDoc* vDoc;
     CImageList m_SmallImageList, m_StateImageList;
     // Generated message map functions
     //{{AFX_MSG(CEPSDateDlg)

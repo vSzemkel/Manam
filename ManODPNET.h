@@ -23,16 +23,16 @@ class CManODPNET
     BOOL GetManamEps();                                               // pobiera z bazy plik z definicj¹ postscriptu
     BOOL FillArr(std::vector<CString>* arr, LPCSTR sql, CManODPNETParms& ps, BOOL comboArray = FALSE);
     BOOL FillListArr(CListBox* combo, LPCSTR sql, CManODPNETParms& ps, BOOL comboArray = FALSE);
-    BOOL FillList(CListBox *list, LPCSTR sql, CManODPNETParms& ps, int indexPos = -1);
-    BOOL FillCombo(CComboBox *combo, LPCSTR sql, CManODPNETParms& ps, int indexPos = -1);
-    BOOL FillNiekratowe(CSpacerDlg *dlg, int szpalt_x, int szpalt_y);
-    BOOL FillNiekratowe(CAddDlg *dlg);
-    BOOL OpenManamDoc(CDrawDoc *doc);                                 // pobiera z bazy podstawowe informacje o makiecie lub grzbiecie
-    BOOL SaveManamDoc(CDrawDoc *doc, BOOL isSaveAs, BOOL doSaveAdds); // zachowuje zmiany w makiecie
-    BOOL RmSysLock(CDrawDoc *doc);
-    BOOL GrbSaveMutczas(CDrawDoc *doc);
+    BOOL FillList(CListBox* list, LPCSTR sql, CManODPNETParms& ps, int indexPos = -1);
+    BOOL FillCombo(CComboBox* combo, LPCSTR sql, CManODPNETParms& ps, int indexPos = -1);
+    BOOL FillNiekratowe(CSpacerDlg* dlg, int szpalt_x, int szpalt_y);
+    BOOL FillNiekratowe(CAddDlg* dlg);
+    BOOL OpenManamDoc(CDrawDoc* doc);                                 // pobiera z bazy podstawowe informacje o makiecie lub grzbiecie
+    BOOL SaveManamDoc(CDrawDoc* doc, BOOL isSaveAs, BOOL doSaveAdds); // zachowuje zmiany w makiecie
+    BOOL RmSysLock(CDrawDoc* doc);
+    BOOL GrbSaveMutczas(CDrawDoc* doc);
     BOOL LoadMakietaDirs(int idm);
-    BOOL F4(CDrawDoc *doc, CListCtrl *list, BOOL initialize);
+    BOOL F4(CDrawDoc* doc, CListCtrl* list, BOOL initialize);
     BOOL ReadAcDeadlines(CDrawDoc* doc);
     BOOL InitRozm(CDrawDoc* doc);
     BOOL GetAcceptStatus(int grb_xx, CString& ldrz, CString& cdrz, CString& org);

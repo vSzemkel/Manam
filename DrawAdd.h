@@ -97,7 +97,7 @@ class CDrawAdd final : public CDrawObj
 
     void SetLogpage(CString& m_op_zew, CString& m_sekcja, CString& m_op_sekcji, int m_nr_w_sekcji, CString& m_PL, CString& m_op_PL, int m_nr_PL, CString& m_poz_na_str); //vu
     void ParseLogpage(TCHAR* op_zew, TCHAR* sekcja, TCHAR* op_sekcji, int* nr_sek, TCHAR* pl, TCHAR* op_pl, int* nr_pl, TCHAR* poz_na_str = nullptr); // vu
-    int CkPageLocation(int vFizPage); //vu : czy ogloszenie moze byc na stronie numer vFizPage
+    int CkPageLocation(int nr_porz); // czy og³oszenie moze staæ na stronie numer nr_porz
     void SetEstPagePos(const TCHAR* description, CRect* vRect, CDrawPage* pPage);
     bool SetPagePosition(CRect* pRect, CDrawPage* pPage);
 

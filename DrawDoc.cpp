@@ -753,7 +753,7 @@ void CDrawDoc::OnFileSaveAs()
         fname = _T("*");
     else {
         const int pos = fname.ReverseFind('.');
-        if (pos > -1) fname = fname.Left(pos);
+        if (pos > -1) fname.Delete(pos, fname.GetLength() - pos);
     }
 
     CFileDialog dlg(FALSE, nullptr, fname, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("manam (*.man)|*.man|Wszystkie pliki (*.*)|*.*||"));

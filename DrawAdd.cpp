@@ -1099,51 +1099,50 @@ void CDrawAdd::ParseLogpage(TCHAR* op_zew, TCHAR* sekcja, TCHAR* op_sekcji, int*
     }
 }
 
-int CDrawAdd::CkPageLocation(int vFizPage)
+int CDrawAdd::CkPageLocation(const int nr_porz)
 {
-    /* vu: 	Sprawdza czy ogloszenie vAdd moze stac na stronie o numerze vFizPage
+    /* vu: 	Sprawdza czy ogloszenie vAdd moze stac na stronie o numerze nr_porz
             ze wzgledu na warunki logiczne ogloszenia i strony. Jezeli nie moze,
             to zwraca 2, jezeli moze, ale stoi na dobrej stronie nieprawidlowo
             zwraca 1, a jezeli wszystko jest w porzadku zwraca 0		end vu */
 
-    CDrawPage *vPage;
     int nr_sek, nr_pl, nr_off, vnr_sek = 0;
     TCHAR op_zew[2], op_sekcji[2], op_pl[2], sekcja[30], pl[2];
 
     // gdy nie stoi na ¿adnej stronie, to dobrze
-    if (!vFizPage) return 0;
+    if (!nr_porz) return 0;
     // parsuj napis i ustaw zmienne 
     ParseLogpage(op_zew, sekcja, op_sekcji, &nr_sek, pl, op_pl, &nr_pl);
     // przejdz liste stron w dokumencie, zeby zapamietac jaki numer ma strona w danej sekcji 
     const auto pc = (int)m_pDocument->m_pages.size();
     for (int j = 1; j <= pc; ++j) {
-        vPage = m_pDocument->m_pages[j % pc];
-        CString vStrLog(vPage->name);
+        CDrawPage* page = m_pDocument->m_pages[j % pc];
+        CString vStrLog{page->name};
         vStrLog.MakeUpper();
         // zliczaj strony z odpowiedni¹ sekcj¹
         if (_tcsstr(vStrLog, sekcja))
             vnr_sek++;
         // czy to jest testowana strona ? otherwise nie ma co sprawedzac
-        if (vPage->nr != vFizPage) continue;
+        if (page->nr != nr_porz) continue;
         // niezgodne kolory - kolor strony 2 oznacza spot anonimowy
-        if ((kolor & 7) > (vPage->kolor & 7) ||
-            ((kolor&ColorId::spot) && (vPage->kolor&ColorId::spot) && (kolor >> 3) != m_pDocument->m_spot_makiety[(vPage->kolor >> 3)] && m_pDocument->m_spot_makiety[(vPage->kolor >> 3)])) return 2;
+        if ((kolor & 7) > (page->kolor & 7) ||
+            ((kolor&ColorId::spot) && (page->kolor&ColorId::spot) && (kolor >> 3) != m_pDocument->m_spot_makiety[(page->kolor >> 3)] && m_pDocument->m_spot_makiety[(page->kolor >> 3)])) return 2;
         // na stronach z dziedziczeniem koloru tylko czarne og³oszenia
-        if (vPage->m_dervlvl == DervType::colo && kolor != ColorId::brak) return 2;
+        if (page->m_dervlvl == DervType::colo && kolor != ColorId::brak) return 2;
         // nie na sciezce
         if (sekcja[0] && !_tcsstr(vStrLog, sekcja)) return 2;
         // lewa - nieparzysty numer
-        if (!_tcscmp(pl, _T("L")) && (vPage->pagina % 2)) return 2;
+        if (!_tcscmp(pl, _T("L")) && (page->pagina % 2)) return 2;
         // prawa - parzysty numer
-        if (!_tcscmp(pl, _T("P")) && !(vPage->pagina % 2)) return 2;
+        if (!_tcscmp(pl, _T("P")) && !(page->pagina % 2)) return 2;
         // polozenie pl
         if (pl[0] && op_pl[0]) {
             //brak numeru
             if (nr_pl < 1) return 2;
-            if ((vPage->pagina - vnr_sek) % 2)	//czy sekcja zaczyna sie na stronie o parzstym numerze
-                nr_off = (sekcja[0] ? ((vPage->pagina % 2) ? vnr_sek - 1 : vnr_sek + 1) : vPage->pagina); //czy numer odnosi sie do sekcji czy do gazety
+            if ((page->pagina - vnr_sek) % 2)	//czy sekcja zaczyna sie na stronie o parzstym numerze
+                nr_off = (sekcja[0] ? ((page->pagina % 2) ? vnr_sek - 1 : vnr_sek + 1) : page->pagina); //czy numer odnosi sie do sekcji czy do gazety
             else
-                nr_off = (sekcja[0] ? vnr_sek : vPage->pagina); //czy numer odnosi sie do sekcji czy do gazety
+                nr_off = (sekcja[0] ? vnr_sek : page->pagina); //czy numer odnosi sie do sekcji czy do gazety
             // inna strona prawa/lewa niz zadano
             if (!_tcscmp(op_pl, _T("=")) && !_tcscmp(pl, _T("P")) && nr_off != 2 * nr_pl - 1) return 2;
             if (!_tcscmp(op_pl, _T("=")) && !_tcscmp(pl, _T("L")) && nr_off != 2 * nr_pl) return 2;
@@ -1368,8 +1367,8 @@ postaw:
     if (pRect) {
         posx = i;
         posy = j;
-        pRect->SetRect(pPage->m_position.left + (int)((posx - 1)*modulx), pPage->m_position.bottom + (int)((szpalt_y - posy + 1)*moduly),
-            pPage->m_position.left + (int)((posx + sizex - 1)*modulx), pPage->m_position.bottom + (int)((szpalt_y - posy - sizey + 1)*moduly));
+        pRect->SetRect(pPage->m_position.left + (int)((posx - 1) * modulx), pPage->m_position.bottom + (int)((szpalt_y - posy + 1) * moduly),
+                       pPage->m_position.left + (int)((posx + sizex - 1) * modulx), pPage->m_position.bottom + (int)((szpalt_y - posy - sizey + 1) * moduly));
         pPage->AddAdd(this);
     }
     return true;
@@ -1384,11 +1383,11 @@ void CDrawAdd::SetDotM(bool setFlag)
         if (p == -1)
             wersja += ".m";
         else
-            wersja = wersja.Left(p) + ".m" + wersja.Mid(p + 1);
+            wersja.Insert(p + 1, 'm');
         SetDirty();
     } else {
         if (p == -1) return;
-        wersja = wersja.Left(p) + wersja.Mid(p + 1);
+        wersja.Delete(p, 1);
         SetDirty();
     }
 }

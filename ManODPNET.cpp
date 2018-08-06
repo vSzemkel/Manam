@@ -1064,9 +1064,9 @@ BOOL CManODPNET::EI(LPCSTR s, CManODPNETParms& ps)
             }
             // formatujemy pierwsza linijke komunikatu
             int pos = m_lastErrorMsg.Find(_T(": "));
-            if (pos > 0) m_lastErrorMsg = m_lastErrorMsg.Mid(pos + 2);
+            if (pos > 0) m_lastErrorMsg.Delete(0, pos + 2);
             pos = m_lastErrorMsg.Find(_T("\n"));
-            if (pos > 0) m_lastErrorMsg = m_lastErrorMsg.Left(pos);
+            if (pos > 0) m_lastErrorMsg.Delete(pos, m_lastErrorMsg.GetLength() - pos);
             AfxMessageBox(m_lastErrorMsg, MB_OK | MB_ICONINFORMATION);
             // theApp.m_ODB.CommitTrans(); // insert into debug
         }

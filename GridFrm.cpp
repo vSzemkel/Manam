@@ -282,7 +282,7 @@ void CGridFrm::OnShowrept()
 
         long adno;
         CDrawAdd* vAdd;
-        CDrawDoc *vDoc = GetDocument();
+        CDrawDoc* vDoc = GetDocument();
         TCHAR *ch, tytul[10], mutacja[5];
         char kiedypowt[32];
         CString sURL;

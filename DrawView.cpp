@@ -180,7 +180,7 @@ void CDrawView::OnActivateView(BOOL bActivate, CView* pActiveView, CView* pDeact
     if (bActivate) {
         if (pActiveView && theApp.activeDoc->swCZV != theApp.swCZV) {
             const auto bPrevMode = theApp.swCZV;
-            theApp.swCZV = ((CDrawDoc *)pActiveView->GetDocument())->swCZV;
+            theApp.swCZV = ((CDrawDoc*)pActiveView->GetDocument())->swCZV;
             ((CMainFrame *)AfxGetMainWnd())->SetToolbarBitmap(bPrevMode, theApp.swCZV);
         }
         ((CMainFrame *)AfxGetMainWnd())->SetOpenStatus(GetDocument()->isRO ? _T("READ") : _T("WRITE"));
@@ -1695,11 +1695,11 @@ void CDrawView::OnPrevKor()
             GENEPSARG genEpsArg;
             genEpsArg.cBigBuf = theApp.bigBuf;
             genEpsArg.format = CManFormat::PDF;
-            genEpsArg.bDoKorekty = TRUE;
+            genEpsArg.bDoKorekty = true;
             pPage->GetDestName(&genEpsArg, num, fname);
             lnr_porz = fname.ReverseFind('\\');
             if (lnr_porz > 0)
-                fname = fname.Mid(lnr_porz);
+                fname.Delete(0, lnr_porz);
             fname = theApp.GetProfileString(_T("GenEPS"), _T("KorektaDobre"), _T("")) + pDoc->daydir + pDoc->gazeta.Left(3) + pDoc->gazeta.Mid(4, 2) + fname;
 
             CDrawApp::OpenWebBrowser(fname);
