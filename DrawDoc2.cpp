@@ -273,10 +273,10 @@ void CDrawDoc::OnVuMakietowanie()
             wywoluje polecenie odswiezenia wszystkich widokow biezacego dokumentu. Algorytm nie
             postawi og³oszenia na stronie, gdy ich kraty nie s¹ zgodne					end vu */
 
-    CObArray vAdds;
-    CDrawPage *vTmpPage, *vPage = nullptr;
-    CDrawAdd *castval;
     CRect vRect;
+    CObArray vAdds;
+    CDrawAdd* castval;
+    CDrawPage* vPage{nullptr};
 
     theApp.BeginWaitCursor();
 
@@ -429,15 +429,11 @@ aSecondRun:
         // wybierz najmniej lub najbardziej zajeta strone z listy - makietujDoKupy
         maxWeight = INT_MAX;
         for (j = 0; j < k; ++j) {
-            vTmpPage = (CDrawPage*)vPages.GetAt(j);
-            int m = 0, ile_mod = vTmpPage->szpalt_x*vTmpPage->szpalt_y;
-            for (int l = 0; l < ile_mod; l++)
-                m += (int)((vTmpPage->space >> l) & 1);
-            if (theApp.makietujDoKupy)
-                m = ile_mod - m;
-            if (m < maxWeight) {
-                maxWeight = m;
-                vPage = vTmpPage;
+            const auto page = (CDrawPage*)vPages.GetAt(j);
+            const int ile_zajetych = page->space.GetBitCnt(theApp.makietujDoKupy == 0);
+            if (ile_zajetych < maxWeight) {
+                maxWeight = ile_zajetych;
+                vPage = page;
             }
             if (!maxWeight) break;
         }

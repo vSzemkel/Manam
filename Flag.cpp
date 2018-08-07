@@ -490,10 +490,12 @@ void CFlag::Serialize(CArchive& ar)
 int CFlag::GetBitCnt(bool val) const noexcept
 {
     int iIle = 0;
-    const auto bit_cnt = 8 * size;
-    for (size_t i = 0; i < bit_cnt; ++i)
-        if (operator[](i) == val)
-            iIle++;
+    const auto raw = (uint32_t*)GetRawFlag();
+    const auto lc = static_cast<uint16_t>(size / sizeof(uint32_t));
+    for (uint16_t i = 0; i < lc; ++i)
+        iIle += _mm_popcnt_u32(raw[i]);
+    if (!val)
+        iIle = 8 * static_cast<int>(size) - iIle;
     return iIle;
 }
 

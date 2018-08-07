@@ -39,6 +39,16 @@ TEST(FlagTests, BitCount) {
     auto char1_cnt = std::count(p.begin(), p.end(), '1');
     EXPECT_EQ(char0_cnt, zero_cnt);
     EXPECT_EQ(char1_cnt, one_cnt);
+
+    CFlag space{ 5, 6, 5, 6 };
+    auto ile_mod = space.GetBitCnt(true);
+    EXPECT_EQ(ile_mod, 30);
+    CFlag pasek{ 5, 1, 5, 6 };
+    space ^= pasek;
+    ile_mod = space.GetBitCnt(true);
+    EXPECT_EQ(ile_mod, 25);
+    ile_mod = space.GetBitCnt(false);
+    EXPECT_EQ(ile_mod, space.GetSize() * 8 - 25);
 }
 
 TEST(FlagTests, MaskShift) {

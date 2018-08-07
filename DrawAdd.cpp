@@ -653,8 +653,8 @@ void CDrawAdd::SetPosition(int fizp, int px, int py, int sx, int sy)
                 m_pos.SetRect(pPage->m_position.left, pPage->m_position.top, pPage->m_position.left + (int)(sizex*modulx), pPage->m_position.top - (int)(sizey*moduly));
             } else {
                 pPage = m_pDocument->GetPage(fizpage);
-                m_pos.SetRect(pPage->m_position.left + (int)(modulx*(posx - 1)), pPage->m_position.bottom + (int)(moduly*(szpalt_y - posy + 1)),
-                    pPage->m_position.left + (int)(modulx*(posx + sizex - 1)), pPage->m_position.bottom + (int)(moduly*(szpalt_y - posy - sizey + 1)));
+                m_pos.SetRect(pPage->m_position.left + (int)(modulx * (posx - 1)), pPage->m_position.bottom + (int)(moduly * (szpalt_y - posy + 1)),
+                              pPage->m_position.left + (int)(modulx * (posx + sizex - 1)), pPage->m_position.bottom + (int)(moduly * (szpalt_y - posy - sizey + 1)));
             }
         }
         MoveTo(m_pos);
@@ -670,15 +670,15 @@ void CDrawAdd::SetPosition(int fizp, int px, int py, int sx, int sy)
     posx = px; posy = py;
     SetSpaceSize(sx, sy);
 
-    if (pPage == nullptr) // tylko ok=(fizp==0) moge tylko postawic na bok, jezeli stawiam zle to cofam -not ok
-        if (fizpage != 0) { // stawiam na bok
+    if (pPage == nullptr)
+        if (fizpage != 0) { // stawia z boku
             pPage = m_pDocument->GetPage(fizpage);
-            m_pos.SetRect(pPage->m_position.left, pPage->m_position.top, pPage->m_position.left + (int)(sizex*modulx), pPage->m_position.top - (int)(sizey*moduly));
+            m_pos.SetRect(pPage->m_position.left, pPage->m_position.top, pPage->m_position.left + (int)(sizex * modulx), pPage->m_position.top - (int)(sizey * moduly));
             posx = posy = fizpage = 0;
-        } else	//zmieniam rozmiar
-            m_pos.SetRect(m_position.left, m_position.top, m_position.left + (int)(sizex*modulx), m_position.top - (int)(sizey*moduly));
+        } else // zmienia rozmiar
+            m_pos.SetRect(m_position.left, m_position.top, m_position.left + (int)(sizex * modulx), m_position.top - (int)(sizey * moduly));
     else {
-        m_pos.SetRect(pPage->m_position.left + (int)(modulx*(posx - 1)), pPage->m_position.bottom + (int)(moduly*(szpalt_y - posy + 1)), pPage->m_position.left + (int)(modulx*(posx + sizex - 1)), pPage->m_position.bottom + (int)(moduly*(szpalt_y - posy - sizey + 1)));
+        m_pos.SetRect(pPage->m_position.left + (int)(modulx * (posx - 1)), pPage->m_position.bottom + (int)(moduly * (szpalt_y - posy + 1)), pPage->m_position.left + (int)(modulx * (posx + sizex - 1)), pPage->m_position.bottom + (int)(moduly * (szpalt_y - posy - sizey + 1)));
         pPage->AddAdd(this);
     }
 
@@ -692,7 +692,7 @@ void CDrawAdd::SetPosition(CRect* m_pos, CDrawPage* pPage)
     int sy = min((int)nearbyint(abs(m_pos->top - m_pos->bottom) / moduly), szpalt_y);
     int px = 0;
     int py = 0;
-    BOOL ok = TRUE;
+    bool ok{true};
 
     dirty = TRUE;
     if (!sx) sx = 1;
@@ -1259,7 +1259,7 @@ void CDrawAdd::SetEstPagePos(const TCHAR* const description, CRect* vRect, CDraw
                     i += szpalt_y - sizey + 1 - j; goto postaw;
                 }
 
-    //nie udalo sie - postaw gdziekolwiek - zacznij od lewego dolnego rogu
+    // nie udalo sie - postaw gdziekolwiek - zacznij od lewego dolnego rogu
     vRect->SetRect(pPage->m_position.left, pPage->m_position.bottom + (int)(sizey*moduly),
         pPage->m_position.left + (int)(sizex*modulx), pPage->m_position.bottom);
     SetPosition(vRect, pPage);
@@ -1276,14 +1276,13 @@ postaw:
 bool CDrawAdd::SetPagePosition(CRect* pRect, CDrawPage* pPage)
 {
     const int hashpos = logpage.ReverseFind('#') + 1;
-    if (hashpos > 0) {
-        const auto sufix = logpage.GetBuffer() + hashpos;
-        const auto placements = {_T("DL"), _T("DP"), _T("GP"), _T("GL"), _T("D"), _T("G"), _T("L"), _T("P")};
+    const auto sufix = logpage.GetBuffer() + hashpos;
+    const auto placements = {_T("DL"), _T("DP"), _T("GP"), _T("GL"), _T("D"), _T("G"), _T("L"), _T("P")};
+    ASSERT(hashpos > 0);
 
-        for (const auto& p : placements)
-            if (_tcsstr(sufix, p))
-                return SetStrictDescPos(p, pRect, pPage);
-    }
+    for (const auto& p : placements)
+        if (_tcsstr(sufix, p))
+            return SetStrictDescPos(p, pRect, pPage);
 
     return false;
 }
