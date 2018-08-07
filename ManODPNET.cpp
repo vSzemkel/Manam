@@ -1025,14 +1025,15 @@ BOOL CManODPNET::CkAccess(LPCTSTR tytul, LPCTSTR mutacja, LPCTSTR rights, BOOL s
 
 BOOL CManODPNET::CkAccess(LPCTSTR gazeta, LPCTSTR rights)
 {
-    TCHAR *ch, tytul[10], mutacja[5];
+    TCHAR tytul[10], *ch, *m, *brakMutacji = _T(" ");
     ::StringCchCopy(tytul, 10, gazeta);
     if (ch = _tcschr(tytul, _T(' '))) {
-        ::StringCchCopy(mutacja, 5, ch + 1);
-        *ch = TCHAR(0);
+        *ch = TCHAR{0};
+        m = ch + 1;
     } else
-        ::StringCchCopy(mutacja, 5, _T(" "));
-    return CkAccess(tytul, mutacja, rights);
+        m = brakMutacji;
+
+    return CkAccess(tytul, m, rights);
 }
 
 BOOL CManODPNET::EI(LPCSTR s, CManODPNETParms& ps)
@@ -1066,7 +1067,7 @@ BOOL CManODPNET::EI(LPCSTR s, CManODPNETParms& ps)
             int pos = m_lastErrorMsg.Find(_T(": "));
             if (pos > 0) m_lastErrorMsg.Delete(0, pos + 2);
             pos = m_lastErrorMsg.Find(_T("\n"));
-            if (pos > 0) m_lastErrorMsg.Delete(pos, m_lastErrorMsg.GetLength() - pos);
+            if (pos > 0) m_lastErrorMsg.Truncate(pos);
             AfxMessageBox(m_lastErrorMsg, MB_OK | MB_ICONINFORMATION);
             // theApp.m_ODB.CommitTrans(); // insert into debug
         }
@@ -1106,7 +1107,7 @@ nextcombo:
     }
 }
 
-BOOL CManODPNET::FillListArr(CListBox* combo, LPCSTR sql, CManODPNETParms& ps, BOOL comboArray)
+BOOL CManODPNET::FillListArr(CListBox* combo, LPCSTR sql, CManODPNETParms& ps, const BOOL comboArray)
 {
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();
@@ -1190,7 +1191,7 @@ BOOL CManODPNET::FillCombo(CComboBox* combo, LPCSTR sql, CManODPNETParms& ps, in
     }
 }
 
-BOOL CManODPNET::FillNiekratoweInternal(int szpalt_x, int szpalt_y, int typ, CComboBox* m_typ_ogl_combo, CWordArray* m_typ_ogl_arr, CByteArray* m_typ_sizex_arr, CByteArray* m_typ_sizey_arr, std::vector<CString>* m_typ_precel_arr)
+BOOL CManODPNET::FillNiekratoweInternal(const int szpalt_x, const int szpalt_y, const int typ, CComboBox* m_typ_ogl_combo, CWordArray* m_typ_ogl_arr, CByteArray* m_typ_sizex_arr, CByteArray* m_typ_sizey_arr, std::vector<CString>* m_typ_precel_arr)
 {
     int typ_xx;
     auto conn = gcnew OracleConnection(g_ConnectionString);
@@ -1231,7 +1232,7 @@ BOOL CManODPNET::FillNiekratoweInternal(int szpalt_x, int szpalt_y, int typ, CCo
     return TRUE;
 }
 
-BOOL CManODPNET::FillNiekratowe(CSpacerDlg* dlg, int szpalt_x, int szpalt_y)
+BOOL CManODPNET::FillNiekratowe(CSpacerDlg* dlg, const int szpalt_x, const int szpalt_y)
 {
     return FillNiekratoweInternal(szpalt_x, szpalt_y, dlg->m_typ_xx, &dlg->m_typ_ogl_combo, &dlg->m_typ_ogl_arr, &dlg->m_typ_sizex_arr, &dlg->m_typ_sizey_arr, &dlg->m_typ_precel_arr);
 }
@@ -1303,7 +1304,7 @@ BOOL CManODPNET::OpenManamDoc(CDrawDoc* doc)
     return opener.OpenManamDoc();
 }
 
-BOOL CManODPNET::SaveManamDoc(CDrawDoc* doc, BOOL isSaveAs, BOOL doSaveAdds)
+BOOL CManODPNET::SaveManamDoc(CDrawDoc* doc, const BOOL isSaveAs, const BOOL doSaveAdds)
 {
     auto opener = CDrawDocDbWriter(doc);
     return opener.SaveManamDoc(isSaveAs, doSaveAdds);
@@ -1363,7 +1364,7 @@ BOOL CManODPNET::GrbSaveMutczas(CDrawDoc* doc)
     }
 }
 
-BOOL CManODPNET::LoadMakietaDirs(int idm)
+BOOL CManODPNET::LoadMakietaDirs(const int idm)
 {
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();
@@ -1395,7 +1396,7 @@ BOOL CManODPNET::LoadMakietaDirs(int idm)
     return TRUE;
 }
 
-BOOL CManODPNET::F4(CDrawDoc* doc, CListCtrl* list, BOOL initialize)
+BOOL CManODPNET::F4(CDrawDoc* doc, CListCtrl* list, const BOOL initialize)
 {
     CString cs;
     CDrawAdd* vAdd;
@@ -1538,7 +1539,7 @@ BOOL CManODPNET::InitRozm(CDrawDoc* doc)
     return TRUE;
 }
 
-const CRozm* CManODPNET::AddRozmTypu(std::vector<CRozm>& roz, int typ_xx)
+const CRozm* CManODPNET::AddRozmTypu(std::vector<CRozm>& roz, const int typ_xx)
 {
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();
@@ -1690,7 +1691,7 @@ BOOL CManODPNET::Deploy(const CString& filepath)
     return TRUE;
 }
 
-CString CManODPNET::GetProdInfo(int pub_xx, LPTSTR kolor, int* ileMat)
+CString CManODPNET::GetProdInfo(const int pub_xx, LPTSTR kolor, int* ileMat)
 {
     CString sBBox;
     auto conn = gcnew OracleConnection(g_ConnectionString);

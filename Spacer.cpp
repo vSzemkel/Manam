@@ -557,7 +557,7 @@ void CSpacerDlg::OnQue()
                     m_emisjelist.GetText(i, errText);
                     const int pos = errText.Find(_T(" # ")) + 3;
                     if (pos >= 3)
-                        errText.Delete(pos, errText.GetLength() - pos);
+                        errText.Truncate(pos);
                     else
                         errText += _T(" # ");
                     errText += _T("QUED");

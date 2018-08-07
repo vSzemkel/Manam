@@ -1268,40 +1268,24 @@ void CDrawAdd::SetEstPagePos(const TCHAR* const description, CRect* vRect, CDraw
 postaw:
     posx = szpalt_x - sizex + 1 - i;
     posy = szpalt_y - sizey + 1 - j;
-    vRect->SetRect(pPage->m_position.left + (int)((posx - 1)*modulx), pPage->m_position.bottom + (int)((szpalt_y - posy + 1)*moduly),
-        pPage->m_position.left + (int)((posx + sizex - 1)*modulx), pPage->m_position.bottom + (int)((szpalt_y - posy - sizey + 1)*moduly));
+    vRect->SetRect(pPage->m_position.left + (int)((posx - 1) * modulx), pPage->m_position.bottom + (int)((szpalt_y - posy + 1) * moduly),
+                   pPage->m_position.left + (int)((posx + sizex - 1) * modulx), pPage->m_position.bottom + (int)((szpalt_y - posy - sizey + 1) * moduly));
     pPage->AddAdd(this);
 }
 
 bool CDrawAdd::SetPagePosition(CRect* pRect, CDrawPage* pPage)
 {
-    /*	vRect ? stawia : sprawdza */
-    int j, k = 0;
-    dirty = TRUE;
-    BOOL mozna = FALSE;
-    TCHAR tail[20];
-    const int hashpos = logpage.ReverseFind('#');
-    const int rc = logpage.GetLength();
-    for (j = hashpos + 1; j < rc; ++j)
-        if (isupper((int)logpage[j])) tail[k++] = logpage[j];
-    tail[k] = '\0';
-    if (_tcsstr(tail, _T("DL")))
-        mozna = SetStrictDescPos(_T("DL"), pRect, pPage);
-    else if (_tcsstr(tail, _T("DP")))
-        mozna = SetStrictDescPos(_T("DP"), pRect, pPage);
-    else if (_tcsstr(tail, _T("D")))
-        mozna = SetStrictDescPos(_T("D"), pRect, pPage);
-    else if (_tcsstr(tail, _T("GP")))
-        mozna = SetStrictDescPos(_T("GP"), pRect, pPage);
-    else if (_tcsstr(tail, _T("GL")))
-        mozna = SetStrictDescPos(_T("GL"), pRect, pPage);
-    else if (_tcsstr(tail, _T("G")))
-        mozna = SetStrictDescPos(_T("G"), pRect, pPage);
-    else if (_tcsstr(tail, _T("L")))
-        mozna = SetStrictDescPos(_T("L"), pRect, pPage);
-    else if (_tcsstr(tail, _T("P")))
-        mozna = SetStrictDescPos(_T("P"), pRect, pPage);
-    return mozna;
+    const int hashpos = logpage.ReverseFind('#') + 1;
+    if (hashpos > 0) {
+        const auto sufix = logpage.GetBuffer() + hashpos;
+        const auto placements = {_T("DL"), _T("DP"), _T("GP"), _T("GL"), _T("D"), _T("G"), _T("L"), _T("P")};
+
+        for (const auto& p : placements)
+            if (_tcsstr(sufix, p))
+                return SetStrictDescPos(p, pRect, pPage);
+    }
+
+    return false;
 }
 
 bool CDrawAdd::SetStrictDescPos(LPCTSTR description, CRect* pRect, CDrawPage* pPage)
@@ -1384,12 +1368,12 @@ void CDrawAdd::SetDotM(bool setFlag)
             wersja += ".m";
         else
             wersja.Insert(p + 1, 'm');
-        SetDirty();
     } else {
         if (p == -1) return;
         wersja.Delete(p, 1);
-        SetDirty();
     }
+
+    SetDirty();
 }
 
 bool CDrawAdd::BBoxFromFile(PGENEPSARG pArg, CFile& handle, float* x1, float* y1, float* x2, float* y2)

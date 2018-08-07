@@ -1139,11 +1139,11 @@ void CInfoDlg::OnOK()
             m_drukarnie |= mask;
     if ((i = m_wydawcycombo.GetCurSel()) != CB_ERR) {
         m_wydawcycombo.GetLBText(i, m_wydawca);
-        m_wydawca.Delete(2, m_wydawca.GetLength() - 2);
+        m_wydawca.Truncate(2);
     }
     if ((i = m_wydawcyredcombo.GetCurSel()) != CB_ERR) {
         m_wydawcyredcombo.GetLBText(i, m_wydawcared);
-        m_wydawcared.Delete(2, m_wydawcared.GetLength() - 2);
+        m_wydawcared.Truncate(2);
     }
 }
 
@@ -1403,13 +1403,13 @@ void CDrzDlg::OnKiedyChanged(NMHDR* pNMHDR, LRESULT* pResult)
 void CDrzDlg::OnOK()
 {
     CString s;
-    m_drz_combo.GetWindowText(s);	//GetCurSel nie dzia³a przy podpowiadaniu koñcówek
+    m_drz_combo.GetWindowText(s); // GetCurSel nie dzia³a przy podpowiadaniu koñcówek
     int ind = m_drz_combo.SelectString(-1, s);
     if (ind != CB_ERR) {
         m_id_drw = (int)m_drz_combo.GetItemData(ind);
         m_drz_combo.GetLBText(ind, m_gazeta);
         const int pos = m_gazeta.Find(_T(" -"), 0);
-        m_gazeta.Delete(pos, m_gazeta.GetLength() - pos);
+        m_gazeta.Truncate(pos);
     }
     CDialog::OnOK();
 }
@@ -1484,7 +1484,7 @@ void CDrz1Dlg::OnOK()
         m_id_drw = (int)m_drz_combo.GetItemData(ind);
         m_drz_combo.GetLBText(ind, m_gazeta);
         const int pos = m_gazeta.Find(_T(" -"), 0);
-        m_gazeta.Delete(pos, m_gazeta.GetLength() - pos);
+        m_gazeta.Truncate(pos);
     }
     CDialog::OnOK();
 }

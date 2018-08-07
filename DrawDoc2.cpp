@@ -427,7 +427,7 @@ aSecondRun:
             continue; // nie znaleziono zadnej strony dla tego ogloszenia
 
         // wybierz najmniej lub najbardziej zajeta strone z listy - makietujDoKupy
-        maxWeight = (int)1E4;
+        maxWeight = INT_MAX;
         for (j = 0; j < k; ++j) {
             vTmpPage = (CDrawPage*)vPages.GetAt(j);
             int m = 0, ile_mod = vTmpPage->szpalt_x*vTmpPage->szpalt_y;

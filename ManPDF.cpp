@@ -699,7 +699,7 @@ bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* const trgName)
             int pos = fname.ReverseFind('\\');
             if (pos >= 0) fname.Delete(0, pos + 1);
             pos = fname.ReverseFind('.');
-            if (pos >= 0) fname.Delete(pos, fname.GetLength() - pos);
+            if (pos >= 0) fname.Truncate(pos);
             embAlias.emplace_back("/" + fname);
             StringCchPrintfA(cStore, bigSize, "/%s %u 0 R\x0a", fname, i - dziury);
             trg.Write(cStore, (UINT)strlen(cStore));
