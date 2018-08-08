@@ -4,18 +4,18 @@
 TEST(FlagTests, DefaultLattice) {
     CFlag flag{ 1, 1, 5, 6 };
 
-    ASSERT_EQ((size_t)sizeof(intptr_t), flag.GetSize()) << L"Nieprawid這wy rozmiar kraty bazowej";
+    ASSERT_EQ((size_t)sizeof(intptr_t), flag.GetSize()) << "Incorrect base lattice size";
     flag <<= 10;
-    EXPECT_FALSE(flag[9]) << L"Nieprawid這wy bit";
-    EXPECT_TRUE(flag[10]) << L"Nieprawid這wy bit";
-    EXPECT_FALSE(flag[11]) << L"Nieprawid這wy bit";
-    EXPECT_STREQ(L"00000400", (LPCTSTR)(flag.ToRaw().Right(8))) << L"Zaburzona flaga";
+    EXPECT_FALSE(flag[9]) << "Wrong bit value";
+    EXPECT_TRUE(flag[10]) << "Wrong bit value";
+    EXPECT_FALSE(flag[11]) << "Wrong bit value";
+    EXPECT_STREQ(L"00000400", (LPCTSTR)(flag.ToRaw().Right(8))) << "Flag clobbered";
 }
 
 TEST(FlagTests, BitMaskInvert) {
     CFlag flag{ 1, 1, 10, 30 };
 
-    ASSERT_EQ(40, flag.GetSize()) << L"Nieprawid這wy rozmiar kraty bazowej";
+    ASSERT_EQ(40, flag.GetSize()) << "Incorrect base lattice size";
     flag |= 0x33333333;
     auto p = flag.Print();
     EXPECT_STREQ(p.Right(8), CString("00110011"));
@@ -32,7 +32,7 @@ TEST(FlagTests, BitCount) {
 
     auto zero_cnt = flag.GetBitCnt(0);
     auto one_cnt = flag.GetBitCnt(1);
-    ASSERT_EQ(zero_cnt + one_cnt, 8 * flag.GetSize()) << L"New kind of bit invented!";
+    ASSERT_EQ(zero_cnt + one_cnt, 8 * flag.GetSize()) << "New kind of bit invented!";
 
     std::wstring p{flag.Print()};
     auto char0_cnt = std::count(p.begin(), p.end(), '0');
@@ -56,7 +56,7 @@ TEST(FlagTests, MaskShift) {
     const auto block_cnt = flag.GetSize() / sizeof(intptr_t);
 
     flag |= 1;
-    ASSERT_EQ(flag.GetBitCnt(1), block_cnt) << L"New kind of bit invented!";
+    ASSERT_EQ(flag.GetBitCnt(1), block_cnt) << "New kind of bit invented!";
     flag <<= 6;
     EXPECT_EQ(flag.GetBitCnt(1), block_cnt);
 
@@ -79,4 +79,17 @@ TEST(FlagTests, SizeRoundup) {
     EXPECT_EQ(f5.GetSize(), 2 * sizeof(uintptr_t));
     CFlag f10{9 * sizeof(uintptr_t) + 1};
     EXPECT_EQ(f10.GetSize(), 10 * sizeof(uintptr_t));
+}
+
+TEST(FlagTests, Invert) {
+    CFlag flag{ "A580BD51C580BDAFBAADF00D" };
+    const int ones = flag.GetBitCnt(true);
+    flag.Invert();
+    const int zeros = flag.GetBitCnt(false);
+    EXPECT_EQ(zeros, ones) << "Long case";
+    CFlag flag2{2, 4, 5, 6};
+    const int ones2 = flag2.GetBitCnt(true);
+    flag2.Invert();
+    const int zeros2 = flag2.GetBitCnt(false);
+    EXPECT_EQ(zeros2, ones2) << "Short case";
 }
