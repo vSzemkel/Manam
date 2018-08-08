@@ -24,7 +24,7 @@ TEST(FlagTests, BitMaskInvert) {
     p = flag2.Print();
     EXPECT_STREQ(p.Right(8), CString("11111111"));
     flag2.Invert();
-    ASSERT_TRUE(flag2.IsZero());
+    EXPECT_STREQ(L"00000000", (LPCTSTR)(flag2.ToRaw().Right(8))) << "Flag clobbered";
 }
 
 TEST(FlagTests, BitCount) {
@@ -92,4 +92,14 @@ TEST(FlagTests, Invert) {
     flag2.Invert();
     const int zeros2 = flag2.GetBitCnt(false);
     EXPECT_EQ(zeros2, ones2) << "Short case";
+}
+
+TEST(FlagTests, Reverse) {
+    const TCHAR* raw = _T("A580BD51C580BDAFBAADF00D");
+    CFlag flag{ raw };
+    flag.Reverse(71);
+    flag.Reverse(20);
+    flag.Reverse(20);
+    flag.Reverse(71);
+    EXPECT_STREQ(raw, (LPCTSTR)(flag.ToRaw().Right(24).MakeUpper())) << "Flag clobbered";
 }

@@ -462,11 +462,10 @@ void CFlag::CopyFlag(CByteArray* bArr)
 void CFlag::Reverse(const size_t len) noexcept
 {
     if (len <= 8 * size)
-        for (size_t i = 0; i < len / 2; ++i) {
-            const auto bit = operator[](i);
-            const auto ind = len - i - 1;
-            SetBit(i, operator[](ind));
-            SetBit(ind, bit);
+        for (size_t l = 0, r = len - 1; l < r; ++l, --r) {
+            const auto bit = operator[](l);
+            SetBit(l, operator[](r));
+            SetBit(r, bit);
         }
 }
 

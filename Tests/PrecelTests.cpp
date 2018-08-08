@@ -27,5 +27,5 @@ TEST(PrecelTests, Podium) {
     EXPECT_TRUE(flag[13]);
     EXPECT_FALSE(flag[14]);
 
-    EXPECT_STREQ(CString(bits), flag.ToRaw().MakeUpper()) << "Irreversible construction";
+    EXPECT_STREQ(CString(bits), flag.ToRaw().Right(8).MakeUpper()) << "Irreversible construction";
 }
