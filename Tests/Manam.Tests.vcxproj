@@ -189,6 +189,7 @@
   <ItemGroup>
     <ClCompile Include="..\Flag.cpp" />
     <ClCompile Include="FlagTests.cpp" />
+    <ClCompile Include="MiscTests.cpp" />
     <ClCompile Include="PrecelTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

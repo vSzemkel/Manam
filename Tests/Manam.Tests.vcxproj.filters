@@ -20,6 +20,9 @@
     <ClCompile Include="PrecelTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MiscTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\Flag.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

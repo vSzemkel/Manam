@@ -344,50 +344,75 @@ void CDrawObj::DrawKolor(CDC* pDC, const CRect& pos) const
     }
 }
 
-CString CDrawObj::RzCyfra(int i, const CString *znaki)
+CString CDrawObj::RzCyfra(const int digit, const int offset) noexcept
 {
     /* vu: Pierwszym argumentem jest cyfra dziesietna, drugim trzypozycyjna tablica cyfr
     rzymskich. Jej zawartosc ustalana jest na podstawie miejsca w zapisie pozycyjnym
     calej liczby cyfry bedacej pierwszym argumentem. Wywolywana przez CDrawObj::Rzymska end vu	*/
 
-    switch (i) {
+    TCHAR ret[5]{0};
+    const TCHAR rz_cyfry[7] = { 'I', 'V', 'X', 'L', 'C', 'D', 'M' };
+    const auto grupa_cyfr = &rz_cyfry[offset];
+
+    switch (digit) {
         case 0:
-            return CString("");
+            break;
         case 1:
-            return znaki[0];
+            ret[0] = grupa_cyfr[0];
+            break;
         case 2:
-            return znaki[0] + znaki[0];
+            ret[0] = grupa_cyfr[0];
+            ret[1] = grupa_cyfr[0];
+            break;
         case 3:
-            return znaki[0] + znaki[0] + znaki[0];
+            ret[0] = grupa_cyfr[0];
+            ret[1] = grupa_cyfr[0];
+            ret[2] = grupa_cyfr[0];
+            break;
         case 4:
-            return znaki[0] + znaki[1];
+            ret[0] = grupa_cyfr[0];
+            ret[1] = grupa_cyfr[1];
+            break;
         case 5:
-            return znaki[1];
+            ret[0] = grupa_cyfr[1];
+            break;
         case 6:
-            return znaki[1] + znaki[0];
+            ret[0] = grupa_cyfr[1];
+            ret[1] = grupa_cyfr[0];
+            break;
         case 7:
-            return znaki[1] + znaki[0] + znaki[0];
+            ret[0] = grupa_cyfr[1];
+            ret[1] = grupa_cyfr[0];
+            ret[2] = grupa_cyfr[0];
+            break;
         case 8:
-            return znaki[1] + znaki[0] + znaki[0] + znaki[0];
+            ret[0] = grupa_cyfr[1];
+            ret[1] = grupa_cyfr[0];
+            ret[2] = grupa_cyfr[0];
+            ret[3] = grupa_cyfr[0];
+            break;
         case 9:
-            return znaki[0] + znaki[2];
+            ret[0] = grupa_cyfr[0];
+            ret[1] = grupa_cyfr[2];
+            break;
         default:
-            return CString("err");
+            return _T("err");
     }
+
+    return ret;
 }
 
-CString CDrawObj::Rzymska(int i)
+CString CDrawObj::Rzymska(const int i) noexcept
 {
     /* vu: liczby rzymskie do kodowania pozycji systemu dziesiêtnego u¿ywaj¹ 3 ró¿nych znaków,
            a s¹siednie pozycje maj¹ jeden znak wspólny - dalej ju¿ ³atwo :end vu */
 
-    const CString rz_cyfry[7] = { "I", "V", "X", "L", "C", "D", "M" };
-    if (abs(i) >= 9000) return "Big one";
+    if (abs(i) >= 3999) return _T("Big one");
     if (i < 0) return CString("-") + Rzymska(-i);
-    return RzCyfra(i / 100, &rz_cyfry[4]) + RzCyfra((i % 100) / 10, &rz_cyfry[2]) + RzCyfra(i % 10, &rz_cyfry[0]);
+    return CString('M', i / 1000) + RzCyfra((i % 1000) / 100, 4) + RzCyfra((i % 100) / 10, 2) + RzCyfra(i % 10, 0);
 }
 
-int CDrawObj::Arabska(LPCTSTR rz)
+int CDrawObj::Arabska(LPCTSTR rz) noexcept
 {
     /* vu: liczby rzymskie zbudowane s¹ z cyfr o sta³ej wadze. Na pocz¹tek liczy siê wagê liczby w instrukcji switch.
            drugi krok, to uwzglêdnienie sekwencji specjalnych zawy¿aj¹cych wagê jak 'IV' czy 'CM' :end vu */
