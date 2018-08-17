@@ -7,9 +7,7 @@
 #include "Manam.h"
 #include "QueView.h"
 
-#define MARGIN 4
-
-CDrawAdd *CQueView::selected_add = nullptr;
+CDrawAdd* CQueView::selected_add{nullptr};
 
 /////////////////////////////////////////////////////////////////////////////
 // CQueView
@@ -120,21 +118,21 @@ void CQueView::ClientToDoc(CPoint *point)
     dc.DPtoLP(point);
 }
 
-void CQueView::ClientToDoc(CRect *rect)
+void CQueView::ClientToDoc(CRect* rect)
 {
     CClientDC dc(this);
     OnPrepareDC(&dc, nullptr);
     dc.DPtoLP(rect);
 }
 
-void CQueView::DocToClient(CPoint *point)
+void CQueView::DocToClient(CPoint* point)
 {
     CClientDC dc(this);
     OnPrepareDC(&dc, nullptr);
     dc.LPtoDP(point);
 }
 
-void CQueView::OnLButtonDblClk(UINT nFlags, CPoint point)
+void CQueView::OnLButtonDblClk(const UINT nFlags, CPoint point)
 {
     ClientToDoc(&point);
     CDrawAdd* pObj = GetDocument()->ObjectAtQue(point);
@@ -147,7 +145,7 @@ void CQueView::OnLButtonDblClk(UINT nFlags, CPoint point)
     }
 }
 
-void CQueView::OnLButtonDown(UINT nFlags, CPoint point)
+void CQueView::OnLButtonDown(const UINT nFlags, CPoint point)
 {
     ClientToDoc(&point);
     CDrawAdd* pObj = GetDocument()->ObjectAtQue(point);
@@ -171,7 +169,7 @@ void CQueView::OnLButtonDown(UINT nFlags, CPoint point)
     CScrollView::OnLButtonDown(nFlags, point);
 }
 
-void CQueView::OnMouseMove(UINT nFlags, CPoint point)
+void CQueView::OnMouseMove(const UINT nFlags, CPoint point)
 {
     CScrollView::OnMouseMove(nFlags, point);
     ClientToDoc(&point);
@@ -203,7 +201,7 @@ void CQueView::OnMouseMove(UINT nFlags, CPoint point)
     ((CMainFrame *)AfxGetMainWnd())->SetStatusBarInfo(pObj ? pObj->info : "");
 }
 
-void CQueView::OnLButtonUp(UINT nFlags, CPoint point)
+void CQueView::OnLButtonUp(const UINT nFlags, CPoint point)
 {
     if (moving) {
         if (selected_add && selected_add->m_position != vPos) {
@@ -219,9 +217,10 @@ void CQueView::OnLButtonUp(UINT nFlags, CPoint point)
     CScrollView::OnLButtonUp(nFlags, point);
 }
 
-void CQueView::RepaintRect(CRect *rect)
+void CQueView::RepaintRect(CRect* rect)
 { // indirect LPtoDP
-    InvalidateRect(CRect(rect->left / vscale - MARGIN, rect->top / vscale - MARGIN, rect->right / vscale + MARGIN, -rect->bottom / vscale + MARGIN), FALSE);
+    const int margin = 4;
+    InvalidateRect(CRect(rect->left / vscale - margin, rect->top / vscale - margin, rect->right / vscale + margin, -rect->bottom / vscale + margin), FALSE);
 }
 
 void CQueView::OnEditClear()

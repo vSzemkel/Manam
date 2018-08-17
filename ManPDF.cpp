@@ -368,7 +368,7 @@ unsigned long CManPDF::EmbedPakStream(CFile& src, unsigned long offset, unsigned
     memcpy(&niepak[niepakoff], pak, niepaklen);
 
     return niepakoff + niepaklen;
-} //EmbedPakStream
+} // EmbedPakStream
 
 // przebisuje obiekt srcObjNr z pliku Ÿród³owego pod nowy numer do pliku docelowego
 void CManPDF::EmbedRef(CFile& src, unsigned int srcObjNr)
@@ -505,9 +505,9 @@ void CManPDF::EmbedContents(CFile& src, unsigned long offset)
         StringCchPrintfA(cStore, bigSize, "endobj\x0a%u 0 obj\n%lu \x0a", lenObjNr, b);
         trg.Write(cStore, (UINT)strlen(cStore));
     }
-} //EmbedContents
+} // EmbedContents
 
-//osadza w generowanym pliku og³oszenie pAdd, do którego materia³ jest w pliku src i przypisuje mu numer objNr
+// osadza w generowanym pliku og³oszenie pAdd, do którego materia³ jest w pliku src i przypisuje mu numer objNr
 bool CManPDF::EmbedPDF(CFile& src, const unsigned int objNr, const CDrawAdd& pAdd)
 {
     StringCchPrintfA(cStore, bigSize, "%u 0 obj\x0a<<\x0a/Type /XObject\x0a/Subtype /Form\x0a/FormType 1\x0a", objNr);

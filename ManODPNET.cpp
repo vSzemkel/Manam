@@ -541,7 +541,8 @@ BOOL CDrawDocDbReader::OpenDocContent()
         pubCur = static_cast<OracleRefCursor^>(par[2]->Value)->GetDataReader();
         opiCur = static_cast<OracleRefCursor^>(par[3]->Value)->GetDataReader();
 
-        if (!OpenPage(strCur, pubCur, multiKraty, m_doc->GetAsideAddPos(TRUE)))
+        CPoint adPos = m_doc->GetAsideAddPos(TRUE);
+        if (!OpenPage(strCur, pubCur, multiKraty, adPos))
             return FALSE;
 
         OpenOpis(opiCur);
@@ -1025,9 +1026,9 @@ BOOL CManODPNET::CkAccess(LPCTSTR tytul, LPCTSTR mutacja, LPCTSTR rights, BOOL s
 
 BOOL CManODPNET::CkAccess(LPCTSTR gazeta, LPCTSTR rights)
 {
-    TCHAR tytul[10], *ch, *m, *brakMutacji = _T(" ");
+    TCHAR tytul[10], brakMutacji[] = _T(" "), *m;
     ::StringCchCopy(tytul, 10, gazeta);
-    if (ch = _tcschr(tytul, _T(' '))) {
+    if (TCHAR* ch = _tcschr(tytul, _T(' '))) {
         *ch = TCHAR{0};
         m = ch + 1;
     } else

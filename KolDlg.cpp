@@ -2051,6 +2051,7 @@ CFlag CPrnEpsDlg::GetChoosenPages(CDrawDoc* pDoc) const noexcept
     const auto pc = (int)pDoc->m_pages.size();
     if (m_page == 0) return {1, pc, 1, pc};
 
+    TCHAR* tok;
     int beg, end;
     CFlag wyborStron{0, 0, 1, pc};
     const TCHAR septok[] = {',', '-'};
@@ -2067,7 +2068,7 @@ CFlag CPrnEpsDlg::GetChoosenPages(CDrawDoc* pDoc) const noexcept
             break;
         case 2:
             ::StringCchCopy(theApp.bigBuf, n_size, m_subset);
-            TCHAR* tok = _tcstok(theApp.bigBuf, septok);
+            tok = _tcstok(theApp.bigBuf, septok);
             while (tok != nullptr) {
                 beg = pDoc->Nr2NrPorz(tok);
                 if (beg == -1)
