@@ -451,13 +451,13 @@ void CDrawAdd::UpdateInfo()
 {
     info.Format(_T("Og³: %ix%i"), sizex, sizey);
     if (typ_xx) info += _T(" niestandardowe");
-    if (!nazwa.IsEmpty()) info.AppendFormat(_T(" | %s"), nazwa);
-    if (nreps > 0) info.AppendFormat(_T(" | %li%s"), nreps, wersja);
+    if (!nazwa.IsEmpty()) info.AppendFormat(_T(" | %s"), (LPCTSTR)nazwa);
+    if (nreps > 0) info.AppendFormat(_T(" | %li%s"), nreps, (LPCTSTR)wersja);
     if (m_add_xx > 0) info.AppendFormat(_T(" | Spacer: %i"), m_add_xx);
-    if (!logpage.IsEmpty()) info.AppendFormat(_T(" | %s"), logpage);
-    if (!remarks.IsEmpty() || !remarks_atex.IsEmpty()) info.AppendFormat(_T(" | %s"), remarks.IsEmpty() ? remarks_atex : remarks);
+    if (!logpage.IsEmpty()) info.AppendFormat(_T(" | %s"), (LPCTSTR)logpage);
+    if (!remarks.IsEmpty() || !remarks_atex.IsEmpty()) info.AppendFormat(_T(" | %s"), remarks.IsEmpty() ? (LPCTSTR)remarks_atex : (LPCTSTR)remarks);
     info.AppendFormat(_T(" | %s"), (kolor == ColorId::full) ? FULL : (LPCTSTR)CDrawDoc::kolory[kolor >> 3]);
-    if (fizpage) info.AppendFormat(_T(" | na str: %s (%i,%i)"), m_pDocument->GetPage(fizpage)->GetNrPaginy(), posx, posy);
+    if (fizpage) info.AppendFormat(_T(" | na str: %s (%i,%i)"), (LPCTSTR)m_pDocument->GetPage(fizpage)->GetNrPaginy(), posx, posy);
 }
 
 CString CDrawAdd::PrepareBuf(const TCHAR* const ch) const
@@ -1654,7 +1654,8 @@ CString CDrawAdd::EpsName(CManFormat format, bool copyOldEPS, const bool bModifT
             CString zajawkiDir = theApp.GetString((LPCTSTR) _T("EpsZajawki"), (LPCTSTR) _T("."));
             const CString zaj_path = FindZajawka(zajawkiDir, CString(extension));
             return zaj_path.IsEmpty() ? nazwa + CString(extension) + _T(" - brak zajawki") : zaj_path;
-        } else if (powtorka == 0) { // adno_seed zajawki
+        }
+        if (powtorka == 0) { // adno_seed zajawki
             num.Format(_T("%i"), status);
             return (theApp.isOpiMode ? _T("::\\") : eps_path) + m_pDocument->daydir + num + extension;
         }

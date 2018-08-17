@@ -267,7 +267,7 @@ void CManPDF::EmbedKey(const char* const buf, const char* const key)
         pdftok(nullptr);
         if (strcmp(pdftok(nullptr), "R"))
             throw CManPDFExc(_T("EmbedKey: Spodziewano sie prostej referencji ") + CString(key));
-        uintmap::iterator it = renumMap.find(refNr);
+        auto it = renumMap.find(refNr);
         if (it == renumMap.end()) {
             renumMap[refNr] = nextObjNr;
             StringCchPrintfA(cStore, bigSize, "%u 0 R\x0a", nextObjNr++);

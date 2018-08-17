@@ -821,7 +821,7 @@ bool CDrawDoc::Import(bool check_exist) // tu dodaje na koncu do m_objects najwy
 {
     CFileDialog dlg(TRUE, _T("txt"), _T(""), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Og³oszenia (*.txt)|*.txt| Wszystkie pliki (*.*)|*.*||"), nullptr);
     if (dlg.DoModal() != IDOK)
-        return 0;
+        return false;
 
     bool ok{true};
     try {

@@ -2051,44 +2051,43 @@ CFlag CPrnEpsDlg::GetChoosenPages(CDrawDoc* pDoc) const noexcept
     const auto pc = (int)pDoc->m_pages.size();
     if (m_page == 0) return {1, pc, 1, pc};
 
+    int beg, end;
     CFlag wyborStron{0, 0, 1, pc};
+    const TCHAR septok[] = {',', '-'};
+
     switch (m_page) {
         case 1:
-            int p, k;
-            p = pDoc->Nr2NrPorz(m_od);
-            k = pDoc->Nr2NrPorz(m_do);
-            if (p < 0 || k < 0) goto subseterr;
-            if (k == 0) k = pc;
-            if (p == 0) p = pc;
-            for (int i = p; i <= k; ++i)
+            beg = pDoc->Nr2NrPorz(m_od);
+            end = pDoc->Nr2NrPorz(m_do);
+            if (beg < 0 || end < 0) goto subseterr;
+            if (end == 0) end = pc;
+            if (beg == 0) beg = pc;
+            for (int i = beg; i <= end; ++i)
                 wyborStron.SetBit(i % pc);
             break;
         case 2:
-            int liczbaA, liczbaB;
-            TCHAR* tok;
-            const TCHAR septok[] = {',', '-'};
             ::StringCchCopy(theApp.bigBuf, n_size, m_subset);
-            tok = _tcstok(theApp.bigBuf, septok);
+            TCHAR* tok = _tcstok(theApp.bigBuf, septok);
             while (tok != nullptr) {
-                liczbaA = pDoc->Nr2NrPorz(tok);
-                if (liczbaA == -1)
+                beg = pDoc->Nr2NrPorz(tok);
+                if (beg == -1)
                     goto subseterr;
-                else if (liczbaA == 0)
-                    liczbaA = pc;
+                else if (beg == 0)
+                    beg = pc;
                 switch (m_subset.GetAt((int)(tok - theApp.bigBuf + _tcslen(tok)))) {
                     case '\0':
                     case ',':
-                        wyborStron.SetBit(liczbaA % pc);
+                        wyborStron.SetBit(beg % pc);
                         tok = _tcstok(nullptr, septok);
                         break;
                     case '-':
                         tok = _tcstok(nullptr, septok);
-                        liczbaB = pDoc->Nr2NrPorz(tok);
-                        if (liczbaB == -1)
+                        end = pDoc->Nr2NrPorz(tok);
+                        if (end == -1)
                             goto subseterr;
-                        else if (liczbaB == 0)
-                            liczbaB = pc;
-                        for (int i = liczbaA; i <= liczbaB; ++i)
+                        else if (end == 0)
+                            end = pc;
+                        for (int i = beg; i <= end; ++i)
                             wyborStron.SetBit(i % pc);
                         tok = _tcstok(nullptr, septok);
                         break;

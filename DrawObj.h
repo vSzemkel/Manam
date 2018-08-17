@@ -31,9 +31,9 @@ class CDrawObj : public CObject
 
     static double modx(double x);
     static double mody(double y);
-    static CString Rzymska(int i) noexcept;
-    static int Arabska(LPCTSTR rz) noexcept;
-    static CString RzCyfra(int digit, int offset) noexcept;
+    static CString Rzymska(int i);
+    static int Arabska(LPCTSTR rz);
+    static CString RzCyfra(int digit, int offset);
     static void DrawNapis(CDC* pDC, LPCTSTR napis, int cnt, LPRECT r, UINT format, int bkMode);
 
     enum TrackerState : uint8_t { normal, selected, active };

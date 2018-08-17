@@ -19,13 +19,13 @@ CDrawObj::CDrawObj(const CRect& position) noexcept : CDrawObj::CDrawObj()
     m_position = position;
 }
 
-void CDrawObj::DrawNapis(CDC* pDC, LPCTSTR napis, int cnt, LPRECT r, UINT format, int bkMode)
+void CDrawObj::DrawNapis(CDC* pDC, LPCTSTR napis, const int cnt, LPRECT r, const UINT format, const int bkMode)
 {
     const auto saved = pDC->SetBkMode(bkMode);
     if (vscale == 1) 
         pDC->DrawText(napis, cnt, r, format);
     else {
-        CRect lRect = r;
+        CRect lRect{r};
         const CSize& initExt = pDC->SetWindowExt(CSize(100, -100));
         lRect.top /= vscale; lRect.bottom /= vscale; lRect.left /= vscale; lRect.right /= vscale;
         pDC->DrawText(napis, cnt, lRect, format);
@@ -41,10 +41,11 @@ inline int CDrawObj::GetVertPrintShift() const
 
 CRect CDrawObj::GetPrintRect() const
 {
-    return {m_position.left / CLIENT_SCALE,
-        m_position.top / CLIENT_SCALE - GetVertPrintShift(),
-        m_position.right / CLIENT_SCALE,
-        m_position.bottom / CLIENT_SCALE - GetVertPrintShift()};
+    const auto shift = GetVertPrintShift();
+    return {m_position.left   / CLIENT_SCALE,
+            m_position.top    / CLIENT_SCALE - shift,
+            m_position.right  / CLIENT_SCALE,
+            m_position.bottom / CLIENT_SCALE - shift};
 }
 
 void CDrawObj::Serialize(CArchive& ar)
@@ -79,7 +80,7 @@ void CDrawObj::Remove()
     delete this;
 }
 
-void CDrawObj::DrawTracker(CDC* pDC, TrackerState state) const
+void CDrawObj::DrawTracker(CDC* pDC, const TrackerState state) const
 {
     ASSERT_VALID(this);
 
@@ -175,7 +176,7 @@ int CDrawObj::GetHandleCount() const
 }
 
 // returns logical coords of center of handle
-CPoint CDrawObj::GetHandle(int nHandle) const
+CPoint CDrawObj::GetHandle(const int nHandle) const
 {
     ASSERT_VALID(this);
     int x, y, xCenter, yCenter;
@@ -233,7 +234,7 @@ CPoint CDrawObj::GetHandle(int nHandle) const
 }
 
 // return rectange of handle in logical coords
-CRect CDrawObj::GetHandleRect(int nHandleID, CDrawView* pView) const
+CRect CDrawObj::GetHandleRect(const int nHandleID, CDrawView* pView) const
 {
     ASSERT_VALID(this);
     ASSERT(pView != nullptr);
@@ -258,7 +259,7 @@ HCURSOR CDrawObj::GetHandleCursor(int nHandle) const
 }
 
 // point must be in logical
-void CDrawObj::MoveHandleTo(int nHandle, const CPoint& point, CDrawView* pView)
+void CDrawObj::MoveHandleTo(const int nHandle, const CPoint& point, CDrawView* pView)
 {
     ASSERT_VALID(this);
 
@@ -320,7 +321,7 @@ BOOL CDrawObj::OnOpen(CDrawView* /*unused*/)
     return TRUE;
 }
 
-void CDrawObj::ChangeKolor(UINT new_kolor)
+void CDrawObj::ChangeKolor(const UINT new_kolor)
 {
     kolor = (kolor == new_kolor) ? ColorId::brak : new_kolor;
     SetDirty();
@@ -344,14 +345,14 @@ void CDrawObj::DrawKolor(CDC* pDC, const CRect& pos) const
     }
 }
 
-CString CDrawObj::RzCyfra(const int digit, const int offset) noexcept
+CString CDrawObj::RzCyfra(const int digit, const int offset)
 {
     /* vu: Pierwszym argumentem jest cyfra dziesietna, drugim trzypozycyjna tablica cyfr
     rzymskich. Jej zawartosc ustalana jest na podstawie miejsca w zapisie pozycyjnym
     calej liczby cyfry bedacej pierwszym argumentem. Wywolywana przez CDrawObj::Rzymska end vu	*/
 
     TCHAR ret[5]{0};
-    const TCHAR rz_cyfry[7] = { 'I', 'V', 'X', 'L', 'C', 'D', 'M' };
+    const TCHAR rz_cyfry[] = { 'I', 'V', 'X', 'L', 'C', 'D', 'M' };
     const auto grupa_cyfr = &rz_cyfry[offset];
 
     switch (digit) {
@@ -402,7 +403,7 @@ CString CDrawObj::RzCyfra(const int digit, const int offset) noexcept
     return ret;
 }
 
-CString CDrawObj::Rzymska(const int i) noexcept
+CString CDrawObj::Rzymska(const int i)
 {
     /* vu: liczby rzymskie do kodowania pozycji systemu dziesiêtnego u¿ywaj¹ 3 ró¿nych znaków,
            a s¹siednie pozycje maj¹ jeden znak wspólny - dalej ju¿ ³atwo :end vu */
@@ -412,7 +413,7 @@ CString CDrawObj::Rzymska(const int i) noexcept
     return CString('M', i / 1000) + RzCyfra((i % 1000) / 100, 4) + RzCyfra((i % 100) / 10, 2) + RzCyfra(i % 10, 0);
 }
 
-int CDrawObj::Arabska(LPCTSTR rz) noexcept
+int CDrawObj::Arabska(LPCTSTR rz)
 {
     /* vu: liczby rzymskie zbudowane s¹ z cyfr o sta³ej wadze. Na pocz¹tek liczy siê wagê liczby w instrukcji switch.
            drugi krok, to uwzglêdnienie sekwencji specjalnych zawy¿aj¹cych wagê jak 'IV' czy 'CM' :end vu */
@@ -456,12 +457,12 @@ int CDrawObj::Arabska(LPCTSTR rz) noexcept
     return li_sum;
 }
 
-double CDrawObj::modx(double x)
+double CDrawObj::modx(const double x)
 {
     return ((double)pwidth / x);
 }
 
-double CDrawObj::mody(double y)
+double CDrawObj::mody(const double y)
 {
     return ((double)phight / y);
 }

@@ -670,7 +670,7 @@ void CDrawDoc::AddFind(long nrAtex, long nrSpacer, LPCTSTR nazwa)
     }
 
     if (vAdd)
-        SelectAdd(vAdd, 0);
+        SelectAdd(vAdd);
     else {
         if (nrAtex == LONG_MIN) nrAtex = nrSpacer;
         CString snr;
