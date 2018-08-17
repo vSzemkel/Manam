@@ -14,13 +14,6 @@
 #define HINT_SAVEAS_DELETE_SELECTION	9
 #define HINT_UPDATE_DRAWVIEW			10
 
-// Print formats
-#define		PRINT_PAGE		0
-#define		PRINT_2PAGES	1
-#define		PRINT_DOC		2
-#define		PRINT_ALL		3
-#define		PRINT_NULL		4	// nie wybrano co siê drukuje
-
 class CDrawObj;
 class CDrawDoc;
 
@@ -64,7 +57,7 @@ class CDrawView : public CScrollView
     void CheckPrintEps(BOOL isprint); //GN
     void OnChooseFont(CFont& m_font, bool IsPageFont);
     int GetZoomFactor() const noexcept { return m_zoomNum.cx; }
-    unsigned char GetPagesPrinted() const noexcept { return m_pagesPrinted; }
+    PrintFormat GetPagesPrinted() const noexcept { return m_pagesPrinted; }
     BOOL SetZoomFactor(CSize zoomNum, CSize zoomDenom);
     CRect GetInitialPosition();
 
@@ -171,7 +164,7 @@ class CDrawView : public CScrollView
     DECLARE_MESSAGE_MAP()
   private:
     static int OnDisableMenuInt(CCmdUI* pCmdUI);
-    unsigned char m_pagesPrinted{PRINT_DOC};
+    PrintFormat m_pagesPrinted{PrintFormat::doc};
 
     BOOL ModifyMutczas(int n);
     void OnPrevKolumnaDruk();                // pokazuje preview kolumny przygotowanej do druku

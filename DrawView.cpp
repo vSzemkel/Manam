@@ -275,7 +275,7 @@ void CDrawView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 
 void CDrawView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo)
 {
-    if (pInfo && pInfo->GetMaxPage() == 1 && m_pagesPrinted == PRINT_DOC && theApp.GetProfileInt(_T("General"), _T("ForceLandscape"), 0) > 0) {
+    if (pInfo && pInfo->GetMaxPage() == 1 && m_pagesPrinted == PrintFormat::doc && theApp.GetProfileInt(_T("General"), _T("ForceLandscape"), 0) > 0) {
         LPDEVMODE dm = SetLandscape();
         if (dm) pDC->ResetDC(dm);
     }
@@ -999,13 +999,13 @@ BOOL CDrawView::OnPreparePrinting(CPrintInfo* pInfo)
     // default preparation
     const int format = theApp.colsPerPage == 1 ? A4 : A3;
     switch (m_pagesPrinted) {
-        case PRINT_PAGE:
+        case PrintFormat::page:
             pInfo->SetMaxPage((UINT)GetDocument()->m_pages.size());
             break;
-        case PRINT_DOC:
+        case PrintFormat::doc:
             pInfo->SetMaxPage((int)ceil((float)GetDocument()->m_pages.size() / (float)format));
             break;
-        case PRINT_ALL:
+        case PrintFormat::all:
             pInfo->SetMaxPage(1);
             break;
     }
@@ -1033,11 +1033,11 @@ void CDrawView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
     CDrawDoc* pDoc = GetDocument();
     ASSERT_VALID(pDoc);
     int pc, wspol = theApp.colsPerPage;
-    if (wspol == 2 || m_pagesPrinted != PRINT_PAGE)
+    if (wspol == 2 || m_pagesPrinted != PrintFormat::page)
         pDoc->PrintInfo(pDC, pInfo->GetMaxPage(), wspol);
     CDrawPage* pPage;
     switch (m_pagesPrinted) {
-        case PRINT_PAGE:
+        case PrintFormat::page:
             pPage = (GetDocument()->m_pages[pInfo->m_nCurPage - 1]);
             pDC->SetMapMode(MM_ANISOTROPIC);
             pDC->SetViewportOrg(0, 0);
@@ -1046,10 +1046,10 @@ void CDrawView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
             pDC->SetWindowExt((pmodulx + 2 * vscale) * pszpalt_x, -(pmoduly + 4 * vscale) * pszpalt_y);
             pDoc->PrintPage(pDC, pPage);
             break;
-        case PRINT_DOC:
+        case PrintFormat::doc:
             pDoc->Print(pDC);
             break;
-        case PRINT_ALL:
+        case PrintFormat::all:
             pc = (int)pDoc->m_pages.size();
             if ((theApp.colsPerPage == 1 && pc > A4) || (theApp.colsPerPage == 2 && pc > A3)) {
                 pDC->SetMapMode(MM_ANISOTROPIC);
@@ -1065,43 +1065,43 @@ void CDrawView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 
 void CDrawView::OnFilePrint()
 {
-    if (m_pagesPrinted == PRINT_NULL) m_pagesPrinted = PRINT_DOC;
+    if (m_pagesPrinted == PrintFormat::null) m_pagesPrinted = PrintFormat::doc;
     CScrollView::OnFilePrint();
     GetDocument()->ComputeCanvasSize();
-    m_pagesPrinted = PRINT_NULL;
+    m_pagesPrinted = PrintFormat::null;
 }
 
 void CDrawView::OnFilePrint1p()
 {
-    m_pagesPrinted = PRINT_PAGE;
+    m_pagesPrinted = PrintFormat::page;
     CScrollView::OnFilePrint();
     GetDocument()->ComputeCanvasSize();
-    m_pagesPrinted = PRINT_NULL;
+    m_pagesPrinted = PrintFormat::null;
 }
 
 void CDrawView::OnFilePrintAll()
 {
-    m_pagesPrinted = PRINT_ALL;
+    m_pagesPrinted = PrintFormat::all;
     CScrollView::OnFilePrint();
     GetDocument()->ComputeCanvasSize();
-    m_pagesPrinted = PRINT_NULL;
+    m_pagesPrinted = PrintFormat::null;
 }
 
 void CDrawView::OnFilePrintPreview1p()
 {
-    m_pagesPrinted = PRINT_PAGE;
+    m_pagesPrinted = PrintFormat::page;
     AFXPrintPreview(this);
 }
 
 void CDrawView::OnFilePrintPreviewAll()
 {
-    m_pagesPrinted = PRINT_ALL;
+    m_pagesPrinted = PrintFormat::all;
     AFXPrintPreview(this);
 }
 
 void CDrawView::OnFilePrintPreview()
 {
-    m_pagesPrinted = PRINT_DOC;
+    m_pagesPrinted = PrintFormat::doc;
     AFXPrintPreview(this);
 }
 

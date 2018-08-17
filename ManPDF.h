@@ -44,7 +44,7 @@ class CManPDF
     bool  bSearchInPdfToken;  // wskaŸnik trybu dzia³ania funkcji pdftok - gdy ustawiony, to nie wywo³uje strtok
     char  cNextPdfToken[256]; // tablica, do której pdftok przepisuje kontynuacjê znalezionego tokenu, ma rozmiar maxTokenSize
     char  cPdfToken[5][256];  // tablica, do której pdftok przepisuje znaleziony token, ma rozmiar maxTokenSize, jest ich 5 by utworzy³y bufor cykliczny, nastêpne 4 wywo³ania nie zamazuj¹ wyniku
-    char* pdftok(char *str);  // zachowuje siê podobnie jak strtok, ale rozpoznaje tokeny PDF nie rozdzielone niczym - przepisuje je do bufora cPdfToken w takim przypadku
+    char* pdftok(char* str);  // zachowuje siê podobnie jak strtok, ale rozpoznaje tokeny PDF nie rozdzielone niczym - przepisuje je do bufora cPdfToken w takim przypadku
 
     char* cStore;
     bool GenProlog();
@@ -52,14 +52,14 @@ class CManPDF
     void GenPDFTail(unsigned int howMany = 0);
     void EmbedContents(CFile& src, unsigned long offset);
     void EmbedRef(CFile& src, unsigned int srcObjNr);
-    void EmbedKey(const char *buf, const char *key);
+    void EmbedKey(const char* buf, const char* key);
     void EmbedSection(const char* str, bool innerOnly = false);
-    inline void EmbedTextRight(const char *font, unsigned int fsize, float px, float py, const char *text, CStringA& buf);
-    unsigned int GetRefNr(char *buf);
+    inline void EmbedTextRight(const char* font, unsigned int fsize, float px, float py, const char* text, CStringA& buf);
+    unsigned int GetRefNr(char* buf);
     unsigned long GetMainXref(CFile& f);
     unsigned long FindObjEntry(CFile& f, unsigned int obj);
-    unsigned long EmbedStream(CFile& src, unsigned long offset, BOOL decorate);
-    unsigned long EmbedPakStream(CFile& src, unsigned long offset, unsigned char *pak, unsigned char *niepak, unsigned char *tmp, unsigned long niepakoff);
+    unsigned long EmbedStream(CFile& src, unsigned long offset, bool decorate);
+    unsigned long EmbedPakStream(CFile& src, unsigned long offset, unsigned char* pak, unsigned char* niepak, unsigned char* tmp, unsigned long niepakoff);
     unsigned long GetPrevXref(CFile& f, unsigned long currentxrefOffset);
 };
 

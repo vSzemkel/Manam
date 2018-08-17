@@ -18,8 +18,8 @@ public:
     CFlag(CFlag&& f) noexcept;                          // move constructor
     explicit CFlag(size_t s = CRITICAL_SIZE);           // default constructor, how many bytes to store
     CFlag(int sx, int sy, int szpalt_x, int szpalt_y);  // SetSpace constructor, how many modules to store
-    explicit CFlag(const char *raw);                             // Oracle RAW hexadecimal format
-    explicit CFlag(const wchar_t *raw) : CFlag(CStringA(raw)){}; // Oracle RAW hexadecimal format unicode encoded
+    explicit CFlag(const char* raw);                             // Oracle RAW hexadecimal format
+    explicit CFlag(const wchar_t* raw) : CFlag(CStringA(raw)){}; // Oracle RAW hexadecimal format unicode encoded
     explicit CFlag(const CByteArray& bArr);
     ~CFlag();
     const CFlag& operator= (const CFlag& f);
@@ -50,7 +50,7 @@ public:
     CFlag& Invert() noexcept;
     void   SetZero() noexcept;
     void   Reverse(size_t len) noexcept;
-    void   CopyFlag(CByteArray *bArr);
+    void   CopyFlag(CByteArray* bArr);
     void   Serialize(CArchive& ar);
     CString Print() const;
     CString ToRaw() const;

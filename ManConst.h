@@ -145,7 +145,7 @@ enum class DervType : uint8_t
     colo = 6
 };
 
-enum class EntityType : uint8_t // typy obiektow
+enum class EntityType : uint8_t // typ obiektu
 {
     page = 0,
     add = 1,
@@ -165,6 +165,15 @@ enum class StudioStatus : uint8_t // status studia
     send = 5,
     filtr = 6,
     msg = 7
+};
+
+enum class PrintFormat : uint8_t // typ wydruku
+{
+    page = 0,
+    two_pages = 1,
+    doc = 2,
+    all = 3,
+    null = 4 // nie wybrano co siê drukuje
 };
 #pragma endregion enums
 
