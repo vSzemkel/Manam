@@ -679,7 +679,9 @@ std::unique_ptr<CHttpFile> CDrawApp::OpenURL(size_t service, const CString& sUrl
 
 CTime CDrawApp::ShortDateToCTime(const CString& sData)
 {
-    return {_ttoi(sData.Mid(6, 4)), _ttoi(sData.Mid(3, 2)), _ttoi(sData.Mid(0, 2)), 0, 0, 0};
+    // _ttoi stops reading the input string at the first character that it cannot recognize as part of a number
+    const auto buf = (LPCTSTR)sData;
+    return {_ttoi(buf + 6), _ttoi(buf + 3), _ttoi(buf), 0, 0, 0};
 }
 
 void CDrawApp::CTimeToShortDate(const CTime& tData, CString& sData)
