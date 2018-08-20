@@ -1217,7 +1217,7 @@ foundsizex:
 
     auto itAdd = m_adds.cbegin();
     while (ok && itAdd != m_adds.cend() && !pArg->pDlg->cancelGenEPS) {
-        BOOL bAddOK = (*itAdd++)->RewriteEps(pArg, dest);
+        bool bAddOK = (*itAdd++)->RewriteEps(pArg, dest);
         if (!bAddOK && pArg->format == CManFormat::PS && pArg->bDoKorekty == 0)
             return false;
     }

@@ -528,7 +528,13 @@ yesNext:
         BOOL isOK;
         CManODPNETParm komuPar { CManDbType::DbTypeVarchar2, &dlg.m_loginname };
         if (dlg.m_senior.IsEmpty()) {
-            CString acc = CString(dlg.m_racc ? _T("R") : _T("")) + CString(dlg.m_sacc ? _T("S") : _T("")) + (dlg.m_wacc ? _T("W") : _T("")) + (dlg.m_dacc ? _T("D") : _T("")) + (dlg.m_pacc ? _T("P") : _T("")) + (dlg.m_gacc ? _T("G") : _T(""));
+            CString acc;
+            if (dlg.m_racc) acc.AppendChar('R');
+            if (dlg.m_sacc) acc.AppendChar('S');
+            if (dlg.m_wacc) acc.AppendChar('W');
+            if (dlg.m_dacc) acc.AppendChar('D');
+            if (dlg.m_pacc) acc.AppendChar('P');
+            if (dlg.m_gacc) acc.AppendChar('G');
             if (dlg.m_alltyt)
                 dlg.m_tytul = dlg.m_mutacja = _T("%");
             CManODPNETParms orapar {

@@ -1478,7 +1478,7 @@ CString CDrawDoc::XmlReadText(IXmlReader *reader)
 bool CDrawDoc::DBImport(bool synchronize)
 {
     CDbDlg dlg;
-    dlg.m_dtime = CTime(_ttoi(data.Mid(6, 4)), _ttoi(data.Mid(3, 2)), _ttoi(data.Mid(0, 2)), 0, 0, 0);
+    dlg.m_dtime = CDrawApp::ShortDateToCTime(data);
     if (dlg.DoModal() != IDOK) return false;
     BeginWaitCursor();
 
@@ -1511,7 +1511,7 @@ second_paper:
             return false;
         }
 
-        CPoint pos(GetAsideAddPos(false)), pos2;
+        CPoint pos{GetAsideAddPos(false)}, pos2;
         while (S_OK == reader->Read(&nodeType) && nodeType != XmlNodeType_EndElement) // read next ad
         {
             empSet = false;

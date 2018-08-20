@@ -57,7 +57,7 @@ public:
     afx_msg void OnCbnSelchangeKratka();
     afx_msg void OnDefineModelid();
 private:
-    BOOL bCalcMode;                //tryb kalkulatora czy rêczny
+    BOOL bCalcMode;                // tryb kalkulatora czy rêczny
     static const double TOLERANCE; // wzgledna tolerancja rozmiaru
     CComboBox m_kratycombo;
     CString m_sizex;
