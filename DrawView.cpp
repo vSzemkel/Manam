@@ -1640,8 +1640,8 @@ void CDrawView::OnPrevDig()
         }
     }
 
-    const char *kon = nullptr, *pocz = CManPDF::memstr(buf, "<artykul", bigSize);
-    if (pocz) kon = 10 + CManPDF::memstr(pocz, "</artykul>", bigSize - (pocz - buf));
+    const char *kon = nullptr, *pocz = strstr(buf, "<artykul");
+    if (pocz) kon = 10 + strstr(pocz, "</artykul>");
 
     TCHAR tmpPath[_MAX_PATH];
     if (!pocz || !kon || ::GetTempPath(_MAX_PATH, tmpPath) == 0) {

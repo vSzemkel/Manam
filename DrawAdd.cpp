@@ -1380,20 +1380,22 @@ bool CDrawAdd::BBoxFromFile(PGENEPSARG pArg, CFile& handle, float* x1, float* y1
     const int len = 30; // bo obetniemy w srodku wartosci
     bool bRet = false;
     size_t res = 1;
+    const char pat[] = "%BoundingBox:";
     char *p, *s = reinterpret_cast<char*>(pArg->cBigBuf);
     const auto filepos = (unsigned long)handle.GetPosition();
 
-    while (res > 0) { // read block from the file
-        res = handle.Read(s, n_size);    // check if anything was read and no error occurred
-        if ((res > 0) && (res != unsigned(-1))) {      // move file pointer back, lest we can loose string read in partially
+    while (res > 0) {                             // read block from the file
+        res = handle.Read(s, n_size);             // check if anything was read and no error occurred
+        if ((res > 0) && (res != unsigned(-1))) { // move file pointer back, lest we can loose string read in partially
             if (res == n_size) handle.Seek(-len, CFile::current);      // buffer has to end with zero TCHAR to be treated as string
             s[res] = 0;
-        } else break;// break on error or EOF
-        if ((p = (char*)CManPDF::memstr(s, "%BoundingBox:", res)) != nullptr && s + n_size - p >= len) { // search for substring and get it's position
-            bRet = sscanf_s(p + 14, "%f %f %f %f", x1, y1, x2, y2) == 4; //14 == _tcslen("%BoundingBox:")+1
+        } else break; // break on error or EOF
+        if ((p = (char*)CManPDF::memstr(s, pat, sizeof(pat) - 1)) != nullptr && s + n_size - p >= len) { // search for substring and get it's position
+            bRet = sscanf_s(p + sizeof(pat), "%f %f %f %f", x1, y1, x2, y2) == 4;
             break;
         }
     }
+
     handle.Seek(filepos, CFile::begin);
     return bRet;
 }

@@ -66,9 +66,14 @@ char* CManPDF::pdftok(char* str)
     return cPdfToken[iPdfTokenSlot];
 }
 
-const char* CManPDF::memstr(const char* const str, const char* const sub, size_t len)
+const char* CManPDF::memstr(const char* const buf, const char* const pat, size_t patlen)
 {
-    return std::search(str, str + n_size, sub, sub + len);
+    const auto bufend = buf + n_size;
+    const auto ret = std::search(buf, bufend, pat, pat + patlen);
+    if (ret < bufend)
+        return ret;
+
+    return nullptr;
 } // memstr
 
 unsigned long CManPDF::SearchPattern(CFile& f, const char* const pat) const
@@ -85,7 +90,7 @@ unsigned long CManPDF::SearchPattern(CFile& f, const char* const pat) const
             f.Seek(-backLen, CFile::current); // buffer has to end with zero char to be treated as string
         cStore[res] = 0;
 
-        if ((p = (char*)memstr(cStore, pat, res)) != nullptr) { // search for substring and get it's position
+        if ((p = (char*)memstr(cStore, pat, backLen)) != nullptr) { // search for substring and get it's position
             long offset = filepos + (long)(p - cStore);
             f.Seek(offset - 1, CFile::begin);
             f.Read(cStore, 1);

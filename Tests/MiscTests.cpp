@@ -64,6 +64,16 @@ CString Rzymska(int i)
 {
     return CString('M', i / 1000) + RzCyfra((i % 1000) / 100, 4) + RzCyfra((i % 100) / 10, 2) + RzCyfra(i % 10, 0);
 }
+
+const char* memstr(const char* const buf, const char* const pat, size_t patlen)
+{
+    const auto bufend = buf + 100;
+    const auto ret = std::search(buf, bufend, pat, pat + patlen);
+    if (ret < bufend)
+        return ret;
+
+    return nullptr;
+}
 #pragma endregion
 
 TEST(MiscTests, RomanNumerals) {
@@ -84,4 +94,13 @@ TEST(MiscTests, RomanNumerals) {
     EXPECT_STREQ(_T("MCDXI"), Rzymska(1411));
 
     EXPECT_STREQ(_T("MMCMXCIX"), Rzymska(2999));
+}
+
+TEST(MiscTests, MemStr) {
+    const char text[] = "zaqwsxcderfv543\xa6\00bnmjhgfrtcsKOTEKequdo825dgqjx92jdDCSIvfds9*%c3@^((b%^((*gswtysirkkwpfceoioGt7j";
+    const char pat1[] = "KOTEK";
+    const char pat2[] = "KO£EK";
+
+    EXPECT_NE(memstr(text, pat1, sizeof(pat1) - 1), nullptr);
+    EXPECT_EQ(memstr(text, pat2, sizeof(pat2) - 1), nullptr);
 }

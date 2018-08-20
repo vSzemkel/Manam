@@ -14,7 +14,7 @@ class CManPDF
     static constexpr char seppdf[]  = {'<', '>', '/', '[', ']'};
     static constexpr char sepline[] = {(char)10, (char)13, (char)0};
     static constexpr char septok[]  = {(char)9, (char)10, (char)13, (char)32, (char)0};
-    static const char* memstr(const char* str, const char* sub, size_t len);
+    static const char* memstr(const char* buf, const char* pat, size_t patlen);
 
     CManPDF(PGENEPSARG pArg);
     virtual ~CManPDF() = default;
