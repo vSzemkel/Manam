@@ -56,22 +56,24 @@ public:
     afx_msg void OnDeltaposSpin(UINT spinCtrlId, NMHDR* pNMHDR, LRESULT* pResult);
     afx_msg void OnCbnSelchangeKratka();
     afx_msg void OnDefineModelid();
+    afx_msg void OnModeSwitch();
 private:
-    BOOL bCalcMode;                // tryb kalkulatora czy rêczny
     static const double TOLERANCE; // wzgledna tolerancja rozmiaru
-    CComboBox m_kratycombo;
-    CString m_sizex;
-    CString m_sizey;
-    CString m_modelid;
-    CString m_kra_sym;
+    bool m_autocalcMode;           // tryb kalkulatora czy rêczny
     int m_x;
     int m_y;
     int m_lightx;
     int m_lighty;
     int m_userdef_sizex;
     int m_userdef_sizey;
+    double m_stronax;
+    double m_stronay;
+    CString m_sizex;
+    CString m_sizey;
+    CString m_modelid;
+    CString m_kra_sym;
     CEdit m_wynik;
-    double stronax, stronay;
+    CComboBox m_kratycombo;
+
     void Calculate();
-    afx_msg void OnModeSwitch();
 };

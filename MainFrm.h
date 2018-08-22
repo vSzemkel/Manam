@@ -39,7 +39,7 @@ public:
 
     void IniCaptionBox(int id_drw, int new_id_drw);
     void IniCaptionCombo(bool iscaption);
-    BOOL DBIniCaptionCombo(BOOL iscaption, int id_drw);
+    BOOL DBIniCaptionCombo(bool iscaption, int id_drw);
 
     CPen pen;
     CBrush cyjan, magenta, yellow, rzym, robgcolor;

@@ -251,7 +251,7 @@ void CPageDlg::GiveOutStrLog()
     SetDlgItemText(IDC_CAPTION, m_caption);
 }
 
-void CPageDlg::SetFunListBox(bool setDefaults)
+void CPageDlg::SetFunListBox(const bool setDefaults)
 {
     m_prn_fun.ResetContent();
 
@@ -647,7 +647,7 @@ BOOL CAddDlg::OnInitDialog()
 void CAddDlg::OnEnChangeWersja()
 {
     CString sWersja;
-    CWnd *wWer = GetDlgItem(IDC_WERSJA);
+    CWnd* wWer = GetDlgItem(IDC_WERSJA);
     wWer->GetWindowText(sWersja);
     const auto isZajwMode = sWersja.Find(_T("z")) >= 0 && m_add_xx == -1;
     m_zajawkacombo.ShowWindow(isZajwMode ? SW_SHOW : SW_HIDE);
@@ -903,7 +903,7 @@ void CAddDlg::OnCbpowt()
     }
 }
 
-void CAddDlg::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+void CAddDlg::OnKeyDown(const UINT nChar, const UINT nRepCnt, const UINT nFlags)
 {
     if (nChar == 's' && (nFlags&KF_ALTDOWN))
         GetDlgItem(IDC_STUDIO)->SetFocus();
@@ -1362,7 +1362,7 @@ void CDrzDlg::SelectDrzewo(const CTime& t)
         { CManDbType::DbTypeRefCursor, CManDbDir::ParameterOut, nullptr }
     };
 
-    int iCurSel = m_drz_combo.GetCurSel();
+    const int iCurSel = m_drz_combo.GetCurSel();
     m_drz_combo.ResetContent();
     auto cur = ::SetCursor(theApp.LoadStandardCursor(IDC_WAIT));
     if (theManODPNET.FillCombo(&m_drz_combo, "begin open_drzewo_rename(:kiedy,:refCur); end;", orapar, 1) && theApp.activeDoc != nullptr)
@@ -1604,7 +1604,7 @@ void CDBOpenDlg::OnOK()
 
 void CDBOpenDlg::RefreshCombo()
 {
-    CWnd *wnOldFocus = GetFocus();
+    CWnd* wnOldFocus = GetFocus();
     const BOOL isON = IsDlgButtonChecked(IDC_LIB);
     if (bEnableCtrls) { //aktywacja kontrolek
         GetDlgItem(ID_DATA_TEXT)->ShowWindow(isON ? SW_HIDE : SW_SHOW);
@@ -1739,7 +1739,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // velvet : CAddDesc dialog - konfigurowanie opisów do og³oszeñ
 
-CAddDesc::CAddDesc(int top, int bottom, CWnd* pParent /*=NULL*/)
+CAddDesc::CAddDesc(const int top, const int bottom, CWnd* pParent /*=NULL*/)
     : CDialog(CAddDesc::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CAddDesc)
@@ -2132,7 +2132,7 @@ void CPrnEpsDlg::OnFmteps()
     }
 }
 
-void CPrnEpsDlg::OnLButtonDown(UINT nFlags, CPoint point)
+void CPrnEpsDlg::OnLButtonDown(const UINT nFlags, CPoint point)
 {
     BOOL odClicked = FALSE;
     CRect odR, doR, ssR, dR, cdR;
@@ -2638,7 +2638,7 @@ void CPageDerv::OnSelchangeDervlvl()
     GetDlgItem(IDC_BASE_NR)->EnableWindow(isEnabled);
 }
 
-void CPageDerv::OnDirectionChange(UINT mode)
+void CPageDerv::OnDirectionChange(const UINT mode)
 {
     const int cc = m_tytmut.GetCount();
     if (mode == IDC_FROMPAGE) {
@@ -2722,7 +2722,7 @@ void CGrzbDlg::OnShrinkGrzbiet()
     ChangeMode(FALSE);
 }
 
-void CGrzbDlg::ChangeMode(BOOL isExpand) const
+void CGrzbDlg::ChangeMode(const BOOL isExpand) const
 {
     GetDlgItem(IDC_PODWALY)->EnableWindow(isExpand);
     GetDlgItem(IDC_DELETEINSERT)->EnableWindow(!isExpand);
@@ -2754,7 +2754,7 @@ void CGrzbDlg::OnBnClicked4x4()
 void CGrzbDlg::OnOK()
 {
     UpdateData();
-    BOOL isExpand = !(m_incordec == 1 && m_delete == 0);
+    bool isExpand = !(m_incordec == 1 && m_delete == 0);
     if (isExpand && m_tytmut.GetCurSel() == CB_ERR) {
         m_tytmut.SetFocus(); return;
     }
@@ -2824,7 +2824,7 @@ BEGIN_MESSAGE_MAP(COstWer, CDialog)
     ON_NOTIFY(NM_CLICK, IDC_ADDLIST, &COstWer::OnNMClickAddlist)
 END_MESSAGE_MAP()
 
-void COstWer::AppendAdd(CDrawAdd* pAdd, int status)
+void COstWer::AppendAdd(CDrawAdd* pAdd, const int status)
 {
     const int i = m_adds.InsertItem(m_adds.GetItemCount(), pAdd->logpage, status);
     ::StringCchPrintf(theApp.bigBuf, n_size, _T("%li"), pAdd->nreps);

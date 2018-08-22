@@ -47,7 +47,7 @@ DWORD WINAPI CGenEpsInfoDlg::CreateGenEPSDialog(PMESPUMPDLGARG pArg)
     return 0;
 }
 
-INT_PTR CALLBACK CGenEpsInfoDlg::DialogProc(HWND /*unused*/, UINT iMsg, WPARAM wParam, LPARAM /*unused*/)
+INT_PTR CALLBACK CGenEpsInfoDlg::DialogProc(HWND /*unused*/, const UINT iMsg, WPARAM wParam, LPARAM /*unused*/)
 {
     if (iMsg == WM_COMMAND && wParam == IDCANCEL) {
         m_instance.OnInterruptProcessing();
@@ -130,7 +130,7 @@ void CGenEpsInfoDlg::SetChannelCount(int iChannelCnt)
     ShowWindow(SW_SHOW);
 }
 
-void CGenEpsInfoDlg::OglInfo(int iChannel, const CString& s)
+void CGenEpsInfoDlg::OglInfo(const int iChannel, const CString& s)
 {
     switch (iChannel % ciMaxChannels) {
         case 0:
@@ -141,7 +141,7 @@ void CGenEpsInfoDlg::OglInfo(int iChannel, const CString& s)
     ShowWindow(SW_SHOW);
 }
 
-void CGenEpsInfoDlg::StrInfo(int iChannel, const CString& s)
+void CGenEpsInfoDlg::StrInfo(const int iChannel, const CString& s)
 {
     switch (iChannel % ciMaxChannels) {
         case 1:

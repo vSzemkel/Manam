@@ -250,7 +250,7 @@ CRect CDrawObj::GetHandleRect(const int nHandleID, CDrawView* pView) const
     return rect;
 }
 
-HCURSOR CDrawObj::GetHandleCursor(int nHandle) const
+HCURSOR CDrawObj::GetHandleCursor(const int nHandle) const
 {
     ASSERT_VALID(this);
 

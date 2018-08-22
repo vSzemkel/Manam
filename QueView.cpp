@@ -103,7 +103,7 @@ void CQueView::OnDraw(CDC* pDC)
     }
 }
 
-void CQueView::DocToClient(CRect *rect)
+void CQueView::DocToClient(CRect* rect)
 {
     CClientDC dc(this);
     OnPrepareDC(&dc, nullptr);
@@ -111,7 +111,7 @@ void CQueView::DocToClient(CRect *rect)
     rect->NormalizeRect();
 }
 
-void CQueView::ClientToDoc(CPoint *point)
+void CQueView::ClientToDoc(CPoint* point)
 {
     CClientDC dc(this);
     OnPrepareDC(&dc, nullptr);
@@ -201,7 +201,7 @@ void CQueView::OnMouseMove(const UINT nFlags, CPoint point)
     ((CMainFrame *)AfxGetMainWnd())->SetStatusBarInfo(pObj ? pObj->info : "");
 }
 
-void CQueView::OnLButtonUp(const UINT nFlags, CPoint point)
+void CQueView::OnLButtonUp(const UINT nFlags, const CPoint point)
 {
     if (moving) {
         if (selected_add && selected_add->m_position != vPos) {

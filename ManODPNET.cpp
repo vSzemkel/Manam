@@ -34,7 +34,7 @@ struct OdpHelper final
     static const gcroot<String^> DbNull;
 
     // reverse operation is: static String^ PtrToStringUni(IntPtr ptr), but simple assignment will do
-    inline static void __clrcall String2WChar(System::String^ s, wchar_t* os, size_t noe)
+    inline static void __clrcall String2WChar(System::String^ s, wchar_t* os, const size_t noe)
     {
         pin_ptr<const wchar_t> wch = PtrToStringChars(s);
         wcscpy_s(os, noe, wch);
@@ -48,7 +48,7 @@ struct OdpHelper final
         ::CopyMemory(buf, wch, 2 * noe);
     }
 
-    inline static CString __clrcall ReadOdrString(OracleDataReader^ odr, int index)
+    inline static CString __clrcall ReadOdrString(OracleDataReader^ odr, const int index)
     {
         if (odr->IsDBNull(index)) return CString();
         pin_ptr<const wchar_t> wch = PtrToStringChars(odr->GetString(index));
@@ -590,7 +590,7 @@ CDrawDocDbWriter::CDrawDocDbWriter(CDrawDoc* doc) : m_doc(doc)
     m_objetosc = (int)doc->m_pages.size();
 }
 
-BOOL CDrawDocDbWriter::SaveManamDoc(BOOL isSaveAs, BOOL doSaveAdds)
+BOOL CDrawDocDbWriter::SaveManamDoc(const BOOL isSaveAs, const BOOL doSaveAdds)
 {
     OracleTransaction^ otr = nullptr;
     auto conn = gcnew OracleConnection(g_ConnectionString);
@@ -641,7 +641,7 @@ BOOL CDrawDocDbWriter::SaveManamDoc(BOOL isSaveAs, BOOL doSaveAdds)
     return TRUE;
 }
 
-void CDrawDocDbWriter::RemoveDeletedObj(OracleConnection^ conn, BOOL delAdds)
+void CDrawDocDbWriter::RemoveDeletedObj(OracleConnection^ conn, const BOOL delAdds)
 {	// uruchamiane dwa razy, najpierw delAdd=TRUE, potem FALSE
     auto cmd = conn->CreateCommand();
     cmd->CommandText = "begin delete_spacer_object(:mak_xx,:typ,:xx); end;";
@@ -658,7 +658,7 @@ void CDrawDocDbWriter::RemoveDeletedObj(OracleConnection^ conn, BOOL delAdds)
     }
 }
 
-void CDrawDocDbWriter::SaveOpisyMakiety(OracleConnection^ conn, BOOL isSaveAs)
+void CDrawDocDbWriter::SaveOpisyMakiety(OracleConnection^ conn, const BOOL isSaveAs)
 {
     auto cmd = conn->CreateCommand();
     auto par = cmd->Parameters;
@@ -716,7 +716,7 @@ void CDrawDocDbWriter::SaveSpotyMakiety(OracleConnection^ conn)
         }
 }
 
-void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, BOOL isSaveAs, BOOL doSaveAdds)
+void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, const BOOL isSaveAs, const BOOL doSaveAdds)
 {
     // parametry do zapisu og³oszeñ
     auto cmdAdd = conn->CreateCommand();
@@ -963,7 +963,7 @@ void CDrawDocDbWriter::SaveOgloszenie(OracleCommand^ cmd, CDrawAdd* pAdd)
 #pragma endregion
 
 #pragma region CManODPNET
-BOOL CManODPNET::PrepareConnectionString(const CString& user, const CString& pass, const CString& database, BOOL parallel)
+BOOL CManODPNET::PrepareConnectionString(const CString& user, const CString& pass, const CString& database, const BOOL parallel)
 {
     g_ConnectionString = String::Format("max pool size={0};data source={1};user id={2};password={3}", parallel ? CGenEpsInfoDlg::GetCpuCnt() : 1, gcnew String(database), gcnew String(user), gcnew String(pass));
 
@@ -985,7 +985,7 @@ BOOL CManODPNET::PrepareConnectionString(const CString& user, const CString& pas
     return m_lastErrorMsg.IsEmpty();
 }
 
-BOOL CManODPNET::CkAccess(LPCTSTR tytul, LPCTSTR mutacja, LPCTSTR rights, BOOL szczekaj)
+BOOL CManODPNET::CkAccess(LPCTSTR tytul, LPCTSTR mutacja, LPCTSTR rights, const BOOL szczekaj)
 {
     if (!_tcscmp(rights, _T("S")) && (theApp.grupa & UserRole::dea))
         return TRUE;
@@ -1079,7 +1079,7 @@ BOOL CManODPNET::EI(LPCSTR s, CManODPNETParms& ps)
     return m_lastErrorMsg.IsEmpty();
 }
 
-BOOL CManODPNET::FillArr(std::vector<CString>* combo, LPCSTR sql, CManODPNETParms& ps, BOOL comboArray)
+BOOL CManODPNET::FillArr(std::vector<CString>* combo, LPCSTR sql, CManODPNETParms& ps, const BOOL comboArray)
 {
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();
@@ -1139,7 +1139,7 @@ nextcombo:
     }
 }
 
-BOOL CManODPNET::FillList(CListBox* list, LPCSTR sql, CManODPNETParms& ps, int indexPos)
+BOOL CManODPNET::FillList(CListBox* list, LPCSTR sql, CManODPNETParms& ps, const int indexPos)
 {	// gdy nie pobieramy indexu, to indexPos == -1, gdy pobieramy to indexPos zawiera numer porz¹dkowy kolumny, który jest 0 lub 1
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();
@@ -1166,7 +1166,7 @@ BOOL CManODPNET::FillList(CListBox* list, LPCSTR sql, CManODPNETParms& ps, int i
     }
 }
 
-BOOL CManODPNET::FillCombo(CComboBox* combo, LPCSTR sql, CManODPNETParms& ps, int indexPos)
+BOOL CManODPNET::FillCombo(CComboBox* combo, LPCSTR sql, CManODPNETParms& ps, const int indexPos)
 {	// gdy nie pobieramy indexu, to indexPos == -1, gdy pobieramy to indexPos zawiera numer porz¹dkowy kolumny, który jest 0 lub 1
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();

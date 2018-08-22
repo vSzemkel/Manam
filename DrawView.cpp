@@ -160,7 +160,7 @@ BOOL CDrawView::PreCreateWindow(CREATESTRUCT& cs)
     return TRUE;
 }
 
-void CDrawView::OnActivateView(BOOL bActivate, CView* pActiveView, CView* pDeactiveView)
+void CDrawView::OnActivateView(const BOOL bActivate, CView* pActiveView, CView* pDeactiveView)
 {
     CView::OnActivateView(bActivate, pActiveView, pDeactiveView);
 
@@ -187,7 +187,7 @@ void CDrawView::OnActivateView(BOOL bActivate, CView* pActiveView, CView* pDeact
     }
 }
 
-BOOL CDrawView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
+BOOL CDrawView::OnSetCursor(CWnd* pWnd, const UINT nHitTest, const UINT message)
 {
 
     if (CDrawTool::c_drawShape == DrawShape::add || CDrawTool::c_drawShape == DrawShape::opis)
@@ -295,7 +295,7 @@ void CDrawView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo)
     }
 }
 
-BOOL CDrawView::OnScrollBy(CSize sizeScroll, BOOL bDoScroll)
+BOOL CDrawView::OnScrollBy(const CSize sizeScroll, const BOOL bDoScroll)
 {
     // do the scroll
     if (!CScrollView::OnScrollBy(sizeScroll, bDoScroll))
@@ -553,7 +553,7 @@ void CDrawView::UpdateActiveItem()
 /////////////////////////////////////////////////////////////////////////////
 // CDrawView message handlers
 
-void CDrawView::OnLButtonDown(UINT nFlags, CPoint point)
+void CDrawView::OnLButtonDown(const UINT nFlags, const CPoint point)
 {
     if (!m_bActive)
         return;
@@ -562,7 +562,7 @@ void CDrawView::OnLButtonDown(UINT nFlags, CPoint point)
         pTool->OnLButtonDown(this, nFlags, point);
 }
 
-void CDrawView::OnLButtonUp(UINT nFlags, CPoint point)
+void CDrawView::OnLButtonUp(const UINT nFlags, const CPoint point)
 {
     if (!m_bActive)
         return;
@@ -571,7 +571,7 @@ void CDrawView::OnLButtonUp(UINT nFlags, CPoint point)
         pTool->OnLButtonUp(this, nFlags, point);
 }
 
-void CDrawView::OnMouseMove(UINT nFlags, CPoint point)
+void CDrawView::OnMouseMove(const UINT nFlags, const CPoint point)
 {
     if (theApp.unQueing && !m_bActive) {
         CDrawTool::c_drawShape = DrawShape::select;
@@ -587,7 +587,7 @@ void CDrawView::OnMouseMove(UINT nFlags, CPoint point)
         pTool->OnMouseMove(this, nFlags, point);
 }
 
-BOOL CDrawView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+BOOL CDrawView::OnMouseWheel(const UINT nFlags, const short zDelta, const CPoint pt)
 {
     const auto delta = zDelta / WHEEL_DELTA;
     const float fFactor = (15 + (float)delta) / 15;
@@ -613,7 +613,7 @@ BOOL CDrawView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
     return CScrollView::OnMouseWheel(nFlags, zDelta, pt);
 }
 
-void CDrawView::OnLButtonDblClk(UINT nFlags, CPoint point)
+void CDrawView::OnLButtonDblClk(const UINT nFlags, const CPoint point)
 {
     if (!m_bActive)
         return;
@@ -668,7 +668,7 @@ void CDrawView::OnViewLupkaMinus()
         }
 }
 
-void CDrawView::OnDrawTool(UINT tool)
+void CDrawView::OnDrawTool(const UINT tool)
 {
     auto selected_tool = static_cast<DrawShape>(tool);
     if (CDrawTool::c_drawShape == selected_tool)
@@ -750,7 +750,7 @@ void CDrawView::OnUpdateAnySelect(CCmdUI* pCmdUI)
     if (!OnDisableMenuInt(pCmdUI)) pCmdUI->Enable(!m_selection.empty());
 }
 
-void CDrawView::OnSize(UINT nType, int cx, int cy)
+void CDrawView::OnSize(const UINT nType, const int cx, const int cy)
 {
     CScrollView::OnSize(nType, cx, cy);
     UpdateActiveItem();
@@ -1166,7 +1166,7 @@ void CDrawView::Dump(CDumpContext &dc) const
 #endif //_DEBUG
 
 /////////////////////////////////////////////////////////////////////////////
-BOOL CDrawView::SetZoomFactor(CSize zoomNum, CSize zoomDenom)
+BOOL CDrawView::SetZoomFactor(const CSize zoomNum, const CSize zoomDenom)
 {
     if (zoomDenom != m_zoomDenom || zoomNum != m_zoomNum) {
         // sync to new zoom factor
@@ -1184,7 +1184,7 @@ BOOL CDrawView::SetZoomFactor(CSize zoomNum, CSize zoomDenom)
 /////////////////////////////////////////////////////////////////////////////
 // Zooming user interface
 
-void CDrawView::OnViewZoomN(UINT nID)
+void CDrawView::OnViewZoomN(const UINT nID)
 {
     ASSERT(nID >= ID_VIEW_ZOOM100 && nID <= ID_VIEW_ZOOM500);
 
@@ -1506,7 +1506,7 @@ void CDrawView::CheckPrintEps(const BOOL isprint)
 
 } // CheckPrintEps
 
-void CDrawView::OnRButtonDown(UINT nFlags, CPoint point)
+void CDrawView::OnRButtonDown(const UINT nFlags, CPoint point)
 {
     CScrollView::OnRButtonDown(nFlags, point);
     CPoint local{point};

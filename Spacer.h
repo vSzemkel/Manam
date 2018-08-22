@@ -49,8 +49,8 @@ public:
 private:
     static const int narrowcx, widecx, olcx, normalcy;
     static const int qfExact, qfSectionExact, qfSecParExact;
-    bool firstSearch{true};
-    bool olSelected{false};
+    bool m_firstSearch{true};
+    bool m_olSelected{false};
     int m_mak_xx;
     int m_add_xx;
     int	m_quepub_xx;
@@ -59,8 +59,8 @@ private:
     int m_szpalt_x, m_szpalt_y;
     CDrawAdd* pub;
 
-    int GetQueryFlag() const;						//oblicza flagê warunków zamówienia co do miejsca
-    void SetBlokadaState();					//ustawia status kontrolki do blokady miejsca odpowiednio do flagi warunków zamówienia
+    int GetQueryFlag() const; //oblicza flagê warunków zamówienia co do miejsca
+    void SetBlokadaState();   //ustawia status kontrolki do blokady miejsca odpowiednio do flagi warunków zamówienia
     void EnableMultiCond(BOOL flag) const;
     void InsertRequestNoDup(CString& kiedy, CString& mut);
     // Overrides

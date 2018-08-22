@@ -199,7 +199,7 @@ void CDrawApp::AddToRecentFileList(LPCTSTR lpszPathName)
         m_pRecentFileList->Add(lpszPathName);
 }
 
-void CDrawApp::SetScale(int scale)
+void CDrawApp::SetScale(const int scale)
 {
     m_vscale = scale;
     m_phight = 78 * m_vscale;
@@ -349,7 +349,7 @@ void CDrawApp::InitKratyDrukarnie()
     }
 }
 
-void CDrawApp::FillKrataCombo(CComboBox& combo, int szpalt_x, int szpalt_y)
+void CDrawApp::FillKrataCombo(CComboBox& combo, const int szpalt_x, const int szpalt_y)
 {
     for (const auto& k : kraty) {
         const auto ind = combo.AddString(k);
@@ -640,7 +640,7 @@ bool CDrawApp::OpenWebBrowser(const TCHAR* const sUrl)
     return ret > 32;
 }
 
-void CDrawApp::OpenWebBrowser(size_t service, const TCHAR* const sUrl)
+void CDrawApp::OpenWebBrowser(const size_t service, const TCHAR* const sUrl)
 {
     auto pFile = theApp.OpenURL(service, sUrl);
     if (pFile) {
@@ -656,7 +656,7 @@ void CDrawApp::SetErrorMessage(LPTSTR lpBuffer)
     ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, dw, LANG_USER_DEFAULT, lpBuffer, n_size, nullptr);
 }
 
-std::unique_ptr<CHttpFile> CDrawApp::OpenURL(size_t service, const CString& sUrl)
+std::unique_ptr<CHttpFile> CDrawApp::OpenURL(const size_t service, const CString& sUrl)
 {
     if (!isRDBMS) {
         ::MessageBox(nullptr, _T("Wymagane po³¹czenie do bazy danych"), APP_NAME, MB_OK | MB_ICONERROR);

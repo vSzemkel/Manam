@@ -260,8 +260,8 @@ void CSpacerDlg::OnCloseupLastemision(NMHDR * /*unused*/, LRESULT *pResult)
 {
     CTime t;
     m_lastemisionctl.GetTime(t);
-    BOOL interval = t > CTime(rrrr, mm, dd, 0, 0, 0);
-    BOOL changed = emisionlastChoice != t;
+    const BOOL interval = t > CTime(rrrr, mm, dd, 0, 0, 0);
+    const BOOL changed = emisionlastChoice != t;
     emisionlastChoice = t;
 
     GetDlgItem(IDC_KROK)->EnableWindow(interval);
@@ -289,7 +289,7 @@ void CSpacerDlg::OnEmisje()
     CString kiedy = czas.Format(c_ctimeData);
     int krok = ((CComboBox*)GetDlgItem(IDC_KROK))->GetCurSel();
 
-    olSelected = FALSE;
+    m_olSelected = FALSE;
     m_ollist.ResetContent();
     m_emisjelist.ResetContent();
     CheckDlgButton(IDC_OL, BST_UNCHECKED);
@@ -437,7 +437,7 @@ void CSpacerDlg::OnDelsel()
 
 void CSpacerDlg::OnDelall()
 {
-    olSelected = FALSE;
+    m_olSelected = FALSE;
     m_ollist.ResetContent();
     m_emisjelist.ResetContent();
     if (!queDeal && m_add_xx > 0) {
@@ -462,12 +462,12 @@ void CSpacerDlg::SetBlokadaState()
 int CSpacerDlg::GetQueryFlag() const
 {
     int iQF = 2;
-    if (IsDlgButtonChecked(IDC_SEKCJA))		iQF += 1; iQF *= 2;	//iQF&16
-    if (IsDlgButtonChecked(IDC_WSEKCJI))	iQF += 1; iQF *= 2;	//iQF&8
-    if (IsDlgButtonChecked(IDC_PAGEPARITY)) iQF += 1; iQF *= 2;	//iQF&4
-    if (IsDlgButtonChecked(IDC_PAGELAYOUT)) iQF += 1; iQF *= 2;	//iQF&2
-    if (IsDlgButtonChecked(IDC_EXACTPLACE)) iQF += 1;			//iQF&1
-    return iQF;												//free::==iQF=32
+    if (IsDlgButtonChecked(IDC_SEKCJA)) iQF += 1; iQF *= 2;     // iQF&16
+    if (IsDlgButtonChecked(IDC_WSEKCJI)) iQF += 1; iQF *= 2;    // iQF&8
+    if (IsDlgButtonChecked(IDC_PAGEPARITY)) iQF += 1; iQF *= 2; // iQF&4
+    if (IsDlgButtonChecked(IDC_PAGELAYOUT)) iQF += 1; iQF *= 2; // iQF&2
+    if (IsDlgButtonChecked(IDC_EXACTPLACE)) iQF += 1;           // iQF&1
+    return iQF;                                                 // free::==iQF=32
 }
 
 void CSpacerDlg::OnQue()
@@ -512,9 +512,9 @@ void CSpacerDlg::OnQue()
     auto spo_xx = (int)CDrawDoc::spoty[pub->kolor >> 3];
     if (IsDlgButtonChecked(IDC_DEALAPPEND))
         m_add_xx = GetDlgItemInt(IDC_SPACER);
-    else if (firstSearch) {
+    else if (m_firstSearch) {
         m_add_xx = 0;
-        firstSearch = false;
+        m_firstSearch = false;
         GetDlgItem(IDC_DEALAPPEND)->EnableWindow(FALSE);
     }
 
@@ -620,9 +620,9 @@ void CSpacerDlg::OnOK()
 
     if (IsDlgButtonChecked(IDC_DEALAPPEND))
         m_add_xx = GetDlgItemInt(IDC_SPACER);
-    else if (firstSearch) {
+    else if (m_firstSearch) {
         m_add_xx = 0;
-        firstSearch = false;
+        m_firstSearch = false;
         GetDlgItem(IDC_DEALAPPEND)->EnableWindow(FALSE);
     }
 
@@ -752,8 +752,8 @@ void CSpacerDlg::OnBnClickedOl()
 {
     if (IsDlgButtonChecked(IDC_OL)) {
         SetWindowPos(&wndTop, 20, 20, olcx, normalcy, SWP_NOMOVE);
-        if (!olSelected) {
-            olSelected = TRUE;
+        if (!m_olSelected) {
+            m_olSelected = TRUE;
             if (!m_emisjelist.GetCount())
                 m_emisjelist.SetItemData(m_emisjelist.AddString(pub->m_pDocument->data), (DWORD)m_mak_xx);
 

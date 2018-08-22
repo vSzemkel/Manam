@@ -20,10 +20,10 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CManSock member functions
 
-void CManSock::OnReceive(int nErrorCode)
+void CManSock::OnReceive(const int nErrorCode)
 {
     TCHAR message[MSG_LEN + 1];
-    TCHAR *msg = message;
+    TCHAR* msg = message;
 
     int charLen = Receive(msg, MSG_LEN) / sizeof(TCHAR);
     if (static_cast<WORD>(msg[0]) == 0xfffe) { // java string
@@ -67,7 +67,7 @@ void CManSock::OnReceive(int nErrorCode)
     }
 }
 
-void CManSock::SendManamMessage(CString& msg, CString& login, BOOL broadcast)
+void CManSock::SendManamMessage(CString& msg, CString& login, const BOOL broadcast)
 {
     int num;
     if (broadcast) {
@@ -176,7 +176,7 @@ BOOL CSendDlg::OnInitDialog()
     return TRUE;
 }
 
-void CSendDlg::OnShowWindow(BOOL bShow, UINT nStatus)
+void CSendDlg::OnShowWindow(const BOOL bShow, const UINT nStatus)
 {
     CDialog::OnShowWindow(bShow, nStatus);
 

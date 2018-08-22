@@ -117,7 +117,7 @@ void inline CMainFrame::StoreComboHandlers()
     m_CaptionEditBox = cbHeadCombo->GetEditCtrl();
 }
 
-BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParentWnd, CCreateContext* pContext)
+BOOL CMainFrame::LoadFrame(const UINT nIDResource, const DWORD dwDefaultStyle, CWnd* pParentWnd, CCreateContext* pContext)
 {
     BOOL bRet = CMDIFrameWndEx::LoadFrame(nIDResource, dwDefaultStyle, pParentWnd, pContext);
 
@@ -193,7 +193,7 @@ void CMainFrame::OnToolBarCustomize()
     pDlgCust->Create();
 }
 
-void CMainFrame::SwapToolbarImages(int iCmd1, int iCmd2)
+void CMainFrame::SwapToolbarImages(const int iCmd1, const int iCmd2)
 {
     int iPos1 = m_wndToolBar.CommandToIndex(iCmd1);
     auto btn1 = dynamic_cast<CMFCToolBarButton*>(m_wndToolBar.GetButton(iPos1));
@@ -207,7 +207,7 @@ void CMainFrame::SwapToolbarImages(int iCmd1, int iCmd2)
     btn2->SetImage(iPos1);
 }
 
-void CMainFrame::SetToolbarBitmap(ToolbarMode bPrevMode, ToolbarMode bNewMode)
+void CMainFrame::SetToolbarBitmap(const ToolbarMode bPrevMode, const ToolbarMode bNewMode)
 {
     if ((bPrevMode == ToolbarMode::normal && bNewMode == ToolbarMode::czas_obow)
         || (bPrevMode == ToolbarMode::czas_obow && bNewMode == ToolbarMode::normal))
@@ -265,7 +265,7 @@ void CMainFrame::SetRoleStatus()
 }
 
 //////////////// ini spoty o ile sa
-void CMainFrame::InsComboNrSpotow(int new_i)
+void CMainFrame::InsComboNrSpotow(const int new_i)
 {
     if (theApp.swCZV == ToolbarMode::tryb_studia) return;
     const auto old_i = m_KolorBox->GetCount() - (int)CDrawDoc::kolory.size();
@@ -309,7 +309,7 @@ void CMainFrame::InsKolorBox()
 }
 
 ////////////////////////////////////////////////////////// captions /lub str_log
-void CMainFrame::IniCaptionBox(int id_drw, int new_id_drw)
+void CMainFrame::IniCaptionBox(const int id_drw, const int new_id_drw)
 {
     if (new_id_drw == id_drw) // tylko przy zmianie produktu
         return;
@@ -330,7 +330,7 @@ DWORD CMainFrame::GetCaptionDataItem(int ind) const
     return ind == CB_ERR ? 0 : (DWORD)m_CaptionBox->GetItemData(ind);
 }
 
-void CMainFrame::IniCaptionCombo(bool iscaption)
+void CMainFrame::IniCaptionCombo(const bool iscaption)
 {
     CString bf, tx = (iscaption) ? _T("Caption") : _T("StrLog");
     const int max_col = theApp.GetProfileInt(tx, _T("Amount"), 0);
@@ -344,7 +344,7 @@ void CMainFrame::IniCaptionCombo(bool iscaption)
     m_CaptionBox->Invalidate();
 }
 
-BOOL CMainFrame::DBIniCaptionCombo(BOOL iscaption, int id_drw)
+BOOL CMainFrame::DBIniCaptionCombo(const bool iscaption, int id_drw)
 {
     // nie odœwie¿aj niepotrzebnie
     const auto checksum = (iscaption << 24) + ((int)theApp.swCZV << 16) + id_drw;
@@ -388,7 +388,7 @@ int CMainFrame::GetKolorInd(const CString& text) const noexcept
     return ind == CB_ERR ? -1 : ind;
 }
 
-int CMainFrame::GetKolor(int ile_spotow) const // kolejnoœæ na liscie: spoty, brak, full, kolory
+int CMainFrame::GetKolor(const int ile_spotow) const // kolejnoœæ na liscie: spoty, brak, full, kolory
 {
     const auto k = m_KolorBox->GetCurSel();
 
@@ -411,7 +411,7 @@ CString CMainFrame::GetCaption() const
     return rs;
 }
 
-CString CMainFrame::GetCaption(int i) const
+CString CMainFrame::GetCaption(const int i) const
 {
     CString rs;
     m_CaptionBox->GetLBText(i, rs);

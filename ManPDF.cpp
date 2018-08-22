@@ -66,7 +66,7 @@ char* CManPDF::pdftok(char* str)
     return cPdfToken[iPdfTokenSlot];
 }
 
-const char* CManPDF::memstr(const char* const buf, const char* const pat, size_t patlen)
+const char* CManPDF::memstr(const char* const buf, const char* const pat, const size_t patlen)
 {
     const auto bufend = buf + n_size;
     const auto ret = std::search(buf, bufend, pat, pat + patlen);
@@ -117,7 +117,7 @@ unsigned long CManPDF::GetMainXref(CFile& f)
 } // GetMainXref
 
 // podaje poprzedni¹, póŸniej nadpisan¹ wartoœc offsetu do spisu xref
-unsigned long CManPDF::GetPrevXref(CFile& f, unsigned long currentxrefOffset)
+unsigned long CManPDF::GetPrevXref(CFile& f, const unsigned long currentxrefOffset)
 {
     f.Seek(currentxrefOffset, CFile::begin);
     f.Read(cStore, bigSize);
@@ -128,7 +128,7 @@ unsigned long CManPDF::GetPrevXref(CFile& f, unsigned long currentxrefOffset)
 } // GetPrevXref
 
 // podaje offset w pliku f pocz¹tku definicji obiektu numer obj
-unsigned long CManPDF::FindObjEntry(CFile& f, unsigned int obj)
+unsigned long CManPDF::FindObjEntry(CFile& f, const unsigned int obj)
 {
     unsigned long currentxrefOffset = GetMainXref(f);
     while (currentxrefOffset != 0L) {
@@ -195,7 +195,7 @@ unsigned int CManPDF::GetRefNr(char* buf)
 // przepisuje s³ownik podmianiaj¹c numery obiektów Ÿród³owych na docelowe,
 // innerOnly okreœla, czy maj¹ zostaæ przepisane znaczniki pocz¹tku i koñca sekcji
 // str jest tokenem uzyskanym przez strtok i kolejne wywo³anie da nastêpny w kolejnoœci token
-void CManPDF::EmbedSection(const char* const str, bool innerOnly)
+void CManPDF::EmbedSection(const char* const str, const bool innerOnly)
 {
     // ostatnie wywolanie strtok dalo token, który jest pocz¹tkiem sekcji
     // utworz liste tokenow ze slownika i podmien referencje
@@ -269,7 +269,7 @@ void CManPDF::EmbedKey(const char* const buf, const char* const key)
 } // EmbedKey
 
 // analizuje obiekt wystêpuj¹cy po offset. Jeœli wystêpuje w nim stream to przepisuje go do pliku docelowego
-unsigned long CManPDF::EmbedStream(CFile& src, unsigned long offset, bool decorate)
+unsigned long CManPDF::EmbedStream(CFile& src, const unsigned long offset, const bool decorate)
 {
     src.Seek(offset, CFile::begin);
     src.Read(cStore, bigSize);
@@ -312,7 +312,7 @@ unsigned long CManPDF::EmbedStream(CFile& src, unsigned long offset, bool decora
     return ret;
 } // EmbedStream
 
-unsigned long CManPDF::EmbedPakStream(CFile& src, unsigned long offset, unsigned char* pak, unsigned char* niepak, unsigned char* tmp, const unsigned long niepakoff)
+unsigned long CManPDF::EmbedPakStream(CFile& src, const unsigned long offset, unsigned char* pak, unsigned char* niepak, unsigned char* tmp, const unsigned long niepakoff)
 {
     src.Seek(offset, CFile::begin);
     src.Read(cStore, bigSize);
@@ -363,7 +363,7 @@ unsigned long CManPDF::EmbedPakStream(CFile& src, unsigned long offset, unsigned
 } // EmbedPakStream
 
 // przebisuje obiekt srcObjNr z pliku Ÿród³owego pod nowy numer do pliku docelowego
-void CManPDF::EmbedRef(CFile& src, unsigned int srcObjNr)
+void CManPDF::EmbedRef(CFile& src, const unsigned int srcObjNr)
 {
     CString cs;
     unsigned long offset = FindObjEntry(src, srcObjNr);
@@ -392,7 +392,7 @@ void CManPDF::EmbedRef(CFile& src, unsigned int srcObjNr)
     trg.Write("endobj\x0a", 7);
 } // EmbedRef
 
-void CManPDF::EmbedContents(CFile& src, unsigned long offset)
+void CManPDF::EmbedContents(CFile& src, const unsigned long offset)
 {
     CString cs;
     src.Seek(offset, CFile::begin);
@@ -587,7 +587,7 @@ bool CManPDF::GenProlog()
     return true;
 } // GenProlog
 
-void CManPDF::GenPDFTail(unsigned int howMany)
+void CManPDF::GenPDFTail(const unsigned int howMany)
 {
     std::vector<CString> offsetArr;
     const bool noLimit = howMany == 0;
@@ -861,7 +861,7 @@ unsigned long CManPDF::GetMediaBox(const TCHAR* const fpath, float* x1, float* y
     return offset;
 } //GetMediaBox
 
-inline void CManPDF::EmbedTextRight(const char* const font, unsigned int fsize, float px, float py, const char* const text, CStringA& buf)
+inline void CManPDF::EmbedTextRight(const char* const font, unsigned int fsize, const float px, const float py, const char* const text, CStringA& buf)
 {
     buf.Format(R"(q BT 1 g\012%s %u Tf\0121 0 0 1 %f %f cm\012-100 Tz (%s) Tj 100 Tz 0 g (%s) Tj\012ET Q\012)", font, fsize, px, py, text, text);
 }

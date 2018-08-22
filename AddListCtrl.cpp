@@ -42,7 +42,7 @@ void CAddListCtrl::InitHeader()
     SetImageList(&m_SmallImageList, LVSIL_SMALL);
 }
 
-int CAddListCtrl::OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn)
+int CAddListCtrl::OnCompareItems(LPARAM lParam1, LPARAM lParam2, const int iColumn)
 {
     bool bResult = false;
     const auto a1 = reinterpret_cast<CDrawAdd*>(lParam1);
@@ -92,7 +92,7 @@ int CAddListCtrl::OnCompareItems(LPARAM lParam1, LPARAM lParam2, int iColumn)
     return bResult ? -1 : 1;
 }
 
-BOOL CAddListCtrl::OnMouseWheel(UINT /*unused*/, short zDelta, CPoint /*unused*/)
+BOOL CAddListCtrl::OnMouseWheel(UINT /*unused*/, const short zDelta, CPoint /*unused*/)
 {
     if (m_pContainer == nullptr)
         return FALSE;

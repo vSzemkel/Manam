@@ -126,7 +126,7 @@ void CDrawDoc::OnDBSaveAs()
     DBSaveAs(true);
 }
 
-void CDrawDoc::DBSaveAs(bool isSaveAs)
+void CDrawDoc::DBSaveAs(const bool isSaveAs)
 {
     if (!theApp.isRDBMS) return;
 
@@ -209,7 +209,7 @@ void CDrawDoc::OnDBDelete()
     }
 }
 
-void CDrawDoc::ZmianaSpotow(int n)
+void CDrawDoc::ZmianaSpotow(const int n)
 {
     // gdy dodaje strony byc moze mam wiecej mozliwosci spotu, pod warunkiem ze mam wybrane drzewo
     if (id_drw == -1) return;
@@ -241,7 +241,7 @@ int CDrawDoc::DBReadSpot(int n)
     return ile_spotow;
 }
 
-void CDrawDoc::ZmianaCaptions(int old_id_drw, int new_id_drw)
+void CDrawDoc::ZmianaCaptions(const int old_id_drw, const int new_id_drw)
 {
     //gdy dodaje strony byc moze mam wiecej mozliwosci spotu, pod warunkiem ze mam wybrane drzewo
     if (theApp.isRDBMS && ((CDrawApp*)AfxGetApp())->GetProfileInt(_T("General"), _T("Captions"), 1) == 0)
@@ -619,7 +619,7 @@ void CDrawDoc::AsideAdds()
     }
 }
 
-CPoint CDrawDoc::GetAsideAddPos(bool opening) const
+CPoint CDrawDoc::GetAsideAddPos(const bool opening) const
 {
     const int addsAsideCnt = opening ? 1 : 1 + (int)std::count_if(cbegin(m_objects), cend(m_objects), [](CDrawObj* pObj) noexcept { const auto a = dynamic_cast<CDrawAdd*>(pObj); return a && a->posx == 0; });
     const auto marginPageMinX = (int)(pmodulx*(1 + iPagesInRow / 2 + (pszpalt_x*iPagesInRow)));
@@ -643,7 +643,7 @@ void CDrawDoc::ArrangeQue()
     UpdateAllViews(nullptr);
 }
 
-void CDrawDoc::AddFind(long nrAtex, long nrSpacer, LPCTSTR nazwa)
+void CDrawDoc::AddFind(long nrAtex, const long nrSpacer, LPCTSTR nazwa)
 {
     CDrawAdd* vAdd = nullptr;
     if (nrAtex != LONG_MIN)  // szukanie po numerze ATEX
@@ -776,7 +776,7 @@ void CDrawDoc::OnDrawOpcje()
     theApp.WriteInt(_T("PodwalySubDir"), dlg.m_podwal_subdir);
 }
 
-int CDrawDoc::GetIPage(int n) const noexcept
+int CDrawDoc::GetIPage(const int n) const noexcept
 {
     for (int i = 0; i < (int)m_pages.size(); ++i)
         if (m_pages[i]->nr == n)

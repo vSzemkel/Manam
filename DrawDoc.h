@@ -93,8 +93,8 @@ class CDrawDoc final : public COleDocument
     void SetPageRectFromOrd(CDrawPage* pObj, size_t iOrd) const; // pozycjonuje stronê na podstawie numeru porz¹dkowego
     void MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt);   // przesuwa ci¹g³y blok stron w obrêbie makiety
 
-    size_t AddPage(CDrawPage* pObj);             // na koncu, zwieksza pamiec na tablice
-    void AddPageAt(size_t idx, CDrawPage* pObj); // pod zadanym idx
+    size_t AddPage(CDrawPage* pObj);          // na koncu, zwieksza pamiec na tablice
+    void AddPageAt(int idx, CDrawPage* pObj); // pod zadanym idx
     void RemovePage(CDrawPage* pObj);
     CDrawPage* PageAt(const CPoint& point) const;
     CDrawPage* GetPage(int n) const;

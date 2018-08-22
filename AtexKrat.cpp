@@ -97,7 +97,7 @@ CKratCalc::CKratCalc(CWnd* pParent /*=NULL*/) : CDialog(CKratCalc::IDD, pParent)
     m_lightx = 40;
     m_lighty = 34;
     m_sizex = m_sizey = "0";
-    stronax = stronay = 0;
+    m_stronax = m_stronay = 0;
     m_userdef_sizex = m_userdef_sizey = 1;
 }
 
@@ -133,7 +133,7 @@ BOOL CKratCalc::OnInitDialog()
     return TRUE;
 }
 
-void CKratCalc::OnDeltaposSpin(UINT spinCtrlId, NMHDR* pNMHDR, LRESULT* pResult)
+void CKratCalc::OnDeltaposSpin(const UINT spinCtrlId, NMHDR* pNMHDR, LRESULT* pResult)
 {
     CString sn;
     const auto idc_edit = spinCtrlId == IDC_SPINX ? IDC_SIZEX : IDC_SIZEY;
@@ -152,8 +152,8 @@ void CKratCalc::OnCbnSelchangeKratka()
     if (_stscanf_s(k, _T("%ix%i"), &szpalt_x, &szpalt_y) != 2) return;
     auto r = theApp.activeDoc->GetCRozm(szpalt_x, szpalt_y);
     if (r) {
-        stronax = szpalt_x * (r->w + r->sw) - r->sw;
-        stronay = szpalt_y * (r->h + r->sh) - r->sh;
+        m_stronax = szpalt_x * (r->w + r->sw) - r->sw;
+        m_stronay = szpalt_y * (r->h + r->sh) - r->sh;
         Calculate();
     } else
         m_wynik.SetWindowText(_T("Brak rozmiaru"));
@@ -169,39 +169,39 @@ void CKratCalc::Calculate()
     const double addx = _ttof(m_sizex) * 10;
     const double addy = _ttof(m_sizey) * 10;
 
-    if (stronax <= 0 || stronay <= 0 || addx <= 0 || addy <= 0) {
+    if (m_stronax <= 0 || m_stronay <= 0 || addx <= 0 || addy <= 0) {
         m_wynik.SetWindowText(_T("Z³e dane"));
         return;
     }
 
-    int i = 0, j = 0, k = 0, l = 0;
-    double w, h;				// rozmiar modu³u
-    double modw = 0, modh = 0;	// rozmiar ogloszenia pasuj¹cego do kraty
+    int i{0}, j{0}, k{0}, l{0};
+    double w, h;             // rozmiar modu³u
+    double modw{0}, modh{0}; // rozmiar ogloszenia pasuj¹cego do kraty
 
     for (i = 1; i < CAtexKrat::DIM_LIMIT; ++i) {
-        w = (stronax - (i - 1) * lightx) / i;
+        w = (m_stronax - (i - 1) * lightx) / i;
         j = 1;
-        while ((modw = j * (w + lightx) - lightx) <= stronax) {
+        while ((modw = j * (w + lightx) - lightx) <= m_stronax) {
             if (fabs(modw - addx) < addx * TOLERANCE)
                 break;
             j++;
         }
-        if (modw <= stronax) break;
+        if (modw <= m_stronax) break;
     }
 
-    for (k = 1; k < CAtexKrat::DIM_LIMIT; k++) {
-        h = (stronay - (k - 1) * lighty) / k;
+    for (k = 1; k < CAtexKrat::DIM_LIMIT; ++k) {
+        h = (m_stronay - (k - 1) * lighty) / k;
         l = 1;
-        while ((modh = l * (h + lighty) - lighty) <= stronay) {
+        while ((modh = l * (h + lighty) - lighty) <= m_stronay) {
             if (fabs(modh - addy) < addy * TOLERANCE)
                 break;
             l++;
         }
-        if (modh <= stronay) break;
+        if (modh <= m_stronay) break;
     }
 
-    if (i < CAtexKrat::DIM_LIMIT && modw <= stronax) {
-        if (k < CAtexKrat::DIM_LIMIT && modh <= stronay) {
+    if (i < CAtexKrat::DIM_LIMIT && modw <= m_stronax) {
+        if (k < CAtexKrat::DIM_LIMIT && modh <= m_stronay) {
             m_x = j;
             m_y = l;
             m_kra_sym.Format(_T("%ix%i"), i, k);
@@ -210,7 +210,7 @@ void CKratCalc::Calculate()
         } else
             s.Format(_T("%ix# na %ix#"), j, i);
     } else {
-        if (k < CAtexKrat::DIM_LIMIT && modh <= stronay)
+        if (k < CAtexKrat::DIM_LIMIT && modh <= m_stronay)
             s.Format(_T("#x%i na #x%i"), l, k);
         else
             s.Format(_T("Nie pasuje"));
@@ -223,15 +223,15 @@ void CKratCalc::Calculate()
 
 void CKratCalc::OnDefineModelid()
 {
-    if (!bCalcMode) {
+    if (!m_autocalcMode) {
         UpdateData(TRUE);
         m_kratycombo.GetWindowText(m_kra_sym);
     }
 
     GetDlgItem(IDC_MODELID)->GetWindowText(m_modelid);
     CManODPNETParms orapar {
-        { CManDbType::DbTypeInt32, bCalcMode ? &m_x : &m_userdef_sizex },
-        { CManDbType::DbTypeInt32, bCalcMode ? &m_y : &m_userdef_sizey },
+        { CManDbType::DbTypeInt32, m_autocalcMode ? &m_x : &m_userdef_sizex },
+        { CManDbType::DbTypeInt32, m_autocalcMode ? &m_y : &m_userdef_sizey },
         { CManDbType::DbTypeVarchar2, &m_kra_sym },
         { CManDbType::DbTypeVarchar2, &m_modelid },
     };
@@ -242,13 +242,13 @@ void CKratCalc::OnDefineModelid()
 
 void CKratCalc::OnModeSwitch()
 {
-    bCalcMode = IsDlgButtonChecked(IDC_DIR_UZU);
-    GetDlgItem(IDC_SIZEX)->EnableWindow(bCalcMode);
-    GetDlgItem(IDC_SIZEY)->EnableWindow(bCalcMode);
-    GetDlgItem(IDC_SP)->EnableWindow(bCalcMode);
-    GetDlgItem(IDC_SPA)->EnableWindow(bCalcMode);
-    GetDlgItem(IDC_TXTPOSX)->EnableWindow(!bCalcMode);
-    GetDlgItem(IDC_TXTPOSY)->EnableWindow(!bCalcMode);
-    GetDlgItem(IDB_DODAJ)->EnableWindow(!bCalcMode);
+    m_autocalcMode = IsDlgButtonChecked(IDC_DIR_UZU);
+    GetDlgItem(IDC_SIZEX)->EnableWindow(m_autocalcMode);
+    GetDlgItem(IDC_SIZEY)->EnableWindow(m_autocalcMode);
+    GetDlgItem(IDC_SP)->EnableWindow(m_autocalcMode);
+    GetDlgItem(IDC_SPA)->EnableWindow(m_autocalcMode);
+    GetDlgItem(IDC_TXTPOSX)->EnableWindow(!m_autocalcMode);
+    GetDlgItem(IDC_TXTPOSY)->EnableWindow(!m_autocalcMode);
+    GetDlgItem(IDB_DODAJ)->EnableWindow(!m_autocalcMode);
 }
 #pragma endregion

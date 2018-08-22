@@ -68,7 +68,7 @@ void CGridFrm::Dump(CDumpContext& dc) const
 /////////////////////////////////////////////////////////////////////////////
 // CGridFrm message handlers
 
-BOOL CGridFrm::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext)
+BOOL CGridFrm::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, const DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, const UINT nID, CCreateContext* pContext)
 {
     BOOL ret = CFormView::Create(lpszClassName, lpszWindowName, dwStyle, rect, pParentWnd, nID, pContext);
     OnInitialUpdate();
@@ -192,7 +192,7 @@ int CGridFrm::FindRow(DWORD_PTR key) const
     return rc;
 }
 
-void CGridFrm::RefreshRow(int nRow, CDrawAdd* vAdd)
+void CGridFrm::RefreshRow(const int nRow, CDrawAdd* vAdd)
 {
     TCHAR bf[64];
 
@@ -336,7 +336,7 @@ void CGridFrm::OnUpdateShowrept(CCmdUI* pCmdUI)
 }
 
 /*************************** SORTOWANIE **********************************/
-void CGridFrm::OnSort(UINT col)
+void CGridFrm::OnSort(const UINT col)
 {
     eSortCol = static_cast<GridSortCol>(col);
     bSortAsc = eSortCol != eLastOrder;

@@ -617,7 +617,7 @@ CFlag CDrawAdd::GetPlacementFlag() const
     return GetPlacementFlag(posx, posy);
 }
 
-CFlag CDrawAdd::GetPlacementFlag(int px, int py) const
+CFlag CDrawAdd::GetPlacementFlag(const int px, const int py) const
 {
 #ifdef DEBUG
     ASSERT(0 < px && 0 < py && px <= szpalt_x && py <= szpalt_y);
@@ -625,7 +625,7 @@ CFlag CDrawAdd::GetPlacementFlag(int px, int py) const
     return space << ((szpalt_y - sizey - py + 2)*szpalt_x - sizex - px + 1);
 }
 
-void CDrawAdd::SetPosition(int fizp, int px, int py, int sx, int sy)
+void CDrawAdd::SetPosition(const int fizp, int px, int py, int sx, int sy)
 {
     // gdy zmiana przez open wlasnosci lub import
     dirty = TRUE;
@@ -744,7 +744,7 @@ void CDrawAdd::SetPosition(CRect* m_pos, CDrawPage* pPage)
     UpdateInfo();
 }
 
-void CDrawAdd::SetSpaceSize(int sx, int sy)
+void CDrawAdd::SetSpaceSize(const int sx, const int sy)
 {
     sizex = sx;
     sizey = sy;
@@ -752,7 +752,7 @@ void CDrawAdd::SetSpaceSize(int sx, int sy)
         space = CFlag(sx, sy, szpalt_x, szpalt_y);
 }
 
-void CDrawAdd::SetSpaceAndPosition(int fizp, int px, int py)
+void CDrawAdd::SetSpaceAndPosition(const int fizp, int px, int py)
 {
     // gdy copy paste i save i open
     dirty = TRUE;
@@ -772,7 +772,7 @@ void CDrawAdd::SetSpaceAndPosition(int fizp, int px, int py)
     UpdateInfo();
 }
 
-bool CDrawAdd::PtOnRing(CPoint p) const
+bool CDrawAdd::PtOnRing(const CPoint p) const
 {
     for (int i = 0; i < precelWertexCnt - 1; ++i) {
         if (aPrecelWertex[i].y != aPrecelWertex[i + 1].y || aPrecelWertex[i].y != p.y)
@@ -786,7 +786,7 @@ bool CDrawAdd::PtOnRing(CPoint p) const
     return false;
 }
 
-int CDrawAdd::FindRing(CPoint p0, bool bOuterRing)
+int CDrawAdd::FindRing(const CPoint p0, const bool bOuterRing)
 {
     enum Kierunek : uint8_t { E, S, W, N }; // okresla kierunek ostatnio znalezionego fragmentu obwodnicy
     Kierunek eKierunek = E;
@@ -921,7 +921,7 @@ void CDrawAdd::MoveWithPage(const CRect& position, CDrawView* pView)
     MoveTo(toPos, pView);
 }
 
-void CDrawAdd::SetLogpage(CString& m_op_zew, CString& m_sekcja, CString& m_op_sekcji, int m_nr_w_sekcji, CString& m_PL, CString& m_op_PL, int m_nr_PL, CString& m_poz_na_str)
+void CDrawAdd::SetLogpage(const CString& m_op_zew, const CString& m_sekcja, const CString& m_op_sekcji, const int m_nr_w_sekcji, const CString& m_PL, const CString& m_op_PL, const int m_nr_PL, CString& m_poz_na_str)
 {
     /* vu : Formatuje wartosci dostarczone na zmiennych tak, aby powstal napis warunkow logicznych
             Zalozenie:   SetLogpage o ParseLogpage = Id									end vu */
@@ -978,7 +978,7 @@ void CDrawAdd::ParseLogpage(TCHAR* op_zew, TCHAR* sekcja, TCHAR* op_sekcji, int*
         return;
     }
 
-    //potrzebuje duze litery i '\0' na koncu napisu
+    // potrzebuje duze litery i '\0' na koncu napisu
     if (logpage[0] == _T('"')) logpage.SetAt(0, _T(' '));
     logpage.MakeUpper();
     ::StringCchCopy(lp, 50, logpage);
@@ -1357,7 +1357,7 @@ postaw:
     return true;
 }
 
-void CDrawAdd::SetDotM(bool setFlag)
+void CDrawAdd::SetDotM(const bool setFlag)
 {
     int p = this->wersja.Find('m');
     if (setFlag) {
@@ -1377,9 +1377,8 @@ void CDrawAdd::SetDotM(bool setFlag)
 
 bool CDrawAdd::BBoxFromFile(PGENEPSARG pArg, CFile& handle, float* x1, float* y1, float* x2, float* y2)
 {
-    const int len = 30; // bo obetniemy w srodku wartosci
-    bool bRet = false;
     size_t res = 1;
+    bool bRet = false;
     const char pat[] = "%BoundingBox:";
     char *p, *s = reinterpret_cast<char*>(pArg->cBigBuf);
     const auto filepos = (unsigned long)handle.GetPosition();
@@ -1387,10 +1386,10 @@ bool CDrawAdd::BBoxFromFile(PGENEPSARG pArg, CFile& handle, float* x1, float* y1
     while (res > 0) {                             // read block from the file
         res = handle.Read(s, n_size);             // check if anything was read and no error occurred
         if ((res > 0) && (res != unsigned(-1))) { // move file pointer back, lest we can loose string read in partially
-            if (res == n_size) handle.Seek(-len, CFile::current);      // buffer has to end with zero TCHAR to be treated as string
+            if (res == n_size) handle.Seek(-(LONGLONG)sizeof(pat), CFile::current); // buffer has to end with zero TCHAR to be treated as string
             s[res] = 0;
         } else break; // break on error or EOF
-        if ((p = (char*)CManPDF::memstr(s, pat, sizeof(pat) - 1)) != nullptr && s + n_size - p >= len) { // search for substring and get it's position
+        if ((p = (char*)CManPDF::memstr(s, pat, sizeof(pat) - 1)) != nullptr && s + n_size - p >= sizeof(pat)) { // search for substring and get it's position
             bRet = sscanf_s(p + sizeof(pat), "%f %f %f %f", x1, y1, x2, y2) == 4;
             break;
         }
@@ -1402,7 +1401,7 @@ bool CDrawAdd::BBoxFromFile(PGENEPSARG pArg, CFile& handle, float* x1, float* y1
 
 bool CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by1, float* bx2, float* by2, int* ileMat)
 {
-    BOOL bReqProdInfo = false;
+    bool bReqProdInfo{false};
     // szukaj danych w bazie
     if (m_pub_xx > 0) {
         CString sBBox = theManODPNET.GetProdInfo(m_pub_xx, cKolor, ileMat);
@@ -1627,7 +1626,7 @@ bool CDrawAdd::LocatePreview(CFile& fEps, unsigned long* lOffset, unsigned long*
     return true;
 }
 
-CString CDrawAdd::EpsName(CManFormat format, bool copyOldEPS, const bool bModifTest)
+CString CDrawAdd::EpsName(const CManFormat format, bool copyOldEPS, const bool bModifTest)
 {
     static const TCHAR* aExt[] = { _T(".eps"), _T(".ps"), _T(".pdf") };
     const TCHAR* extension = aExt[(uint8_t)format];

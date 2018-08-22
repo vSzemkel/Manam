@@ -191,7 +191,7 @@ BOOL CDrawDoc::SaveModified()
     return CDocument::SaveModified();
 }
 
-void CDrawDoc::SetTitleAndMru(bool addRecentFiles)
+void CDrawDoc::SetTitleAndMru(const bool addRecentFiles)
 {
     CString makieta;
     makieta.AppendFormat(_T("%s %s %s"), static_cast<LPCTSTR>(gazeta), static_cast<LPCTSTR>(opis), static_cast<LPCTSTR>(data));
@@ -490,7 +490,7 @@ CDrawAdd* CDrawDoc::ObjectAtQue(const CPoint& point) const
     return nullptr;
 }
 
-CDrawAdd* CDrawDoc::FindAddAt(int i) const
+CDrawAdd* CDrawDoc::FindAddAt(const int i) const
 {
     int n = 0;
 
@@ -515,7 +515,7 @@ int CDrawDoc::GetAdPosition(const CDrawAdd* pAdd) const
     return pos == m_objects.cend() ? -1 : n;
 }
 
-void CDrawDoc::SelectAdd(CDrawAdd* pObj, bool multiselect) const
+void CDrawDoc::SelectAdd(CDrawAdd* pObj, const bool multiselect) const
 {
     auto pView = GetPanelView<CDrawView>();
     if (pView) pView->Select(pObj, multiselect);
@@ -528,14 +528,14 @@ int CDrawDoc::AddsCount() const noexcept
 }
 
 //import i import++
-void CDrawDoc::RemoveFromHead(int n)
+void CDrawDoc::RemoveFromHead(const int n)
 {
     for (int i = 0; i < n; ++i)
         delete m_objects[i];
     m_objects.erase(m_objects.begin(), m_objects.begin() + n);
 }
 
-void CDrawDoc::RemoveFromTail(int n)
+void CDrawDoc::RemoveFromTail(const int n)
 {
     for (int i = 0; i < n; ++i) {
         delete m_objects.back();
@@ -543,9 +543,7 @@ void CDrawDoc::RemoveFromTail(int n)
     }
 }
 
-/////////////////////////////////////////////////////////////////////////////
-//CDrawPage
-void CDrawDoc::AddPageAt(size_t idx, CDrawPage* pObj)
+void CDrawDoc::AddPageAt(const int idx, CDrawPage* pObj)
 {
     m_pages.insert(m_pages.cbegin() + idx, pObj);
     pObj->m_pDocument = this;
@@ -613,7 +611,7 @@ bool CDrawDoc::MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo)
     return found;
 }
 
-void CDrawDoc::SetPageRectFromOrd(CDrawPage* pObj, size_t iOrd) const
+void CDrawDoc::SetPageRectFromOrd(CDrawPage* pObj, const size_t iOrd) const
 {
     ASSERT(0 <= iOrd && iOrd < m_pages.size());
 
@@ -634,15 +632,16 @@ int CDrawDoc::ComputePageOrderNr(const CRect& position) const
     return min((int)m_pages.size() - 1, i * iPagesInRow + j);
 }
 
-void CDrawDoc::MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt)
+void CDrawDoc::MoveBlockOfPages(const int iSrcOrd, const int iDstOrd, const int iCnt)
 {
     ASSERT(iCnt > 0);
     const int iPocz = min(iSrcOrd, iDstOrd);
     const int iKon = min(max(iSrcOrd, iDstOrd) + iCnt, (int)m_pages.size());
     ASSERT(0 <= iPocz && iKon <= (int)m_pages.size());
 
+    int i;
     CPoint pNowhere(INT_MAX >> 2, 0);
-    int i, iOldOrd, iBufSize = iKon - iPocz;
+    const int iBufSize = iKon - iPocz;
     auto aNoPagePos = (CRect*)theApp.bigBuf;
 
     // przywróæ pozycjê przesuwanym stronom
@@ -655,12 +654,12 @@ void CDrawDoc::MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt)
             aNoPagePos[i] = nullptr;
     }
     // rotacja stron, Pages[i] ==> Pages[iPocz+(i-iPocz+iDstOrd-iSrcOrd)%iBufSize]
-    int iShift = iBufSize + iSrcOrd - iDstOrd;
+    const int iShift = iBufSize + iSrcOrd - iDstOrd;
     std::rotate(begin(m_pages) + iPocz, begin(m_pages) + iPocz + iShift % iBufSize, begin(m_pages) + iKon);
     // przesuñ opisy
     for (i = iPocz; i < iKon; ++i) {
         SetPageRectFromOrd(m_pages[i], i);
-        iOldOrd = iPocz + (i - iPocz + iShift) % iBufSize;
+        const int iOldOrd = iPocz + (i - iPocz + iShift) % iBufSize;
         if (aNoPagePos[iOldOrd] != nullptr)
             MoveOpisAfterPage(&aNoPagePos[iOldOrd], &(m_pages[i])->m_position);
         m_pages[i]->SetDirty();
@@ -676,13 +675,13 @@ void CDrawDoc::MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt)
     UpdateAllViews(nullptr);
 }
 
-int CDrawDoc::GetIdxfromSpotID(UINT spot_id) noexcept
+int CDrawDoc::GetIdxfromSpotID(const UINT spot_id) noexcept
 {
     auto pos = std::find(begin(spoty), end(spoty), spot_id);
     return pos == end(spoty) ? 0 : (int)std::distance(begin(spoty), pos);
 }
 
-CDrawPage* CDrawDoc::GetPage(int n) const
+CDrawPage* CDrawDoc::GetPage(const int n) const
 {
     for (const auto& p : m_pages)
         if (p->nr == n)
@@ -769,7 +768,7 @@ void CDrawDoc::OnFileSaveAs()
 //////////////////////////////////////////////////////////////////////
 ////////// IMPORT 
 
-void CDrawDoc::OnImport(bool fromDB)
+void CDrawDoc::OnImport(const bool fromDB)
 {
     const auto n = (int)m_objects.size();
     if ((fromDB) ? DBImport() : Import(true)) {
@@ -809,7 +808,7 @@ void CDrawDoc::OnDBImportPlus()
     OnImportPlus(true);
 }
 
-void CDrawDoc::OnImportPlus(bool fromDB)
+void CDrawDoc::OnImportPlus(const bool fromDB)
 {
     const auto n = m_objects.size();
     if (!(fromDB ? DBImport() : Import(true)))
@@ -817,7 +816,7 @@ void CDrawDoc::OnImportPlus(bool fromDB)
     UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
 }
 
-bool CDrawDoc::Import(bool check_exist) // tu dodaje na koncu do m_objects najwyzej sie potem usunie 
+bool CDrawDoc::Import(const bool check_exist) // tu dodaje na koncu do m_objects najwyzej sie potem usunie 
 {
     CFileDialog dlg(TRUE, _T("txt"), _T(""), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Og³oszenia (*.txt)|*.txt| Wszystkie pliki (*.*)|*.*||"), nullptr);
     if (dlg.DoModal() != IDOK)
@@ -842,7 +841,7 @@ bool CDrawDoc::Import(bool check_exist) // tu dodaje na koncu do m_objects najwy
     return ok;
 }
 
-bool CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, bool check_exist)
+bool CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, const bool check_exist)
 { // tworzenie ogloszen importowanych z pliku tekstowego
     enum nazcstr : uint8_t
     {
@@ -957,12 +956,12 @@ int CDrawDoc::ValidKolor(const CString& k) noexcept
     return ColorId::brak;
 }
 
-CBrush* CDrawDoc::GetSpotBrush(int i) noexcept
+CBrush* CDrawDoc::GetSpotBrush(const int i) noexcept
 {
     return i >= (int)brushe.size() || i < 0 ? static_cast<CBrush*>(::GetStockObject(BLACK_BRUSH)) : brushe[i];
 }
 
-void CDrawDoc::SetSpotKolor(UINT idx_m_spot_makiety, UINT idx_Spot_Kolor)
+void CDrawDoc::SetSpotKolor(const UINT idx_m_spot_makiety, const UINT idx_Spot_Kolor)
 {
     m_spot_makiety[idx_m_spot_makiety] = (m_spot_makiety[idx_m_spot_makiety] == idx_Spot_Kolor) ? 0 : idx_Spot_Kolor;
     for (const auto& p : m_pages)
@@ -995,7 +994,6 @@ void CDrawDoc::OnExport()
 }
 
 // NUMEROWANIE I DODAWANIE STRON
-
 void CDrawDoc::NumberPages()
 {
     int iFirstPageNumber = 1;
@@ -1064,8 +1062,8 @@ bool CDrawDoc::Add4Pages()
 
     const CRect r{nullptr};
     const int n = _ttoi(dlg.m_ile_kolumn);
-    const size_t last = m_pages.size();
-    for (size_t i = last; i < last + n; ++i) {
+    const auto last = (int)m_pages.size();
+    for (int i = last; i < last + n; ++i) {
         auto pNewPage = new CDrawPage(r);
         if (last > 1) {
             const auto pJedynka = m_pages[1];
@@ -1077,7 +1075,7 @@ bool CDrawDoc::Add4Pages()
         SetPageRectFromOrd(pNewPage, i);
     }
 
-    ZmianaSpotow((int)last + n);
+    ZmianaSpotow(last + n);
     NumberPages();
     ComputeCanvasSize();
     UpdateAllViews(nullptr);
@@ -1156,7 +1154,7 @@ void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_
     if (*m_modwol > (UINT)m_pages.size()*pmodcnt) *m_modwol = 0;
 }
 
-inline float CDrawDoc::PowAdd2Mod(bool bQueStat) const
+inline float CDrawDoc::PowAdd2Mod(const bool bQueStat) const
 {
     float pow = 0.0;
     auto mod_count = [](const CDrawAdd* a) noexcept -> float { return (float)(a->sizex * a->sizey * pmodcnt) / (a->szpalt_x * a->szpalt_y); };
@@ -1386,7 +1384,7 @@ void CDrawDoc::OnFileInfo()
     }
 }
 
-void CDrawDoc::PrintInfo(CDC* pDC, int max_n, int wspol_na_str)  // wspol_na_str =1 lub 2- 50  lub 100 str na wydruku
+void CDrawDoc::PrintInfo(CDC* pDC, const int max_n, const int wspol_na_str)  // wspol_na_str =1 lub 2- 50  lub 100 str na wydruku
 {
     ASSERT_VALID(this);
     CFont m_font, m_vertfont;
@@ -1685,7 +1683,7 @@ second_paper:
     return true;
 }
 
-CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, long nr, UINT kolor, CString& warunki, const CString& uwagi, const CString& krt, CPoint& pos)
+CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, const long nr, UINT kolor, CString& warunki, const CString& uwagi, const CString& krt, CPoint& pos)
 {
     CString sPrecelFlag;
     int sx, sy, atex_krat, szpalt_x = 0, szpalt_y = 0, fizp = 0, posx = 0, posy = 0, typ_xx = 0;
@@ -1773,7 +1771,7 @@ CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, long 
     return pObj;
 }
 
-CDrawAdd* CDrawDoc::AddExists(long nr) const
+CDrawAdd* CDrawDoc::AddExists(const long nr) const
 {
     if (nr != -1 && nr != 0)
         for (const auto& pObj : m_objects) {
@@ -1785,7 +1783,7 @@ CDrawAdd* CDrawDoc::AddExists(long nr) const
     return nullptr;
 }
 
-CDrawAdd* CDrawDoc::PubXXExists(int pub_xx) const
+CDrawAdd* CDrawDoc::PubXXExists(const int pub_xx) const
 {
     for (const auto& pObj : m_objects) {
         auto pAdd = dynamic_cast<CDrawAdd*>(pObj);

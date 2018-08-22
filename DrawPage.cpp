@@ -302,7 +302,7 @@ void CDrawPage::DrawGrid(CDC* pDC)
     }
 }
 
-CRect CDrawPage::GetNormalizedModuleRect(size_t module) const
+CRect CDrawPage::GetNormalizedModuleRect(const size_t module) const
 {
 #ifdef DEBUG
     ASSERT(0 <= module && module < (size_t)szpalt_x * szpalt_y);
@@ -313,7 +313,7 @@ CRect CDrawPage::GetNormalizedModuleRect(size_t module) const
     return {m_position.left + (int)(modulx * (posx - 1)), m_position.bottom + (int)(moduly * (szpalt_y - posy)), m_position.left + (int)(modulx * posx), m_position.bottom + (int)(moduly * (szpalt_y - posy + 1))};
 }
 
-void CDrawPage::SetSpotKolor(UINT spot_kolor) // spot kolor to index spotkoloru w tablicy Spot_Kolor
+void CDrawPage::SetSpotKolor(const UINT spot_kolor) // spot kolor to index spotkoloru w tablicy Spot_Kolor
 {
     if ((kolor & ColorId::spot) == ColorId::spot) {
         dirty = TRUE;
@@ -348,7 +348,7 @@ void CDrawPage::DrawKolor(CDC* pDC, const CRect& pos) const
     }
 }
 
-void CDrawPage::ChangeCaption(bool iscaption, const CString& cap)
+void CDrawPage::ChangeCaption(const bool iscaption, const CString& cap)
 {
     if (iscaption)
         caption = cap;
@@ -588,7 +588,7 @@ std::vector<int> CDrawPage::CleanKraty(const bool dbSave)
     return ret;
 }
 
-void CDrawPage::SetNr(int i)
+void CDrawPage::SetNr(const int i)
 {
     nr = i;
     SetDirty();
@@ -635,7 +635,7 @@ void CDrawPage::AddAdd(CDrawAdd* pAdd)
     SetDirty();
 }
 
-void CDrawPage::RemoveAdd(CDrawAdd* pAdd, bool removeFromAdds)
+void CDrawPage::RemoveAdd(CDrawAdd* pAdd, const bool removeFromAdds)
 {
     auto itAdd = std::find(m_adds.cbegin(), m_adds.cend(), pAdd);
     if (itAdd != m_adds.end()) {
@@ -770,7 +770,7 @@ bool CDrawPage::CheckSpaceDiffKraty(const CDrawAdd* pObj, const int x, const int
     return true;
 }
 
-void CDrawPage::SetBaseKrata(int s_x, int s_y, bool refresh)
+void CDrawPage::SetBaseKrata(const int s_x, const int s_y, const bool refresh)
 {
     /*  poszukaj czy taka krata jest juz zdefiniowana na tej stronie.
         jezli nie to zmien krate bazowa. jeeli incremental to dopisz */
@@ -825,7 +825,7 @@ void CDrawPage::SetBaseKrata(int s_x, int s_y, bool refresh)
     if (refresh) { SetDirty(); Invalidate(); }
 }
 
-void CDrawPage::ChangeMark(size_t module, SpaceMode mode)
+void CDrawPage::ChangeMark(const size_t module, const SpaceMode mode)
 {
     if (m_dervlvl == DervType::fixd) return;
 

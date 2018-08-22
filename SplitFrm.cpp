@@ -59,7 +59,7 @@ void CSplitFrame::ResizeQueView()
 /////////////////////////////////////////////////////////////////////////////
 // CSplitFrame message handlers
 
-void CSplitFrame::OnMDIActivate(BOOL bActivate, CWnd *pActivateWnd, CWnd *pDeactivateWnd)
+void CSplitFrame::OnMDIActivate(const BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd)
 {
 
     theApp.activeDoc = bActivate ? (CDrawDoc*)GetActiveDocument() : nullptr;
@@ -81,7 +81,7 @@ void CSplitFrame::OnUpdateShowDtls(CCmdUI* pCmdUI)
     pCmdUI->Enable(!disableMenu && ((CDrawView*)m_Splitter2.GetPane(0, 0))->m_selection.size() == 1);
 }
 
-void CSplitFrame::OnSize(UINT nType, int cx, int cy)
+void CSplitFrame::OnSize(const UINT nType, const int cx, const int cy)
 {
     CMDIChildWndEx::OnSize(nType, cx, cy);
 
