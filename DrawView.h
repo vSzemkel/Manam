@@ -2,17 +2,17 @@
 #pragma once
 
 // Hints for UpdateAllViews/OnUpdate
-#define HINT_UPDATE_WINDOW				0
-#define HINT_UPDATE_DRAWOBJ				1
-#define HINT_UPDATE_SELECTION			2
-#define HINT_DELETE_SELECTION			3
-#define HINT_UPDATE_OLE_ITEMS			4
-#define HINT_DELETE_FROM_GRID			5
-#define HINT_UPDATE_GRID				6
-#define HINT_EDIT_PASTE					7
-#define HINT_UPDATE_COMBOBOXY			8
-#define HINT_SAVEAS_DELETE_SELECTION	9
-#define HINT_UPDATE_DRAWVIEW			10
+constexpr auto HINT_UPDATE_WINDOW = 0;
+constexpr auto HINT_UPDATE_DRAWOBJ = 1;
+constexpr auto HINT_UPDATE_SELECTION = 2;
+constexpr auto HINT_DELETE_SELECTION = 3;
+constexpr auto HINT_UPDATE_OLE_ITEMS = 4;
+constexpr auto HINT_DELETE_FROM_GRID = 5;
+constexpr auto HINT_UPDATE_GRID = 6;
+constexpr auto HINT_EDIT_PASTE = 7;
+constexpr auto HINT_UPDATE_COMBOBOXY = 8;
+constexpr auto HINT_SAVEAS_DELETE_SELECTION = 9;
+constexpr auto HINT_UPDATE_DRAWVIEW = 10;
 
 class CDrawObj;
 class CDrawDoc;

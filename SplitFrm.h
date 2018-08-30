@@ -1,23 +1,17 @@
 
 #pragma once
 
-const int NONEMPTY_QUEUE_HEIGHT = 70;
+constexpr int NONEMPTY_QUEUE_HEIGHT = 70;
 
 class CSplitFrame : public CMDIChildWndEx
 {
     DECLARE_DYNCREATE(CSplitFrame)
-private:
-    bool m_initialized{false};
-protected:
-    CSplitFrame() {}; // protected constructor used by dynamic creation
-
-// Attributes
-public:
-    CSplitterWndEx    m_Splitter;
-    CSplitterWndEx    m_Splitter2;
+    // Attributes
+  public:
+    CSplitterWndEx m_Splitter;
+    CSplitterWndEx m_Splitter2;
 
     // Operations
-public:
     void ResizeQueView();
 
     // Overrides
@@ -25,10 +19,10 @@ public:
     //{{AFX_VIRTUAL(CSplitFrame)
     //}}AFX_VIRTUAL
 
-    // Implementation
-protected:
+  protected:
+    CSplitFrame(){}; // protected constructor used by dynamic creation
     ~CSplitFrame() noexcept override = default;
-    BOOL OnCreateClient(LPCREATESTRUCT cs, CCreateContext *pContext) override;
+    BOOL OnCreateClient(LPCREATESTRUCT cs, CCreateContext* pContext) override;
 
     // Generated message map functions
     //{{AFX_MSG(CSplitFrame)
@@ -38,4 +32,7 @@ protected:
     afx_msg void OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd);
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
+
+  private:
+    bool m_initialized{false};
 };

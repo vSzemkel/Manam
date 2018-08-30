@@ -10,7 +10,7 @@
 #include "DrawObj.h"
 
 // podpisy og³oszeñ maj¹ wspó³rzêdne z zakresu [-TXTSHIFT, TXTSHIFT]
-const int TXTSHIFT = 20;
+constexpr int TXTSHIFT = 20;
 
 class CDrawDoc;
 class CDrawAdd;

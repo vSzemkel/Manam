@@ -196,23 +196,23 @@ void CGridFrm::RefreshRow(const int nRow, CDrawAdd* vAdd)
 {
     TCHAR bf[64];
 
-    int	nImage = 8;
+    GridImgType nImage{GridImgType::new_brak};
     if (showLastAdnoUsed) {
         if (vAdd->skad_ol.GetLength() == 2)
-            nImage = (vAdd->skad_ol != theApp.activeDoc->symWydawcy) ? IMG_FILE_REMOTE : IMG_FILE_LOCAL;
+            nImage = (vAdd->skad_ol != theApp.activeDoc->symWydawcy) ? GridImgType::file_remote : GridImgType::file_local;
     } else {
         if (vAdd->flags.studio >= StudioStatus::msg)
-            nImage = IMG_ERR;
+            nImage = GridImgType::err;
         else if (vAdd->powtorka == 0)
-            nImage = (vAdd->flags.studio == StudioStatus::jest) ? IMG_NEW_JEST : IMG_NEW_BRAK;
+            nImage = (vAdd->flags.studio == StudioStatus::jest) ? GridImgType::new_jest : GridImgType::new_brak;
         else
-            nImage = (vAdd->flags.studio == StudioStatus::jest) ? IMG_POWT_JEST : IMG_POWT_BRAK;
+            nImage = (vAdd->flags.studio == StudioStatus::jest) ? GridImgType::powt_jest : GridImgType::powt_brak;
     }
 
     LVITEM lvi = { 0 };
     lvi.mask = LVIF_IMAGE | LVIF_PARAM;
     lvi.iItem = nRow;
-    lvi.iImage = nImage;
+    lvi.iImage = (int)nImage;
     lvi.lParam = reinterpret_cast<LPARAM>(vAdd);
     if (nRow == lcPubList.GetItemCount())
         lcPubList.InsertItem(&lvi);

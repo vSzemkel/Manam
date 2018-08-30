@@ -7,22 +7,24 @@
 /////////////////////////////////////////////////////////////////////////////
 // CGridFrm form view
 
-#define		PORTROWSPERPAGE		54
-#define		PORTPAGEHEIGHT		914
-#define		LANDROWSPERPAGE		36
-#define		LANDPAGEHEIGHT		630
-#define		HEADERHEIGHT		180
-#define		ROWHEIGHT			17
-#define		MARGINTOP			43
+constexpr auto PORTROWSPERPAGE = 54;
+constexpr auto PORTPAGEHEIGHT = 914;
+constexpr auto LANDROWSPERPAGE = 36;
+constexpr auto LANDPAGEHEIGHT = 630;
+constexpr auto HEADERHEIGHT = 180;
+constexpr auto ROWHEIGHT = 17;
+constexpr auto MARGINTOP = 43;
 
-#define		IMG_ERR			1
-#define		IMG_NEW_BRAK	8
-#define		IMG_NEW_JEST	0
-#define		IMG_POWT_BRAK	4
-#define		IMG_POWT_JEST	5
-#define		IMG_BRAK		8
-#define		IMG_FILE_LOCAL	2
-#define		IMG_FILE_REMOTE	3
+enum class GridImgType : uint8_t {
+    err = 1,
+    new_brak = 8,
+    new_jest = 0,
+    powt_brak = 4,
+    powt_jest = 5,
+    brak = 8,
+    file_local = 2,
+    file_remote = 3
+};
 
 enum class GridSortCol : uint8_t
 {
