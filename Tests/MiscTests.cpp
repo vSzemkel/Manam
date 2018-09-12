@@ -60,12 +60,12 @@ CString RzCyfra(const int digit, const int offset) noexcept
     return ret;
 }
 
-CString Rzymska(int i)
+CString Rzymska(const int i)
 {
     return CString('M', i / 1000) + RzCyfra((i % 1000) / 100, 4) + RzCyfra((i % 100) / 10, 2) + RzCyfra(i % 10, 0);
 }
 
-const char* memstr(const char* const buf, const char* const pat, size_t patlen)
+const char* memstr(const char* const buf, const char* const pat, const size_t patlen)
 {
     const auto bufend = buf + 100;
     const auto ret = std::search(buf, bufend, pat, pat + patlen);

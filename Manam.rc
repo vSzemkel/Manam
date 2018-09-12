@@ -472,7 +472,7 @@ END
 IDD_ABOUTBOX DIALOGEX 34, 22, 171, 177
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "Manam - lipiec 2018"
+CAPTION "Manam - wrzesieÒ 2018"
 FONT 8, "Verdana", 0, 0, 0x0
 BEGIN
     LTEXT           "*",IDC_CLIENT,9,133,158,42
@@ -1891,8 +1891,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 7,0,4,12
- PRODUCTVERSION 7,0,4,12
+ FILEVERSION 7,1,0,0
+ PRODUCTVERSION 7,1,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -1909,12 +1909,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Agora SA"
             VALUE "FileDescription", "Manam"
-            VALUE "FileVersion", "7.0.4.12"
+            VALUE "FileVersion", "7.1.0.0"
             VALUE "InternalName", "Manam"
             VALUE "LegalCopyright", "© Marcin Buchwald"
             VALUE "OriginalFilename", "Manam.exe"
             VALUE "ProductName", "Manager Makiet"
-            VALUE "ProductVersion", "7.0.4.12"
+            VALUE "ProductVersion", "7.1.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -2015,8 +2015,8 @@ BEGIN
     IDS_INITVUPDF           "%PDF-1.4\n%‚„œ”\n1 0 obj\n<<\n/Type /Catalog\n/Pages 3 0 R\n/ViewerPreferences <</FitWindow true>>\n>>\nendobj\n2 0 obj\n<<\n"
     IDS_INITVUPDF2          "/Producer (Manam)\n/Author (Marcin Buchwald)\n>>\nendobj\n3 0 obj\n<<\n/Type /Pages\n/Kids [4 0 R]\n/Count 1\n>>\nendobj\n4 0 obj\n<<\n/Type /Page\n/Parent 3 0 R\n/MediaBox [30 10 821 1161]\n/Contents 5 0 R\n/Resources <<\n\t/ProcSet [/PDF /Text /ImageC /ImageI]\n\t/Font << /FVU 6 0 R >>\n\t/XObject 7 0 R\n\t>>\n>>\nendobj\n6 0 obj\n<</Type /Font\n/Subtype /Type1\n/Encoding /WinAnsiEncoding\n/BaseFont /Helvetica\n>>\nendobj\n%Embedded PDF section\n"
     IDS_OPISEPAR            "--Manam-OPI"
-    IDS_DB_PD               "//srv-spac.agora.pl/SPAC"
-    IDS_DB_TP               "//db-spacpom02.agora.pl/spactp"
+    IDS_DB_PD               "//db-asf.agora.pl/asf"
+    IDS_DB_TP               "//db-asftp.agora.pl/asftp"
 END
 
 STRINGTABLE

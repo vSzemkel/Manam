@@ -332,14 +332,18 @@ BOOL CPageDlg::OnInitDialog()
         }
 
     if (m_iscaption) {
-        GetDlgItem(IDC_NAMECOMBO)->EnableWindow(FALSE);
-        GetDlgItem(IDC_NAMECOMBO)->ShowWindow(SW_HIDE);
-        GetDlgItem(IDC_NAME)->EnableWindow(TRUE);
-        GetDlgItem(IDC_NAME)->ShowWindow(SW_SHOW);
-        GetDlgItem(IDC_CAPTIONCOMBO)->EnableWindow(TRUE);
-        GetDlgItem(IDC_CAPTIONCOMBO)->ShowWindow(SW_SHOW);
-        GetDlgItem(IDC_CAPTION)->EnableWindow(FALSE);
-        GetDlgItem(IDC_CAPTION)->ShowWindow(SW_HIDE);
+        auto dlgItem = GetDlgItem(IDC_NAMECOMBO);
+        dlgItem->EnableWindow(FALSE);
+        dlgItem->ShowWindow(SW_HIDE);
+        dlgItem = GetDlgItem(IDC_NAME);
+        dlgItem->EnableWindow(TRUE);
+        dlgItem->ShowWindow(SW_SHOW);
+        dlgItem = GetDlgItem(IDC_CAPTIONCOMBO);
+        dlgItem->EnableWindow(TRUE);
+        dlgItem->ShowWindow(SW_SHOW);
+        dlgItem = GetDlgItem(IDC_CAPTION);
+        dlgItem->EnableWindow(FALSE);
+        dlgItem->ShowWindow(SW_HIDE);
 
         if (vCB->SelectString(0, m_caption) == CB_ERR) {
             vCB->AddString(m_caption);
@@ -602,8 +606,9 @@ BOOL CAddDlg::OnInitDialog()
     // blokuj opcje dla og³oszeñ niespacerowanych
     if (m_add_xx < 0 && (theApp.grupa&UserRole::dea))
         GetDlgItem(IDOK)->EnableWindow(FALSE);
-    GetDlgItem(IDEMISJE)->EnableWindow(m_add_xx > 0 && (theApp.grupa&(UserRole::mas | UserRole::kie | UserRole::dea)));
-    GetDlgItem(IDATEX)->EnableWindow(GetDlgItem(IDEMISJE)->IsWindowEnabled());
+    const BOOL enable = m_add_xx > 0 && (theApp.grupa & (UserRole::mas | UserRole::kie | UserRole::dea));
+    GetDlgItem(IDEMISJE)->EnableWindow(enable);
+    GetDlgItem(IDATEX)->EnableWindow(enable);
     GetDlgItem(IDC_ODBLOKUJ)->EnableWindow(theApp.grupa&(UserRole::mas | UserRole::kie));
     // dla zajawek pobierz listê dopuszczalnych nazw
     OnEnChangeWersja();
@@ -682,10 +687,11 @@ void CAddDlg::OnCbnSelchangeZajawka()
         SetDlgItemText(ID_NREPS, sAdno);
         // zaznacz powtorke
         if (iPowt > 0) {
-            GetDlgItem(ID_OLDADNO)->EnableWindow();
+            auto dlgItem = GetDlgItem(ID_OLDADNO);
+            dlgItem->EnableWindow();
             matchingOldAdnoUpdate = TRUE;
             SetDlgItemInt(ID_OLDADNO, zaj_xx, FALSE);
-            GetDlgItem(ID_OLDADNO)->UpdateData();
+            dlgItem->UpdateData();
             matchingOldAdnoUpdate = FALSE;
             CheckDlgButton(IDC_CBPOWT, BST_CHECKED);
             m_powtctrl.SetTime(&CTime(POWTSEED_1 + iPowt * ONEDAY));
@@ -922,7 +928,7 @@ void CAddDlg::OnBnClickedOdblokuj()
             { CManDbType::DbTypeVarchar2, &theApp.activeDoc->data },
             { CManDbType::DbTypeInt32, &adno }
         };
-        theManODPNET.EI("begin atex.spacer.odblokuj@oraent(:tytul,:mutacja,:kiedy,:adno); end;", orapar);
+        theManODPNET.EI("begin atex.spacer.odblokuj(:tytul,:mutacja,:kiedy,:adno); end;", orapar);
     }
 }
 
@@ -930,10 +936,11 @@ void CAddDlg::OnDtnDatetimechangePowt(NMHDR* pNMHDR, LRESULT* pResult)
 {
     auto pDTChange = reinterpret_cast<LPNMDATETIMECHANGE>(pNMHDR);
     m_candidateAdnoDate.Format(c_formatDaty, pDTChange->st.wDay, pDTChange->st.wMonth, pDTChange->st.wYear);
-    CString sOldAdno;
-    GetDlgItem(ID_OLDADNO)->GetWindowText(sOldAdno);
-    if (sOldAdno != this->m_nreps)
-        GetDlgItem(ID_OLDADNO)->SetWindowText(_T(""));
+    CString oldAdno;
+    auto dlgItem = GetDlgItem(ID_OLDADNO);
+    dlgItem->GetWindowText(oldAdno);
+    if (oldAdno != this->m_nreps)
+        dlgItem->SetWindowText(_T(""));
     *pResult = 0;
 }
 
@@ -942,7 +949,7 @@ void CAddDlg::OnEnUpdateOldadno()
     static CString lastTypedOldAdno;
     if (matchingOldAdnoUpdate) return;
 
-    if (!m_candidateAdnoDate.IsEmpty()) { //odczytaj kandyduj¹ce do powtórki numery adno
+    if (!m_candidateAdnoDate.IsEmpty()) { // odczytaj kandyduj¹ce do powtórki numery adno
         CManODPNETParms orapar {
             { CManDbType::DbTypeVarchar2, &m_candidateAdnoDate },
             { CManDbType::DbTypeInt32, &m_pub_xx },
@@ -1806,8 +1813,9 @@ void CAddFindDlg::OnUpdateNr()
             match.Format(_T("%ld"), pAdd->nreps);
             if (typed == match.Left(typed.GetLength())) {
                 matchingUpdate = true;
-                GetDlgItem(IDC_NR)->SetWindowText(match);
-                ((CEdit*)GetDlgItem(IDC_NR))->SetSel(typed.GetLength(), match.GetLength());
+                auto dlgItem = (CEdit*)GetDlgItem(IDC_NR);
+                dlgItem->SetWindowText(match);
+                dlgItem->SetSel(typed.GetLength(), match.GetLength());
                 matchingUpdate = false;
                 return;
             }
