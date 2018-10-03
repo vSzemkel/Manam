@@ -662,7 +662,6 @@ void CSpacerDlg::OnOK()
                 return;
     } else {
         CString errText;
-        int maxwidth = 0;
         std::vector<int> mak_xxArr;
 
         for (i = 0; i < rc; ++i) { // wysylamy tylko niesprzedane
@@ -678,6 +677,7 @@ void CSpacerDlg::OnOK()
             if (m_first_emision_pub_xx < 0)
                 m_first_emision_pub_xx = pub->m_pub_xx;
 
+            int maxwidth = 0;
             const auto pDC = m_emisjelist.GetDC();
             const auto mrc = (int)mak_xxArr.size();
             for (int j = 0; j < mrc; ++j) {

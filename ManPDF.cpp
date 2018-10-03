@@ -78,7 +78,6 @@ const char* CManPDF::memstr(const char* const buf, const char* const pat, const 
 
 unsigned long CManPDF::SearchPattern(CFile& f, const char* const pat) const
 {
-    char* p;
     size_t res = 1;
     const auto backLen = (int)strlen(pat);
 
@@ -90,8 +89,9 @@ unsigned long CManPDF::SearchPattern(CFile& f, const char* const pat) const
             f.Seek(-backLen, CFile::current); // buffer has to end with zero char to be treated as string
         cStore[res] = 0;
 
-        if ((p = (char*)memstr(cStore, pat, backLen)) != nullptr) { // search for substring and get it's position
-            long offset = filepos + (long)(p - cStore);
+        const char* p = memstr(cStore, pat, backLen);
+        if (p != nullptr) { // search for substring and get it's position
+            const long offset = filepos + (long)(p - cStore);
             f.Seek(offset - 1, CFile::begin);
             f.Read(cStore, 1);
             if (cStore[0] >= '0' && cStore[0] <= '9')
@@ -100,6 +100,7 @@ unsigned long CManPDF::SearchPattern(CFile& f, const char* const pat) const
                 return offset;
         }
     }
+
     return CManPDF::ulNotFound;
 } // SearchPattern
 
@@ -298,9 +299,9 @@ unsigned long CManPDF::EmbedStream(CFile& src, const unsigned long offset, const
     else str += 8;
 
     src.Seek(offset + (str - cStore), CFile::begin);
-    unsigned int rB, wB = 1;
+    unsigned int wB = 1;
     while (len > 0) {
-        rB = src.Read(cStore, bigSize);
+        const unsigned int rB = src.Read(cStore, bigSize);
         if (rB < len && rB < bigSize)
             throw CManPDFExc(_T("EmbedStream: nieoczekiwany koniec stream'a"));
         wB = len > rB ? rB : len;
@@ -342,9 +343,9 @@ unsigned long CManPDF::EmbedPakStream(CFile& src, const unsigned long offset, un
     src.Seek(offset + (str - cStore), CFile::begin);
     if (paklen > pakBufLen / 3)
         throw CManPDFExc(_T("EmbedPakStream: Zbyt dlugi fragment contentu"));
-    unsigned int pieceLen, pieceOff = 0;
+    unsigned int pieceOff = 0;
     while (paklen) {
-        pieceLen = (paklen > INT_MAX) ? INT_MAX : paklen;
+        const unsigned int pieceLen = (paklen > INT_MAX) ? INT_MAX : paklen;
         if (src.Read(&tmp[pieceOff], pieceLen) < pieceLen)
             throw CManPDFExc(_T("EmbedPakStream: nieoczekiwany koniec stream'a"));
         pieceOff += pieceLen;
@@ -451,10 +452,10 @@ void CManPDF::EmbedContents(CFile& src, const unsigned long offset)
         EmbedSection(p, true);
     trg.Write(">>\x0astream\x0a", 10);
     auto b = (unsigned long)trg.GetPosition();
-    unsigned int lastR = 0;
     if (!multi)
         EmbedStream(src, loffset, false);
     else {
+        unsigned int lastR = 0;
         auto tmp = std::make_unique<unsigned char[]>(pakBufLen / 3);
         auto pak = std::make_unique<unsigned char[]>(pakBufLen + 1);
         auto niepak = std::make_unique<unsigned char[]>(pakBufLen);

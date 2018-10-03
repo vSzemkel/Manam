@@ -1065,6 +1065,10 @@ BOOL CInfoDlg::OnInitDialog()
     int i, modtotal = m_modogl + m_modred + m_modrez + m_modwol;
     TCHAR title[32];
     ::StringCchPrintf(title, 32, _T("Makieta zawiera %i modu³ów"), modtotal);
+    if (modtotal < pmodcnt * m_objetosc) {
+        const TCHAR sekcja[] = _T(" Sekcja");
+        memcpy(title, sekcja, sizeof(sekcja) - sizeof(TCHAR));
+    }
     GetDlgItem(IDOK)->EnableWindow(!isRO);
     SetDlgItemText(IDC_MODSTATISTICS, title);
     GetDlgItemText(IDC_SIGN_TEXT, title, 3);

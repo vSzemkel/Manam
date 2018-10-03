@@ -281,11 +281,10 @@ void CGridFrm::OnShowrept()
         hcHeader.SetItem(oldadno, &hi);
 
         long adno;
-        CDrawAdd* vAdd;
+        CString sURL;
+        char kiedypowt[32];
         CDrawDoc* vDoc = GetDocument();
         TCHAR *ch, tytul[10], mutacja[5];
-        char kiedypowt[32];
-        CString sURL;
 
         ::StringCchCopy(tytul, 10, vDoc->gazeta);
         if (ch = _tcschr(tytul, ' ')) {
@@ -307,11 +306,11 @@ void CGridFrm::OnShowrept()
                     break;
                 }
                 if (sscanf_s(line, "%li,%s", &adno, kiedypowt, 32) == 2) {
-                    vAdd = vDoc->AddExists(adno);
-                    if (vAdd) {
-                        vAdd->skad_ol = &kiedypowt[11];
+                    CDrawAdd* ad = vDoc->AddExists(adno);
+                    if (ad) {
+                        ad->skad_ol = &kiedypowt[11];
                         kiedypowt[10] = '\0';
-                        vAdd->lastAdnoUsed = kiedypowt;
+                        ad->lastAdnoUsed = kiedypowt;
                     }
                 }
             }

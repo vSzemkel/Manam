@@ -217,7 +217,6 @@ void CDrawDoc::SetTitleAndMru(const bool addRecentFiles)
 
 void CDrawDoc::Serialize(CArchive& ar)
 {
-    size_t i;
     LOGFONT lf;
     if (ar.IsStoring()) {
         m_pagefont.GetObject(sizeof(LOGFONT), &lf);
@@ -263,7 +262,7 @@ void CDrawDoc::Serialize(CArchive& ar)
         // serializacja spotow
         ar >> wTemp; m_spot_makiety.resize(wTemp);
         DWORD tm;
-        for (i = 0; i < wTemp; ++i) {
+        for (DWORD i = 0; i < wTemp; ++i) {
             ar >> tm; m_spot_makiety[i] = (UINT)tm;
         }
         // serializacja stron
@@ -1111,17 +1110,31 @@ bool CDrawDoc::AddDrz4Pages(LPCTSTR ile_kolumn)
 
 void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_modwol) const
 {
+    UINT selectedPagesCount{0};
     UINT l_modogl, l_modred, l_modrez;
+    const auto view = GetPanelView<CDrawView>();
+
     *m_modogl = *m_modred = *m_modrez = 0;
-    for (const auto& vPage : m_pages) {
-        if (vPage->m_dervlvl == DervType::proh)
+    for (const auto& page : m_pages) {
+        if (page->m_dervlvl == DervType::proh)
             continue;
+
+        const bool isPageSelected = view->IsSelected(page);
+        if (selectedPagesCount == 0 && isPageSelected) {
+            selectedPagesCount = 1;
+            *m_modogl = *m_modred = *m_modrez = 0;
+        } else if (selectedPagesCount > 0)
+            if (isPageSelected)
+                selectedPagesCount++;
+            else
+                continue;
+
         l_modogl = l_modred = l_modrez = 0;
-        int pmods = vPage->szpalt_x * vPage->szpalt_y;
+        int pmods = page->szpalt_x * page->szpalt_y;
         for (int j = 0; j < pmods; ++j) {
-            if (vPage->space_red[j]) l_modred++;
-            else if (vPage->space_locked[j]) l_modrez++;
-            else if (vPage->space[j]) l_modogl++;
+            if (page->space_red[j]) l_modred++;
+            else if (page->space_locked[j]) l_modrez++;
+            else if (page->space[j]) l_modogl++;
         }
         if (pmods != pmodcnt) {
             const auto norm = (float)pmodcnt / pmods;
@@ -1132,26 +1145,31 @@ void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_
         *m_modogl += l_modogl; *m_modred += l_modred; *m_modrez += l_modrez;
 
         // og³oszenia dla krat niebazowych
-        const int init_szpalt_x = vPage->szpalt_x;
-        const int init_szpalt_y = vPage->szpalt_y;
-        for (const auto& kn : vPage->m_kraty_niebazowe) {
+        if (page->m_kraty_niebazowe.empty())
+            continue;
+        const int init_szpalt_x = page->szpalt_x;
+        const int init_szpalt_y = page->szpalt_y;
+        for (const auto& kn : page->m_kraty_niebazowe) {
             const int sx = kn.m_szpalt_x;
             const int sy = kn.m_szpalt_y;
-            vPage->SetBaseKrata(sx, sy, TRUE);
+            page->SetBaseKrata(sx, sy, true);
             l_modogl = l_modred = l_modrez = 0;
             pmods = sx * sy;
             for (int j = 0; j < pmods; ++j)
-                if (vPage->space[j] && !vPage->space_red[j] && !vPage->space_locked[j])
+                if (page->space[j] && !page->space_red[j] && !page->space_locked[j])
                     l_modogl++;
             if (pmods != pmodcnt)
                 l_modogl = (UINT)nearbyintf((float)(l_modogl * pmodcnt) / pmods);
             *m_modogl += l_modogl;
         }
-        vPage->SetBaseKrata(init_szpalt_x, init_szpalt_y, TRUE);
+        page->SetBaseKrata(init_szpalt_x, init_szpalt_y, true);
     }
 
-    *m_modwol = (UINT)m_pages.size()*pmodcnt - *m_modogl - *m_modred - *m_modrez;
-    if (*m_modwol > (UINT)m_pages.size()*pmodcnt) *m_modwol = 0;
+    if (selectedPagesCount == 0)
+        selectedPagesCount = (UINT)m_pages.size();
+    *m_modwol = selectedPagesCount * pmodcnt - *m_modogl - *m_modred - *m_modrez;
+    if (*m_modwol < 0)
+        *m_modwol = 0;
 }
 
 inline float CDrawDoc::PowAdd2Mod(const bool bQueStat) const
@@ -1273,8 +1291,8 @@ void CDrawDoc::OnFileInfo()
         dlg.m_modredp = (float)dlg.m_modred / pmodcnt;
         dlg.m_modrezp = (float)dlg.m_modrez / pmodcnt;
         dlg.m_modwolp = (float)dlg.m_modwol / pmodcnt;
-        dlg.m_modcnt = PowAdd2Mod(FALSE);
-        dlg.m_quecnt = PowAdd2Mod(TRUE);
+        dlg.m_modcnt = PowAdd2Mod(false);
+        dlg.m_quecnt = PowAdd2Mod(true);
         if (dlg.DoModal() != IDOK) return;
         // zmiana grzbietu
         if (iDocType == DocType::grzbiet_drukowany) {
@@ -1595,7 +1613,7 @@ second_paper:
     if (synchronize) { // usuñ z makiety te og³oszenia, które maj¹ nr>0 i nie ma ich w ATEX'ie
         UpdateAllViews(nullptr, HINT_SAVEAS_DELETE_SELECTION, nullptr);
         bool spfluos{false}, rejestracjaSpfluos{false};
-        int i, j = 1, ac = (int)syncATEX.size();
+        int i, ac = (int)syncATEX.size();
         std::vector<CDrawAdd*> aDelAdds;
         CString sQueMissed;
         CString adnos = _T("Stwierdzono brak nastêpuj¹cych og³oszeñ w bazie ATEX:\n\n");
@@ -1656,10 +1674,10 @@ second_paper:
                 if (rejestracjaSpfluos) adnos += doRejetracjiAdnos + _T("\n\n");
             }
             if (ac = (int)dirtyATEX.size()) {
-                j = 1;
+                unsigned char j = 1;
                 adnos += _T("Zmieniono w ATEXie nastêpuj¹ce og³oszenia:\n\n");
                 for (i = 0; i < ac; ++i)
-                    adnos.AppendFormat((j++ & 3) ? _T("%li,\t") : _T("%li\n\t"), (long)dirtyATEX[i]);
+                    adnos.AppendFormat((j++ & 3) ? _T("%li, ") : _T("%li\n"), (long)dirtyATEX[i]);
                 adnos += _T("\n\n");
             }
             if (!sQueMissed.IsEmpty())
