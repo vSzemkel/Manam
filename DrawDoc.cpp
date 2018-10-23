@@ -716,21 +716,27 @@ BOOL CDrawDoc::OnOpenDocument(LPCTSTR pszPathName)
 {
     if (disableMenu) return FALSE;
 
-    const TCHAR* pos = _tcsrchr(pszPathName, _T('.'));
-    if (pos != nullptr) {
-        const TCHAR firstExtensionLetter = *(pos + 1);
-        if (firstExtensionLetter == 'L') { // .LIB
+    const TCHAR* dot = _tcsrchr(pszPathName, _T('.'));
+    if (dot != nullptr) {
+        const TCHAR firstExtensionLetter = *(dot + 1);
+        if (firstExtensionLetter == _T('L')) { // .LIB
             isLIB = TRUE;
             iDocType = DocType::makieta_lib;
-        } else if (firstExtensionLetter == 'G') { // .GRB
+        } else if (firstExtensionLetter == _T('G')) { // .GRB
             isGRB = TRUE;
             iDocType = DocType::grzbiet_drukowany;
         }
-        if (isGRB || isLIB || firstExtensionLetter == 'D') { // .DB
+        if (isGRB || isLIB || firstExtensionLetter == _T('D')) { // .DB
             TCHAR makieta[MAX_PATH];
             swCZV = theApp.initCZV;
-            ::StringCchCopy(makieta, MAX_PATH, pszPathName);
-            return DBOpenDoc(makieta);
+            const TCHAR* slash = _tcsrchr(pszPathName, _T('\\'));
+            if (slash != nullptr) {
+                const auto len = dot - slash;
+                ASSERT(0 < len && len <= MAX_PATH);
+                memcpy(makieta, slash + 1, len * sizeof(TCHAR));
+                makieta[len - 1] = TCHAR{0};
+                return DBOpenDoc(makieta);
+            }
         }
     }
 

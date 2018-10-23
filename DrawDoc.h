@@ -128,7 +128,7 @@ class CDrawDoc final : public COleDocument
     bool Add4Pages();
     bool AddDrz4Pages(LPCTSTR ile_kolumn = _T("4"));
 
-    bool DBOpenDoc(TCHAR* sMakieta = nullptr);
+    bool DBOpenDoc(TCHAR* makieta = nullptr);
     void OnDBSave();
     void OnDBSaveAs();
     void DBSaveAs(bool isSaveAs);

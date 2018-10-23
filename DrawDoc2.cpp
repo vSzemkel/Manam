@@ -11,33 +11,20 @@
 extern BOOL drawErrorBoxes;
 extern BOOL disableMenu;
 
-/////////////// DB MAKIETA z DB
-bool CDrawDoc::DBOpenDoc(TCHAR *sMakieta)
+// parameter format: "TTT EE_DD-MM-YYYY"
+bool CDrawDoc::DBOpenDoc(TCHAR* makieta)
 {
     if (!theApp.isRDBMS && !theApp.ConnecttoDB())
         return false;
 
     CDBOpenDlg dlg;
-    if (sMakieta) {
-        TCHAR *mnam, *sep, *sep2;
-        mnam = _tcsrchr(sMakieta, _T('\\'));
-        if (!mnam) return false;
-        sep = _tcschr(++mnam, _T('_'));
-        if (!sep) return false;
-        *sep++ = 0;
-        sep2 = _tcschr(mnam, _T(' '));
-        if (sep2) { // okreœlono mutacjê
-            *sep2++ = 0;
-            dlg.m_mutacja = sep2;
-        } else
-            dlg.m_mutacja = _T(" ");
-        dlg.m_tytul = mnam;
-        sep2 = _tcschr(sep, _T('.'));
-        if (!sep2) return false;
-        *sep2 = 0;
-        if (!isLIB) //.DB
-            sep[2] = sep[5] = '/';
-        dlg.m_dt = sep;
+    if (makieta) {
+        makieta[3] = makieta[6] = TCHAR{0};
+        dlg.m_tytul = makieta;
+        dlg.m_mutacja = makieta + 4;
+        if (!isLIB)
+            makieta[9] = makieta[12] = _T('/');
+        dlg.m_dt = makieta + 7;
         dlg.m_doctype = static_cast<int>(iDocType);
     } else {
         if (dlg.DoModal() != IDOK) return false;
