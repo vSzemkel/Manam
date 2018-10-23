@@ -715,18 +715,23 @@ void CDrawDoc::ComputeCanvasSize()
 BOOL CDrawDoc::OnOpenDocument(LPCTSTR pszPathName)
 {
     if (disableMenu) return FALSE;
-    if (_tcsstr(pszPathName, _T(".LIB\0"))) {
-        isLIB = TRUE;
-        iDocType = DocType::makieta_lib;
-    } else if (_tcsstr(pszPathName, _T(".GRB\0"))) {
-        isGRB = TRUE;
-        iDocType = DocType::grzbiet_drukowany;
-    }
-    if (isGRB || isLIB || _tcsstr(pszPathName, _T(".DB\0"))) {
-        TCHAR makieta[MAX_PATH];
-        swCZV = theApp.initCZV;
-        ::StringCchCopy(makieta, MAX_PATH, pszPathName);
-        return DBOpenDoc(makieta);
+
+    const TCHAR* pos = _tcsrchr(pszPathName, _T('.'));
+    if (pos != nullptr) {
+        const TCHAR firstExtensionLetter = *(pos + 1);
+        if (firstExtensionLetter == 'L') { // .LIB
+            isLIB = TRUE;
+            iDocType = DocType::makieta_lib;
+        } else if (firstExtensionLetter == 'G') { // .GRB
+            isGRB = TRUE;
+            iDocType = DocType::grzbiet_drukowany;
+        }
+        if (isGRB || isLIB || firstExtensionLetter == 'D') { // .DB
+            TCHAR makieta[MAX_PATH];
+            swCZV = theApp.initCZV;
+            ::StringCchCopy(makieta, MAX_PATH, pszPathName);
+            return DBOpenDoc(makieta);
+        }
     }
 
     if (CDocument::OnOpenDocument(pszPathName)) {
@@ -1172,12 +1177,12 @@ void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_
         *m_modwol = 0;
 }
 
-inline float CDrawDoc::PowAdd2Mod(const bool bQueStat) const
+float CDrawDoc::PowAdd2Mod(const bool queryQue) const
 {
     float pow = 0.0;
     auto mod_count = [](const CDrawAdd* a) noexcept -> float { return (float)(a->sizex * a->sizey * pmodcnt) / (a->szpalt_x * a->szpalt_y); };
 
-    if (bQueStat) {
+    if (queryQue) {
         for (const auto& a : m_addsque)
             pow += mod_count(a);
     } else {
@@ -1195,12 +1200,11 @@ void CDrawDoc::OnFileInfo()
     if (!theApp.isRDBMS || m_mak_xx < 0) {
         UINT ogl, red, rez, wol;
         ModCount(&ogl, &red, &rez, &wol);
-        float oglp, redp, rezp, wolp;
-        oglp = (float)ogl / pmodcnt;
-        redp = (float)red / pmodcnt;
-        rezp = (float)rez / pmodcnt;
-        wolp = (float)wol / pmodcnt;
-        ::StringCchPrintf(theApp.bigBuf, n_size, _T("Wszystkich modu³ów\n\tog³oszeniowych %u\n\tredakcyjnych %u\n\tzarezerwowanych %u\n\twolnych %u\nStron\n\tog³oszeniowych %.3f\n\tredakcyjnych %.3f\n\tzarezerwowanych %.3f\n\twolnych %.3f\n\nPowierzchnia og³oszeñ: %.2f mod."), ogl, red, rez, wol, oglp, redp, rezp, wolp, PowAdd2Mod(FALSE));
+        const auto oglp = (float)ogl / pmodcnt;
+        const auto redp = (float)red / pmodcnt;
+        const auto rezp = (float)rez / pmodcnt;
+        const auto wolp = (float)wol / pmodcnt;
+        ::StringCchPrintf(theApp.bigBuf, n_size, _T("Wszystkich modu³ów\n\tog³oszeniowych %u\n\tredakcyjnych %u\n\tzarezerwowanych %u\n\twolnych %u\nStron\n\tog³oszeniowych %.3f\n\tredakcyjnych %.3f\n\tzarezerwowanych %.3f\n\twolnych %.3f\n\nPowierzchnia og³oszeñ: %.2f mod."), ogl, red, rez, wol, oglp, redp, rezp, wolp, PowAdd2Mod(false));
         MessageBox(nullptr, theApp.bigBuf, _T("Statystyka"), MB_OK);
         return;
     }
@@ -1528,8 +1532,7 @@ second_paper:
         }
 
         CPoint pos{GetAsideAddPos(false)}, pos2;
-        while (S_OK == reader->Read(&nodeType) && nodeType != XmlNodeType_EndElement) // read next ad
-        {
+        while (S_OK == reader->Read(&nodeType) && nodeType != XmlNodeType_EndElement) { // read next ad
             empSet = false;
             pos2 = pos;
 

@@ -34,9 +34,9 @@ class CDrawDoc final : public COleDocument
     friend class CDrawDocDbWriter;
 
     static const TCHAR* asDocTypeExt[3];
-    static std::vector<UINT> spoty;                 // numer na liœcie kolorów -> bazodanowy identyfikator koloru
-    static std::vector<CString> kolory;             // dopuszczalne kolory og³oszeñ i stron
-    static std::vector<CBrush*> brushe;             // cache pêdzli u¿ywanych w widoku makiety
+    static std::vector<UINT> spoty;         // numer na liœcie kolorów -> bazodanowy identyfikator koloru
+    static std::vector<CString> kolory;     // dopuszczalne kolory og³oszeñ i stron
+    static std::vector<CBrush*> brushe;     // cache pêdzli u¿ywanych w widoku makiety
 
     static void IniKolorTable();
     static void DrawPageCross(CDC* pDC);
@@ -83,7 +83,7 @@ class CDrawDoc final : public COleDocument
     void RemoveFromTail(int n);
     void Remove(CDrawObj* pObj);
     int GetAdPosition(const CDrawAdd* pAdd) const;
-    CDrawObj* ObjectAt(const CPoint &point) const;
+    CDrawObj* ObjectAt(const CPoint& point) const;
     CDrawAdd* ObjectAtQue(const CPoint& point) const;
     CDrawAdd* FindAddAt(int i) const; // szuka ogloszenia na pozycji i wsrod ogl - opisy sie nie numeruje
 
@@ -99,7 +99,7 @@ class CDrawDoc final : public COleDocument
     CDrawPage* PageAt(const CPoint& point) const;
     CDrawPage* GetPage(int n) const;
 
-    //..,,inne akcje menu -OGLOSZENIA
+    // inne akcje menu -OGLOSZENIA
     void OnImport(bool fromDB);
     void OnImportPlus(bool fromDB);
     void OnFileImportPlus();
@@ -231,7 +231,7 @@ private:
 
     void SetTitleAndMru(bool addRecentFiles = true); // wywo³uje base->SetTitle przekazuj¹c odpowiednie parametry i opcjonalnie dodaje do MRU
     void AdvanceAsidePos(CPoint& p) const;           // wylicza polozenie kolejnego nastepnego ogloszenia z boku
-    float PowAdd2Mod(bool bQueStat) const;
+    float PowAdd2Mod(bool queryQue) const;
     bool MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo);
     void ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_modwol) const;
 };

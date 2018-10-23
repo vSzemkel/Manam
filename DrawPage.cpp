@@ -802,8 +802,8 @@ void CDrawPage::SetBaseKrata(const int s_x, const int s_y, const bool refresh)
                 if (isRed || isLock) {
                     CRect intsec, dst;
                     const CRect& src = GetNormalizedModuleRect(module);
-                    for (int k = 1; k <= s_x; k++)
-                        for (int l = 1; l <= s_y; l++) {
+                    for (int k = 1; k <= s_x; ++k)
+                        for (int l = 1; l <= s_y; ++l) {
                             dst.SetRect(m_position.left + (int)(CDrawObj::modx(s_x)*(k - 1)), m_position.bottom + (int)(CDrawObj::mody(s_y)*(s_y - l)),
                                 m_position.left + (int)(CDrawObj::modx(s_x)*k), m_position.bottom + (int)(CDrawObj::mody(s_y)*(s_y - l + 1))); // normalized
                             if (intsec.IntersectRect(src, dst)) {
