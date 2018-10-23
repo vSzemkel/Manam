@@ -44,8 +44,15 @@ bool CDrawDoc::DBOpenDoc(TCHAR* makieta)
             return false;
         }
     }
+
+    if (dlg.m_tytul.IsEmpty() || dlg.m_dt.IsEmpty()) {
+        MessageBox(nullptr, (LPCTSTR)_T("Proszê podaæ trzyliterowy kod tytu³u i datê emisji lub wersjê"), (LPCTSTR)_T("Brak danych"), MB_ICONSTOP);
+        return false;
+    }
+
     theApp.default_title = dlg.m_tytul;
     theApp.default_mut = dlg.m_mutacja;
+    gazeta.Format(_T("%s %s"), dlg.m_tytul, dlg.m_mutacja);
 
     // moze byc juz otwarte
     auto frame = reinterpret_cast<CMainFrame*>(AfxGetMainWnd());
@@ -53,22 +60,16 @@ bool CDrawDoc::DBOpenDoc(TCHAR* makieta)
     while (pos != nullptr) {
         auto openDoc = reinterpret_cast<CDrawDoc*>(m_pDocTemplate->GetNextDoc(pos));
         if (openDoc == this) continue;
-        if (openDoc->data == dlg.m_dt && openDoc->gazeta == dlg.m_tytul + (dlg.m_mutacja == " " ? "" : " " + dlg.m_mutacja) && static_cast<int>(openDoc->iDocType) == dlg.m_doctype) {
+        if (openDoc->data == dlg.m_dt && openDoc->gazeta == this->gazeta && static_cast<int>(openDoc->iDocType) == dlg.m_doctype) {
             frame->MDIActivate(openDoc->GetFirstFrame());
             return false;
         }
-    }
-
-    if (dlg.m_tytul.IsEmpty() || dlg.m_dt.IsEmpty()) {
-        MessageBox(nullptr, (LPCTSTR)_T("Proszê podaæ trzyliterowy kod tytu³u i datê emisji lub wersjê"), (LPCTSTR)_T("Brak danych"), MB_ICONSTOP);
-        return false;
     }
 
     frame->SetStatusBarInfo((LPCTSTR)_T("Proszê czekaæ. Trwa otwieranie makiety z bazy danych . . ."));
     theApp.BeginWaitCursor();
 
     data = dlg.m_dt;
-    gazeta.Format(_T("%s %s"), dlg.m_tytul, dlg.m_mutacja);
     dayws = data.Mid(6, 4) + data.Mid(3, 2) + data.Mid(0, 2);
     daydir = dayws + _T("\\");
     disableMenu = TRUE;

@@ -727,12 +727,12 @@ BOOL CDrawDoc::OnOpenDocument(LPCTSTR pszPathName)
             iDocType = DocType::grzbiet_drukowany;
         }
         if (isGRB || isLIB || firstExtensionLetter == _T('D')) { // .DB
-            TCHAR makieta[MAX_PATH];
             swCZV = theApp.initCZV;
             const TCHAR* slash = _tcsrchr(pszPathName, _T('\\'));
             if (slash != nullptr) {
                 const auto len = dot - slash;
-                ASSERT(0 < len && len <= MAX_PATH);
+                ASSERT(len <= MAX_PATH);
+                TCHAR makieta[MAX_PATH];
                 memcpy(makieta, slash + 1, len * sizeof(TCHAR));
                 makieta[len - 1] = TCHAR{0};
                 return DBOpenDoc(makieta);
