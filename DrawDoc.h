@@ -152,8 +152,6 @@ class CDrawDoc final : public COleDocument
     BYTE ovEPS : 1;        // nadpisuj EPS'y przy generacji
     BYTE isRO  : 1;        // otwarty tylko do odczytu
     BYTE isSIG : 1;        // makieta podpisana przez kierownika 
-    BYTE isGRB : 1;        // grzbiet
-    BYTE isLIB : 1;        // makieta biblioteczna
     BYTE isRED : 1;        // czy pokazuj¹ siê nag³ówki redakcyjne
     BYTE isACD : 1;        // czy wczytano ju¿ dane o deadlinach dla czasopism
     CString gazeta;        // tytul i mutacja - ust przy wyborze dzewa

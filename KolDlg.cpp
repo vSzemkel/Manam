@@ -418,7 +418,7 @@ BOOL CPageDlg::OnInitDialog()
         GetDlgItem(IDC_KRATKA)->EnableWindow(FALSE);
 
     // drukarnie
-    if (!theApp.activeDoc->isLIB) {
+    if (theApp.activeDoc->iDocType != DocType::makieta_lib) {
         for (const auto& d : theApp.drukarnie)
             m_drukarniecombo.AddString(d);
         unsigned long mask = 1L;
@@ -427,7 +427,7 @@ BOOL CPageDlg::OnInitDialog()
                 m_drukarniecombo.SetSel(i);
     }
 
-    if (m_dervlvl == DervType::fixd || theApp.activeDoc->isGRB) {
+    if (m_dervlvl == DervType::fixd || theApp.activeDoc->iDocType == DocType::grzbiet_drukowany) {
         GetDlgItem(IDOK)->EnableWindow(FALSE);
         GetDlgItem(IDC_PRINTHOUSE)->EnableWindow(FALSE);
     }

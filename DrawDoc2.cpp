@@ -22,15 +22,13 @@ bool CDrawDoc::DBOpenDoc(TCHAR* makieta)
         makieta[3] = makieta[6] = TCHAR{0};
         dlg.m_tytul = makieta;
         dlg.m_mutacja = makieta + 4;
-        if (!isLIB)
+        if (iDocType != DocType::makieta_lib)
             makieta[9] = makieta[12] = _T('/');
         dlg.m_dt = makieta + 7;
         dlg.m_doctype = static_cast<int>(iDocType);
     } else {
         if (dlg.DoModal() != IDOK) return false;
         iDocType = (DocType)dlg.m_doctype;
-        isLIB = iDocType == DocType::makieta_lib;
-        isGRB = iDocType == DocType::grzbiet_drukowany;
         auto cnt = dlg.m_arrDaty.size();
         if (cnt > 0) {
             if (cnt > 52) {
@@ -76,7 +74,7 @@ bool CDrawDoc::DBOpenDoc(TCHAR* makieta)
     if (!theManODPNET.OpenManamDoc(this)) {
         if (m_mak_xx != 0) {
             theManODPNET.RmSysLock(this);
-            if (!isGRB) AfxGetMainWnd()->MessageBox(_T("B³¹d czytania stron makiety"), gazeta + _T(" ") + data, MB_OK);
+            if (iDocType != DocType::grzbiet_drukowany) AfxGetMainWnd()->MessageBox(_T("B³¹d czytania stron makiety"), gazeta + _T(" ") + data, MB_OK);
         }
         frame->SetStatusBarInfo(_T(""));
         return disableMenu = false;
@@ -84,7 +82,7 @@ bool CDrawDoc::DBOpenDoc(TCHAR* makieta)
 
     ComputeCanvasSize();
     ArrangeQue();
-    if (isGRB) NumberPages();
+    if (iDocType == DocType::grzbiet_drukowany) NumberPages();
     UpdateAllViews(nullptr);
 
     if (theApp.showAcDeadline > 0) {
@@ -102,7 +100,7 @@ bool CDrawDoc::DBOpenDoc(TCHAR* makieta)
 
 void CDrawDoc::OnDBSave()
 {
-    isGRB ? (void)theManODPNET.GrbSaveMutczas(this) : DBSaveAs(m_mak_xx == -1);
+    iDocType == DocType::grzbiet_drukowany ? (void)theManODPNET.GrbSaveMutczas(this) : DBSaveAs(m_mak_xx == -1);
 }
 
 void CDrawDoc::OnDBSaveAs()
@@ -121,9 +119,9 @@ void CDrawDoc::DBSaveAs(const bool isSaveAs)
     if (isSaveAs) {
         CDBSaveAsDlg dlg;
         dlg.m_tytmut = gazeta;
-        dlg.m_lib = isLIB;
+        dlg.m_lib = iDocType == DocType::makieta_lib;
         if (dlg.DoModal() != IDOK) return;
-        if ((isLIB = dlg.m_lib) > 0) {
+        if (dlg.m_lib) {
             data.Format(_T("%03Iu%s"), m_pages.size(), static_cast<LPCTSTR>(dlg.m_dt));
             iDocType = DocType::makieta_lib;
         } else {
@@ -132,7 +130,7 @@ void CDrawDoc::DBSaveAs(const bool isSaveAs)
         }
     }
 
-    if (!theManODPNET.CkAccess(gazeta, isLIB ? _T("WD") : _T("W"))) return;
+    if (!theManODPNET.CkAccess(gazeta, iDocType == DocType::makieta_lib ? _T("WD") : _T("W"))) return;
 
     // sprawdz, czy s¹ og³oszenia poza makieta
     for (const auto& pObj : m_objects) {
@@ -150,7 +148,7 @@ void CDrawDoc::DBSaveAs(const bool isSaveAs)
     disableMenu = TRUE;
     BeginWaitCursor();
 
-    const bool doSaveAdds = (!isLIB && (m_mak_xx == -1 || !isSaveAs));
+    const bool doSaveAdds = (iDocType != DocType::makieta_lib && (m_mak_xx == -1 || !isSaveAs));
     ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo((LPCTSTR)_T("Trwa zapis makiety ") + gazeta + _T(" ") + data);
     if (theManODPNET.SaveManamDoc(this, isSaveAs, doSaveAdds)) {
         if (!doSaveAdds) {
@@ -185,10 +183,10 @@ void CDrawDoc::OnDBDelete()
                 return;
             }
 
-    if (AfxMessageBox(_T("Czy na pewno chcesz usunaæ ") + CString(isGRB ? "ten grzbiet" : "tê makietê"), MB_OKCANCEL | MB_ICONQUESTION) != IDOK) return;
+    if (AfxMessageBox(_T("Czy na pewno chcesz usunaæ ") + CString(iDocType == DocType::grzbiet_drukowany ? "ten grzbiet" : "tê makietê"), MB_OKCANCEL | MB_ICONQUESTION) != IDOK) return;
 
     auto sql = reinterpret_cast<char*>(theApp.bigBuf);
-    ::StringCchPrintfA(sql, bigSize, "begin %s%s(:mak_xx); end;", isGRB ? "grb.delete_grzbiet" : "delete_makieta", isLIB ? "_lib" : "");
+    ::StringCchPrintfA(sql, bigSize, "begin %s%s(:mak_xx); end;", iDocType == DocType::grzbiet_drukowany ? "grb.delete_grzbiet" : "delete_makieta", iDocType == DocType::makieta_lib ? "_lib" : "");
     CManODPNETParms orapar { CManDbType::DbTypeInt32, &m_mak_xx };
     if (theManODPNET.EI(sql, orapar)) {
         m_mak_xx = -1;
@@ -887,7 +885,7 @@ void CDrawDoc::DerivePages(CDrawPage* pPage)
         pPage = m_pages[nr_porz];
     } else
         nr_porz = GetIPage(pPage);
-    if (theApp.isRDBMS && !this->isGRB && !this->isLIB && !this->isRO && this->SaveModified() && !pPage->dirty) {
+    if (theApp.isRDBMS && this->iDocType == DocType::makieta && !this->isRO && this->SaveModified() && !pPage->dirty) {
         CPageDerv dlg;
         dlg.m_mak_xx = this->m_mak_xx;
         dlg.m_idervlvl = pPage->m_dervlvl;

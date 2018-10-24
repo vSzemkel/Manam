@@ -202,7 +202,7 @@ BOOL CDrawDocDbReader::OpenManamDoc()
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();
     auto par = cmd->Parameters;
-    cmd->CommandText = String::Format("begin {0}{1}(:tytul,:mutacja,:kiedy,:isro,:retCur); end;", m_doc->isGRB ? "grb.open_grzbiet" : "open_makieta", m_doc->isLIB ? "_lib" : "");
+    cmd->CommandText = String::Format("begin {0}{1}(:tytul,:mutacja,:kiedy,:isro,:retCur); end;", m_doc->iDocType == DocType::grzbiet_drukowany ? "grb.open_grzbiet" : "open_makieta", m_doc->iDocType == DocType::makieta_lib ? "_lib" : "");
     par->Add("tytul", OracleDbType::Varchar2, 3)->Value = gcnew String(m_doc->gazeta.Left(3));
     par->Add("mutacja", OracleDbType::Varchar2, 2)->Value = gcnew String(m_doc->gazeta.Mid(4));
     par->Add("kiedy", OracleDbType::Char, 10)->Value = gcnew String(m_doc->data);
@@ -229,7 +229,7 @@ BOOL CDrawDocDbReader::OpenManamDoc()
 
     m_doc->m_pages.resize(m_objetosc);
     const auto ro = static_cast<int8_t>(OdpHelper::IntegerValue(par[3]));
-    m_doc->isRO = ((m_doc->isGRB && ro == -1) ? 0 : ro);
+    m_doc->isRO = ((m_doc->iDocType == DocType::grzbiet_drukowany && ro == -1) ? 0 : ro);
     if (!m_doc->isRO && !String::IsNullOrEmpty(openStatus)) {
         if (DialogResult::Cancel == MessageBox::Show(nullptr, openStatus + L".\nCzy chcesz otworzyæ j¹ w trybie tylko do odczytu?", L"Manam", MessageBoxButtons::OKCancel, MessageBoxIcon::Information)) {
             ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo((LPCTSTR)_T("Spróbuj wys³aæ wiadomoœæ (F10) lub zadzwoniæ do u¿ytkownika, który blokuje makietê . . ."));
@@ -239,7 +239,7 @@ BOOL CDrawDocDbReader::OpenManamDoc()
         m_doc->isRO = TRUE;
     }
 
-    if (m_doc->isGRB && ro == -1) m_doc->m_mak_xx *= -1;
+    if (m_doc->iDocType == DocType::grzbiet_drukowany && ro == -1) m_doc->m_mak_xx *= -1;
 
     if (m_doc->iDocType == DocType::makieta) { // data_zm
         int d, m, r, g, min;
@@ -248,10 +248,10 @@ BOOL CDrawDocDbReader::OpenManamDoc()
             m_doc->dataZamkniecia = CTime(r, m, d, g, min, 0);
     }
 
-    if (!m_doc->isLIB) {
+    if (m_doc->iDocType != DocType::makieta_lib) {
         par->Clear();
         par->Add("mak_xx", OracleDbType::Int32)->Value = m_doc->m_mak_xx;
-        cmd->CommandText = String::Format("select p1,kto_prowadzi,opiekun,wydawca,is_sig from {0}info where xx=abs(:mak_xx)", m_doc->isGRB ? "grb" : "mak");
+        cmd->CommandText = String::Format("select p1,kto_prowadzi,opiekun,wydawca,is_sig from {0}info where xx=abs(:mak_xx)", m_doc->iDocType == DocType::grzbiet_drukowany ? "grb" : "mak");
         try {
             conn->Open();
             auto odr = cmd->ExecuteReader(CommandBehavior::SingleRow);
@@ -281,7 +281,7 @@ BOOL CDrawDocDbReader::OpenManamDoc()
 
     if (m_doc->gazeta.GetAt(0) == _T('Z')) { // spoty ju¿ tylko dla zewnêtrznych
         m_doc->ZmianaSpotow(m_objetosc);
-        if (!m_doc->isGRB) OpenSpot();
+        if (m_doc->iDocType != DocType::grzbiet_drukowany) OpenSpot();
     }
 
     return OpenDocContent();
@@ -291,7 +291,7 @@ void CDrawDocDbReader::OpenSpot()
 {
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();
-    cmd->CommandText = String::Format("select nvl(spo_xx,-1) from spot_makiety{0} where mak_xx=:mak_xx order by spot", m_doc->isLIB ? gcnew String("_lib") : String::Empty);
+    cmd->CommandText = String::Format("select nvl(spo_xx,-1) from spot_makiety{0} where mak_xx=:mak_xx order by spot", m_doc->iDocType == DocType::makieta_lib ? gcnew String("_lib") : String::Empty);
     cmd->Parameters->Add("mak_xx", OracleDbType::Int32)->Value = m_doc->m_mak_xx;
     try {
         conn->Open();
@@ -399,13 +399,13 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
         // 20 - pap_xx, obsolete
         pPage->m_typ_pary = strCur->GetByte(21); // rozkladowka
         pPage->wyd_xx = static_cast<UINT>(strCur->GetInt32(22));
-        if (m_doc->isGRB) {
+        if (m_doc->iDocType == DocType::grzbiet_drukowany) {
             pPage->m_mutczas = strCur->GetInt32(23); // mutczas
             StringCchPrintf(theApp.bigBuf, bigSize, _T("%s (mutacja %i)"), pPage->m_dervinfo, pPage->m_mutczas);
             pPage->m_dervinfo = theApp.bigBuf;
         }
 
-        if (!m_doc->isLIB) // w bibliotecznych nie ma og³oszeñ
+        if (m_doc->iDocType != DocType::makieta_lib) // w bibliotecznych nie ma og³oszeñ
             while (ogloszenieNaNastepnaStrone || pubCur->Read()) {
                 ivar = pubCur->GetInt32(3); // str_xx
                 if (ogloszenieNaNastepnaStrone = ivar != pPage->id_str)
@@ -493,7 +493,7 @@ void CDrawDocDbReader::OpenMultiKraty(OracleCommand^ cmd, const CFlag& multiKrat
     auto par = cmd->Parameters;
     par->Insert(1, gcnew OracleParameter("str_xx", OracleDbType::Int32));
     while (par->Count > 3) par->RemoveAt(3);
-    cmd->CommandText = String::Format("begin {0}open_kra_str{1}(:mak_xx,:str_xx,:retCur); end;", m_doc->isGRB ? "grb." : String::Empty, m_doc->isLIB ? "_lib" : String::Empty);
+    cmd->CommandText = String::Format("begin {0}open_kra_str{1}(:mak_xx,:str_xx,:retCur); end;", m_doc->iDocType == DocType::grzbiet_drukowany ? "grb." : String::Empty, m_doc->iDocType == DocType::makieta_lib ? "_lib" : String::Empty);
 
     for (int i = 0; i < (int)m_objetosc; ++i) {
         if (!multiKraty[i]) continue;
@@ -525,12 +525,12 @@ BOOL CDrawDocDbReader::OpenDocContent()
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();
     auto par = cmd->Parameters;
-    cmd->CommandText = String::Format("begin {0}open_spo{1}; end;", m_doc->isGRB ? "grb." : String::Empty, m_doc->isLIB ? "_lib(:mak_xx,:retCur,:retCur2,:retCur3)" : "q(:mak_xx,:retCur,:retCur2,:retCur3,:retCur4)");
+    cmd->CommandText = String::Format("begin {0}open_spo{1}; end;", m_doc->iDocType == DocType::grzbiet_drukowany ? "grb." : String::Empty, m_doc->iDocType == DocType::makieta_lib ? "_lib(:mak_xx,:retCur,:retCur2,:retCur3)" : "q(:mak_xx,:retCur,:retCur2,:retCur3,:retCur4)");
     par->Add("mak_xx", OracleDbType::Int32)->Value = m_doc->m_mak_xx;
     par->Add("refCur", OracleDbType::RefCursor)->Direction = ParameterDirection::Output;
     par->Add("refCur2", OracleDbType::RefCursor)->Direction = ParameterDirection::Output;
     par->Add("refCur3", OracleDbType::RefCursor)->Direction = ParameterDirection::Output;
-    if (!m_doc->isLIB)
+    if (m_doc->iDocType != DocType::makieta_lib)
         par->Add("refCur4", OracleDbType::RefCursor)->Direction = ParameterDirection::Output;
     OracleDataReader ^strCur, ^pubCur, ^opiCur, ^queCur;
     CFlag multiKraty((int)ceil(m_doc->m_pages.size() / 8.0));
@@ -547,7 +547,7 @@ BOOL CDrawDocDbReader::OpenDocContent()
 
         OpenOpis(opiCur);
 
-        if (!m_doc->isLIB) {
+        if (m_doc->iDocType != DocType::makieta_lib) {
             queCur = static_cast<OracleRefCursor^>(par[4]->Value)->GetDataReader();
             OpenQued(queCur);
         }
@@ -596,7 +596,7 @@ BOOL CDrawDocDbWriter::SaveManamDoc(const BOOL isSaveAs, const BOOL doSaveAdds)
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();
     auto par = cmd->Parameters;
-    cmd->CommandText = String::Format("begin {0}_makieta{1}(:drw_xx,:kiedy,:obj,:mak_xx); end;", isSaveAs ? "insert" : "update", m_doc->isLIB ? "_lib" : "");
+    cmd->CommandText = String::Format("begin {0}_makieta{1}(:drw_xx,:kiedy,:obj,:mak_xx); end;", isSaveAs ? "insert" : "update", m_doc->iDocType == DocType::makieta_lib ? "_lib" : "");
     par->Add("drw_xx", OracleDbType::Int32)->Value = m_doc->id_drw;
     par->Add("kiedy", OracleDbType::Varchar2)->Value = gcnew String(m_doc->data);
     par->Add("obj", OracleDbType::Int32)->Value = m_objetosc;
@@ -622,7 +622,7 @@ BOOL CDrawDocDbWriter::SaveManamDoc(const BOOL isSaveAs, const BOOL doSaveAdds)
         if (isSaveAs) {
             par->Clear();
             par->Add("mak_xx", OracleDbType::Int32)->Value = m_doc->m_mak_xx;
-            cmd->CommandText = String::Format("begin update_drukarnie{0}(:mak_xx); end;", m_doc->isLIB ? "_lib" : "");
+            cmd->CommandText = String::Format("begin update_drukarnie{0}(:mak_xx); end;", m_doc->iDocType == DocType::makieta_lib ? "_lib" : "");
             cmd->ExecuteNonQuery();
         }
 
@@ -676,7 +676,7 @@ void CDrawDocDbWriter::SaveOpisyMakiety(OracleConnection^ conn, const BOOL isSav
         auto pOpis = dynamic_cast<CDrawOpis*>(pObj);
         if (pOpis && pOpis->dirty) {
             const auto isInsert = isSaveAs || pOpis->m_opi_xx == -1;
-            cmd->CommandText = String::Format("begin {0}_spacer_opis{1}(:opi_xx,:mak_xx,:top,:left,:bottom,:right,:tekst,:skala,:kolor); end;", isInsert ? "insert" : "update", m_doc->isLIB ? "_lib" : "");
+            cmd->CommandText = String::Format("begin {0}_spacer_opis{1}(:opi_xx,:mak_xx,:top,:left,:bottom,:right,:tekst,:skala,:kolor); end;", isInsert ? "insert" : "update", m_doc->iDocType == DocType::makieta_lib ? "_lib" : "");
             op->Value = pOpis->m_opi_xx;
             par[2]->Value = pOpis->m_position.top / vscale;
             par[3]->Value = pOpis->m_position.left / vscale;
@@ -702,7 +702,7 @@ void CDrawDocDbWriter::SaveSpotyMakiety(OracleConnection^ conn)
     if (cnt == 0) return;
 
     auto cmd = conn->CreateCommand();
-    cmd->CommandText = String::Format("begin save_spot{0}(:mak_xx,:nr,:spot); end;", m_doc->isLIB ? "_lib" : "");
+    cmd->CommandText = String::Format("begin save_spot{0}(:mak_xx,:nr,:spot); end;", m_doc->iDocType == DocType::makieta_lib ? "_lib" : "");
     auto par = cmd->Parameters;
     par->Add("mak_xx", OracleDbType::Int32)->Value = m_doc->m_mak_xx;
     par->Add("nr", OracleDbType::Int32);
@@ -801,12 +801,12 @@ void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, const BOOL isSaveAs, c
 
         if (isSaveAs || (pPage->id_str == -1))
             plsqlProc = "insert_strona";
-        else if (AfxGetApp()->GetProfileInt(_T("General"), _T("Captions"), 1) == 0 || m_doc->isLIB)
+        else if (AfxGetApp()->GetProfileInt(_T("General"), _T("Captions"), 1) == 0 || m_doc->iDocType == DocType::makieta_lib)
             plsqlProc = "update_strona";
         else
             plsqlProc = "update_strona_cap";
 
-        if (m_doc->isLIB) plsqlProc += "_lib";
+        if (m_doc->iDocType == DocType::makieta_lib) plsqlProc += "_lib";
 
         cmdPage->CommandText = String::Format(pageSql, plsqlProc);
 
@@ -854,7 +854,7 @@ void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, const BOOL isSaveAs, c
 
         for (const auto& kn : pPage->m_kraty_niebazowe) {
             auto cmdKrat = conn->CreateCommand();
-            cmdKrat->CommandText = String::Format("begin save_str_krata{0}(:mak_xx,:str_xx,:szpalt_x,:szpalt_y,:O,:B,:R); end;", m_doc->isLIB ? "_lib" : "");
+            cmdKrat->CommandText = String::Format("begin save_str_krata{0}(:mak_xx,:str_xx,:szpalt_x,:szpalt_y,:O,:B,:R); end;", m_doc->iDocType == DocType::makieta_lib ? "_lib" : "");
             auto par2 = cmdKrat->Parameters;
             par2->Add("mak_xx", OracleDbType::Int32)->Value = m_doc->m_mak_xx;
             par2->Add("str_xx", OracleDbType::Int32)->Value = pPage->id_str;
@@ -877,7 +877,7 @@ save_adds:
     }
 
     // zachowaj og³oszenia, które nie stoj¹ na ¿adnej stronie
-    if (!m_doc->isLIB && i > 0) {
+    if (m_doc->iDocType != DocType::makieta_lib && i > 0) {
         cmdAdd->Parameters[3]->Value = m_doc->m_pages[0]->id_str;
         for (const auto& pObj : m_doc->m_objects) {
             auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
@@ -1317,7 +1317,7 @@ BOOL CManODPNET::RmSysLock(CDrawDoc* doc)
 
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();
-    cmd->CommandText = String::Format("call {0}drop_syslock{1}(:mak_xx)", doc->isGRB ? "grb." : String::Empty, doc->isLIB ? "_lib" : String::Empty);
+    cmd->CommandText = String::Format("call {0}drop_syslock{1}(:mak_xx)", doc->iDocType == DocType::grzbiet_drukowany ? "grb." : String::Empty, doc->iDocType == DocType::makieta_lib ? "_lib" : String::Empty);
     cmd->Parameters->Add("mak_xx", OracleDbType::Int32)->Value = doc->m_mak_xx;
 
     try {

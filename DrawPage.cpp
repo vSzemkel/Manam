@@ -177,7 +177,7 @@ void CDrawPage::Draw(CDC* pDC)
         DrawNapis(pDC, cnr, cnr.GetLength(), r, DT_RIGHT | DT_VCENTER | DT_SINGLELINE, OPAQUE);
     }
 
-    if (m_pDocument->isGRB) {
+    if (m_pDocument->iDocType == DocType::grzbiet_drukowany) {
         pDC->SelectObject(&m_pDocument->m_addfont);
         DrawNapis(pDC, m_dervinfo, m_dervinfo.GetLength(), CRect(rect.TopLeft() + CSize(0, rect.Height() - pmoduly + 3 * vscale), CSize(pwidth, pmoduly)), DT_CENTER | DT_VCENTER | DT_SINGLELINE, OPAQUE);
     }
@@ -337,7 +337,8 @@ void CDrawPage::DrawKolor(CDC* pDC, const CRect& pos) const
         auto r1 = CRect(pos.left, pos.top + 3 * vscale, pos.right, pos.top);
         CBrush* pOldBrush;
         auto pOldPen = reinterpret_cast<CPen*>(pDC->SelectStockObject(NULL_PEN));
-        if (m_pDocument->isGRB) pOldBrush = reinterpret_cast<CBrush*>(pDC->SelectStockObject(LTGRAY_BRUSH));
+        if (m_pDocument->iDocType == DocType::grzbiet_drukowany)
+            pOldBrush = reinterpret_cast<CBrush*>(pDC->SelectStockObject(LTGRAY_BRUSH));
         else pOldBrush = pDC->SelectObject(CDrawDoc::GetSpotBrush(m_pDocument->m_spot_makiety[kolor >> 3]));
         const COLORREF bk = pDC->SetBkColor(BIALY);
         pDC->Rectangle(r1);
@@ -412,7 +413,7 @@ void CDrawPage::Print(CDC* pDC)
         DrawNapis(pDC, cnr, cnr.GetLength(), r, DT_NOCLIP | DT_RIGHT | DT_VCENTER | DT_SINGLELINE, OPAQUE);
     }
 
-    if (m_pDocument->isGRB && pDC->GetViewportExt().cx < 1000) {
+    if (m_pDocument->iDocType == DocType::grzbiet_drukowany && pDC->GetViewportExt().cx < 1000) {
         pDC->SelectObject(&m_pDocument->m_addfont);
         DrawNapis(pDC, m_dervinfo, m_dervinfo.GetLength(), CRect(m_position.TopLeft() + CSize(0, m_position.Height() - pmoduly + 3 * vscale), CSize(pwidth, pmoduly)), DT_CENTER | DT_VCENTER | DT_SINGLELINE, OPAQUE);
     }
@@ -604,7 +605,7 @@ void CDrawPage::UpdateInfo()
 {
     info.Format(_T("Strona %s %s"), GetNrPaginy(), caption);
     if (!name.IsEmpty()) info.AppendFormat(_T(" - %s"), name);
-    if (!m_pDocument->isGRB && (kolor & ColorId::spot) > 0)
+    if (m_pDocument->iDocType != DocType::grzbiet_drukowany && (kolor & ColorId::spot) > 0)
         info.AppendFormat(_T(" | %s"), CDrawDoc::kolory[m_pDocument->m_spot_makiety[kolor >> 3]]); // w kolory 0-brak, 1==full
     info.AppendFormat(_T(" | %s"), m_deadline.Format(c_ctimeCzas));
     if (!m_dervinfo.IsEmpty())

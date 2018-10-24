@@ -443,13 +443,13 @@ void CDrawApp::FileRefresh(CDrawDoc* refreshDoc)
             aIsRO.Add((BOOL)vDoc->isRO);
             aSwCZV.Add((BYTE)vDoc->swCZV);
             CString d{vDoc->data};
-            if (!vDoc->isLIB) {
+            if (vDoc->iDocType != DocType::makieta_lib) {
                 d.SetAt(2, '-'); d.SetAt(5, '-');
             }
-            if (vDoc->m_mak_xx < 0 && !vDoc->isGRB) // offline
+            if (vDoc->m_mak_xx < 0 && vDoc->iDocType != DocType::grzbiet_drukowany) // offline
                 doce.emplace_back(vDoc->GetPathName());
             else // online 
-                doce.emplace_back(vDoc->gazeta + _T("_") + d + _T(".") + (vDoc->isLIB ? _T("LIB") : (vDoc->isGRB ? _T("GRB") : _T("DB"))));
+                doce.emplace_back(vDoc->gazeta + _T("_") + d + _T(".") + (vDoc->iDocType == DocType::makieta_lib ? _T("LIB") : (vDoc->iDocType == DocType::grzbiet_drukowany ? _T("GRB") : _T("DB"))));
             tytuly.emplace_back(vDoc->GetTitle());
         }
         vWnd->DestroyWindow();

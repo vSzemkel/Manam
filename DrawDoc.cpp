@@ -106,7 +106,7 @@ void CDrawDoc::OnDisableGrbNotSaved(CCmdUI* pCmdUI)
 // CDrawDoc construction/destruction
 
 CDrawDoc::CDrawDoc() :
-    isRO(0), isSIG(0), isGRB(0), isLIB(0), isACD(0),
+    isRO(0), isSIG(0), isACD(0),
     data(CTime::GetCurrentTime().Format(c_ctimeData))
 {
     iPagesInRow = 10 + 2 * theApp.GetProfileInt(_T("General"), _T("PagesInRow"), 0);
@@ -174,7 +174,7 @@ BOOL CDrawDoc::SaveModified()
 {
     /* vu :nadpisuje metodê domyœln¹ tak, aby uwzglêdniaæ zapis do bazy */
 
-    if (IsModified() && ((m_mak_xx > 1 && !isGRB) || isLIB || isGRB)) {
+    if (IsModified() && (m_mak_xx > 1 || iDocType != DocType::makieta)) {
         if (!isRO)
             switch (AfxMessageBox(_T("Czy chcesz zachowaæ makietê w bazie danych"), MB_YESNOCANCEL, AFX_IDP_ASK_TO_SAVE)) {
                 case IDCANCEL:
@@ -196,13 +196,13 @@ void CDrawDoc::SetTitleAndMru(const bool addRecentFiles)
     CString makieta;
     makieta.AppendFormat(_T("%s %s %s"), static_cast<LPCTSTR>(gazeta), static_cast<LPCTSTR>(opis), static_cast<LPCTSTR>(data));
     const auto len = makieta.GetLength();
-    if (!isLIB) {
+    if (iDocType != DocType::makieta_lib) {
         ASSERT(data.GetLength() == 10);
         makieta.SetAt(len - 5, _T('-'));
         makieta.SetAt(len - 8, _T('-'));
     }
 
-    SetTitle(CString(isGRB ? "Grzbiet drukowany " : "Makieta ") + makieta + (isRO ? ((theApp.grupa&UserRole::dea) ? " [tylko do rezerwacji]" : " [tylko do odczytu]") : ""));
+    SetTitle(CString(iDocType == DocType::grzbiet_drukowany ? "Grzbiet drukowany " : "Makieta ") + makieta + (isRO ? ((theApp.grupa & UserRole::dea) ? " [tylko do rezerwacji]" : " [tylko do odczytu]") : ""));
     if (!addRecentFiles) return;
 
     ASSERT(gazeta.GetLength() == 6);
@@ -452,7 +452,7 @@ void CDrawDoc::Remove(CDrawObj* pObj)
             } else {
                 auto pOpis = dynamic_cast<CDrawOpis*>(pObj);
                 if (pOpis && pOpis->m_opi_xx != -1)
-                    m_del_obj.emplace_back(isLIB ? EntityType::opis_lib : EntityType::opis, pOpis->m_opi_xx);
+                    m_del_obj.emplace_back(iDocType == DocType::makieta_lib ? EntityType::opis_lib : EntityType::opis, pOpis->m_opi_xx);
             }
             m_objects.erase(pos);
         }
@@ -569,7 +569,7 @@ void CDrawDoc::RemovePage(CDrawPage* pObj)
     if (i == -1)
         return;
 
-    if (i == 0 && !isLIB)  // usuwamy ostatnia strone, na ktorej moga byc virtualne ogloszenia
+    if (i == 0 && iDocType != DocType::makieta_lib) // usuwamy ostatnia strone, na ktorej moga byc virtualne ogloszenia
         for (const auto& a : m_objects) {
             auto pAdd = dynamic_cast<CDrawAdd*>(a);
             if (pAdd && !pAdd->fizpage) pAdd->SetDirty();
@@ -582,7 +582,7 @@ void CDrawDoc::RemovePage(CDrawPage* pObj)
         m_pages[ii]->MoveTo(&m_pages[ii - 1]->m_position);
 
     if (pObj->id_str != -1)
-        m_del_obj.emplace_back(isLIB ? EntityType::page_lib : EntityType::page, pObj->id_str);
+        m_del_obj.emplace_back(iDocType == DocType::makieta_lib ? EntityType::page_lib : EntityType::page, pObj->id_str);
     m_pages.erase(m_pages.cbegin() + i);
     SetModifiedFlag();
 
@@ -664,7 +664,7 @@ void CDrawDoc::MoveBlockOfPages(const int iSrcOrd, const int iDstOrd, const int 
         m_pages[i]->SetDirty();
     }
     // og³oszenia poza makiet¹ musz¹ byæ zmienione w bazie
-    if (iPocz == 0 && !isLIB)
+    if (iPocz == 0 && iDocType != DocType::makieta_lib)
         for (const auto& pObj : m_objects) {
             auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
             if (pAdd && !pAdd->fizpage) pAdd->SetDirty();
@@ -719,23 +719,22 @@ BOOL CDrawDoc::OnOpenDocument(LPCTSTR pszPathName)
     const TCHAR* dot = _tcsrchr(pszPathName, _T('.'));
     if (dot != nullptr) {
         const TCHAR firstExtensionLetter = *(dot + 1);
-        if (firstExtensionLetter == _T('L')) { // .LIB
-            isLIB = TRUE;
+        if (firstExtensionLetter == _T('L')) // .LIB
             iDocType = DocType::makieta_lib;
-        } else if (firstExtensionLetter == _T('G')) { // .GRB
-            isGRB = TRUE;
+        else if (firstExtensionLetter == _T('G')) // .GRB
             iDocType = DocType::grzbiet_drukowany;
-        }
-        if (isGRB || isLIB || firstExtensionLetter == _T('D')) { // .DB
+
+        if (iDocType != DocType::makieta || firstExtensionLetter == _T('D')) { // .DB
             swCZV = theApp.initCZV;
             const TCHAR* slash = _tcsrchr(pszPathName, _T('\\'));
             if (slash != nullptr) {
                 const auto len = dot - slash;
-                ASSERT(len <= MAX_PATH);
-                TCHAR makieta[MAX_PATH];
-                memcpy(makieta, slash + 1, len * sizeof(TCHAR));
-                makieta[len - 1] = TCHAR{0};
-                return DBOpenDoc(makieta);
+                if (len <= MAX_PATH) {
+                    TCHAR makieta[MAX_PATH];
+                    memcpy(makieta, slash + 1, len * sizeof(TCHAR));
+                    makieta[len - 1] = TCHAR{0};
+                    return DBOpenDoc(makieta);
+                }
             }
         }
     }
@@ -1218,7 +1217,7 @@ void CDrawDoc::OnFileInfo()
     CInfoDlg dlg;
     CString deadline, data_z, data_s, data_w;
     CManODPNETParm idmPar { CManDbType::DbTypeInt32, &m_mak_xx };
-    if (isLIB) {
+    if (iDocType == DocType::makieta_lib) {
         CInfoDlgLib dlg2;
         dlg2.m_tytmut = gazeta;
         dlg2.m_wersja = data;
@@ -1283,7 +1282,7 @@ void CDrawDoc::OnFileInfo()
         orapar.outParamsCount = 20;
 
         auto sql = reinterpret_cast<char*>(theApp.bigBuf);
-        ::StringCchPrintfA(sql, bigSize, "begin select deadline,data_z,data_s,data_w,p2,wydawca,zsy_red,grzbietowanie,naklad,numer,numerrok,to_char(cena),to_char(cena2),podpis_red,wydaw_str,typ_dodatku,grzbiet,szycie,drukarnie,opis_papieru into :1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:l5,:16,:17,:18,:19,:20 from %sinfo where rownum=1 and xx=:xx; end;", isGRB ? "grb" : "mak");
+        ::StringCchPrintfA(sql, bigSize, "begin select deadline,data_z,data_s,data_w,p2,wydawca,zsy_red,grzbietowanie,naklad,numer,numerrok,to_char(cena),to_char(cena2),podpis_red,wydaw_str,typ_dodatku,grzbiet,szycie,drukarnie,opis_papieru into :1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:l5,:16,:17,:18,:19,:20 from %sinfo where rownum=1 and xx=:xx; end;", iDocType == DocType::grzbiet_drukowany ? "grb" : "mak");
         if (!theManODPNET.EI(sql, orapar)) return;
 
         if (_stscanf_s(deadline, c_formatCzasu, &d, &m, &r, &g, &min) == 5)
@@ -1380,7 +1379,7 @@ void CDrawDoc::OnFileInfo()
         }
     }
 
-    if (!isLIB) {
+    if (iDocType != DocType::makieta_lib) {
         prowadzacy1 = dlg.m_prowadz1;
         prowadzacy2 = dlg.m_prowadz2;
         sekretarz = dlg.m_sekretarz;
@@ -1883,7 +1882,7 @@ void CDrawDoc::OnPagederv()
 
 HMENU CDrawDoc::GetDefaultMenu()
 {
-    return isGRB ? m_grzbietMenu.GetSafeHmenu() : nullptr;
+    return iDocType == DocType::grzbiet_drukowany ? m_grzbietMenu.GetSafeHmenu() : nullptr;
 }
 
 void CDrawDoc::OnInsertGrzbiet()

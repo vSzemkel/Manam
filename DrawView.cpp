@@ -138,19 +138,19 @@ void CDrawView::OnDisableMenu(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu); }
 
 void CDrawView::OnDisableMenuRDBMS(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && theApp.isRDBMS); }
 
-void CDrawView::OnDisableMenuLIB(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB); }
+void CDrawView::OnDisableMenuLIB(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && GetDocument()->iDocType != DocType::makieta_lib); }
 
-void CDrawView::OnDisableMenuDEAL(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && !(theApp.grupa & (UserRole::dea))); }
+void CDrawView::OnDisableMenuDEAL(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && GetDocument()->iDocType != DocType::makieta_lib && !(theApp.grupa & (UserRole::dea))); }
 
-void CDrawView::OnDisableMenuSTU(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && (theApp.grupa & UserRole::stu)); }
+void CDrawView::OnDisableMenuSTU(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && GetDocument()->iDocType != DocType::makieta_lib && (theApp.grupa & UserRole::stu)); }
 
-void CDrawView::OnDisableMenuAdSel(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && m_selection.size() == 1 && dynamic_cast<CDrawAdd *>(m_selection.front())); }
+void CDrawView::OnDisableMenuAdSel(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && GetDocument()->iDocType != DocType::makieta_lib && m_selection.size() == 1 && dynamic_cast<CDrawAdd*>(m_selection.front())); }
 
-void CDrawView::OnDisableMenuAdPageSel(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && m_selection.size() == 1 && (dynamic_cast<CDrawAdd *>(m_selection.front()) || dynamic_cast<CDrawPage *>(m_selection.front()))); }
+void CDrawView::OnDisableMenuAdPageSel(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && GetDocument()->iDocType != DocType::makieta_lib && m_selection.size() == 1 && (dynamic_cast<CDrawAdd*>(m_selection.front()) || dynamic_cast<CDrawPage*>(m_selection.front()))); }
 
-void CDrawView::OnDisableMenuAdSelOPI(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && !theApp.isOpiMode && m_selection.size() == 1 && dynamic_cast<CDrawAdd *>(m_selection.front())); }
+void CDrawView::OnDisableMenuAdSelOPI(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && GetDocument()->iDocType != DocType::makieta_lib && !theApp.isOpiMode && m_selection.size() == 1 && dynamic_cast<CDrawAdd*>(m_selection.front())); }
 
-void CDrawView::OnDisableMenuAdSelSTU(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && !GetDocument()->isLIB && (theApp.grupa & UserRole::stu) && m_selection.size() == 1 && dynamic_cast<CDrawAdd *>(m_selection.front())); }
+void CDrawView::OnDisableMenuAdSelSTU(CCmdUI* pCmdUI) { pCmdUI->Enable(!disableMenu && GetDocument()->iDocType != DocType::makieta_lib && (theApp.grupa & UserRole::stu) && m_selection.size() == 1 && dynamic_cast<CDrawAdd*>(m_selection.front())); }
 
 BOOL CDrawView::PreCreateWindow(CREATESTRUCT& cs)
 {
@@ -685,7 +685,7 @@ void CDrawView::OnUpdateDrawTool(CCmdUI* pCmdUI)
 
 void CDrawView::OnUpdateDrawAdd(CCmdUI* pCmdUI)
 {
-    if (GetDocument()->isLIB)
+    if (GetDocument()->iDocType == DocType::makieta_lib)
         pCmdUI->Enable(FALSE);
     else
         OnUpdateDrawTool(pCmdUI);
@@ -776,7 +776,8 @@ void CDrawView::OnImportOpcje()
 void CDrawView::OnUpdateImportOpcje(CCmdUI* pCmdUI)
 {
     if (!OnDisableMenuInt(pCmdUI)) {
-        if (GetDocument()->isLIB) pCmdUI->Enable(FALSE);
+        if (GetDocument()->iDocType == DocType::makieta_lib) 
+            pCmdUI->Enable(FALSE);
         pCmdUI->SetCheck(theApp.includeKratka);
     }
 }
@@ -1242,7 +1243,7 @@ void CDrawView::OnDrawMakStrony()
 void CDrawView::OnUpdateDrawMakStrony(CCmdUI* pCmdUI)
 {
     if (OnDisableMenuInt(pCmdUI)) return;
-    if (GetDocument()->isLIB || m_selection.size() != 1) {
+    if (GetDocument()->iDocType == DocType::makieta_lib || m_selection.size() != 1) {
         pCmdUI->Enable(FALSE);
         return;
     }
@@ -1514,7 +1515,7 @@ void CDrawView::OnRButtonDown(const UINT nFlags, CPoint point)
     CDrawDoc* pDoc = GetDocument();
     CDrawPage* pPage = pDoc->PageAt(local);
     if (!pPage) return;
-    if (theApp.isRDBMS && pDoc->isGRB && !pDoc->isRO) {
+    if (theApp.isRDBMS && pDoc->iDocType == DocType::grzbiet_drukowany && !pDoc->isRO) {
         CMenu mmutczas;
         Select(pPage, false);
         ClientToScreen(&point);

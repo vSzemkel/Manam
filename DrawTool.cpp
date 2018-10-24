@@ -164,7 +164,7 @@ void CSelectTool::OnLButtonDown(CDrawView* pView, const UINT nFlags, const CPoin
         dc.DrawFocusRect(m_last_rect);
     }
 
-    if (pView->GetDocument()->isGRB || (theApp.grupa & UserRole::dea) > 0)
+    if (pView->GetDocument()->iDocType == DocType::grzbiet_drukowany || (theApp.grupa & UserRole::dea) > 0)
         selectMode = SelectMode::none;
 
     lastPoint = local;
