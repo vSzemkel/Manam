@@ -208,9 +208,9 @@ void CDrawDoc::SetTitleAndMru(const bool addRecentFiles)
     ASSERT(gazeta.GetLength() == 6);
     const auto posDate = makieta.ReverseFind(_T(' '));
     const auto makBuf = makieta.GetBuffer();
-    memcpy(static_cast<void*>(6 + makBuf), static_cast<void*>(makBuf + posDate), (len - posDate + 1) * sizeof(TCHAR));
+    makieta.CopyChars(makBuf + 6, makBuf + posDate, len - posDate + 1);
     makieta.SetAt(6, _T('_'));
-    makieta.GetBufferSetLength(len - posDate + 6);
+    makieta.Truncate(len - posDate + 6);
     makieta.Append(asDocTypeExt[static_cast<int>(iDocType)]);
     theApp.AddToRecentFileList(makieta);
 }

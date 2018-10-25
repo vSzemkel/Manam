@@ -449,7 +449,8 @@ void CDrawApp::FileRefresh(CDrawDoc* refreshDoc)
             if (vDoc->m_mak_xx < 0 && vDoc->iDocType != DocType::grzbiet_drukowany) // offline
                 doce.emplace_back(vDoc->GetPathName());
             else // online 
-                doce.emplace_back(vDoc->gazeta + _T("_") + d + _T(".") + (vDoc->iDocType == DocType::makieta_lib ? _T("LIB") : (vDoc->iDocType == DocType::grzbiet_drukowany ? _T("GRB") : _T("DB"))));
+                doce.emplace_back(vDoc->gazeta + _T("_") + d + CDrawDoc::asDocTypeExt[static_cast<int8_t>(vDoc->iDocType)]);
+
             tytuly.emplace_back(vDoc->GetTitle());
         }
         vWnd->DestroyWindow();
