@@ -14,7 +14,7 @@
 extern BOOL drawErrorBoxes;
 extern BOOL disableMenu;
 
-const TCHAR* CDrawDoc::asDocTypeExt[3] = { _T(".DB"), _T(".LIB"), _T(".GRB") }; // rozszerzenie poszczeglnych typów dokumentow opisanych w eDocType
+const TCHAR* CDrawDoc::asDocTypeExt[] = { _T(".DB"), _T(".LIB"), _T(".GRB") }; // rozszerzenie poszczeglnych typów dokumentow opisanych w eDocType
 std::vector<UINT> CDrawDoc::spoty;
 std::vector<CString> CDrawDoc::kolory;
 std::vector<CBrush*> CDrawDoc::brushe;
@@ -211,7 +211,7 @@ void CDrawDoc::SetTitleAndMru(const bool addRecentFiles)
     makieta.CopyChars(makBuf + 6, makBuf + posDate, len - posDate + 1);
     makieta.SetAt(6, _T('_'));
     makieta.Truncate(len - posDate + 6);
-    makieta.Append(asDocTypeExt[static_cast<int>(iDocType)]);
+    makieta.Append(asDocTypeExt[static_cast<int8_t>(iDocType)]);
     theApp.AddToRecentFileList(makieta);
 }
 
@@ -460,7 +460,7 @@ void CDrawDoc::Remove(CDrawObj* pObj)
 
     SetModifiedFlag();
     // call remove for each view so that the view can remove from m_selection
-    auto pView = GetPanelView<CDrawView>();
+    auto pView = GetPanelView();
     if (pView) pView->Remove(pObj);
 }
 
@@ -516,7 +516,7 @@ int CDrawDoc::GetAdPosition(const CDrawAdd* pAdd) const
 
 void CDrawDoc::SelectAdd(CDrawAdd* pObj, const bool multiselect) const
 {
-    auto pView = GetPanelView<CDrawView>();
+    auto pView = GetPanelView();
     if (pView) pView->Select(pObj, multiselect);
 }
 
@@ -587,7 +587,7 @@ void CDrawDoc::RemovePage(CDrawPage* pObj)
     SetModifiedFlag();
 
     // call remove for each view so that the view can remove from m_selection
-    auto pView = GetPanelView<CDrawView>();
+    auto pView = GetPanelView();
     if (pView) pView->Remove(pObj);
 
     //zmiana spotow
@@ -707,7 +707,7 @@ void CDrawDoc::ComputeCanvasSize()
     // if size changed then iterate over views and reset
     if (new_size != m_size) {
         m_size = new_size;
-        auto *pView = GetPanelView<CDrawView>();
+        auto *pView = GetPanelView();
         if (pView) pView->SetPageSize();
     }
 }
@@ -781,7 +781,7 @@ void CDrawDoc::OnImport(const bool fromDB)
 {
     const auto n = (int)m_objects.size();
     if ((fromDB) ? DBImport() : Import(true)) {
-        auto pView = GetPanelView<CDrawView>();
+        auto pView = GetPanelView();
         if (pView && pView->m_bActive) pView->Select(nullptr, FALSE);
         RemoveFromHead(n);
         UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
@@ -1008,7 +1008,7 @@ void CDrawDoc::NumberPages()
     int iFirstPageNumber = 1;
     int iFirstPageToNumber = 1;
     // dla stron arabskich dopuszczamy przenumerowanie od zadanej
-    auto pView = GetPanelView<CDrawView>();
+    auto pView = GetPanelView();
     if (pView->m_selection.size() == 1) {
         auto pSelPage = dynamic_cast<CDrawPage*>(pView->m_selection.front());
         if (pSelPage != nullptr && pSelPage->pagina_type == PaginaType::arabic) {
@@ -1122,7 +1122,7 @@ void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_
 {
     UINT selectedPagesCount{0};
     UINT l_modogl, l_modred, l_modrez;
-    const auto view = GetPanelView<CDrawView>();
+    const auto view = GetPanelView();
 
     *m_modogl = *m_modred = *m_modrez = 0;
     for (const auto& page : m_pages) {

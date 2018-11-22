@@ -980,12 +980,12 @@ bool CDrawPage::CheckRozmKrat()
 
 bool CDrawPage::GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destName)
 {
-    const TCHAR* aExt[3] = { _T(".eps"), _T(".ps"), _T(".pdf") };
+    const TCHAR* aExt[] = { _T(".eps"), _T(".ps"), _T(".pdf") };
     destName = theApp.GetProfileString(_T("GenEPS"), pArg->format == CManFormat::EPS ? _T("EpsDst") : _T("PsDst"), _T(""));
     destName += ((destName.Right(1) == _T("\\")) ? _T("") : _T("\\"));
     int pos = m_pDocument->gazeta.Find(_T(" "));
     if (pArg->format > CManFormat::EPS) {
-        CString dbDestName = CString(' ', 20);
+        CString dbDestName(' ', 20);
         CManODPNETParms orapar {
             { CManDbType::DbTypeInt32, &m_pDocument->m_mak_xx },
             { CManDbType::DbTypeInt32, &id_str },

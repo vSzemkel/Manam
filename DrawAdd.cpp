@@ -16,7 +16,7 @@
 extern BOOL drawErrorBoxes;
 extern SelectMode selectMode;
 
-constexpr SpadInfo aSpadInfo[16] = {
+constexpr SpadInfo aSpadInfo[] = {
     { SpadInfo::bleed_right, SpadInfo::bleed_right, true,  true  }, // 0
     { SpadInfo::bleed_right, SpadInfo::bleed_right, false, true  },
     { SpadInfo::bleed_right, SpadInfo::bleed_right, true,  false },

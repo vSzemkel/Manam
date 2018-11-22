@@ -574,7 +574,7 @@ void CDrawDoc::OnVuCkMakietowanie()
 
     drawErrorBoxes = !drawErrorBoxes;
 
-    auto vView = GetPanelView<CDrawView>();
+    auto vView = GetPanelView();
     if (vView) vView->Invalidate(FALSE);
 }
 
@@ -779,7 +779,7 @@ int CDrawDoc::GetIPage(CDrawPage* pPage) const noexcept
 void CDrawDoc::OnAsideAdds()
 {
     CDrawPage* vPage{nullptr};
-    auto pView = GetPanelView<CDrawView>();
+    auto pView = GetPanelView();
     if (pView->m_selection.size() == 1)
         vPage = dynamic_cast<CDrawPage*>(pView->m_selection.front());
 

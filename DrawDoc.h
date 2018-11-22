@@ -53,7 +53,7 @@ class CDrawDoc final : public COleDocument
     void Serialize(CArchive& ar) override;  // overridden for document i/o
     BOOL SaveModified() override;           // plik do pliku , baza do bazy
 
-    template<class T> T* GetPanelView() const noexcept;
+    template<class T = CDrawView> T* GetPanelView() const noexcept;
     const CSize& GetSize() const noexcept { return m_size; }
     float GetDrobneH();
     void ComputeCanvasSize();
@@ -240,9 +240,9 @@ template<class T> T* CDrawDoc::GetPanelView() const noexcept
 {
     POSITION pos = GetFirstViewPosition();
     while (pos != nullptr) {
-        auto vView = dynamic_cast<T*>(GetNextView(pos));
-        if (vView)
-            return vView;
+        auto view = dynamic_cast<T*>(GetNextView(pos));
+        if (view)
+            return view;
     }
     return nullptr;
 }
