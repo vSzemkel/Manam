@@ -2066,7 +2066,7 @@ CFlag CPrnEpsDlg::GetChoosenPages(CDrawDoc* pDoc) const noexcept
     TCHAR* tok;
     int beg, end;
     CFlag wyborStron{0, 0, 1, pc};
-    const TCHAR septok[] = {',', '-'};
+    const TCHAR septok[] = _T(",-");
 
     switch (m_page) {
         case 1:
@@ -3018,7 +3018,7 @@ CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
     else
         sProcInfo.Trim().Replace(_T("  "), _T(" "));
 
-    m_memstat.Format(_T("Zu¿ycie pamiêci: %d/%d [MB]\n%s"), (ms.ullTotalPhys - ms.ullAvailPhys)/0x100000, ms.ullTotalPhys / 0x100000, sProcInfo);
+    m_memstat.Format(_T("Zu¿ycie pamiêci: %u/%u [MB]\n%s"), static_cast<uint32_t>((ms.ullTotalPhys - ms.ullAvailPhys) / 0x100000), static_cast<uint32_t>(ms.ullTotalPhys / 0x100000), sProcInfo);
 }
 
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)

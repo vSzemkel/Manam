@@ -14,7 +14,6 @@
 extern BOOL drawErrorBoxes;
 extern BOOL disableMenu;
 
-const TCHAR* CDrawDoc::asDocTypeExt[] = { _T(".DB"), _T(".LIB"), _T(".GRB") }; // rozszerzenie poszczeglnych typów dokumentow opisanych w eDocType
 std::vector<UINT> CDrawDoc::spoty;
 std::vector<CString> CDrawDoc::kolory;
 std::vector<CBrush*> CDrawDoc::brushe;
@@ -1069,7 +1068,7 @@ bool CDrawDoc::Add4Pages()
     if (dlg.DoModal() != IDOK)
         return false;
 
-    const CRect r{nullptr};
+    const CRect r{0};
     const int n = _ttoi(dlg.m_ile_kolumn);
     const auto last = (int)m_pages.size();
     for (int i = last; i < last + n; ++i) {
@@ -1102,7 +1101,7 @@ bool CDrawDoc::AddDrz4Pages(LPCTSTR ile_kolumn)
     gazeta = dlg.m_gazeta;
     id_drw = dlg.m_id_drw;
 
-    const CRect r{nullptr};
+    const CRect r{0};
     const int n = _ttoi(dlg.m_ile_kolumn);
     const auto last = (int)m_pages.size();
     for (int i = last; i < last + n; ++i) {

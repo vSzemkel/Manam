@@ -10,8 +10,6 @@
 /////////////////////////////////////////////////////////////////////////////
 // CGridFrm
 
-TCHAR CGridFrm::studioStats[][8] = { _T("Brak"), _T("Jest"), _T("Akcept."), _T("Nowy"), _T("O.K."), _T("Wys³any"), _T("Filtr"), _T("Err") };
-
 IMPLEMENT_DYNCREATE(CGridFrm, CFormView)
 
 bool CGridFrm::bSortAsc{true};

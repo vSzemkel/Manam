@@ -67,8 +67,8 @@ public:
 // Attributes
 public:
     bool showLastAdnoUsed;
-    static TCHAR studioStats[][8];
     static GridSortCol eLastOrder;
+    static constexpr TCHAR studioStats[][8] = {_T("Brak"), _T("Jest"), _T("Akcept."), _T("Nowy"), _T("O.K."), _T("Wys³any"), _T("Filtr"), _T("Err")};
     // Operations
 public:
     auto GetDocument() const { return reinterpret_cast<CDrawDoc*>(m_pDocument); }

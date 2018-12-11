@@ -123,7 +123,7 @@ class CDrawPage final : public CDrawObj
     CString GetNrPaginy() const;
 
 private:
-    static CString GenerateGUIDString();                        // Konwertuje wygenerowany GIUD do stringu
+    static CStringW GenerateGUIDString();                       // Konwertuje wygenerowany GIUD do stringu
     static void MoveMemFileContent(CFile& dst, CMemFile&& src); // Przenosi zawartoœæ src od poczatku do aktualnej pozycji
 
     CFlag GetReservedFlag();                                    // Pobiera flagê szarych modu³ów

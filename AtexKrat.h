@@ -29,8 +29,8 @@ private:
     float xmm;			// szerokosc ogloszenia
     CDrawDoc* doc;		// aktywny dokument
 
-    bool CompX(int* sizex, int* s_x) const;	// liczy szerokosc ogloszenia i liczbe kolumn strony
-    bool CompY(int* sizey, int* s_y) const;	// liczy wysokosc ogloszenia i liczbe wierszy strony
+    bool CompX(int* sizex, int* s_x) const noexcept; // liczy szerokosc ogloszenia i liczbe kolumn strony
+    bool CompY(int* sizey, int* s_y) const noexcept; // liczy wysokosc ogloszenia i liczbe wierszy strony
 };
 
 // CKratCalc dialog

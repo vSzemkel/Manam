@@ -116,15 +116,15 @@ void CDrawPage::Serialize(CArchive& ar)
     }
 }
 
-inline CString CDrawPage::GenerateGUIDString()
+inline CStringW CDrawPage::GenerateGUIDString()
 {
     const int MAX_CHAR_IN_GUID = 50;
     wchar_t buf[MAX_CHAR_IN_GUID];
     GUID Guid = { 0 };
 
     ::CoCreateGuid(&Guid);
-    StringFromGUID2(Guid, buf, MAX_CHAR_IN_GUID);
-    return CString(buf);
+    ::StringFromGUID2(Guid, buf, MAX_CHAR_IN_GUID);
+    return buf;
 }
 
 CString CDrawPage::GetNrPaginy() const

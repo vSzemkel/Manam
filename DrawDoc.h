@@ -33,7 +33,6 @@ class CDrawDoc final : public COleDocument
     friend class CDrawDocDbReader;
     friend class CDrawDocDbWriter;
 
-    static const TCHAR* asDocTypeExt[3];
     static std::vector<UINT> spoty;         // numer na liœcie kolorów -> bazodanowy identyfikator koloru
     static std::vector<CString> kolory;     // dopuszczalne kolory og³oszeñ i stron
     static std::vector<CBrush*> brushe;     // cache pêdzli u¿ywanych w widoku makiety
@@ -44,6 +43,7 @@ class CDrawDoc final : public COleDocument
     static int GetIdxfromSpotID(UINT spot_id) noexcept;
     static CBrush* GetSpotBrush(int i) noexcept;
     static CString XmlReadText(IXmlReader* reader);
+    static constexpr TCHAR* asDocTypeExt[] = {_T(".DB"), _T(".LIB"), _T(".GRB")}; // rozszerzenie poszczeglnych typów dokumentow opisanych w eDocType
 
     ~CDrawDoc() override;
     BOOL OnNewDocument() override;
