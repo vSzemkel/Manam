@@ -369,7 +369,7 @@ void CDrawDoc::Print(CDC* pDC)
         const auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
         if (pAdd) {
             const CRect& rect = pAdd->GetPrintRect();
-            pAdd->DrawDesc(pDC, &rect);
+            pAdd->DrawDesc(pDC, rect);
         }
     }
 
@@ -378,7 +378,7 @@ void CDrawDoc::Print(CDC* pDC)
 
     if (theApp.showDeadline)
         for (const auto& p : m_pages)
-            p->DrawDeadline(pDC, &p->GetPrintRect());
+            p->DrawDeadline(pDC, p->GetPrintRect());
 }
 
 void CDrawDoc::PrintPage(CDC* pDC, CDrawPage* pPage)
@@ -406,7 +406,7 @@ void CDrawDoc::PrintPage(CDC* pDC, CDrawPage* pPage)
     pDC->SetViewportExt(s);
     pDC->SetWindowOrg(p);
     if (theApp.showDeadline)
-        pPage->DrawDeadline(pDC, &pPage->GetPrintRect());
+        pPage->DrawDeadline(pDC, pPage->GetPrintRect());
     pDC->SetViewportOrg(0, 0);
     pDC->SetWindowOrg(0, 0);
     if (!isSIG && theApp.isRDBMS)
@@ -416,17 +416,17 @@ void CDrawDoc::PrintPage(CDC* pDC, CDrawPage* pPage)
 ////////// CDRAWOBJ _M_OBJECTS LIST ?/////////////////////////////       
 void CDrawDoc::Add(CDrawObj* pObj)
 {
+    SetModifiedFlag();
     pObj->m_pDocument = this;
     m_objects.push_back(pObj);
-    SetModifiedFlag();
 }
 
 void CDrawDoc::AddQue(CDrawAdd* pObj)
 {
+    SetModifiedFlag();
     pObj->fizpage = 0;
     pObj->m_pDocument = this;
     m_addsque.push_back(pObj);
-    SetModifiedFlag();
 }
 
 void CDrawDoc::RemoveQue(CDrawAdd* pObj)
@@ -633,9 +633,10 @@ int CDrawDoc::ComputePageOrderNr(const CRect& position) const
 void CDrawDoc::MoveBlockOfPages(const int iSrcOrd, const int iDstOrd, const int iCnt)
 {
     ASSERT(iCnt > 0);
+    const int size = (int)m_pages.size();
     const int iPocz = min(iSrcOrd, iDstOrd);
-    const int iKon = min(max(iSrcOrd, iDstOrd) + iCnt, (int)m_pages.size());
-    ASSERT(0 <= iPocz && iKon <= (int)m_pages.size());
+    const int iKon = min(max(iSrcOrd, iDstOrd) + iCnt, size);
+    ASSERT(0 <= iPocz && iKon <= size);
 
     int i;
     CPoint pNowhere(INT_MAX >> 2, 0);
@@ -647,7 +648,7 @@ void CDrawDoc::MoveBlockOfPages(const int iSrcOrd, const int iDstOrd, const int 
         SetPageRectFromOrd(m_pages[iSrcOrd + i], iSrcOrd + i);
     // przenieœ opisy stron z zakresu rotacji
     for (i = iPocz; i < iKon; ++i) {
-        aNoPagePos[i] = (m_pages[i])->m_position - pNowhere;
+        aNoPagePos[i] = m_pages[i]->m_position - pNowhere;
         if (!MoveOpisAfterPage(&m_pages[i]->m_position, &aNoPagePos[i]))
             aNoPagePos[i] = nullptr;
     }
@@ -1644,7 +1645,7 @@ second_paper:
                 if (i < ac && abs(vAdd->flags.isok) < 3) { // ustaw zapore
                     zaporaATEX.push_back((int)vAdd->m_pub_xx);
                     vAdd->flags.isok = 3;
-                    const int p = vAdd->czaskto.Find(_T("["));
+                    const int p = vAdd->czaskto.Find(_T('['));
                     if (p >= 0) vAdd->czaskto = _T("# ") + vAdd->czaskto.Mid(p);
                 }
             }

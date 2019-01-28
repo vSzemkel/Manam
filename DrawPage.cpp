@@ -265,7 +265,9 @@ void CDrawPage::DrawGrid(CDC* pDC)
                     pDC->LineTo(rect.right, rect.bottom);
                     pDC->SelectStockObject(NULL_PEN);
                 } else {
-                    auto tmp = rect.bottom; rect.bottom = rect.top; rect.top = tmp;
+                    rect.bottom ^= rect.top;
+                    rect.top ^= rect.bottom;
+                    rect.bottom ^= rect.top;
                     DrawNapis(pDC, _T("R"), 1, rect, DT_CENTER | DT_VCENTER, TRANSPARENT);
                 }
             }
