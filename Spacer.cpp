@@ -41,7 +41,7 @@ BOOL CSpacerDlg::Deal(CDrawAdd* vAdd)
 
     vAdd->flags.isok = 1;
     CSpacerDlg dlg(vAdd);
-    dlg.queDeal = !vAdd->fizpage;
+    dlg.m_que_deal = !vAdd->fizpage;
     if (dlg.DoModal() != IDOK && (vAdd->m_add_xx < 1 || dlg.m_quepub_xx > 0)) { //jezeli nie udalo sie sprzedac, to usun ogloszenie z makiety, z kolejki nie usuwaj
         CDrawDoc* vDoc = vAdd->m_pDocument;
         CDrawPage* pPage = vDoc->GetPage(vAdd->fizpage);
@@ -50,7 +50,7 @@ BOOL CSpacerDlg::Deal(CDrawAdd* vAdd)
         if (pPage) pPage->Invalidate();
         else vDoc->UpdateAllViews(nullptr);
         vDoc->SetModifiedFlag(FALSE);
-    } else dlg.refreshOnClose ? theApp.FileRefresh() : vAdd->UpdateInfo();
+    } else dlg.m_onclose_refresh ? theApp.FileRefresh() : vAdd->UpdateInfo();
 
     return TRUE;
 }
@@ -58,8 +58,8 @@ BOOL CSpacerDlg::Deal(CDrawAdd* vAdd)
 CSpacerDlg::CSpacerDlg(CDrawAdd* vAdd, CWnd* pParent /*=NULL*/)
     : CDialog(CSpacerDlg::IDD, pParent)
 {
-    _stscanf_s(vAdd->m_pDocument->data, c_formatDaty, &dd, &mm, &rrrr);
-    emisionlastChoice = m_lastemision = CTime(rrrr, mm, dd, 0, 0, 0);
+    _stscanf_s(vAdd->m_pDocument->data, c_formatDaty, &m_dd, &m_mm, &m_rrrr);
+    emisionlastChoice = m_lastemision = CTime(m_rrrr, m_mm, m_dd, 0, 0, 0);
     kroklastChoice = _T("*");
     //{{AFX_DATA_INIT(CSpacerDlg)
     m_pageparity = m_pagelayout = FALSE;
@@ -68,7 +68,7 @@ CSpacerDlg::CSpacerDlg(CDrawAdd* vAdd, CWnd* pParent /*=NULL*/)
     m_dealappend = m_wsekcji = m_sekcja = FALSE;
     m_quepub_xx = m_spacer = 0;
     //}}AFX_DATA_INIT
-    queDeal = refreshOnClose = FALSE;
+    m_que_deal = m_onclose_refresh = FALSE;
     pub = vAdd;
     m_posx = vAdd->posx;
     m_posy = vAdd->posy;
@@ -120,7 +120,7 @@ void CSpacerDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Text(pDX, IDC_SPACER, m_spacer);
     DDX_Control(pDX, IDC_MUTACJA, m_ollist);
 
-    const int base = queDeal ? 0 : 1;
+    const int base = m_que_deal ? 0 : 1;
     const int ax = m_szpalt_x - m_sizex + 1;
     const int ay = m_szpalt_y - m_sizey + 1;
     DDV_MinMaxInt(pDX, m_posx, base, ax);
@@ -198,7 +198,7 @@ BOOL CSpacerDlg::OnInitDialog()
 
     m_mak_xx = pub->m_pDocument->m_mak_xx;
 
-    if (queDeal) {
+    if (m_que_deal) {
         m_str_xx = 0;
         GetDlgItem(IDOK)->EnableWindow(FALSE);
         if (CDrawApp::ShortDateToCTime(pub->m_pDocument->data) < CTime::GetCurrentTime()) {
@@ -260,7 +260,7 @@ void CSpacerDlg::OnCloseupLastemision(NMHDR * /*unused*/, LRESULT *pResult)
 {
     CTime t;
     m_lastemisionctl.GetTime(t);
-    const BOOL interval = t > CTime(rrrr, mm, dd, 0, 0, 0);
+    const BOOL interval = t > CTime(m_rrrr, m_mm, m_dd, 0, 0, 0);
     const BOOL changed = emisionlastChoice != t;
     emisionlastChoice = t;
 
@@ -302,7 +302,7 @@ void CSpacerDlg::OnEmisje()
     };
     theManODPNET.FillList(&m_emisjelist, "begin spacer.list_emisje(:mak_xx,:krok,:kiedy,:retCur); end;", orapar, 0);
 
-    if (!queDeal) GetDlgItem(IDOK)->EnableWindow(TRUE);
+    if (!m_que_deal) GetDlgItem(IDOK)->EnableWindow(TRUE);
     GetDlgItem(IDEMISJE)->EnableWindow(FALSE);
 }
 
@@ -326,7 +326,7 @@ void CSpacerDlg::OnZDnia()
         if (m_emisjelist.FindString(0, kiedy) == LB_ERR)
             m_emisjelist.SetItemData(m_emisjelist.AddString(kiedy), (DWORD)mak_xx);
     }
-    if (!queDeal) GetDlgItem(IDOK)->EnableWindow(TRUE);
+    if (!m_que_deal) GetDlgItem(IDOK)->EnableWindow(TRUE);
 }
 
 void CSpacerDlg::OnSelchangeKrok()
@@ -440,7 +440,7 @@ void CSpacerDlg::OnDelall()
     m_olSelected = FALSE;
     m_ollist.ResetContent();
     m_emisjelist.ResetContent();
-    if (!queDeal && m_add_xx > 0) {
+    if (!m_que_deal && m_add_xx > 0) {
         CManODPNETParms orapar { CManDbType::DbTypeInt32, &m_add_xx };
         theManODPNET.EI("begin spacer.del_all(:add_xx); end;", orapar);
     }
@@ -537,7 +537,7 @@ void CSpacerDlg::OnQue()
     orapar.outParamsCount = 2;
     const int rc = m_emisjelist.GetCount();
     const char* sql = "begin spacer.que(:mak_xx,:szpalt_x,:szpalt_y,:sizex,:sizey,:nazwa,:wersja,:uwagi,:ile_kol,:spo_xx,:typ_xx,:add_xx,:pub_xx); end;";
-    if (queDeal) {
+    if (m_que_deal) {
         if (!theManODPNET.EI(sql, orapar))
             return;
         for (i = 1; i < rc; ++i) { // wieloemisyjny queDeal
@@ -571,7 +571,7 @@ void CSpacerDlg::OnQue()
         if (!isDone) return;
     }
 
-    refreshOnClose = TRUE;
+    m_onclose_refresh = TRUE;
 
     CDialog::OnOK();
 }
@@ -599,7 +599,7 @@ void CSpacerDlg::OnOK()
         m_precel_flag = m_typ_precel_arr[i];
     }
 
-    refreshOnClose = (pub->posx != m_posx || pub->posy != m_posy || pub->sizex != m_sizex || pub->sizey != m_sizey || !m_precel_flag.IsEmpty());
+    m_onclose_refresh = (pub->posx != m_posx || pub->posy != m_posy || pub->sizex != m_sizex || pub->sizey != m_sizey || !m_precel_flag.IsEmpty());
 
     pub->nazwa = m_nazwa;
     pub->wersja = m_wersja;

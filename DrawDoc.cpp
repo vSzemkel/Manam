@@ -108,7 +108,7 @@ CDrawDoc::CDrawDoc() :
     isRO(0), isSIG(0), isACD(0),
     data(CTime::GetCurrentTime().Format(c_ctimeData))
 {
-    iPagesInRow = 10 + 2 * theApp.GetProfileInt(_T("General"), _T("PagesInRow"), 0);
+    m_pagerow_size = 10 + 2 * theApp.GetProfileInt(_T("General"), _T("PagesInRow"), 0);
     // font
     LOGFONT lf { 0 };
     lf.lfHeight = theApp.GetProfileInt(_T("Settings"), _T("PageFontSize"), -11);  //~8pt
@@ -613,8 +613,8 @@ void CDrawDoc::SetPageRectFromOrd(CDrawPage* pObj, const size_t iOrd) const
 {
     ASSERT(0 <= iOrd && iOrd < m_pages.size());
 
-    const auto x = (int)(pmodulx*(1 + floor(fmod((float)iOrd, (float)iPagesInRow) / 2) + (pszpalt_x*fmod((float)iOrd, (float)iPagesInRow))));
-    const auto y = (int)((-7)*pmoduly*floor((float)iOrd / iPagesInRow) + (-1)*(pmoduly*(floor((float)iOrd / iPagesInRow) + 1)));
+    const auto x = (int)(pmodulx*(1 + floor(fmod((float)iOrd, (float)m_pagerow_size) / 2) + (pszpalt_x*fmod((float)iOrd, (float)m_pagerow_size))));
+    const auto y = (int)((-7)*pmoduly*floor((float)iOrd / m_pagerow_size) + (-1)*(pmoduly*(floor((float)iOrd / m_pagerow_size) + 1)));
 
     pObj->m_position.SetRect(x, y, x + pszpalt_x*pmodulx, y - 7 * pmoduly);
     pObj->MoveTo(&pObj->m_position);
@@ -625,9 +625,9 @@ int CDrawDoc::ComputePageOrderNr(const CRect& position) const
     int i = 0, j = 0;
     while (pmoduly*(i + 1)*(-8) >= position.top)
         i++;
-    while (j < iPagesInRow && pmodulx*((int)(1 + floor((float)j / 2) + pszpalt_x*(j + 0.5))) < position.left)
+    while (j < m_pagerow_size && pmodulx*((int)(1 + floor((float)j / 2) + pszpalt_x*(j + 0.5))) < position.left)
         j++;
-    return min((int)m_pages.size() - 1, i * iPagesInRow + j);
+    return min((int)m_pages.size() - 1, i * m_pagerow_size + j);
 }
 
 void CDrawDoc::MoveBlockOfPages(const int iSrcOrd, const int iDstOrd, const int iCnt)
@@ -699,7 +699,7 @@ CDrawPage* CDrawDoc::PageAt(const CPoint& point) const
 void CDrawDoc::ComputeCanvasSize()
 {
     CClientDC dc{nullptr};
-    auto r = div((int)m_pages.size(), iPagesInRow);
+    auto r = div((int)m_pages.size(), m_pagerow_size);
     if (r.quot < 3) r.quot = 3;
     else if (r.rem > 0) r.quot++;
     const CSize new_size(dc.GetDeviceCaps(HORZRES), m_pages.empty() ? dc.GetDeviceCaps(VERTRES) : (int)(pmoduly / vscale * (1 + 8 * r.quot)));
@@ -1433,7 +1433,7 @@ void CDrawDoc::PrintInfo(CDC* pDC, const int max_n, const int wspol_na_str)  // 
     const BOOL vertOK = m_vertfont.CreateFontIndirect(&lf);
 
     CRect rect;
-    const int iHorizScale = iPagesInRow * pmodulx;
+    const int iHorizScale = m_pagerow_size * pmodulx;
     for (int i = 1; i <= max_n; ++i) {
         rect.SetRect(pmodulx, (i - 1)*(wspol_na_str * 40 + 2)*(-pmoduly), (int)(5.5*iHorizScale), ((i - 1)*(wspol_na_str * 40 + 2) + 1)*(-pmoduly));
         pDC->FillRect(rect, (CBrush*)pDC->SelectStockObject(WHITE_BRUSH));
@@ -1737,7 +1737,7 @@ CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, const
 
         if (!szpalt_x) {
             if (krt[0]) { // informacja o kracie z ATEXa
-                if (m_Rozm.empty()) IniRozm();
+                if (m_rozm.empty()) IniRozm();
                 CAtexKrat krat(krt, this);
                 if (krat.isValid && !krat.Compute(&sx, &sy, &szpalt_x, &szpalt_y)) {
                     AfxMessageBox(krat.isToSmall ? _T("Og³oszenie ") + nazwa + _T(": ") + roz + _T(" jest za ma³e do automatycznego dopasowania kraty") : _T("Nie uda³o siê dopasowaæ kraty og³oszenia: ") + roz, MB_OK);
@@ -1749,7 +1749,7 @@ CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, const
             }
         } else { // modelid zdefiniowany w s³owniku TYP_OGLOSZENIA
             if (atex_krat == 1 && krt[0]) {
-                if (m_Rozm.empty()) IniRozm();
+                if (m_rozm.empty()) IniRozm();
                 CAtexKrat krat(krt, this);
                 if (krat.isValid) {
                     int _sx, _sy, _szpalt_x, _szpalt_y;

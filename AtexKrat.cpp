@@ -125,7 +125,7 @@ BOOL CKratCalc::OnInitDialog()
     CheckDlgButton(IDC_DIR_UZU, BST_CHECKED);
 
     // ustaw kratki
-    if (theApp.activeDoc->m_Rozm.empty())
+    if (theApp.activeDoc->m_rozm.empty())
         theApp.activeDoc->IniRozm();
 
     theApp.FillKrataCombo(m_kratycombo);

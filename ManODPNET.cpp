@@ -850,7 +850,7 @@ void CDrawDocDbWriter::SaveStrony(OracleConnection^ conn, const BOOL isSaveAs, c
 
         cmdPage->ExecuteNonQuery();
         pPage->id_str = (int)static_cast<OracleDecimal>(par[1]->Value);
-        pPage->sBoundingBox.Empty();
+        pPage->m_bbox.Empty();
 
         for (const auto& kn : pPage->m_kraty_niebazowe) {
             auto cmdKrat = conn->CreateCommand();
@@ -1529,7 +1529,7 @@ BOOL CManODPNET::InitRozm(CDrawDoc* doc)
 
     try {
         conn->Open();
-        OdpHelper::InitRozmInternal(cmd, doc->m_Rozm);
+        OdpHelper::InitRozmInternal(cmd, doc->m_rozm);
     } catch (OracleException^ oex) {
         OdpHelper::ShowErrMsgDlg(oex->Message);
         return FALSE;

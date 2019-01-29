@@ -608,7 +608,7 @@ void CDrawDoc::AsideAdds()
 CPoint CDrawDoc::GetAsideAddPos(const bool opening) const
 {
     const int addsAsideCnt = opening ? 1 : 1 + (int)std::count_if(cbegin(m_objects), cend(m_objects), [](CDrawObj* pObj) noexcept { const auto a = dynamic_cast<CDrawAdd*>(pObj); return a && a->posx == 0; });
-    const auto marginPageMinX = (int)(pmodulx*(1 + iPagesInRow / 2 + (pszpalt_x*iPagesInRow)));
+    const auto marginPageMinX = (int)(pmodulx*(1 + m_pagerow_size / 2 + (pszpalt_x*m_pagerow_size)));
     const auto marginPageMaxX = (int)(nearbyint((float)(m_size.cx * vscale * 100) / (theApp.m_initZoom * pmodulx)) - (pszpalt_x + 2)) * pmodulx;
     return {max(marginPageMinX, marginPageMaxX), -pmoduly * addsAsideCnt};
 }
@@ -800,7 +800,7 @@ void CDrawDoc::OnAsideAdds()
             }
         AsideAdds();
     } else { // zdejmujemy og³oszenia ze wskazanej strony (wiemy, ¿e to strona makietowana)
-        int iOffset = iPagesInRow - (GetIPage(vPage) % iPagesInRow);
+        int iOffset = m_pagerow_size - (GetIPage(vPage) % m_pagerow_size);
         iOffset = iOffset*pszpalt_x*pmodulx + (iOffset / 2 + 1)*pmodulx;
         vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd* pAdd) -> BOOL {
             if (!pAdd->flags.locked && !pAdd->flags.derived) {
@@ -838,42 +838,42 @@ void CDrawDoc::IniKolorTable()
 
 void CDrawDoc::IniRozm()
 {
-    m_Rozm.clear();
+    m_rozm.clear();
 
     if (theApp.isRDBMS)
         theManODPNET.InitRozm(this);
 
-    if (!m_Rozm.empty()) return;
-    m_Rozm.emplace_back(); // krata 5x6
+    if (!m_rozm.empty()) return;
+    m_rozm.emplace_back(); // krata 5x6
     theApp.SetRegistryBase(_T("EPSKratka"));
     int i, n = theApp.GetInt(_T("Amount"), 0);
     CString bf;
     for (i = 1; i <= n; ++i) {
         bf.Format(_T("%i"), i); // tylko kraty inne niz 5x6
-        m_Rozm.emplace_back(theApp.GetInt(_T("w") + bf, 0), theApp.GetInt(_T("h") + bf, 0),
+        m_rozm.emplace_back(theApp.GetInt(_T("w") + bf, 0), theApp.GetInt(_T("h") + bf, 0),
             theApp.GetInt(_T("sw") + bf, 0), theApp.GetInt(_T("sh") + bf, 0),
             theApp.GetInt(_T("szpalt_x") + bf, 0), theApp.GetInt(_T("szpalt_y") + bf, 0), 0, FALSE);
     }
     n = theApp.GetProfileInt(_T("EPSNiekratowe"), _T("Amount"), 0);
     for (i = 1; i <= n; ++i) {
         bf.Format(_T("%i"), i);
-        m_Rozm.emplace_back(theApp.GetProfileInt(_T("EPSNiekratowe"), _T("w") + bf, 0), theApp.GetProfileInt(_T("Niekratowe"), _T("h") + bf, 0), 0, 0, 0, 0,
+        m_rozm.emplace_back(theApp.GetProfileInt(_T("EPSNiekratowe"), _T("w") + bf, 0), theApp.GetProfileInt(_T("Niekratowe"), _T("h") + bf, 0), 0, 0, 0, 0,
             theApp.GetProfileInt(_T("EPSNiekratowe"), _T("typ_xx") + bf, 0), FALSE);
     }
 } // IniRozm
 
 const CRozm* CDrawDoc::GetCRozm(const int s_x, const int s_y, const int typ_xx)
 {
-    auto pR = std::find_if(m_Rozm.cbegin(), m_Rozm.cend(), [=](const CRozm& r) noexcept {
+    auto pR = std::find_if(m_rozm.cbegin(), m_rozm.cend(), [=](const CRozm& r) noexcept {
         return (typ_xx == 0 && s_x == r.szpalt_x && s_y == r.szpalt_y) || (typ_xx > 0 && typ_xx == r.typ_xx);
     });
 
-    if (typ_xx > 0 && pR == m_Rozm.cend()) { // doczytaj wymiar niestandardowy przypisany do wszystkich produktów
-        auto pRozm = theManODPNET.AddRozmTypu(m_Rozm, typ_xx);
+    if (typ_xx > 0 && pR == m_rozm.cend()) { // doczytaj wymiar niestandardowy przypisany do wszystkich produktów
+        auto pRozm = theManODPNET.AddRozmTypu(m_rozm, typ_xx);
         if (pRozm) return pRozm;
     }
 
-    return pR == m_Rozm.cend() ? (typ_xx ? GetCRozm(s_x, s_y, 0) : nullptr) : &*pR;
+    return pR == m_rozm.cend() ? (typ_xx ? GetCRozm(s_x, s_y, 0) : nullptr) : &*pR;
 }
 
 void CDrawDoc::DerivePages(CDrawPage* pPage)
@@ -960,7 +960,7 @@ int CDrawDoc::Nr2NrPorz(const TCHAR *s) const noexcept
 void CDrawDoc::OnChangeColsPerRow()
 {
     const CPoint pNowhere(INT_MAX >> 2, 0);
-    iPagesInRow = MIN_COLSPERROW + 2 * (((iPagesInRow - MIN_COLSPERROW) / 2 + 1) % 5);
+    m_pagerow_size = MIN_COLSPERROW + 2 * (((m_pagerow_size - MIN_COLSPERROW) / 2 + 1) % 5);
     int i, iPC = (int)m_pages.size();
     auto aNoPagePos = (CRect*)theApp.bigBuf;
     // przenieœ opisy tekstowe na bok

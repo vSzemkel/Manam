@@ -38,11 +38,11 @@ class CDrawObj : public CObject
 
     enum TrackerState : uint8_t { normal, selected, active };
     // Attributes
-    CString info;
     CRect m_position;
-    bool dirty{true};
-    UINT kolor{ColorId::brak};
+    CString info;
     CDrawDoc* m_pDocument{nullptr};
+    UINT kolor{ColorId::brak};
+    bool dirty{true};
     // 3 bity na to ile kolorow czyli 100=4 full; 010=2 spot; 001 =1 brak
     // wyzsze bity dla ogloszenia oznaczaja id_spotu
     // dla strony wyzsze bity oznaczaja nr spotu spotI spotII itp

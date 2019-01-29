@@ -15,10 +15,9 @@ extern BOOL drawErrorBoxes;
 IMPLEMENT_SERIAL(CDrawPage, CDrawObj, 0)
 
 CDrawPage::CDrawPage(const CRect& position) noexcept :
-    CDrawObj(position), id_str(-1), szpalt_x(pszpalt_x), szpalt_y(pszpalt_y),
-    nr(PaginaType::arabic), prn_mak_xx(0), wyd_xx(-1), m_typ_pary(0),
-    niemakietuj(0), m_mutczas(1), m_drukarnie(0), m_deadline(CTime::GetCurrentTime()), m_dervlvl(DervType::none),
-    m_ac_red(0), m_ac_fot(0), m_ac_kol(0)
+    CDrawObj(position), m_drukarnie(0), id_str(-1), szpalt_x(pszpalt_x), szpalt_y(pszpalt_y),
+    nr(PaginaType::arabic), prn_mak_xx(0), m_mutczas(1), wyd_xx(-1), m_deadline(CTime::GetCurrentTime()), 
+    m_dervlvl(DervType::none), m_ac_red(0), m_ac_fot(0), m_ac_kol(0), m_typ_pary(0), niemakietuj(0)
 {
     ASSERT_VALID(this);
     kolor = ColorId::full;
@@ -28,7 +27,7 @@ CDrawPage::~CDrawPage()
 {
     // ogloszenia spadaja poza makiete
     for (const auto& pAdd : m_adds) {
-        const auto px = pszpalt_x*m_pDocument->iPagesInRow + m_pDocument->iPagesInRow / 2 + pAdd->posx;
+        const auto px = pszpalt_x*m_pDocument->m_pagerow_size + m_pDocument->m_pagerow_size / 2 + pAdd->posx;
         const CRect rect(pmodulx*px, pmoduly*(-1 - pAdd->posy), pmodulx*(px + pAdd->sizex), pmoduly*(-1 - pAdd->posy - pAdd->sizey));
         pAdd->MoveTo(rect);
         pAdd->fizpage = pAdd->posx = pAdd->posy = 0;
@@ -265,9 +264,7 @@ void CDrawPage::DrawGrid(CDC* pDC)
                     pDC->LineTo(rect.right, rect.bottom);
                     pDC->SelectStockObject(NULL_PEN);
                 } else {
-                    rect.bottom ^= rect.top;
-                    rect.top ^= rect.bottom;
-                    rect.bottom ^= rect.top;
+                    std::swap(rect.bottom, rect.top);
                     DrawNapis(pDC, _T("R"), 1, rect, DT_CENTER | DT_VCENTER, TRANSPARENT);
                 }
             }
@@ -1130,7 +1127,7 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
                         line = (pArg->format > CManFormat::EPS) ? (LPCSTR)towrite[i] : tofind[i];
                         break;
                     case 1: if (pArg->format > CManFormat::EPS) {
-                        if (sBoundingBox.IsEmpty()) { // pobierz BoundingBox z formatu papieru
+                        if (m_bbox.IsEmpty()) { // pobierz BoundingBox z formatu papieru
                             CStringW wBoundingBox(' ', 32);
                             CManODPNETParms orapar {
                                 { CManDbType::DbTypeInt32, &m_pDocument->m_mak_xx },

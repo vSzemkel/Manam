@@ -14,50 +14,50 @@ public:
     // Dialog Data
         //{{AFX_DATA(CSpacerDlg)
     enum { IDD = IDD_SPACER };
-    CDateTimeCtrl	m_lastemisionctl;
-    CComboBox	m_typ_ogl_combo;
-    CComboBox	m_kolorcombo;
-    CListBox	m_emisjelist;
-    CListBox m_ollist;
-    int 	m_posx;
-    int 	m_posy;
-    int 	m_sizex;
-    int 	m_sizey;
-    int 	m_spacer;
-    int 	m_typ_xx;
-    int 	dd, mm, rrrr;
-    BOOL	m_exactplace;
-    BOOL	m_niekratowe;
-    BOOL	m_blokada;
-    BOOL	m_pagelayout;
-    BOOL	m_pageparity;
-    BOOL	m_sekcja;
-    BOOL	m_wsekcji;
-    BOOL	m_dealappend;
-    BOOL	queDeal;
-    BOOL	refreshOnClose;
-    CString	m_nazwa;
-    CString	m_uwagi;
-    CString	m_wersja;
-    CTime	m_lastemision;
-    UINT	m_kolor;
-    //}}AFX_DATA
+    std::vector<CString> m_typ_precel_arr;
+    CDateTimeCtrl m_lastemisionctl;
     CWordArray m_typ_ogl_arr;
     CByteArray m_typ_sizex_arr;
     CByteArray m_typ_sizey_arr;
-    std::vector<CString> m_typ_precel_arr;
+    CComboBox m_typ_ogl_combo;
+    CComboBox m_kolorcombo;
+    CListBox m_emisjelist;
+    CListBox m_ollist;
+    CString m_nazwa;
+    CString m_uwagi;
+    CString m_wersja;
+    CTime   m_lastemision;
+    UINT    m_kolor;
+    int     m_posx;
+    int     m_posy;
+    int     m_sizex;
+    int     m_sizey;
+    int     m_spacer;
+    int     m_typ_xx;
+    int     m_dd, m_mm, m_rrrr;
+    BOOL    m_onclose_refresh;
+    BOOL    m_exactplace;
+    BOOL    m_niekratowe;
+    BOOL    m_pagelayout;
+    BOOL    m_pageparity;
+    BOOL    m_dealappend;
+    BOOL    m_que_deal;
+    BOOL    m_blokada;
+    BOOL    m_wsekcji;
+    BOOL    m_sekcja;
+    //}}AFX_DATA
 private:
     static const int narrowcx, widecx, olcx, normalcy;
     static const int qfExact, qfSectionExact, qfSecParExact;
-    bool m_firstSearch{true};
-    bool m_olSelected{false};
+    CDrawAdd* pub;
     int m_mak_xx;
     int m_add_xx;
     int	m_quepub_xx;
     int m_first_emision_pub_xx;
     int m_str_xx;
     int m_szpalt_x, m_szpalt_y;
-    CDrawAdd* pub;
+    bool m_firstSearch{true};
+    bool m_olSelected{false};
 
     int GetQueryFlag() const; //oblicza flagê warunków zamówienia co do miejsca
     void SetBlokadaState();   //ustawia status kontrolki do blokady miejsca odpowiednio do flagi warunków zamówienia

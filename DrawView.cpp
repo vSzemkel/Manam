@@ -286,7 +286,7 @@ void CDrawView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo)
     pDC->SetViewportExt(m_zoomNum);
     pDC->SetWindowExt(m_zoomDenom);
     if (pInfo) {
-        const auto deviceModuleWidth = pDC->GetDeviceCaps(HORZRES) / (6 * GetDocument()->iPagesInRow);
+        const auto deviceModuleWidth = pDC->GetDeviceCaps(HORZRES) / (6 * GetDocument()->m_pagerow_size);
         const auto deviceModuleHeigth = pDC->GetDeviceCaps(VERTRES) / (theApp.colsPerPage * 40 + 2); // 40 - inaczej wchodza nastepne strony - 2 na naglowek
         pDC->SetViewportOrg(2 * deviceModuleWidth, 0);
         pDC->SetWindowOrg(0, (pInfo->m_nCurPage - 1) * (-(theApp.colsPerPage * 40 + 2)) * (pmoduly)+(int)floor((float)pmoduly / 3));
@@ -1057,7 +1057,7 @@ void CDrawView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
                 pDC->SetViewportOrg(0, 0);
                 pDC->SetViewportExt(pDC->GetDeviceCaps(HORZRES), pDC->GetDeviceCaps(VERTRES));
                 pDC->SetWindowOrg(0, -2 * PRINT_VOFFSET);
-                pDC->SetWindowExt(((int)(5.5 * pDoc->iPagesInRow) + 1) * pmodulx, -(int)((pDoc->m_pages.size() / pDoc->iPagesInRow + 1.7) * 8 * pmoduly));
+                pDC->SetWindowExt(((int)(5.5 * pDoc->m_pagerow_size) + 1) * pmodulx, -(int)((pDoc->m_pages.size() / pDoc->m_pagerow_size + 1.7) * 8 * pmoduly));
             }
             pDoc->Print(pDC);
             break;
@@ -1367,7 +1367,7 @@ void CDrawView::CheckPrintEps(const BOOL isprint)
 
     if (d.DoModal() == IDCANCEL) return;
     if (isprint && !pDoc->SaveModified()) return;
-    if (pDoc->m_Rozm.empty()) pDoc->IniRozm();
+    if (pDoc->m_rozm.empty()) pDoc->IniRozm();
     theApp.isParalellGen = d.m_streamed ? 1 : 0;
     theApp.WriteProfileInt(_T("GenEPS"), _T("autoMark"), theApp.autoMark = d.m_markfound);
 

@@ -44,10 +44,10 @@ public:
 // Dialog Data
     //{{AFX_DATA(CSendDlg)
     enum { IDD = IDD_MANCHAT };
-    BOOL	m_broadcast;
-    CString	m_login;
-    CString	m_msg;
-    CString	m_rcv;
+    CString m_login;
+    CString m_msg;
+    CString m_rcv;
+    BOOL    m_broadcast;
     //}}AFX_DATA
 
 

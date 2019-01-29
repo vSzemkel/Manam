@@ -25,14 +25,14 @@ using PGENEPSARG = GENEPSARG *;
 struct CKrataNiebazowa final
 {
     explicit CKrataNiebazowa(int s_x, int s_y, CFlag&& space, CFlag&& locked, CFlag&& red) noexcept
-        : m_szpalt_x(s_x), m_szpalt_y(s_y), m_space(std::forward<CFlag>(space)), m_space_locked(std::forward<CFlag>(locked)), m_space_red(std::forward<CFlag>(red))
+        : m_space(std::forward<CFlag>(space)), m_space_locked(std::forward<CFlag>(locked)), m_space_red(std::forward<CFlag>(red)), m_szpalt_x(s_x), m_szpalt_y(s_y)
     {
     };
-    int m_szpalt_x;
-    int m_szpalt_y;
     CFlag m_space;
     CFlag m_space_locked;
     CFlag m_space_red;
+    int m_szpalt_x;
+    int m_szpalt_y;
 };
 
 class CDrawPage final : public CDrawObj
@@ -55,6 +55,19 @@ class CDrawPage final : public CDrawObj
     CDrawObj* Clone(CDrawDoc* pDoc) const override;
 
     // Members
+    std::vector<CDrawAdd*> m_adds; // og³oszenia przypisane do danej strony
+    std::vector<CKrataNiebazowa> m_kraty_niebazowe; // kraty niebazowe
+    CFlag space;        // bitowa maska zajêtosci
+    CFlag space_locked; // bitowa maska blokady
+    CFlag space_red;    // bitowa maska powierzchni redakcyjnej
+    CString caption;    // widoczny naglowek, redakcyjny lub cennikowy
+    CString caption_alt;// alternatywny naglowek, cennikowy lub redakcyjny
+    CString name;       // logiczna strony z atexa ==sciezka ale zmieniamy  str_log np RED/PRG/PON user poprwia tylko pon
+    CString mutred;     // alternatywne mutacje redakcyjne strony
+    CString m_dervinfo; // informacja o dziedziczeniu
+    CString f5_errInfo; // komunikat o b³êdzie dotycz¹cym materia³u, wygenerowany przez funkcjê F5
+    CStringA m_bbox;    // postscriptowy BoundingBox
+    long m_drukarnie;   // flaga bitowa drukarni
     int id_str;
     int szpalt_x;
     int szpalt_y;
@@ -66,31 +79,15 @@ class CDrawPage final : public CDrawObj
         int nr;    // numer strony
     };
     int prn_mak_xx;     // identyfikator makiety prn
+    int m_mutczas;      // numer mutacji czasowej (tylko grzbiet)
     int wyd_xx;         // identyfikator wydawcy strony
+    CTime m_deadline;   // najwczesniejszy deadline
+    CTime m_ac_red;     // deadline redakcyjny dla czasopism
+    CTime m_ac_fot;     // deadline na zdjêcia dla czasopism
+    CTime m_ac_kol;     // deadline na kolumnê dla czasopism
+    DervType m_dervlvl; // poziom dziedziczenia
     BYTE m_typ_pary;    // czy strona wchodzi do sztucznej rozkladowki
-    CString caption;    // widoczny naglowek, redakcyjny lub cennikowy
-    CString caption_alt;// alternatywny naglowek, cennikowy lub redakcyjny
-    CString name;       // logiczna strony z atexa ==sciezka ale zmieniamy  str_log np RED/PRG/PON user poprwia tylko pon
-    CString mutred;     // alternatywne mutacje redakcyjne strony
-    CFlag space;        // bitowa maska zajêtosci
-    CFlag space_locked; // bitowa maska blokady
-    CFlag space_red;    // bitowa maska powierzchni redakcyjnej
     BOOL niemakietuj;   // blokada makietowania
-
-    std::vector<CDrawAdd*> m_adds;	// og³oszenia przypisane do danej strony
-    std::vector<CKrataNiebazowa> m_kraty_niebazowe;	// kraty niebazowe
-
-    int m_mutczas;			// numer mutacji czasowej (tylko grzbiet)
-    long m_drukarnie;		// flaga bitowa drukarni
-    CTime m_deadline;		// najwczesniejszy deadline
-    CString m_dervinfo;		// informacja o dziedziczeniu
-    CString f5_errInfo;		// komunikat o b³êdzie dotycz¹cym materia³u, wygenerowany przez funkcjê F5
-    CStringA sBoundingBox;	// postscriptowy BB
-    DervType m_dervlvl;		// poziom dziedziczenia
-
-    CTime m_ac_red;			// deadline redakcyjny dla czasopism
-    CTime m_ac_fot;			// deadline na zdjêcia dla czasopism
-    CTime m_ac_kol;			// deadline na kolumnê dla czasopism
 
     // Implementation
     void DrawGrid(CDC* pDC);

@@ -1477,11 +1477,11 @@ bool CDrawAdd::CheckSrcFile(PGENEPSARG pArg)
     int iSearchTypXX = typ_xx;
 dajWymiarKraty:
     // szukaj wymiarów w cachu
-    const auto pR = std::find_if(m_pDocument->m_Rozm.cbegin(), m_pDocument->m_Rozm.cend(), [=](const CRozm& r) {
+    const auto pR = std::find_if(m_pDocument->m_rozm.cbegin(), m_pDocument->m_rozm.cend(), [=](const CRozm& r) {
         return (!iSearchTypXX && szpalt_x == r.szpalt_x && szpalt_y == r.szpalt_y) || (iSearchTypXX && iSearchTypXX == r.typ_xx);
     });
 
-    if (pR == m_pDocument->m_Rozm.end()) {
+    if (pR == m_pDocument->m_rozm.end()) {
         if (iSearchTypXX > 0) {
             iSearchTypXX = 0;
             goto dajWymiarKraty;
