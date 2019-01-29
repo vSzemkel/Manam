@@ -548,15 +548,15 @@ void CDrawDoc::AddPageAt(const int idx, CDrawPage* pObj)
     SetModifiedFlag();
 }
 
-size_t CDrawDoc::AddPage(CDrawPage* pObj)
+uint32_t CDrawDoc::AddPage(CDrawPage* pObj)
 {
-    size_t iNewOrd = m_pages.size();
+    auto iNewOrd = (uint32_t)m_pages.size();
     m_pages.push_back(pObj);
     pObj->m_pDocument = this;
     SetPageRectFromOrd(pObj, iNewOrd);
     ComputeCanvasSize();
     if (!(++iNewOrd & 3))
-        ZmianaSpotow((int)iNewOrd);
+        ZmianaSpotow(iNewOrd);
     NumberPages();
     SetModifiedFlag();
     return iNewOrd;
@@ -609,25 +609,27 @@ bool CDrawDoc::MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo)
     return found;
 }
 
-void CDrawDoc::SetPageRectFromOrd(CDrawPage* pObj, const size_t iOrd) const
+void CDrawDoc::SetPageRectFromOrd(CDrawPage* pObj, const uint32_t iOrd) const
 {
     ASSERT(0 <= iOrd && iOrd < m_pages.size());
 
-    const auto x = (int)(pmodulx*(1 + floor(fmod((float)iOrd, (float)m_pagerow_size) / 2) + (pszpalt_x*fmod((float)iOrd, (float)m_pagerow_size))));
-    const auto y = (int)((-7)*pmoduly*floor((float)iOrd / m_pagerow_size) + (-1)*(pmoduly*(floor((float)iOrd / m_pagerow_size) + 1)));
+    const auto col_row = div(iOrd, m_pagerow_size);
+    const auto x = (int)(pmodulx * (1 + (col_row.rem >> 1) + (pszpalt_x * col_row.rem)));
+    const auto y = (int)(pmoduly * col_row.quot * -8 - pmoduly);
 
-    pObj->m_position.SetRect(x, y, x + pszpalt_x*pmodulx, y - 7 * pmoduly);
+    pObj->m_position.SetRect(x, y, x + pszpalt_x * pmodulx, y - 7 * pmoduly);
     pObj->MoveTo(&pObj->m_position);
 }
 
 int CDrawDoc::ComputePageOrderNr(const CRect& position) const
 {
-    int i = 0, j = 0;
-    while (pmoduly*(i + 1)*(-8) >= position.top)
-        i++;
-    while (j < m_pagerow_size && pmodulx*((int)(1 + floor((float)j / 2) + pszpalt_x*(j + 0.5))) < position.left)
-        j++;
-    return min((int)m_pages.size() - 1, i * m_pagerow_size + j);
+    int col = 0;
+    while (col < m_pagerow_size && pmodulx * ((int)(2 + (col >> 1) + pszpalt_x * col)) < position.left)
+        col++;
+    const int row = position.top / (-8 * pmoduly);
+    const int ord = row * m_pagerow_size + col;
+    ASSERT(ord < m_pages.size());
+    return ord;
 }
 
 void CDrawDoc::MoveBlockOfPages(const int iSrcOrd, const int iDstOrd, const int iCnt)

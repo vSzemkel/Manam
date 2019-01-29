@@ -89,11 +89,11 @@ class CDrawDoc final : public COleDocument
 
     void SelectAdd(CDrawAdd* pObj, bool multiselect = false) const;
 
-    int ComputePageOrderNr(const CRect& position) const;         // oblicza numer porz¹dkowy strony na podstawie po³o¿enia
-    void SetPageRectFromOrd(CDrawPage* pObj, size_t iOrd) const; // pozycjonuje stronê na podstawie numeru porz¹dkowego
-    void MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt);   // przesuwa ci¹g³y blok stron w obrêbie makiety
+    int ComputePageOrderNr(const CRect& position) const;           // oblicza numer porz¹dkowy strony na podstawie po³o¿enia
+    void SetPageRectFromOrd(CDrawPage* pObj, uint32_t iOrd) const; // pozycjonuje stronê na podstawie numeru porz¹dkowego
+    void MoveBlockOfPages(int iSrcOrd, int iDstOrd, int iCnt);     // przesuwa ci¹g³y blok stron w obrêbie makiety
 
-    size_t AddPage(CDrawPage* pObj);          // na koncu, zwieksza pamiec na tablice
+    uint32_t AddPage(CDrawPage* pObj);        // na koncu, zwieksza pamiec na tablice
     void AddPageAt(int idx, CDrawPage* pObj); // pod zadanym idx
     void RemovePage(CDrawPage* pObj);
     CDrawPage* PageAt(const CPoint& point) const;
@@ -167,7 +167,7 @@ class CDrawDoc final : public COleDocument
     CString symWydawcy;    // dwuliterowy symbol dzia³u zsy³aj¹cego
     int m_mak_xx{-1};      // ident makiety
     int id_drw{-2};        // ident drzewa
-    int m_pagerow_size;    // ile stron rysyje siê w wierszu
+    uint16_t m_pagerow_size;                // ile stron rysuje siê w wierszu
     DocType iDocType{DocType::makieta};     // typ dokumentu na podstawie eDocType
     ToolbarMode swCZV{ToolbarMode::normal}; // prze³¹cznik widoku: 0==standard; 1==czas_obow; 2==studio;
     BYTE ovEPS : 1;        // nadpisuj EPS'y przy generacji
