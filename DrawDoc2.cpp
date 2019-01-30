@@ -292,7 +292,7 @@ void CDrawDoc::OnVuMakietowanie()
         k = -1;
         auto viAdd = (CDrawAdd*)vAdds.GetAt(i);
         maxLen = viAdd->logpage.GetLength();
-        maxWeight = viAdd->sizex*viAdd->sizey;
+        maxWeight = viAdd->sizex * viAdd->sizey;
         for (j = i + 1; j < vAddsCount; ++j) {
             auto vjAdd = (CDrawAdd*)vAdds.GetAt(j);
             if (vjAdd->logpage.GetLength() > maxLen) {
@@ -302,8 +302,8 @@ void CDrawDoc::OnVuMakietowanie()
             if (vjAdd->logpage.GetLength() == maxLen) { // warunek z '=' ma wiekszy prirytet
                 if (_tcsstr(vjAdd->logpage, _T("=")) && !_tcsstr(viAdd->logpage, _T("=")))
                     k = j;
-                else if (maxWeight < vjAdd->sizex*vjAdd->sizey) {
-                    maxWeight = vjAdd->sizex*vjAdd->sizey;
+                else if (maxWeight < vjAdd->sizex * vjAdd->sizey) {
+                    maxWeight = vjAdd->sizex * vjAdd->sizey;
                     k = j;
                 }
             }
@@ -580,9 +580,9 @@ void CDrawDoc::OnVuCkMakietowanie()
 
 void CDrawDoc::AdvanceAsidePos(CPoint& p) const
 {
-    if (pszpalt_y*pmoduly - p.y > m_size.cy*vscale) {
+    if (pszpalt_y * pmoduly - p.y > m_size.cy * vscale) {
         p.y = -pmoduly;
-        p.x -= pszpalt_x*pmodulx;
+        p.x -= pszpalt_x * pmodulx;
     } else
         p.y -= pmoduly;
 }
@@ -659,9 +659,12 @@ void CDrawDoc::AddFind(long nrAtex, const long nrSpacer, LPCTSTR nazwa)
         SelectAdd(vAdd);
     else {
         if (nrAtex == LONG_MIN) nrAtex = nrSpacer;
-        CString snr;
-        if (nrAtex > 0) snr.Format(_T("%ld"), nrAtex);
-        AfxMessageBox(CString(_T("Nie odnaleziono og³oszenia: ")) + (snr.IsEmpty() ? nazwa : (LPCTSTR)snr));
+        CString msg{_T("Nie odnaleziono og³oszenia: ")};
+        if (nrAtex > 0)
+            msg.AppendFormat(_T("%ld"), nrAtex);
+        else
+            msg.Append(nazwa);
+        AfxMessageBox(msg);
         findNextInd = -1;
     }
 }
@@ -784,8 +787,8 @@ void CDrawDoc::OnAsideAdds()
         vPage = dynamic_cast<CDrawPage*>(pView->m_selection.front());
 
     if (vPage == nullptr) {
-        const auto pcount = m_pages.size();
-        for (size_t i = 0; i < pcount; ++i)
+        const auto pc = m_pages.size();
+        for (size_t i = 0; i < pc; ++i)
             if (!(m_pages[i])->niemakietuj) {
                 vPage = m_pages[i];
                 vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd* pAdd) -> BOOL {
@@ -801,7 +804,7 @@ void CDrawDoc::OnAsideAdds()
         AsideAdds();
     } else { // zdejmujemy og³oszenia ze wskazanej strony (wiemy, ¿e to strona makietowana)
         int iOffset = m_pagerow_size - (GetIPage(vPage) % m_pagerow_size);
-        iOffset = iOffset*pszpalt_x*pmodulx + (iOffset / 2 + 1)*pmodulx;
+        iOffset = iOffset * pszpalt_x * pmodulx + (iOffset / 2 + 1) * pmodulx;
         vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd* pAdd) -> BOOL {
             if (!pAdd->flags.locked && !pAdd->flags.derived) {
                 pAdd->fizpage = 0;
@@ -961,18 +964,18 @@ void CDrawDoc::OnChangeColsPerRow()
 {
     const CPoint pNowhere(INT_MAX >> 2, 0);
     m_pagerow_size = MIN_COLSPERROW + 2 * (((m_pagerow_size - MIN_COLSPERROW) / 2 + 1) % 5);
-    int i, iPC = (int)m_pages.size();
+    int i, pc = (int)m_pages.size();
     auto aNoPagePos = (CRect*)theApp.bigBuf;
     // przenieœ opisy tekstowe na bok
-    for (i = MIN_COLSPERROW; i < iPC; ++i) {
+    for (i = MIN_COLSPERROW; i < pc; ++i) {
         aNoPagePos[i] = m_pages[i]->m_position - pNowhere;
         MoveOpisAfterPage(&m_pages[i]->m_position, &aNoPagePos[i]);
     }
     // repozycjonuj strony
-    for (i = MIN_COLSPERROW; i < iPC; ++i)
+    for (i = MIN_COLSPERROW; i < pc; ++i)
         this->SetPageRectFromOrd(m_pages[i], i);
     // przywróæ opisy tekstowe na makietê
-    for (i = MIN_COLSPERROW; i < iPC; ++i)
+    for (i = MIN_COLSPERROW; i < pc; ++i)
         MoveOpisAfterPage(&aNoPagePos[i], &m_pages[i]->m_position);
 
     UpdateAllViews(nullptr);

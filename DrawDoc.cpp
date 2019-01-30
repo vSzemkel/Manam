@@ -565,7 +565,7 @@ uint32_t CDrawDoc::AddPage(CDrawPage* pObj)
 void CDrawDoc::RemovePage(CDrawPage* pObj)
 {
     int i = GetIPage(pObj);
-    if (i == -1)
+    if (i < 0)
         return;
 
     if (i == 0 && iDocType != DocType::makieta_lib) // usuwamy ostatnia strone, na ktorej moga byc virtualne ogloszenia
@@ -575,23 +575,26 @@ void CDrawDoc::RemovePage(CDrawPage* pObj)
         }
 
     // przesuwam strony na obrazku by nie zostala dziura
-    for (size_t ii = i + 1; ii <= m_pages.size() - 1; ++ii)
+    const auto pc = (uint32_t)m_pages.size();
+    for (uint32_t ii = i + 1; ii <= pc - 1; ++ii)
         MoveOpisAfterPage(&m_pages[ii]->m_position, &m_pages[ii - 1]->m_position);
-    for (size_t ii = m_pages.size() - 1; ii > (size_t)i; --ii)
+    for (uint32_t ii = pc - 1; ii > (uint32_t)i; --ii)
         m_pages[ii]->MoveTo(&m_pages[ii - 1]->m_position);
 
     if (pObj->id_str != -1)
         m_del_obj.emplace_back(iDocType == DocType::makieta_lib ? EntityType::page_lib : EntityType::page, pObj->id_str);
     m_pages.erase(m_pages.cbegin() + i);
-    SetModifiedFlag();
 
     // call remove for each view so that the view can remove from m_selection
     auto pView = GetPanelView();
     if (pView) pView->Remove(pObj);
 
-    //zmiana spotow
-    if (!(m_pages.size() & 3))
-        ZmianaSpotow((int)m_pages.size());
+    // zmiana spotow
+    const auto pc2 = (uint32_t)m_pages.size();
+    if ((pc2 & 3) == 0)
+        ZmianaSpotow(pc2);
+
+    SetModifiedFlag();
 }
 
 bool CDrawDoc::MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo)
