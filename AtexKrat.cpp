@@ -25,7 +25,7 @@ CAtexKrat::CAtexKrat(const TCHAR *atexKratInfo, CDrawDoc* vDoc)
 
 bool CAtexKrat::CompX(int* sizex, int* s_x) const noexcept
 {
-    for (*s_x = 1; *s_x < DIM_LIMIT; (*s_x)++) {
+    for (*s_x = 1; *s_x < DIM_LIMIT; ++(*s_x)) {
         const auto tmpsizex = (float)xcol / szpalt_x * (float)*s_x;
         *sizex = (int)nearbyintf(tmpsizex);
         if (fabs(tmpsizex - *sizex) < *sizex * TOLERANCE)
@@ -36,7 +36,7 @@ bool CAtexKrat::CompX(int* sizex, int* s_x) const noexcept
 
 bool CAtexKrat::CompY(int* sizey, int* s_y) const noexcept
 {
-    for (*s_y = 1; *s_y < DIM_LIMIT; (*s_y)++) {
+    for (*s_y = 1; *s_y < DIM_LIMIT; ++(*s_y)) {
         const auto tmpsizey = (float)ymm / (float)dy * (float)*s_y;
         *sizey = (int)nearbyintf(tmpsizey);
         if (fabs(tmpsizey - *sizey) < *sizey * TOLERANCE)
@@ -62,8 +62,8 @@ bool CAtexKrat::Compute(int* sizex, int* sizey, int* s_x, int* s_y)
     if (*s_y >= KRATA_PASKOWA && *s_x == *sizex)
         *s_x = *sizex = 1;
     // rzutuj na istniejaca krate
-    for (int x = 1; x < 2 * ADJUST_LEVEL; x++)
-        for (int y = (x < ADJUST_LEVEL ? 1 : x - ADJUST_LEVEL + 1); y <= (x < ADJUST_LEVEL ? x : ADJUST_LEVEL); y++)
+    for (int x = 1; x < 2 * ADJUST_LEVEL; ++x)
+        for (int y = (x < ADJUST_LEVEL ? 1 : x - ADJUST_LEVEL + 1); y <= (x < ADJUST_LEVEL ? x : ADJUST_LEVEL); ++y)
             if (doc->GetCRozm(*s_x*(x - y + 1), *s_y*y, -1)) {
                 *sizex *= (x - y + 1);
                 *s_x *= (x - y + 1);

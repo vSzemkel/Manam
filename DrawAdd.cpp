@@ -156,9 +156,9 @@ void CDrawAdd::Draw(CDC* pDC)
     // clipping dla precli
     if (precelWertexCnt > 0) {
         CRgn rgn;
-        if (precelRingCnt == 1)		// clipping dla precli
+        if (precelRingCnt == 1)     // clipping dla precli
             rgn.CreatePolygonRgn(aPrecelWertex.get(), precelWertexCnt, ALTERNATE);
-        else if (precelRingCnt > 1)	//clipping dla precli z wieloma obwodniacami
+        else if (precelRingCnt > 1) //clipping dla precli z wieloma obwodniacami
             rgn.CreatePolyPolygonRgn(aPrecelWertex.get(), aRingWertexCnt, precelRingCnt, ALTERNATE);
         rgn.OffsetRgn(m_position.left, m_position.top);
         rgn.GetRegionData((RGNDATA*)theApp.bigBuf, bigSize);
@@ -197,20 +197,15 @@ void CDrawAdd::Draw(CDC* pDC)
     }
 
     pDC->SelectStockObject(NULL_BRUSH);
-    switch (precelRingCnt) {
-        case 0:
-            pDC->Rectangle(rect);
-            break;
-        case 1:
-            pDC->OffsetWindowOrg(-m_position.left, -m_position.top);
+    if (precelRingCnt == 0)
+        pDC->Rectangle(rect);
+    else {
+        pDC->OffsetWindowOrg(-m_position.left, -m_position.top);
+        if (precelRingCnt == 1)
             pDC->Polygon(aPrecelWertex.get(), precelWertexCnt);
-            pDC->OffsetWindowOrg(m_position.left, m_position.top);
-            break;
-        default:
-            pDC->OffsetWindowOrg(-m_position.left, -m_position.top);
+        else
             pDC->PolyPolygon(aPrecelWertex.get(), aRingWertexCnt, precelRingCnt);
-            pDC->OffsetWindowOrg(m_position.left, m_position.top);
-            break;
+        pDC->OffsetWindowOrg(m_position.left, m_position.top);
     }
 
     if (flags.derived) {
@@ -622,7 +617,7 @@ CFlag CDrawAdd::GetPlacementFlag(const int px, const int py) const
 #ifdef DEBUG
     ASSERT(0 < px && 0 < py && px <= szpalt_x && py <= szpalt_y);
 #endif
-    return space << ((szpalt_y - sizey - py + 2)*szpalt_x - sizex - px + 1);
+    return space << ((szpalt_y - sizey - py + 2) * szpalt_x - sizex - px + 1);
 }
 
 void CDrawAdd::SetPosition(const int fizp, int px, int py, int sx, int sy)
@@ -891,7 +886,7 @@ void CDrawAdd::InitPrecel(const CString& sPrecelFlag)
     space ^= CFlag(CString('0', 8 * ((int)space.GetSize() / 4 - (int)ceil((float)sPrecelFlag.GetLength() / 8))) + CString('0', (8888 - sPrecelFlag.GetLength()) % 8) + sPrecelFlag);
 
     // skanuj flagê w poszukiwaniu obwodnic
-    for (int x = 0; x < sizex; x++)
+    for (int x = 0; x < sizex; ++x)
         if (space[x] && !PtOnRing(CPoint(static_cast<int>(x * modulx), 0)))
             aRingWertexCnt[precelRingCnt++] = FindRing(CPoint(x, 0), true);
     for (int y = 1; y < sizey; ++y)
@@ -932,25 +927,19 @@ void CDrawAdd::SetLogpage(const CString& m_op_zew, const CString& m_sekcja, cons
         logpage += m_sekcja;
         if (m_op_sekcji.GetLength() == 1 && (m_op_sekcji[0] == _T('=') || m_op_sekcji[0] == _T('<') || m_op_sekcji[0] == _T('>'))) {
             logpage += m_op_sekcji;
-            if (m_nr_w_sekcji > 0) {
-                CString snr;
-                snr.Format(_T("%i"), m_nr_w_sekcji);
-                logpage += snr;
-            }
+            if (m_nr_w_sekcji > 0) 
+                logpage.AppendFormat(_T("%i"), m_nr_w_sekcji);
         }
-        logpage += CString(_T(" "));
+        logpage.Append(_T(" "));
     }
     if (m_PL == _T("P") || m_PL == _T("L")) {
         logpage += m_PL;
         if (m_op_PL.GetLength() == 1 && (m_op_PL[0] == _T('=') || m_op_PL[0] == _T('<') || m_op_PL[0] == _T('>'))) {
             logpage += m_op_PL;
-            if (m_nr_PL > 0) {
-                CString snr;
-                snr.Format(_T("%i"), m_nr_PL);
-                logpage += snr;
-            }
+            if (m_nr_PL > 0)
+                logpage.AppendFormat(_T("%i"), m_nr_PL);
         }
-        logpage += CString(_T(" "));
+        logpage.Append(_T(" "));
     }
     if (m_poz_na_str.GetLength() > 0) {
         m_poz_na_str.MakeUpper();
@@ -1421,7 +1410,7 @@ bool CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by
     if (powtorka > 0) pArg->pDlg->OglInfo(pArg->iChannelId, CString(_T("Pobieranie pliku z archiwum")));
     const CString& eps_name = EpsName(CManFormat::EPS, false);
     pArg->pDlg->OglInfo(pArg->iChannelId, eps_name);
-    if (eps_name.Mid(1, 1) != _T(":")) {
+    if (eps_name[1] != _T(':')) {
         f5_errInfo += (eps_name + _T(", "));
         return false;
     }
