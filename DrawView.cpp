@@ -1307,7 +1307,7 @@ void CDrawView::OnViewStudio()
     UpdateToolbar(newMode);
 }
 
-void CDrawView::UpdateToolbar(ToolbarMode newMode)
+void CDrawView::UpdateToolbar(const ToolbarMode newMode)
 {
     const auto prevMode = theApp.swCZV;
     theApp.swCZV = GetDocument()->swCZV = newMode;

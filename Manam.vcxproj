@@ -27,7 +27,7 @@
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows-static</VcpkgTriplet>
     <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows-static</VcpkgTriplet>
   </PropertyGroup>
@@ -72,7 +72,6 @@
       <ProgramDataBaseFileName>$(IntermediateOutputPath)</ProgramDataBaseFileName>
       <AssemblerListingLocation>$(IntermediateOutputPath)</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>$(IntermediateOutputPath)$(TargetName).pch</PrecompiledHeaderOutputFile>
-      <AdditionalOptions>/source-charset:.1250 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -85,6 +84,9 @@
     <Manifest>
       <EnableDpiAwareness>false</EnableDpiAwareness>
     </Manifest>
+    <PreBuildEvent>
+      <Command>chcp 1250</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

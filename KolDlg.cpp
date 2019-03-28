@@ -762,7 +762,7 @@ void CAddDlg::OnDelall()
 
 void CAddDlg::OnAlways()
 {
-    BOOL isClear = !IsDlgButtonChecked(IDC_ALWAYS);
+    const BOOL isClear = !IsDlgButtonChecked(IDC_ALWAYS);
     GetDlgItem(IDC_DATA_CZOB)->EnableWindow(isClear);
     GetDlgItem(IDC_GODZ_CZOB)->EnableWindow(isClear);
     if (isClear) GetDlgItem(IDC_DATA_CZOB)->SetFocus();
