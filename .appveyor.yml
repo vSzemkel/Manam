@@ -6,7 +6,7 @@ branches:
 
 clone_folder: C:\Manam
 
-image: Visual Studio 2017
+image: Visual Studio 2019 Preview
 
 configuration: Debug
 
@@ -28,4 +28,4 @@ before_build:
 
 build:
   project: Manam.sln
-  verbosity: detailed
+  verbosity: normal
