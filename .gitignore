@@ -2,9 +2,10 @@
 # https://vszemkel.visualstudio.com/DefaultCollection/_git/Manam
 
 *.aps
-*.db*
+*.db
 *.suo
 *.user
+*.opendb
 
 .vs/
 .vscode/
@@ -12,8 +13,6 @@ ipch/
 
 /**/x64
 /**/x86
-/Manam.VC.db
-/Manam.VC.VC.opendb
 /Oracle.ManagedDataAccess.dll
 
 

@@ -631,7 +631,7 @@ int CDrawDoc::ComputePageOrderNr(const CRect& position) const
         col++;
     const int row = position.top / (-8 * pmoduly);
     const int ord = row * m_pagerow_size + col;
-    ASSERT(ord < m_pages.size());
+    ASSERT(ord < (int)m_pages.size());
     return ord;
 }
 
