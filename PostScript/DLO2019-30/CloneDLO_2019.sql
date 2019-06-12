@@ -395,3 +395,16 @@ begin
 
 drop procedure space_reservation.clone_dlowa2019
 /
+
+declare
+    vtyp_xx number;
+begin
+    select xx into vtyp_xx from typ_paginy where nazwa='DLO-30-lat';
+    
+    update spacer_prn_makieta set vrt_xx=1 where typ_xx=vtyp_xx;
+    update spacer_prn_makieta set vrt_xx=3 where typ_xx=vtyp_xx and naglowek='Platn';
+    update spacer_prn_makieta set vrt_xx=4 where typ_xx=vtyp_xx and naglowek='Bezpl';
+    update spacer_prn_makieta set vrt_xx=5 where typ_xx=vtyp_xx and naglowek='WlWyd';
+    update spacer_prn_makieta set vrt_xx=6 where typ_xx=vtyp_xx and naglowek='Oglosz';
+end;
+/

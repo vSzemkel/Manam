@@ -20,7 +20,6 @@ class CDrawAdd final : public CDrawObj
     void Serialize(CArchive& ar) override;
     BOOL OnOpen(CDrawView* pView) override;
 
-    CFlag space;          // odpowiada ksztaltowi
     CString nazwa;        // nazwa ogl
     CString logpage;      // logiczna strona - powiedzmy ze string war logicznych
     CString remarks;      // uwagi
@@ -31,6 +30,7 @@ class CDrawAdd final : public CDrawObj
     CString f5_errInfo;   // komunikat o b³êdzie dotycz¹cym materia³u, wygenerowany przez funkcjê F5
     CString lastAdnoUsed; // data ostatniego uzycia tego numeru zamowienia
     CString skad_ol;      // kod oddzia³y przyjmuj¹cego, uzyskany przy F7
+    CFlag space;          // odpowiada ksztaltowi
     CTime powtorka;       // data powtórki
     CTime epsDate;        // data pliku
     long nreps;           // nr eps==adno z atexa
