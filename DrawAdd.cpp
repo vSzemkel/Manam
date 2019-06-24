@@ -2,7 +2,6 @@
 #include "StdAfx.h"
 #include "DrawAdd.h"
 #include "DrawDoc.h"
-#include "DrawPage.h"
 #include "DrawTool.h"
 #include "DrawView.h"
 #include "GenEpsInfoDlg.h"
