@@ -86,7 +86,16 @@ create or replace package body pagina is
      where s.mak_xx=vmak_xx and s.str_xx=vstr_xx and s.prn_mak_xx=m.xx and m.typ_xx=t.xx and m.vrt_xx=v.xx(+);
   exception
     when no_data_found then
-      raise_application_error(-20001,'Nie okreslono paginy dla strony');
+    begin
+       select t.pelne_pole_trans,v.label,nvl(t.margines_do_grzbietu,45)
+         into vtrans,vrekl,vmdg
+         from makieta m,spacer_strona s,spacer_prn_makieta mp,typ_paginy t,spacer_prn_vert_label v
+        where m.xx=vmak_xx and s.mak_xx=m.xx and s.str_xx=vstr_xx and s.prn_mak_xx is null and mp.drw_xx=m.drw_xx 
+        and mp.parity=bitand(s.nr_porz,1) and mp.is_def>0 and mp.typ_xx=t.xx and mp.vrt_xx=v.xx(+);
+    exception 
+       when no_data_found then
+         raise_application_error(-20001,'Nie okreslono paginy dla strony');
+       end;
   end get_ppole_trans;
 
 /******************** GET_DROBNEH ************************/
@@ -401,8 +410,14 @@ create or replace package body pagina is
      vmak_xx makieta.xx%type,
      vstr_xx spacer_strona.str_xx%type
   ) return binary_integer as
+     vtt char;
      vile binary_integer;
   begin     
+     select substr(tytul,1,1) into vtt from drzewo d,makieta m where m.drw_xx=d.xx and m.xx=vmak_xx;
+     if vtt <> 'D' then
+        return 0;
+     end if;     
+  
      with nostd as (
         select min(d.ile_dni) d
           from spacer_strona s,makieta m,spacer_prn_makieta p,spacer_prn_data_swiat d
@@ -420,7 +435,7 @@ create or replace package body pagina is
   ) as
     vile binary_integer := ile_dni_daty(vmak_xx,vstr_xx); 
   begin    
-    select '('||decode(vile,0,to_char(kiedy,'fmDay'),to_char(kiedy,'fmDay')||vckreska||to_char(kiedy+vile,'fmday'))||')' 
+    select '('||decode(vile,0,to_char(kiedy,'fmday'),to_char(kiedy,'fmday')||vckreska||to_char(kiedy+vile,'fmday'))||')' 
       into voutText from makieta where xx=vmak_xx;
   end get_day;
 
@@ -463,9 +478,9 @@ create or replace package body pagina is
   begin
     select count(1) into vcrossday from makieta m, drzewo d 
      where m.xx=vmak_xx AND m.drw_xx=d.xx 
-       and d.tytul in ('DLO','DGW') and m.kiedy=to_date('25/05/2016',sr.vfshortdate);  
+       and d.tytul in ('DLO','DGW') and m.kiedy=to_date('19/06/2019',sr.vfshortdate);  
     if vcrossday>0 then
-      select '(Œroda' || vckreska || 'czwartek 25' || vckreska || '26 maja 2016)' into voutText from dual;
+      select '(Œroda' || vckreska || 'czwartek, 19' || vckreska || '20 czerwca 2019)' into voutText from dual;
       return;
     end if;
     
@@ -490,13 +505,13 @@ create or replace package body pagina is
 
     select '(' ||
     decode(to_number(to_char(vkiedy,'D')),
-        1,'Poniedzia³ek ',
-        2,'Wtorek ',
-        3,'Œroda ',
-        4,'Czwartek ',
-        5,'Pi¹tek ',
-        6,decode(vckl_xx,1,'Sobota'||vckreska||'niedziela ','Sobota '),
-        7,'Niedziela ') ||
+        1,'Poniedzia³ek, ',
+        2,'Wtorek, ',
+        3,'Œroda, ',
+        4,'Czwartek, ',
+        5,'Pi¹tek, ',
+        6,decode(vckl_xx,1,'Sobota'||vckreska||'niedziela, ','Sobota, '),
+        7,'Niedziela, ') ||
     to_char(vkiedy,'fmDD') ||
     decode(vcrossmonth,
         0,null,
@@ -860,9 +875,9 @@ end set_config;
     select count(1), min(tytul), min(mutacja), min(substr(nazwa,1,instr(nazwa,' ')-1))
       into vcc, vtytul, vmutacja, vnazwa
       from spacer_prn_makieta m, drzewo d
-     where m.xx=vxx and d.xx=m.drw_xx and (uid=100 or sql_check_access(d.xx,'W')>=0);
+     where m.xx=vxx and d.xx=m.drw_xx and (uid=(select user_id from all_users where username='SPACE_RESERVATION') or sql_check_access(d.xx,'W')>=0);
     if vcc < 1 then
-       null;--raise_application_error(-20001,'Nie mozesz usunac tej paginy, gdyz nie masz prawa zapisu do tytulu '||vtytul||' '||vmutacja);
+       return;--raise_application_error(-20001,'Nie mozesz usunac tej paginy, gdyz nie masz prawa zapisu do tytulu '||vtytul||' '||vmutacja);
     end if;
 
     usun(vnazwa,vtytul,vmutacja);
@@ -887,15 +902,15 @@ end set_config;
     update spacer_strona set prn_mak_xx=null,prn_flag=null
      where prn_mak_xx in
       (select xx from spacer_prn_makieta
-        where is_wzorzec=0 and drw_xx=vdrw_xx
+        where is_wzorzec<>1 and drw_xx=vdrw_xx
           and nazwa in (vnazwa||vceven,vnazwa||vcodd))
        and mak_xx in (select xx from makieta where drw_xx=vdrw_xx);
     delete from spacer_prn_mak_fun where mak_xx in
       (select xx from spacer_prn_makieta
-        where is_wzorzec=0 and drw_xx=vdrw_xx
+        where is_wzorzec<>1 and drw_xx=vdrw_xx
           and nazwa in (vnazwa||vceven,vnazwa||vcodd));
     delete from spacer_prn_makieta
-        where is_wzorzec=0 and drw_xx=vdrw_xx
+        where is_wzorzec<>1 and drw_xx=vdrw_xx
           and nazwa in (vnazwa||vceven,vnazwa||vcodd);
     delete from spacer_prn_fun_arg
      where fun_xx not in (select fun_xx from spacer_prn_mak_fun)

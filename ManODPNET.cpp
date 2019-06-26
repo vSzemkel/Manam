@@ -134,12 +134,14 @@ struct OdpHelper final
 
     static void __clrcall RetrieveOutParams(OracleCommand^ cmd, CManODPNETParms& ps)
     {
-        if (ps.outParamsCount > 0)
-            for (int i = 0; i < static_cast<int>(ps.params.size()); ++i)
+        if (ps.outParamsCount > 0) {
+            const int pc = static_cast<int>(ps.params.size());
+            for (int i = 0; i < pc; ++i)
                 if (ps.params[i].m_direction != CManDbDir::ParameterIn) {
                     RetrieveOdpParam(&ps.params[i], cmd->Parameters[i]);
                     if (--ps.outParamsCount == 0) break;
                 }
+        }
     }
 
     static void __clrcall ExecuteOpenedCommand(OracleCommand^ cmd, CManODPNETParms& ps)
