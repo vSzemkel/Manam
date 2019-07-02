@@ -62,8 +62,8 @@ void CManSock::OnReceive(const int nErrorCode)
     CSendDlg dlg;
     dlg.m_rcv = msg;
     if (dlg.DoModal() == IDOK && theApp.isRDBMS) {
-        CString msg{theManODPNET.m_userName + ": " + dlg.m_msg};
-        SendManamMessage(msg, dlg.m_login, dlg.m_broadcast);
+        CString msg2{theManODPNET.m_userName + ": " + dlg.m_msg};
+        SendManamMessage(msg2, dlg.m_login, dlg.m_broadcast);
     }
 }
 

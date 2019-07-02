@@ -667,7 +667,7 @@ std::unique_ptr<CHttpFile> CDrawApp::OpenURL(const size_t service, const CString
     if (m_uriDict.empty())
         theManODPNET.FillArr(&m_uriDict, "select uri from manam_uri order by xx", CManODPNET::emptyParm);
 
-    ASSERT(0 <= service && service < m_uriDict.size());
+    ASSERT(service < m_uriDict.size());
     BeginWaitCursor();
     std::unique_ptr<CHttpFile> f(reinterpret_cast<CHttpFile*>(this->m_InternetSession.OpenURL(m_uriDict[service] + sUrl)));
     EndWaitCursor();

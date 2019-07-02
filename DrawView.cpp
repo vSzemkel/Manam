@@ -430,13 +430,6 @@ void CDrawView::OnSetFocus(CWnd* pOldWnd)
     CScrollView::OnSetFocus(pOldWnd);
 }
 
-CRect CDrawView::GetInitialPosition()
-{
-    CRect rect(10, 10, 10, 10);
-    ClientToDoc(rect);
-    return rect;
-}
-
 void CDrawView::ClientToDoc(CPoint& point)
 {
     CClientDC dc(this);
@@ -1589,7 +1582,6 @@ void CDrawView::OnPrevPdf() // single Add or Page selected
     auto doc = GetDocument();
     if (pAdd->powtorka == 0 || pAdd->powtorka > CTime::GetCurrentTime()) { // nowe lub powtórka niearchiwalna
         int status = pAdd->nreps;
-        CString sOrgDate = GetDocument()->data;
         sUrl = theManODPNET.GetHttpSource(GetDocument()->gazeta, GetDocument()->data, &status);
 
         if (!sUrl.IsEmpty()) {

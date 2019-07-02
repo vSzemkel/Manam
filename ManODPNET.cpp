@@ -410,7 +410,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
         if (m_doc->iDocType != DocType::makieta_lib) // w bibliotecznych nie ma og³oszeñ
             while (ogloszenieNaNastepnaStrone || pubCur->Read()) {
                 ivar = pubCur->GetInt32(3); // str_xx
-                if (ogloszenieNaNastepnaStrone = ivar != pPage->id_str)
+                if (ogloszenieNaNastepnaStrone = (ivar != pPage->id_str))
                     break;
 
                 ivx = pubCur->GetInt32(10); // sizex

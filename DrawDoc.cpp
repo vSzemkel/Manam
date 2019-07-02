@@ -1182,8 +1182,9 @@ void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_
 
     if (selectedPagesCount == 0)
         selectedPagesCount = (UINT)m_pages.size();
-    *m_modwol = selectedPagesCount * pmodcnt - *m_modogl - *m_modred - *m_modrez;
-    if (*m_modwol < 0)
+    const auto total_modules = selectedPagesCount * pmodcnt;
+    *m_modwol = total_modules - *m_modogl - *m_modred - *m_modrez;
+    if (*m_modwol > total_modules)
         *m_modwol = 0;
 }
 

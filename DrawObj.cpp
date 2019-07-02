@@ -14,9 +14,8 @@ CDrawObj::CDrawObj() noexcept
 {
 }
 
-CDrawObj::CDrawObj(const CRect& position) noexcept : CDrawObj::CDrawObj()
+CDrawObj::CDrawObj(const CRect& position) noexcept : m_position(position)
 {
-    m_position = position;
 }
 
 void CDrawObj::DrawNapis(CDC* pDC, LPCTSTR napis, const int cnt, LPRECT r, const UINT format, const int bkMode)

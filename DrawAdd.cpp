@@ -543,7 +543,7 @@ BOOL CDrawAdd::OnOpen(CDrawView* pView)
     m_add_xx = dlg.m_add_xx;
     spad_flag = dlg.m_spad;
     powtorka = dlg.m_powt.GetTime() ? CTime(dlg.m_powt.GetYear(), dlg.m_powt.GetMonth(), dlg.m_powt.GetDay(), 1, 0, 0) : 0;
-    if (flags.epsok != dlg.m_epsok) flags.epsok = dlg.m_epsok;
+    flags.epsok = dlg.m_epsok;
     if (dlg.m_epsok < 2) flags.showeps = dlg.m_epsok;
     flags.reserv = dlg.m_flaga_rezerw;
     flags.locked = (fizpage ? dlg.m_locked : FALSE);

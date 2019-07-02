@@ -59,7 +59,6 @@ class CDrawView : public CScrollView
     int GetZoomFactor() const noexcept { return m_zoomNum.cx; }
     PrintFormat GetPagesPrinted() const noexcept { return m_pagesPrinted; }
     BOOL SetZoomFactor(CSize zoomNum, CSize zoomDenom);
-    CRect GetInitialPosition();
 
     // Attributes
     static CLIPFORMAT m_cfDraw; // custom clipboard format

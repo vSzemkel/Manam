@@ -501,7 +501,7 @@ int CFlag::GetBitCnt(const bool val) const noexcept
 
 bool CFlag::operator[](const size_t pos) const noexcept
 {
-    ASSERT(0 <= pos && pos < 8 * size);
+    ASSERT(pos < 8 * size);
     const unsigned char mask = (1 << (pos % 8));
     char* str = GetRawFlag();
     str += (pos / 8);

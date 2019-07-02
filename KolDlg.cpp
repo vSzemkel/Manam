@@ -91,12 +91,8 @@ void CConnDlg::OnOK()
 /////////////////////////////////////////////////////////////////////////////
 // CKolDlg dialog
 
-CKolDlg::CKolDlg(CWnd* pParent /*=NULL*/)
-    : CDialog(CKolDlg::IDD, pParent)
+CKolDlg::CKolDlg(CWnd* pParent) : CDialog(CKolDlg::IDD, pParent), m_ile_kolumn(_T("4"))
 {
-    //{{AFX_DATA_INIT(CKolDlg)
-    m_ile_kolumn = _T("4");
-    //}}AFX_DATA_INIT
 }
 
 void CKolDlg::DoDataExchange(CDataExchange* pDX)
@@ -130,16 +126,10 @@ BOOL CKolDlg::OnInitDialog()
 /////////////////////////////////////////////////////////////////////////////
 // CPageDlg dialog
 
-CPageDlg::CPageDlg(CWnd* pParent /*=NULL*/)
-    : CDialog(CPageDlg::IDD, pParent)
+CPageDlg::CPageDlg(CWnd* pParent /*=NULL*/) : CDialog(CPageDlg::IDD, pParent), 
+    m_topage(1), m_kolor(ColorId::brak), m_deadline(0), m_typ_pary(0), m_drukarnie(0), m_ile_spotow(0), m_nr(0),
+    m_dervlvl(DervType::none), m_rzymska(FALSE), m_iscaption(FALSE), m_sztywna_kratka(FALSE), m_niemakietuj(FALSE)
 {
-    //{{AFX_DATA_INIT(CPageDlg)
-    m_topage = 1;
-    m_kolor = ColorId::brak;
-    m_deadline = m_typ_pary = m_drukarnie = m_ile_spotow = m_nr = 0;
-    m_dervlvl = DervType::none;
-    m_rzymska = m_iscaption = m_sztywna_kratka = m_niemakietuj = FALSE;
-    //}}AFX_DATA_INIT
 }
 
 void CPageDlg::OnOK()
@@ -440,20 +430,13 @@ BOOL CPageDlg::OnInitDialog()
 
 BOOL CAddDlg::matchingOldAdnoUpdate = FALSE;
 // CAddDlg dialog
-CAddDlg::CAddDlg(CWnd* pParent /*=NULL*/)
-    : CDialog(CAddDlg::IDD, pParent), vActiveDoc(theApp.activeDoc)
+CAddDlg::CAddDlg(CWnd* pParent) : CDialog(CAddDlg::IDD, pParent), vActiveDoc(theApp.activeDoc), m_kolor(ColorId::brak),
+    m_add_xx(0), m_nag_xx(0), m_spad(0), m_fizpage(0), m_oldadno(0), m_txtposx(0), m_txtposy(0), m_posx(0), m_posy(0),
+    m_sizex(0), m_sizey(0), m_powt(0), m_studio(1), m_spad_top(FALSE), m_spad_bottom(FALSE), m_spad_left(FALSE),
+    m_spad_right(FALSE), m_locked(FALSE), m_flaga_rezerw(FALSE), m_rzymnum(FALSE), m_epsok(FALSE), m_always(FALSE), 
+    m_zagroz(FALSE), m_fullView(FALSE), c_height(470), c_narrow(340), c_wide(500)
 {
-    //{{AFX_DATA_INIT(CAddDlg)
-    m_kolor = ColorId::brak;
-    m_add_xx = m_nag_xx = m_spad = m_fizpage = m_oldadno = m_txtposx = m_txtposy = 0;
-    m_posx = m_posy = m_sizex = m_sizey = 0;
-    m_spad_top = m_spad_bottom = m_spad_left = m_spad_right = m_locked = m_flaga_rezerw = m_rzymnum = FALSE;
     m_godz_czob = m_data_czob = CTime::GetCurrentTime();
-    m_epsok = m_always = m_zagroz = m_fullView = FALSE;
-    m_studio = -1;
-    m_powt = 0;
-    //}}AFX_DATA_INIT
-    c_height = 470; c_narrow = 340; c_wide = 500;
 }
 
 void CAddDlg::DoDataExchange(CDataExchange* pDX)
@@ -1044,19 +1027,12 @@ void CAddDlg::OnOK()
 
 /////////////////////////////////////////////////////////////////////////////
 // CInfoDlg dialog
-CInfoDlg::CInfoDlg(CWnd* pParent /*=NULL*/)
-    : CDialog(CInfoDlg::IDD, pParent)
+CInfoDlg::CInfoDlg(CWnd* pParent /*=NULL*/) : CDialog(CInfoDlg::IDD, pParent), m_objetosc(0), m_numerrok(0),
+    m_numer(0), m_drukarnie(0), m_naklad(0), m_modogl(0), m_modred(0), m_modwol(0), m_modrez(0), m_modoglp(0),
+    m_modwolp(0), m_modrezp(0), m_modredp(0), m_data_deadline(0), m_godz_deadline(0), m_godz_zamkniecia(0),
+    m_godz_studio(0), m_godz_wykupu(0), m_data_zamkniecia(0), m_data_studio(0), m_data_wykupu(0), m_quecnt(0),
+    m_modcnt(0), m_set_papier(FALSE), m_set_kraty(FALSE), m_set_deadline(FALSE), m_szyj(FALSE)
 {
-    //{{AFX_DATA_INIT(CInfoDlg)
-    m_objetosc = m_numerrok = m_numer = 0;
-    m_drukarnie = m_naklad = 0L;
-    m_modogl = m_modred = m_modwol = m_modrez = 0;
-    m_modoglp = m_modwolp = m_modrezp = m_modredp = 0;
-    m_data_deadline = m_godz_deadline = m_godz_zamkniecia = m_godz_studio = m_godz_wykupu = m_data_zamkniecia = m_data_studio = m_data_wykupu = 0;
-    m_quecnt = m_modcnt = 0.0f;
-    m_set_papier = m_set_kraty = m_set_deadline = FALSE;
-    m_szyj = FALSE;
-    //}}AFX_DATA_INIT
 }
 
 BOOL CInfoDlg::OnInitDialog()
