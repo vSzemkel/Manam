@@ -21,7 +21,6 @@ CConnDlg::CConnDlg(CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-
 void CConnDlg::DoDataExchange(CDataExchange* pDX)
 {
     CDialog::DoDataExchange(pDX);
@@ -32,11 +31,10 @@ void CConnDlg::DoDataExchange(CDataExchange* pDX)
     //}}AFX_DATA_MAP
 }
 
-
 BEGIN_MESSAGE_MAP(CConnDlg, CDialog)
-    //{{AFX_MSG_MAP(CConnDlg)
-    ON_EN_CHANGE(IDC_PASSWD, &CConnDlg::OnChangePasswd)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CConnDlg)
+ON_EN_CHANGE(IDC_PASSWD, &CConnDlg::OnChangePasswd)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -106,10 +104,9 @@ void CKolDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CKolDlg, CDialog)
-    //{{AFX_MSG_MAP(CKolDlg)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CKolDlg)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CKolDlg message handlers
@@ -126,9 +123,9 @@ BOOL CKolDlg::OnInitDialog()
 /////////////////////////////////////////////////////////////////////////////
 // CPageDlg dialog
 
-CPageDlg::CPageDlg(CWnd* pParent /*=NULL*/) : CDialog(CPageDlg::IDD, pParent), 
-    m_topage(1), m_kolor(ColorId::brak), m_deadline(0), m_typ_pary(0), m_drukarnie(0), m_ile_spotow(0), m_nr(0),
-    m_dervlvl(DervType::none), m_rzymska(FALSE), m_iscaption(FALSE), m_sztywna_kratka(FALSE), m_niemakietuj(FALSE)
+CPageDlg::CPageDlg(CWnd* pParent /*=NULL*/) : CDialog(CPageDlg::IDD, pParent),
+                                              m_topage(1), m_kolor(ColorId::brak), m_deadline(0), m_typ_pary(0), m_drukarnie(0), m_ile_spotow(0), m_nr(0),
+                                              m_dervlvl(DervType::none), m_rzymska(FALSE), m_iscaption(FALSE), m_sztywna_kratka(FALSE), m_niemakietuj(FALSE)
 {
 }
 
@@ -225,13 +222,12 @@ void CPageDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CPageDlg, CDialog)
-    //{{AFX_MSG_MAP(CPageDlg)
-    ON_CBN_SELCHANGE(IDC_NAMECOMBO, &CPageDlg::GiveOutStrLog)
-    ON_CBN_SELCHANGE(IDC_PRN_MAK, &CPageDlg::OnSelchangePrnMak)
-    ON_BN_CLICKED(IDC_ACDEAD, &CPageDlg::OnBnClickedAcdead)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CPageDlg)
+ON_CBN_SELCHANGE(IDC_NAMECOMBO, &CPageDlg::GiveOutStrLog)
+ON_CBN_SELCHANGE(IDC_PRN_MAK, &CPageDlg::OnSelchangePrnMak)
+ON_BN_CLICKED(IDC_ACDEAD, &CPageDlg::OnBnClickedAcdead)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
 
 void CPageDlg::GiveOutStrLog()
 {
@@ -366,7 +362,7 @@ BOOL CPageDlg::OnInitDialog()
             m_wydawcycombo.SetCurSel(j);
     }
 
-    if (theApp.swCZV == ToolbarMode::tryb_studia && theApp.isRDBMS && (theApp.grupa&(UserRole::stu | UserRole::mas))) {
+    if (theApp.swCZV == ToolbarMode::tryb_studia && theApp.isRDBMS && (theApp.grupa & (UserRole::stu | UserRole::mas))) {
         // odczytaj ustawienia strony
         int prn_flag;
         CManODPNETParms orapar {
@@ -431,10 +427,10 @@ BOOL CPageDlg::OnInitDialog()
 BOOL CAddDlg::matchingOldAdnoUpdate = FALSE;
 // CAddDlg dialog
 CAddDlg::CAddDlg(CWnd* pParent) : CDialog(CAddDlg::IDD, pParent), vActiveDoc(theApp.activeDoc), m_kolor(ColorId::brak),
-    m_add_xx(0), m_nag_xx(0), m_spad(0), m_fizpage(0), m_oldadno(0), m_txtposx(0), m_txtposy(0), m_posx(0), m_posy(0),
-    m_sizex(0), m_sizey(0), m_powt(0), m_studio(1), m_spad_top(FALSE), m_spad_bottom(FALSE), m_spad_left(FALSE),
-    m_spad_right(FALSE), m_locked(FALSE), m_flaga_rezerw(FALSE), m_rzymnum(FALSE), m_epsok(FALSE), m_always(FALSE), 
-    m_zagroz(FALSE), m_fullView(FALSE), c_height(470), c_narrow(340), c_wide(500)
+                                  m_add_xx(0), m_nag_xx(0), m_spad(0), m_fizpage(0), m_oldadno(0), m_txtposx(0), m_txtposy(0), m_posx(0), m_posy(0),
+                                  m_sizex(0), m_sizey(0), m_powt(0), m_studio(1), m_spad_top(FALSE), m_spad_bottom(FALSE), m_spad_left(FALSE),
+                                  m_spad_right(FALSE), m_locked(FALSE), m_flaga_rezerw(FALSE), m_rzymnum(FALSE), m_epsok(FALSE), m_always(FALSE),
+                                  m_zagroz(FALSE), m_fullView(FALSE), c_height(470), c_narrow(340), c_wide(500)
 {
     m_godz_czob = m_data_czob = CTime::GetCurrentTime();
 }
@@ -503,23 +499,23 @@ void CAddDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAddDlg, CDialog)
-    //{{AFX_MSG_MAP(CAddDlg)
-    ON_WM_KEYDOWN()
-    ON_BN_CLICKED(IDC_LOCKED, &CAddDlg::OnLocked)
-    ON_BN_CLICKED(IDC_KRATOWE, &CAddDlg::OnKratowe)
-    ON_BN_CLICKED(IDC_ALWAYS, &CAddDlg::OnAlways)
-    ON_BN_CLICKED(IDEMISJE, &CAddDlg::OnEmisje)
-    ON_BN_CLICKED(IDDELSEL, &CAddDlg::OnDelsel)
-    ON_BN_CLICKED(IDDELALL, &CAddDlg::OnDelall)
-    ON_BN_CLICKED(IDATEX, &CAddDlg::OnAtex)
-    ON_BN_CLICKED(IDC_CBPOWT, &CAddDlg::OnCbpowt)
-    ON_BN_CLICKED(IDC_ODBLOKUJ, &CAddDlg::OnBnClickedOdblokuj)
-    ON_NOTIFY(DTN_DATETIMECHANGE, IDC_POWT, &CAddDlg::OnDtnDatetimechangePowt)
-    ON_EN_UPDATE(ID_OLDADNO, &CAddDlg::OnEnUpdateOldadno)
-    ON_EN_CHANGE(IDC_WERSJA, &CAddDlg::OnEnChangeWersja)
-    ON_CBN_SELCHANGE(IDC_KRATKA, &CAddDlg::OnSelchangeKratka)
-    ON_CBN_SELCHANGE(IDC_ZAJAWKA, &CAddDlg::OnCbnSelchangeZajawka)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CAddDlg)
+ON_WM_KEYDOWN()
+ON_BN_CLICKED(IDC_LOCKED, &CAddDlg::OnLocked)
+ON_BN_CLICKED(IDC_KRATOWE, &CAddDlg::OnKratowe)
+ON_BN_CLICKED(IDC_ALWAYS, &CAddDlg::OnAlways)
+ON_BN_CLICKED(IDEMISJE, &CAddDlg::OnEmisje)
+ON_BN_CLICKED(IDDELSEL, &CAddDlg::OnDelsel)
+ON_BN_CLICKED(IDDELALL, &CAddDlg::OnDelall)
+ON_BN_CLICKED(IDATEX, &CAddDlg::OnAtex)
+ON_BN_CLICKED(IDC_CBPOWT, &CAddDlg::OnCbpowt)
+ON_BN_CLICKED(IDC_ODBLOKUJ, &CAddDlg::OnBnClickedOdblokuj)
+ON_NOTIFY(DTN_DATETIMECHANGE, IDC_POWT, &CAddDlg::OnDtnDatetimechangePowt)
+ON_EN_UPDATE(ID_OLDADNO, &CAddDlg::OnEnUpdateOldadno)
+ON_EN_CHANGE(IDC_WERSJA, &CAddDlg::OnEnChangeWersja)
+ON_CBN_SELCHANGE(IDC_KRATKA, &CAddDlg::OnSelchangeKratka)
+ON_CBN_SELCHANGE(IDC_ZAJAWKA, &CAddDlg::OnCbnSelchangeZajawka)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -587,12 +583,12 @@ BOOL CAddDlg::OnInitDialog()
         GetDlgItem(IDC_GODZ_CZOB)->EnableWindow(FALSE);
     }
     // blokuj opcje dla og³oszeñ niespacerowanych
-    if (m_add_xx < 0 && (theApp.grupa&UserRole::dea))
+    if (m_add_xx < 0 && (theApp.grupa & UserRole::dea))
         GetDlgItem(IDOK)->EnableWindow(FALSE);
     const BOOL enable = m_add_xx > 0 && (theApp.grupa & (UserRole::mas | UserRole::kie | UserRole::dea));
     GetDlgItem(IDEMISJE)->EnableWindow(enable);
     GetDlgItem(IDATEX)->EnableWindow(enable);
-    GetDlgItem(IDC_ODBLOKUJ)->EnableWindow(theApp.grupa&(UserRole::mas | UserRole::kie));
+    GetDlgItem(IDC_ODBLOKUJ)->EnableWindow(theApp.grupa & (UserRole::mas | UserRole::kie));
     // dla zajawek pobierz listê dopuszczalnych nazw
     OnEnChangeWersja();
 
@@ -629,7 +625,7 @@ BOOL CAddDlg::OnInitDialog()
 
     static_cast<CComboBox*>(GetDlgItem(IDC_NAGL_RED))->SetCurSel(m_nag_xx - 1);
 
-    return TRUE;  // return TRUE  unless you set the focus to a control
+    return TRUE; // return TRUE  unless you set the focus to a control
 }
 
 void CAddDlg::OnEnChangeWersja()
@@ -760,7 +756,7 @@ void CAddDlg::OnKratowe()
             CheckDlgButton(IDC_KRATOWE, BST_UNCHECKED);
             GetDlgItem(IDC_KRATOWE)->EnableWindow(FALSE);
             return;
-        } 
+        }
         m_wymiarowe = FALSE;
     }
     GetDlgItem(IDC_TYP_OGL)->ShowWindow(m_wymiarowe ? SW_HIDE : SW_SHOW);
@@ -894,7 +890,7 @@ void CAddDlg::OnCbpowt()
 
 void CAddDlg::OnKeyDown(const UINT nChar, const UINT nRepCnt, const UINT nFlags)
 {
-    if (nChar == 's' && (nFlags&KF_ALTDOWN))
+    if (nChar == 's' && (nFlags & KF_ALTDOWN))
         GetDlgItem(IDC_STUDIO)->SetFocus();
     CDialog::OnKeyDown(nChar, nRepCnt, nFlags);
 }
@@ -1013,11 +1009,11 @@ void CAddDlg::OnOK()
     if (m_powt == 0) m_oldadno = -1;
     // spad
     m_spad = 0;
-    if (m_spad_right)  m_spad += 1;
-    if (m_spad_top)    m_spad += 2;
-    if (m_spad_left)   m_spad += 4;
+    if (m_spad_right) m_spad += 1;
+    if (m_spad_top) m_spad += 2;
+    if (m_spad_left) m_spad += 4;
     if (m_spad_bottom) m_spad += 8;
-    // nazwa zajawki wpisana rêcznie 
+    // nazwa zajawki wpisana rêcznie
     i = m_zajawkacombo.GetCurSel();
     if (m_wersja.Find(_T("z")) >= 0 && i != LB_ERR)
         m_zajawkacombo.GetLBText(i, m_nazwa);
@@ -1028,10 +1024,10 @@ void CAddDlg::OnOK()
 /////////////////////////////////////////////////////////////////////////////
 // CInfoDlg dialog
 CInfoDlg::CInfoDlg(CWnd* pParent /*=NULL*/) : CDialog(CInfoDlg::IDD, pParent), m_objetosc(0), m_numerrok(0),
-    m_numer(0), m_drukarnie(0), m_naklad(0), m_modogl(0), m_modred(0), m_modwol(0), m_modrez(0), m_modoglp(0),
-    m_modwolp(0), m_modrezp(0), m_modredp(0), m_data_deadline(0), m_godz_deadline(0), m_godz_zamkniecia(0),
-    m_godz_studio(0), m_godz_wykupu(0), m_data_zamkniecia(0), m_data_studio(0), m_data_wykupu(0), m_quecnt(0),
-    m_modcnt(0), m_set_papier(FALSE), m_set_kraty(FALSE), m_set_deadline(FALSE), m_szyj(FALSE)
+                                              m_numer(0), m_drukarnie(0), m_naklad(0), m_modogl(0), m_modred(0), m_modwol(0), m_modrez(0), m_modoglp(0),
+                                              m_modwolp(0), m_modrezp(0), m_modredp(0), m_data_deadline(0), m_godz_deadline(0), m_godz_zamkniecia(0),
+                                              m_godz_studio(0), m_godz_wykupu(0), m_data_zamkniecia(0), m_data_studio(0), m_data_wykupu(0), m_quecnt(0),
+                                              m_modcnt(0), m_set_papier(FALSE), m_set_kraty(FALSE), m_set_deadline(FALSE), m_szyj(FALSE)
 {
 }
 
@@ -1045,10 +1041,10 @@ BOOL CInfoDlg::OnInitDialog()
         const TCHAR sekcja[] = _T(" Sekcja");
         memcpy(title, sekcja, sizeof(sekcja) - sizeof(TCHAR));
     }
-    GetDlgItem(IDOK)->EnableWindow(!isRO);
+    GetDlgItem(IDOK)->EnableWindow(!m_isRO);
     SetDlgItemText(IDC_MODSTATISTICS, title);
     GetDlgItemText(IDC_SIGN_TEXT, title, 3);
-    if (title[0] || !(theApp.grupa&UserRole::kie))
+    if (title[0] || !(theApp.grupa & UserRole::kie))
         GetDlgItem(IDB_SIGN)->EnableWindow(FALSE);
     GetDlgItemText(ID_DATA_STUDIO, title, 11);
     if (m_grzbiet.GetLength() == 2) { //mutacja grzbietu
@@ -1099,15 +1095,22 @@ BOOL CInfoDlg::OnInitDialog()
         GetWindowRect(&r);
         SetWindowPos(&wndTop, 0, 0, r.Width() - 98, r.Height(), SWP_NOMOVE);
     }
-    // wydawcy NSS - WWWWW; N={0|1} czy jest studio; SS symbol; WWWWW nazwa
+    // wydawcy NSS - WWWWW; N={0|1|2} czy jest studio(1) i korekta(2); SS symbol; WWWWW nazwa
     for (const auto& z : theApp.zsylajacy) {
-        if (z[0] == _T('1')) {
-            modtotal = m_wydawcycombo.AddString(z.Mid(1));
+        const auto role = z[0];
+        const CString opis{z.Mid(1)};
+        if (role != _T('0')) {
+            modtotal = m_wydawcycombo.AddString(opis);
             if (z.Find(m_wydawca) == 1)
                 m_wydawcycombo.SetCurSel(modtotal);
+            if (role == _T('2')) {
+                modtotal = m_korektacombo.AddString(opis);
+                if (z.Find(m_korekta) == 1)
+                    m_korektacombo.SetCurSel(modtotal);
+            }
         }
 
-        modtotal = m_wydawcyredcombo.AddString(z.Mid(1));
+        modtotal = m_wydawcyredcombo.AddString(opis);
         if (z.Find(m_wydawcared) == 1)
             m_wydawcyredcombo.SetCurSel(modtotal);
     }
@@ -1127,6 +1130,10 @@ void CInfoDlg::OnOK()
     if ((i = m_wydawcycombo.GetCurSel()) != CB_ERR) {
         m_wydawcycombo.GetLBText(i, m_wydawca);
         m_wydawca.Truncate(2);
+    }
+    if ((i = m_korektacombo.GetCurSel()) != CB_ERR) {
+        m_korektacombo.GetLBText(i, m_korekta);
+        m_korekta.Truncate(2);
     }
     if ((i = m_wydawcyredcombo.GetCurSel()) != CB_ERR) {
         m_wydawcyredcombo.GetLBText(i, m_wydawcared);
@@ -1178,6 +1185,7 @@ void CInfoDlg::DoDataExchange(CDataExchange* pDX)
     DDV_MaxChars(pDX, m_uwagi, 255);
     DDX_Control(pDX, IDC_ISSN, m_wydawcycombo);
     DDX_Control(pDX, IDC_INSERT, m_wydawcyredcombo);
+    DDX_Control(pDX, IDC_CBRIP, m_korektacombo);
     DDX_Text(pDX, IDC_PAP, m_opis_papieru);
     DDX_Text(pDX, IDC_QUECNT, m_quecnt);
     DDX_Text(pDX, IDC_WYDAWCA, m_wydaw_str);
@@ -1202,13 +1210,12 @@ void CInfoDlg::OnShowPageDeadlines()
 }
 
 BEGIN_MESSAGE_MAP(CInfoDlg, CDialog)
-    //{{AFX_MSG_MAP(CInfoDlg)
-    ON_BN_CLICKED(IDOK, &CInfoDlg::OnOK)
-    ON_BN_CLICKED(IDB_SIGN, &CInfoDlg::OnSign)
-    ON_BN_CLICKED(IDC_DEADLINEDAY, &CInfoDlg::OnShowPageDeadlines)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CInfoDlg)
+ON_BN_CLICKED(IDOK, &CInfoDlg::OnOK)
+ON_BN_CLICKED(IDB_SIGN, &CInfoDlg::OnSign)
+ON_BN_CLICKED(IDC_DEADLINEDAY, &CInfoDlg::OnShowPageDeadlines)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CInfoDlg message handlers
@@ -1230,9 +1237,9 @@ void COpisDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(COpisDlg, CDialog)
-    //{{AFX_MSG_MAP(COpisDlg)
-        // NOTE: the ClassWizard will add message map macros here
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(COpisDlg)
+// NOTE: the ClassWizard will add message map macros here
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1257,12 +1264,11 @@ void CZoomDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CZoomDlg, CDialog)
-    //{{AFX_MSG_MAP(CZoomDlg)
-        // NOTE: the ClassWizard will add message map macros here
-    //}}AFX_MSG_MAP
-END_MESSAGE_MAP()/////////////////////////////////////////////////////////////////////////////
+//{{AFX_MSG_MAP(CZoomDlg)
+// NOTE: the ClassWizard will add message map macros here
+//}}AFX_MSG_MAP
+END_MESSAGE_MAP() /////////////////////////////////////////////////////////////////////////////
 // CDbDlg dialog
-
 
 CDbDlg::CDbDlg(CWnd* pParent /*=NULL*/)
     : CDialog(CDbDlg::IDD, pParent)
@@ -1310,15 +1316,13 @@ void CDbDlg::OnOK()
 }
 
 BEGIN_MESSAGE_MAP(CDbDlg, CDialog)
-    //{{AFX_MSG_MAP(CDbDlg)
-    ON_BN_CLICKED(IDC_ZAKRES, &CDbDlg::OnDefineZone)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CDbDlg)
+ON_BN_CLICKED(IDC_ZAKRES, &CDbDlg::OnDefineZone)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CDrzDlg dialog
-
 
 CDrzDlg::CDrzDlg(CWnd* pParent /*=NULL*/)
     : CDialog(CDrzDlg::IDD, pParent)
@@ -1419,12 +1423,11 @@ void CDrzDlg::OnCbnEditupdateDrzewo()
 }
 
 BEGIN_MESSAGE_MAP(CDrzDlg, CDialog)
-    //{{AFX_MSG_MAP(CDrzDlg)
-    ON_NOTIFY(DTN_DATETIMECHANGE, IDC_LASTEMISION, &CDrzDlg::OnKiedyChanged)
-    ON_CBN_EDITUPDATE(IDC_DRZEWO, &CDrzDlg::OnCbnEditupdateDrzewo)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CDrzDlg)
+ON_NOTIFY(DTN_DATETIMECHANGE, IDC_LASTEMISION, &CDrzDlg::OnKiedyChanged)
+ON_CBN_EDITUPDATE(IDC_DRZEWO, &CDrzDlg::OnCbnEditupdateDrzewo)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CDrzDlg message handlers
@@ -1434,7 +1437,7 @@ CDrz1Dlg::CDrz1Dlg(CWnd* pParent /*=NULL*/)
     : CDialog(CDrz1Dlg::IDD, pParent)
 {
     //{{AFX_DATA_INIT(CDrz1Dlg)
-        // NOTE: the ClassWizard will add member initialization here		
+    // NOTE: the ClassWizard will add member initialization here
     //}}AFX_DATA_INIT
     m_id_drw = -1;
 }
@@ -1477,11 +1480,10 @@ void CDrz1Dlg::OnOK()
 }
 
 BEGIN_MESSAGE_MAP(CDrz1Dlg, CDialog)
-    //{{AFX_MSG_MAP(CDrz1Dlg)
-        // NOTE: the ClassWizard will add message map macros here
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CDrz1Dlg)
+// NOTE: the ClassWizard will add message map macros here
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CDBOpenDlg dialog
@@ -1524,7 +1526,8 @@ void CDBOpenDlg::OnChangeTytul()
         GetDlgItem(ID_MUTACJA)->SetFocus();
     } else if (IsDlgButtonChecked(IDC_LIB))
         m_wersje_lib.ResetContent();
-    else m_date_combo.ResetContent();
+    else
+        m_date_combo.ResetContent();
 }
 
 void CDBOpenDlg::OnChangeMutacja()
@@ -1535,7 +1538,8 @@ void CDBOpenDlg::OnChangeMutacja()
         bEnableCtrls = TRUE;
     } else if (IsDlgButtonChecked(IDC_LIB))
         m_wersje_lib.ResetContent();
-    else m_date_combo.ResetContent();
+    else
+        m_date_combo.ResetContent();
 }
 
 void CDBOpenDlg::OnBnClickedAllMut()
@@ -1619,7 +1623,7 @@ void CDBOpenDlg::RefreshCombo()
             theManODPNET.FillCombo(&m_wersje_lib, "select wersja from makieta_lib, drzewo where tytul=:tytul and mutacja=:mutacja and drw_xx=drzewo.xx order by 1", orapar);
     } else { //makieta wyprzedzeniowa lub grzbiet
         CTime t;
-        int aIleDni[] = { 1, 7, 14, 31, 62, 93, 185, 365 };
+        int aIleDni[] = {1, 7, 14, 31, 62, 93, 185, 365};
         m_date_combo.ResetContent();
         m_mutacja_combo.ResetContent();
         int iIleDni = aIleDni[((CComboBox*)GetDlgItem(IDC_OKRES))->GetCurSel()];
@@ -1637,7 +1641,7 @@ void CDBOpenDlg::RefreshCombo()
                 { CManDbType::DbTypeRefCursor, CManDbDir::ParameterOut, nullptr },
                 { CManDbType::DbTypeRefCursor, CManDbDir::ParameterOut, nullptr }
             };
-            CListBox* carr[] = { &m_date_combo, &m_mutacja_combo };
+            CListBox* carr[] = {&m_date_combo, &m_mutacja_combo};
             theManODPNET.FillListArr(carr[0], "begin list_emisje_mutacje2(:tytul,:mutacja,:kiedy,:ileDni,:is_grb,:dateCur,:mutCur); end;", orapar2, IsDlgButtonChecked(IDC_MEMSTAT));
         }
     }
@@ -1658,16 +1662,16 @@ void CDBOpenDlg::OnDtnDatetimechangeDt(NMHDR* pNMHDR, LRESULT* pResult)
 }
 
 BEGIN_MESSAGE_MAP(CDBOpenDlg, CDialog)
-    //{{AFX_MSG_MAP(CDBOpenDlg)
-    ON_EN_CHANGE(ID_TYTUL, &CDBOpenDlg::OnChangeTytul)
-    ON_EN_CHANGE(ID_MUTACJA, &CDBOpenDlg::OnChangeMutacja)
-    ON_BN_CLICKED(IDC_LIB, &CDBOpenDlg::RefreshCombo)
-    ON_BN_CLICKED(IDC_GRZBIET, &CDBOpenDlg::RefreshCombo)
-    ON_BN_CLICKED(IDC_MAKIETA, &CDBOpenDlg::RefreshCombo)
-    ON_BN_CLICKED(IDC_MEMSTAT, &CDBOpenDlg::OnBnClickedAllMut)
-    ON_CBN_SELCHANGE(IDC_OKRES, &CDBOpenDlg::RefreshCombo)
-    ON_NOTIFY(DTN_DATETIMECHANGE, IDC_DT, &CDBOpenDlg::OnDtnDatetimechangeDt)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CDBOpenDlg)
+ON_EN_CHANGE(ID_TYTUL, &CDBOpenDlg::OnChangeTytul)
+ON_EN_CHANGE(ID_MUTACJA, &CDBOpenDlg::OnChangeMutacja)
+ON_BN_CLICKED(IDC_LIB, &CDBOpenDlg::RefreshCombo)
+ON_BN_CLICKED(IDC_GRZBIET, &CDBOpenDlg::RefreshCombo)
+ON_BN_CLICKED(IDC_MAKIETA, &CDBOpenDlg::RefreshCombo)
+ON_BN_CLICKED(IDC_MEMSTAT, &CDBOpenDlg::OnBnClickedAllMut)
+ON_CBN_SELCHANGE(IDC_OKRES, &CDBOpenDlg::RefreshCombo)
+ON_NOTIFY(DTN_DATETIMECHANGE, IDC_DT, &CDBOpenDlg::OnDtnDatetimechangeDt)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1718,9 +1722,9 @@ void CDBSaveAsDlg::OnLib()
 }
 
 BEGIN_MESSAGE_MAP(CDBSaveAsDlg, CDialog)
-    //{{AFX_MSG_MAP(CDBSaveAsDlg)
-    ON_BN_CLICKED(IDC_LIB, &CDBSaveAsDlg::OnLib)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CDBSaveAsDlg)
+ON_BN_CLICKED(IDC_LIB, &CDBSaveAsDlg::OnLib)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1745,10 +1749,9 @@ void CAddDesc::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAddDesc, CDialog)
-    //{{AFX_MSG_MAP(CAddDesc)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CAddDesc)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CAddFindDlg dialog
@@ -1774,9 +1777,9 @@ void CAddFindDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAddFindDlg, CDialog)
-    //{{AFX_MSG_MAP(CAddFindDlg)
-    ON_EN_UPDATE(IDC_NR, &CAddFindDlg::OnUpdateNr)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CAddFindDlg)
+ON_EN_UPDATE(IDC_NR, &CAddFindDlg::OnUpdateNr)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 void CAddFindDlg::OnUpdateNr()
@@ -1828,11 +1831,10 @@ void CInfoDlgLib::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CInfoDlgLib, CDialog)
-    //{{AFX_MSG_MAP(CInfoDlgLib)
-        // NOTE: the ClassWizard will add message map macros here
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CInfoDlgLib)
+// NOTE: the ClassWizard will add message map macros here
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CConfDlg dialog
@@ -1893,9 +1895,9 @@ BOOL CConfDlg::OnInitDialog()
 {
     CDialog::OnInitDialog();
     OnDaydirs();
-    GetDlgItem(IDC_SETDEA)->EnableWindow(theApp.grupa&UserRole::kie);
-    GetDlgItem(IDC_INSERT)->EnableWindow(!theApp.activeDoc->isRO && (theApp.grupa&UserRole::stu));
-    if (theApp.grupa&UserRole::dea) CheckDlgButton(IDC_SETDEA, BST_CHECKED);
+    GetDlgItem(IDC_SETDEA)->EnableWindow(theApp.grupa & UserRole::kie);
+    GetDlgItem(IDC_INSERT)->EnableWindow(!theApp.activeDoc->isRO && (theApp.grupa & UserRole::stu));
+    if (theApp.grupa & UserRole::dea) CheckDlgButton(IDC_SETDEA, BST_CHECKED);
     OnBnClickedCopyPodwaly();
     OnBnClickedOpiMode();
 
@@ -1913,7 +1915,10 @@ void CConfDlg::OnSubdir()
 void CConfDlg::OnDaydirs()
 {
     const BOOL isClear = !IsDlgButtonChecked(IDC_DAYDIRS);
-    if (isClear) OnSubdir(); else GetDlgItem(IDC_HASHING)->EnableWindow(FALSE);
+    if (isClear)
+        OnSubdir();
+    else
+        GetDlgItem(IDC_HASHING)->EnableWindow(FALSE);
     GetDlgItem(IDC_COPYOLDEPS)->EnableWindow(!isClear);
     GetDlgItem(IDC_SUBDIR)->EnableWindow(isClear);
     GetDlgItem(IDC_EPS_OLD)->EnableWindow(isClear);
@@ -1958,12 +1963,12 @@ void CConfDlg::OnOK()
 }
 
 BEGIN_MESSAGE_MAP(CConfDlg, CDialog)
-    //{{AFX_MSG_MAP(CConfDlg)
-    ON_BN_CLICKED(IDC_DAYDIRS, &CConfDlg::OnDaydirs)
-    ON_BN_CLICKED(IDC_SUBDIR, &CConfDlg::OnSubdir)
-    ON_BN_CLICKED(IDC_COPYOLDEPS, &CConfDlg::OnBnClickedCopyPodwaly)
-    ON_BN_CLICKED(IDC_OPIMODE, &CConfDlg::OnBnClickedOpiMode)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CConfDlg)
+ON_BN_CLICKED(IDC_DAYDIRS, &CConfDlg::OnDaydirs)
+ON_BN_CLICKED(IDC_SUBDIR, &CConfDlg::OnSubdir)
+ON_BN_CLICKED(IDC_COPYOLDEPS, &CConfDlg::OnBnClickedCopyPodwaly)
+ON_BN_CLICKED(IDC_OPIMODE, &CConfDlg::OnBnClickedOpiMode)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 CPassDlg::CPassDlg(CWnd* pParent /*=NULL*/)
@@ -1987,8 +1992,8 @@ void CPassDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CPassDlg, CDialog)
-    //{{AFX_MSG_MAP(CPassDlg)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CPassDlg)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 void CPassDlg::OnOK()
@@ -2093,14 +2098,14 @@ CFlag CPrnEpsDlg::GetChoosenPages(CDrawDoc* pDoc) const noexcept
 }
 
 BEGIN_MESSAGE_MAP(CPrnEpsDlg, CDialog)
-    //{{AFX_MSG_MAP(CPrnEpsDlg)
-    ON_WM_LBUTTONDOWN()
-    ON_BN_CLICKED(IDC_ALLPAGES, &CPrnEpsDlg::OnAllPages)
-    ON_BN_CLICKED(IDC_ZAKRES, &CPrnEpsDlg::OnAllPages)
-    ON_BN_CLICKED(IDC_FMTEPS, &CPrnEpsDlg::OnFmteps)
-    ON_BN_CLICKED(IDC_FMTPS, &CPrnEpsDlg::OnFmteps)
-    ON_BN_CLICKED(IDC_FMTPDF, &CPrnEpsDlg::OnFmteps)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CPrnEpsDlg)
+ON_WM_LBUTTONDOWN()
+ON_BN_CLICKED(IDC_ALLPAGES, &CPrnEpsDlg::OnAllPages)
+ON_BN_CLICKED(IDC_ZAKRES, &CPrnEpsDlg::OnAllPages)
+ON_BN_CLICKED(IDC_FMTEPS, &CPrnEpsDlg::OnFmteps)
+ON_BN_CLICKED(IDC_FMTPS, &CPrnEpsDlg::OnFmteps)
+ON_BN_CLICKED(IDC_FMTPDF, &CPrnEpsDlg::OnFmteps)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 void CPrnEpsDlg::OnAllPages()
@@ -2130,7 +2135,8 @@ void CPrnEpsDlg::OnLButtonDown(const UINT nFlags, CPoint point)
     GetDlgItem(IDC_FROMPAGE)->GetWindowRect(odR);
     GetDlgItem(IDC_TOPAGE)->GetWindowRect(doR);
     GetDlgItem(IDC_DWARLOG)->GetWindowRect(ssR);
-    point.x += dR.left + borderWidth; point.y += dR.bottom - cdR.Height() - borderWidth;
+    point.x += dR.left + borderWidth;
+    point.y += dR.bottom - cdR.Height() - borderWidth;
     UpdateData(TRUE);
     if ((odClicked = odR.PtInRect(point)) || doR.PtInRect(point))
         m_page = 1;
@@ -2170,7 +2176,6 @@ void CPrnEpsDlg::OnOK()
 
 /////////////////////////////////////////////////////////////////////////////
 // CUserDlg dialog
-
 
 CUserDlg::CUserDlg(CWnd* pParent /*=NULL*/)
     : CDialog(CUserDlg::IDD, pParent)
@@ -2214,20 +2219,19 @@ void CUserDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CUserDlg, CDialog)
-    //{{AFX_MSG_MAP(CUserDlg)
-    ON_BN_CLICKED(IDOK, &CUserDlg::OnZaloz)
-    ON_BN_CLICKED(IDC_YESNNEXT, &CUserDlg::OnYesnnext)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CUserDlg)
+ON_BN_CLICKED(IDOK, &CUserDlg::OnZaloz)
+ON_BN_CLICKED(IDC_YESNNEXT, &CUserDlg::OnYesnnext)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CUserDlg message handlers
 
 void CUserDlg::OnZaloz()
 {
-    TCHAR *s = theApp.bigBuf;
-    int aiGets[6] = { IDC_IMIE, IDC_NAZWISKO, IDC_LOGINNAME, IDC_PASS, IDC_GRUPA, IDC_TELEFON };
+    TCHAR* s = theApp.bigBuf;
+    int aiGets[6] = {IDC_IMIE, IDC_NAZWISKO, IDC_LOGINNAME, IDC_PASS, IDC_GRUPA, IDC_TELEFON};
     for (int aiGet : aiGets) {
         GetDlgItemText(aiGet, s, 255);
         if (!s[0]) {
@@ -2239,7 +2243,6 @@ void CUserDlg::OnZaloz()
 }
 /////////////////////////////////////////////////////////////////////////////
 // CAccDlg dialog
-
 
 CAccDlg::CAccDlg(CWnd* pParent /*=NULL*/)
     : CDialog(CAccDlg::IDD, pParent)
@@ -2253,10 +2256,16 @@ void CAccDlg::OnOK()
 {
     CString s;
     GetDlgItemText(IDC_LOGINNAME, s);
-    if (s.IsEmpty()) { GetDlgItem(IDC_LOGINNAME)->SetFocus(); return; }
+    if (s.IsEmpty()) {
+        GetDlgItem(IDC_LOGINNAME)->SetFocus();
+        return;
+    }
     if (!IsDlgButtonChecked(IDC_ALLTYT) && !IsDlgButtonChecked(IDC_ALIKE)) {
         GetDlgItemText(IDC_TYTUL, s);
-        if (s.IsEmpty()) { GetDlgItem(IDC_TYTUL)->SetFocus(); return; }
+        if (s.IsEmpty()) {
+            GetDlgItem(IDC_TYTUL)->SetFocus();
+            return;
+        }
     }
     CDialog::OnOK();
 }
@@ -2295,13 +2304,12 @@ void CAccDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAccDlg, CDialog)
-    //{{AFX_MSG_MAP(CAccDlg)
-    ON_BN_CLICKED(IDC_ALLTYT, &CAccDlg::OnAlltyt)
-    ON_BN_CLICKED(IDC_YESNNEXT, &CAccDlg::OnYesnnext)
-    ON_BN_CLICKED(IDC_ALIKE, &CAccDlg::OnGrantAlike)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CAccDlg)
+ON_BN_CLICKED(IDC_ALLTYT, &CAccDlg::OnAlltyt)
+ON_BN_CLICKED(IDC_YESNNEXT, &CAccDlg::OnYesnnext)
+ON_BN_CLICKED(IDC_ALIKE, &CAccDlg::OnGrantAlike)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CAccDlg message handlers
@@ -2374,9 +2382,9 @@ void CNewTitleDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CNewTitleDlg, CDialog)
-    //{{AFX_MSG_MAP(CNewTitleDlg)
-        // NOTE: the ClassWizard will add message map macros here
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CNewTitleDlg)
+// NOTE: the ClassWizard will add message map macros here
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2384,7 +2392,6 @@ END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CEPSDateDlg dialog
-
 
 CEPSDateDlg::CEPSDateDlg(CWnd* pParent /*=NULL*/)
     : CDialog(CEPSDateDlg::IDD, pParent)
@@ -2401,13 +2408,13 @@ void CEPSDateDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CEPSDateDlg, CDialog)
-    //{{AFX_MSG_MAP(CEPSDateDlg)
-    ON_WM_CLOSE()
-    ON_WM_RBUTTONDOWN()
-    ON_WM_LBUTTONDOWN()
-    ON_BN_CLICKED(ID_FILE_UPDATE, &CEPSDateDlg::OnUznaj)
-    ON_NOTIFY(NM_CLICK, IDC_EPSDATE, &CEPSDateDlg::OnClickEpsdate)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CEPSDateDlg)
+ON_WM_CLOSE()
+ON_WM_RBUTTONDOWN()
+ON_WM_LBUTTONDOWN()
+ON_BN_CLICKED(ID_FILE_UPDATE, &CEPSDateDlg::OnUznaj)
+ON_NOTIFY(NM_CLICK, IDC_EPSDATE, &CEPSDateDlg::OnClickEpsdate)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2458,7 +2465,6 @@ void CEPSDateDlg::OnClickEpsdate(NMHDR* pNMHDR, LRESULT* pResult)
 /////////////////////////////////////////////////////////////////////////////
 // CDirDaysDlg dialog
 
-
 CDirDaysDlg::CDirDaysDlg(CWnd* pParent /*=NULL*/)
     : CDialog(CDirDaysDlg::IDD, pParent)
 {
@@ -2468,7 +2474,6 @@ CDirDaysDlg::CDirDaysDlg(CWnd* pParent /*=NULL*/)
     m_oneday = CTimeSpan(1, 0, 0, 0);
     //}}AFX_DATA_INIT
 }
-
 
 void CDirDaysDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -2480,12 +2485,11 @@ void CDirDaysDlg::DoDataExchange(CDataExchange* pDX)
     //}}AFX_DATA_MAP
 }
 
-
 BEGIN_MESSAGE_MAP(CDirDaysDlg, CDialog)
-    //{{AFX_MSG_MAP(CDirDaysDlg)
-    ON_BN_CLICKED(IDC_DAYDIRS, &CDirDaysDlg::OnDaydirs)
-    ON_BN_CLICKED(IDC_CAB, &CDirDaysDlg::OnCab)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CDirDaysDlg)
+ON_BN_CLICKED(IDC_DAYDIRS, &CDirDaysDlg::OnDaydirs)
+ON_BN_CLICKED(IDC_CAB, &CDirDaysDlg::OnCab)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2538,7 +2542,6 @@ CPageDerv::CPageDerv(CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-
 void CPageDerv::DoDataExchange(CDataExchange* pDX)
 {
     CDialog::DoDataExchange(pDX);
@@ -2555,10 +2558,10 @@ void CPageDerv::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CPageDerv, CDialog)
-    //{{AFX_MSG_MAP(CPageDerv)
-    ON_CBN_SELCHANGE(IDC_DERVLVL, OnSelchangeDervlvl)
-    ON_CONTROL_RANGE(BN_CLICKED, IDC_FROMPAGE, IDC_TOPAGE, &CPageDerv::OnDirectionChange)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CPageDerv)
+ON_CBN_SELCHANGE(IDC_DERVLVL, OnSelchangeDervlvl)
+ON_CONTROL_RANGE(BN_CLICKED, IDC_FROMPAGE, IDC_TOPAGE, &CPageDerv::OnDirectionChange)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2655,7 +2658,6 @@ CGrzbDlg::CGrzbDlg(CWnd* pParent /*=NULL*/)
     //}}AFX_DATA_INIT
 }
 
-
 void CGrzbDlg::DoDataExchange(CDataExchange* pDX)
 {
     CDialog::DoDataExchange(pDX);
@@ -2673,13 +2675,12 @@ void CGrzbDlg::DoDataExchange(CDataExchange* pDX)
     //}}AFX_DATA_MAP
 }
 
-
 BEGIN_MESSAGE_MAP(CGrzbDlg, CDialog)
-    //{{AFX_MSG_MAP(CGrzbDlg)
-    ON_BN_CLICKED(IDC_DODAJ, OnExpandGrzbiet)
-    ON_BN_CLICKED(IDC_USUN, OnShrinkGrzbiet)
-    ON_BN_CLICKED(IDC_ILEKOLUMN, &CGrzbDlg::OnBnClicked4x4)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CGrzbDlg)
+ON_BN_CLICKED(IDC_DODAJ, OnExpandGrzbiet)
+ON_BN_CLICKED(IDC_USUN, OnShrinkGrzbiet)
+ON_BN_CLICKED(IDC_ILEKOLUMN, &CGrzbDlg::OnBnClicked4x4)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -2744,7 +2745,8 @@ void CGrzbDlg::OnOK()
     UpdateData();
     bool isExpand = !(m_incordec == 1 && m_delete == 0);
     if (isExpand && m_tytmut.GetCurSel() == CB_ERR) {
-        m_tytmut.SetFocus(); return;
+        m_tytmut.SetFocus();
+        return;
     }
     if ((m_incordec == 0 && m_insert == -1) || (m_incordec == 1 && m_delete == -1)) return;
     m_drw_xx = isExpand ? (int)m_tytmut.GetItemData(m_tytmut.GetCurSel()) : m_delete;
@@ -2790,7 +2792,7 @@ COstWer::COstWer(CWnd* pParent /*=NULL*/)
 {
 }
 
-COstWer::COstWer(std::vector<CDrawAdd*> *aNewAdds, std::vector<CDrawAdd*> *aOldAdds, std::vector<CDrawAdd*> *aModifAdds, std::vector<CDrawAdd*> *aDelAdds, BOOL bBankOnly)
+COstWer::COstWer(std::vector<CDrawAdd*>* aNewAdds, std::vector<CDrawAdd*>* aOldAdds, std::vector<CDrawAdd*>* aModifAdds, std::vector<CDrawAdd*>* aDelAdds, BOOL bBankOnly)
     : CDialog(COstWer::IDD, nullptr)
 {
     m_aNewAdds = aNewAdds;
@@ -2807,9 +2809,9 @@ void COstWer::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(COstWer, CDialog)
-    ON_BN_CLICKED(IDOK, &COstWer::OnOK)
-    ON_BN_CLICKED(IDC_SIGNALL, &COstWer::OnSelectAll)
-    ON_NOTIFY(NM_CLICK, IDC_ADDLIST, &COstWer::OnNMClickAddlist)
+ON_BN_CLICKED(IDOK, &COstWer::OnOK)
+ON_BN_CLICKED(IDC_SIGNALL, &COstWer::OnSelectAll)
+ON_NOTIFY(NM_CLICK, IDC_ADDLIST, &COstWer::OnNMClickAddlist)
 END_MESSAGE_MAP()
 
 void COstWer::AppendAdd(CDrawAdd* pAdd, const int status)
@@ -2827,7 +2829,8 @@ void COstWer::AppendAdd(CDrawAdd* pAdd, const int status)
             ::StringCchCopy(theApp.bigBuf, n_size, FULL);
         else
             ::StringCchCopy(theApp.bigBuf, n_size, CDrawDoc::kolory[pAdd->kolor >> 3]);
-    } else ::StringCchCopy(theApp.bigBuf, n_size, BRAK);
+    } else
+        ::StringCchCopy(theApp.bigBuf, n_size, BRAK);
     m_adds.SetItemText(i, 5, theApp.bigBuf);
     m_adds.SetItemText(i, 6, pAdd->remarks_atex);
     if (pAdd->bank.insid > 0) {
@@ -2876,11 +2879,11 @@ BOOL COstWer::OnInitDialog()
             if (a->bank.insid > 0)
                 AppendAdd(a, a->bank.n < a->bank.k ? 3 : 1);
     } else {
-        for (const auto& a : *m_aNewAdds)   // nowe
+        for (const auto& a : *m_aNewAdds) // nowe
             AppendAdd(a, 2);
         for (const auto& a : *m_aModifAdds) // modyfikowane
             AppendAdd(a, 0);
-        for (const auto& a : *m_aDelAdds)   // usuniete
+        for (const auto& a : *m_aDelAdds) // usuniete
             AppendAdd(a, 5);
     }
 
@@ -3013,9 +3016,9 @@ BOOL CAboutDlg::OnInitDialog()
     CString s;
     s.Format(ID_APP_ABOUT, APP_NAME, theApp.m_app_version,
 #ifdef _WIN64
-        _T("64"));
+             _T("64"));
 #else
-        _T("86"));
+             _T("86"));
 #endif
     SetDlgItemText(IDC_SIGN_TEXT, s);
 
@@ -3023,6 +3026,6 @@ BOOL CAboutDlg::OnInitDialog()
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
-    //{{AFX_MSG_MAP(CAboutDlg)
-    //}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CAboutDlg)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()

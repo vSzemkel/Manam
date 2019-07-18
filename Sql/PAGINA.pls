@@ -736,18 +736,17 @@ end set_config;
     **    up to 31 elements
     */
 
-    select prn_mak_xx, prn_flag, bitand(nr_porz,1), page_device_size
+    select s.prn_mak_xx, s.prn_flag, bitand(s.nr_porz,1), tp.page_device_size
       into vprn_mak_xx, vflag, vparity, vpagesize
       from spacer_strona s, spacer_prn_makieta pm, typ_paginy tp
      where s.mak_xx=vmak_xx and s.str_xx=vstr_xx and s.prn_mak_xx=pm.xx(+) and pm.typ_xx=tp.xx(+);
     if vprn_mak_xx is null then
-    begin
-   		select mp.xx, is_def
-   		  into vprn_mak_xx, vflag
-        from spacer_prn_makieta mp, makieta m, spacer_strona s
-       where mp.drw_xx=m.drw_xx and m.xx=s.mak_xx
-         and str_xx=vstr_xx and m.xx=vmak_xx
-         and parity=vparity and is_def>0;
+    begin -- domyslna pusta
+   		select pm.xx, 0, bitand(s.nr_porz,1), tp.page_device_size
+   		  into vprn_mak_xx, vflag, vparity, vpagesize
+        from spacer_prn_makieta pm, makieta m, spacer_strona s, typ_paginy tp
+       where pm.drw_xx=m.drw_xx and m.xx=s.mak_xx and str_xx=vstr_xx and m.xx=vmak_xx
+         and pm.parity=bitand(nr_porz,1) and pm.is_wzorzec>1 and pm.typ_xx=tp.xx(+);
     exception
       when no_data_found then
         raise_application_error(-20001,'GEN_PS: Nie zdefiniowano zadnej makiety PRN dla tego tytulu.');

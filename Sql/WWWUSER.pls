@@ -552,12 +552,12 @@ create or replace PACKAGE BODY "WWWUSER" as
      open vrefCur for
         select rejkod.get_opis_drzewa(d.xx,m.kiedy) "opis",
                to_char(nvl((select min(s.deadline) from spacer_strona s where s.deadline>sr.powtseed and s.mak_xx=m.xx and nvl(s.dervlvl,-1) not in (derv.fixd,derv.proh)),(select min(g.deadline) from makingrb mg,grzbiet g where mg.grb_xx=g.xx and mg.mak_xx=m.xx)),sr.vfLongDate) "deadline",
-               nvl(wd.sym,'brak w Rejkodzie') "wydawca", nvl(wo.sym,'brak w Manamie') "zsyla_ogl", nvl(wr.sym,'brak w Manamie') "zsyla_red", 
+               nvl(wd.sym,'brak w Rejkodzie') "wydawca", nvl(wo.sym,'brak w Manamie') "zsyla_ogl", nvl(wr.sym,'brak w Manamie') "zsyla_red", nvl(wk.sym,'brak w Manamie') "korekta",
                m.objetosc "objetosc", wp.format "format", 
                nvl(wp.naszosc,0) "kod_zuzycia", m.grzbietowanie "uwagi"
-          from drzewo d, makieta m, wydawca wd, wydawca wo, wydawca wr, plan_wyd.wydanie_produktu wp
+          from drzewo d, makieta m, wydawca wd, wydawca wo, wydawca wr, wydawca wk, plan_wyd.wydanie_produktu wp
           where d.tytul=vtytul and d.mutacja=vmutacja and m.kiedy=vkiedy and d.xx=m.drw_xx
-            and d.wyd_xx=wd.xx(+) and m.wyd_xx=wo.xx(+) and nvl(m.zsy_red,m.wyd_xx)=wr.xx(+)
+            and d.wyd_xx=wd.xx(+) and m.wyd_xx=wo.xx(+) and nvl(m.zsy_red,m.wyd_xx)=wr.xx(+) and nvl(m.kor_xx,m.wyd_xx)=wk.xx(+)
             and m.kiedy=wp.data_edycji and d.tytul||d.mutacja=wp.kod_produktu and wp.odw_xx is null and wp.del_xx is null;
   end makieta_info;
 

@@ -82,63 +82,59 @@ protected:
 // CPageDlg dialog
 class CPageDlg final : public CDialog
 {
-    // Construction
-public:
-    CPageDlg(CWnd* pParent = nullptr);	// standard constructor
-    void OnOK() override;
+  public:
+    CPageDlg(CWnd* pParent = nullptr); // standard constructor
+    //{{AFX_DATA(CPageDlg)
+    enum { IDD = IDD_PAGE };
+    CFlag m_prn_flag;
+    CString m_mutred;
+    CString m_docmutred;
+    CString m_caption;
+    CString m_name;
+    CString m_dervinfo;
+    CTime m_deadline;
+    CTime m_deadlineday;
+    CTime m_red;
+    CTime m_fot;
+    CTime m_kol;
+    long m_drukarnie;
     int m_id_str;
     int m_szpalt_x;
     int m_szpalt_y;
     int m_prn_mak_xx;
-    int m_wyd_xx;					// wydawca strony
+    int m_wyd_xx; // wydawca strony
     int m_mak_xx;
-    BOOL m_sztywna_kratka;
-    CFlag m_prn_flag;
-    CString m_mutred;
-    CString m_docmutred;
-    DervType m_dervlvl;
-    // Dialog Data
-        //{{AFX_DATA(CPageDlg)
-    enum { IDD = IDD_PAGE };
-    CListBox	m_mutredcombo;
-    CListBox	m_drukarniecombo;
-    CListBox	m_prn_fun;
-    CComboBox	m_prn_mak;
-    CComboBox	m_kratkacombo;
-    CComboBox	m_kolorcombo;
-    CComboBox	m_namecombo;
-    CComboBox	m_captioncombo;
-    BOOL m_iscaption;
-    BOOL	m_rzymska;
-    CString	m_caption;
-    CString	m_name;
-    long m_drukarnie;
-    int  m_nr;
-    int  m_topage;
-    int  m_typ_pary;
+    int m_nr;
+    int m_topage;
+    int m_typ_pary;
     UINT m_kolor;
     UINT m_ile_spotow;
-    BOOL	m_niemakietuj;
-    CTime	m_deadline;
-    CString	m_dervinfo;
-    CTime	m_deadlineday;
-    CTime m_red;
-    CTime m_fot;
-    CTime m_kol;
+    BOOL m_sztywna_kratka;
+    BOOL m_iscaption;
+    BOOL m_rzymska;
+    BOOL m_niemakietuj;
+    DervType m_dervlvl;
     //}}AFX_DATA
-// Implementation
-protected:
-    void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
-
-    // Generated message map functions
-    //{{AFX_MSG(CPageDlg)
+  protected:
     BOOL OnInitDialog() override;
+    void OnOK() override;
+    void DoDataExchange(CDataExchange* pDX) override; // DDX/DDV support
+
+    //{{AFX_MSG(CPageDlg)
     afx_msg void GiveOutStrLog();
     afx_msg void OnSelchangePrnMak();
     afx_msg void OnBnClickedAcdead();
     //}}AFX_MSG
     DECLARE_MESSAGE_MAP()
-private:
+  private:
+    CListBox m_mutredcombo;
+    CListBox m_drukarniecombo;
+    CListBox m_prn_fun;
+    CComboBox m_prn_mak;
+    CComboBox m_kratkacombo;
+    CComboBox m_kolorcombo;
+    CComboBox m_namecombo;
+    CComboBox m_captioncombo;
     CComboBox m_wydawcycombo; // lista potencjalnych wydawców strony
     void SetFunListBox(bool setDefaults);
 };
@@ -260,14 +256,11 @@ class CInfoDlg final : public CDialog
 public:
     CInfoDlg(CWnd* pParent = nullptr);	// standard constructor
 
-    BOOL isRO;
-    long m_drukarnie;
+    enum { IDD = IDD_INFO };
     CString m_wydawca;
     CString m_wydawcared;
-    // Dialog Data
-        //{{AFX_DATA(CInfoDlg)
-    enum { IDD = IDD_INFO };
-    CString	m_data;
+    CString m_korekta;
+    CString m_data;
     CString	m_gazeta;
     CString	m_prowadz1;
     CString	m_prowadz2;
@@ -275,43 +268,46 @@ public:
     CString m_kto_makietuje;
     CString m_cena;
     CString m_cena2;
-    long	m_naklad;
-    int		m_objetosc;
-    int		m_numer;
-    int		m_numerrok;
-    UINT	m_modogl;
-    UINT	m_modred;
-    UINT	m_modrez;
-    UINT	m_modwol;
-    float	m_modredp;
-    float	m_modrezp;
-    float	m_modwolp;
-    float	m_modoglp;
-    float	m_modcnt;
-    float	m_quecnt;
     CString	m_sign_text;
-    CTime	m_data_wykupu;
-    CTime	m_data_studio;
-    CTime	m_data_zamkniecia;
-    CTime	m_data_deadline;
-    CTime	m_godz_wykupu;
-    CTime	m_godz_studio;
-    CTime	m_godz_zamkniecia;
-    CTime	m_godz_deadline;
-    BOOL	m_set_deadline;
-    BOOL	m_set_kraty;
-    BOOL	m_set_papier;
     CString	m_grzbiet;
-    BOOL	m_szyj;
     CString m_uwagi;
     CString m_opis_papieru;
     CString m_wydaw_str;
     CString m_typ_dodatku;
+    long    m_drukarnie;
+    long    m_naklad;
+    int     m_objetosc;
+    int     m_numer;
+    int     m_numerrok;
+    UINT    m_modogl;
+    UINT    m_modred;
+    UINT    m_modrez;
+    UINT    m_modwol;
+    float   m_modredp;
+    float   m_modrezp;
+    float   m_modwolp;
+    float   m_modoglp;
+    float   m_modcnt;
+    float   m_quecnt;
+    CTime   m_data_wykupu;
+    CTime   m_data_studio;
+    CTime   m_data_zamkniecia;
+    CTime   m_data_deadline;
+    CTime   m_godz_wykupu;
+    CTime   m_godz_studio;
+    CTime   m_godz_zamkniecia;
+    CTime   m_godz_deadline;
+    BOOL    m_set_deadline;
+    BOOL    m_set_kraty;
+    BOOL    m_set_papier;
+    BOOL    m_szyj;
+    BOOL    m_isRO;
     CListBox m_drukarniecombo;
     CComboBox m_wydawcycombo;
     CComboBox m_wydawcyredcombo;
+    CComboBox m_korektacombo;
     //}}AFX_DATA
-protected:
+  protected:
     void DoDataExchange(CDataExchange* pDX) override;	// DDX/DDV support
 
     // Generated message map functions

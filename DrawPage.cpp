@@ -528,13 +528,10 @@ BOOL CDrawPage::OnOpen(CDrawView* /*pView*/)
 
     SetBaseKrata(dlg.m_szpalt_x, dlg.m_szpalt_y);
 
-    const auto pc = (int)m_pDocument->m_pages.size();
     int i, pom_nr = (dlg.m_nr << 16) + (dlg.m_rzymska ? PaginaType::roman : PaginaType::arabic);
     if (nr != pom_nr) {
         // sprawdz czy istnieje juz taka strona - bo numer/typ_num nie moze sie powtarzac
-        for (i = 0; i < pc; ++i)
-            if ((m_pDocument->m_pages[i])->nr == pom_nr) break;
-        if (i < pc)
+        if (std::any_of(std::begin(m_pDocument->m_pages), std::end(m_pDocument->m_pages), [pom_nr](const auto p){ return p->nr == pom_nr; }))
             AfxMessageBox(_T("Strona o podanym numerze i typie numeracji ju¿ istnieje. Numer nie zostanie zmieniony."), MB_ICONEXCLAMATION);
         else {
             nr = pom_nr;
@@ -550,6 +547,8 @@ BOOL CDrawPage::OnOpen(CDrawView* /*pView*/)
 
     if (theApp.swCZV == ToolbarMode::tryb_studia)
         prn_mak_xx = dlg.m_prn_mak_xx;
+
+    const auto pc = (int)m_pDocument->m_pages.size();
     pom_nr = m_pDocument->GetIPage(this);
     i = dlg.m_topage;
     while (--i) {
