@@ -1250,14 +1250,14 @@ void CDrawDoc::OnFileInfo()
     } else {
         int d, m, r, g, min;
 
-        dlg.isRO = isRO;
+        dlg.m_isRO = isRO;
         dlg.m_data = data;
         dlg.m_gazeta = gazeta;
         dlg.m_prowadz1 = prowadzacy1;
         dlg.m_prowadz2 = prowadzacy2;
         dlg.m_sekretarz = sekretarz;
         dlg.m_objetosc = (int)m_pages.size();
-        dlg.m_grzbiet = dlg.m_cena = dlg.m_cena2 = dlg.m_wydawcared = dlg.m_wydawca = CString(' ', 8);
+        dlg.m_grzbiet = dlg.m_cena = dlg.m_cena2 = dlg.m_wydawcared = dlg.m_wydawca = dlg.m_korekta = CString(' ', 8);
         dlg.m_sign_text = deadline = data_z = data_s = data_w = CString(' ', 16);
         dlg.m_typ_dodatku = dlg.m_kto_makietuje = dlg.m_opis_papieru = CString(' ', 128);
         dlg.m_wydaw_str = dlg.m_uwagi = CString(' ', 256);
@@ -1270,6 +1270,7 @@ void CDrawDoc::OnFileInfo()
             { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &dlg.m_kto_makietuje },
             { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &dlg.m_wydawca },
             { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &dlg.m_wydawcared },
+            { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &dlg.m_korekta },
             { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &dlg.m_uwagi },
             { CManDbType::DbTypeInt32, CManDbDir::ParameterOut, &dlg.m_naklad },
             { CManDbType::DbTypeInt32, CManDbDir::ParameterOut, &dlg.m_numer },
@@ -1285,10 +1286,10 @@ void CDrawDoc::OnFileInfo()
             { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &dlg.m_opis_papieru },
             idmPar
         };
-        orapar.outParamsCount = 20;
+        orapar.outParamsCount = 21;
 
         auto sql = reinterpret_cast<char*>(theApp.bigBuf);
-        ::StringCchPrintfA(sql, bigSize, "begin select deadline,data_z,data_s,data_w,p2,wydawca,zsy_red,grzbietowanie,naklad,numer,numerrok,to_char(cena),to_char(cena2),podpis_red,wydaw_str,typ_dodatku,grzbiet,szycie,drukarnie,opis_papieru into :1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:l5,:16,:17,:18,:19,:20 from %sinfo where rownum=1 and xx=:xx; end;", iDocType == DocType::grzbiet_drukowany ? "grb" : "mak");
+        ::StringCchPrintfA(sql, bigSize, "begin select deadline,data_z,data_s,data_w,p2,wydawca,zsy_red,korekta,grzbietowanie,naklad,numer,numerrok,to_char(cena),to_char(cena2),podpis_red,wydaw_str,typ_dodatku,grzbiet,szycie,drukarnie,opis_papieru into :1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:l5,:16,:17,:18,:19,:20,:21 from %sinfo where rownum=1 and xx=:xx; end;", iDocType == DocType::grzbiet_drukowany ? "grb" : "mak");
         if (!theManODPNET.EI(sql, orapar)) return;
 
         if (_stscanf_s(deadline, c_formatCzasu, &d, &m, &r, &g, &min) == 5)
@@ -1410,10 +1411,11 @@ void CDrawDoc::OnFileInfo()
             { CManDbType::DbTypeVarchar2, &prowadzacy2 },
             { CManDbType::DbTypeVarchar2, &dlg.m_cena2 },
             { CManDbType::DbTypeVarchar2, &dlg.m_wydawcared },
+            { CManDbType::DbTypeVarchar2, &dlg.m_korekta },
             { CManDbType::DbTypeVarchar2, &data_s }
         };
 
-        theManODPNET.EI("begin update_makinfo(:mak_xx,:mutwyd,:cena,:naklad,:numerrok,:numer,:sekr,:prow1,:prow2,:wykup,:zamkniecie,:podpis,:szycie,:uwagi,:kto_prowadzi,:cena2,:zsy_red,:do_studia); end;", orapar4);
+        theManODPNET.EI("begin update_makinfo(:mak_xx,:mutwyd,:cena,:naklad,:numerrok,:numer,:sekr,:prow1,:prow2,:wykup,:zamkniecie,:podpis,:szycie,:uwagi,:kto_prowadzi,:cena2,:zsy_red,:korekta,:do_studia); end;", orapar4);
     }
 }
 

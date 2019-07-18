@@ -336,7 +336,7 @@ void CDrawApp::InitKratyDrukarnie()
         theManODPNET.FillArr(&drukarnie, "select nazwa from spacer_drukarnie where usunieta is null order by xx", CManODPNET::emptyParm);
         // zsylaj¹cy
         zsylajacy.clear();
-        theManODPNET.FillArr(&zsylajacy, "select nvl(studio,0)||sym||' '||nazwa from space_reservation.wydawca where zsyla=1 order by sym", CManODPNET::emptyParm);
+        theManODPNET.FillArr(&zsylajacy, "select oddzial from space_reservation.zsyla_korekta order by sym", CManODPNET::emptyParm);
         // wydawcy
         wydawcy.clear();
         theManODPNET.FillArr(&wydawcy, "select to_char(xx,'fm000')||sym||' '||nazwa from space_reservation.wydawca where wydaje=1 order by sym", CManODPNET::emptyParm);

@@ -472,16 +472,16 @@ END
 IDD_ABOUTBOX DIALOGEX 34, 22, 171, 177
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "Manam - wrzesieñ 2018"
+CAPTION "Manam - lipiec 2019"
 FONT 8, "Verdana", 0, 0, 0x0
 BEGIN
     LTEXT           "*",IDC_CLIENT,9,133,158,42
     GROUPBOX        "U¿ytkownik",IDC_STATIC,4,121,165,40
     ICON            IDR_MAINFRAME,IDC_STATIC,7,7,20,20
     LTEXT           "",IDC_SIGN_TEXT,45,7,124,33
-    LTEXT           "ver 7.0",IDC_STATIC,5,28,25,8
+    LTEXT           "ver 7.2",IDC_STATIC,5,28,25,8
     LTEXT           "M\nM",IDC_MEMSTAT,4,101,166,19
-    LTEXT           "Program napisany dla Agora SA \nprzez Marcina Buchwalda w latach 1999-2018.\n\n  email: velvet@agora.pl\n  www: http://gwspacer.agora.pl\n  telefon dy¿urny: 55558",IDC_STATIC,4,48,166,49,NOT WS_GROUP
+    LTEXT           "Program napisany dla Agora SA \nprzez Marcina Buchwalda w latach 1999-2019.\n\n  email: velvet@agora.pl\n  www: http://gwspacer.agora.pl\n  telefon dy¿urny: 55558",IDC_STATIC,4,48,166,49,NOT WS_GROUP
     DEFPUSHBUTTON   "Zamknij",IDOK,133,73,35,14
 END
 
@@ -667,9 +667,11 @@ BEGIN
     RTEXT           "Wydawca:",IDC_STATIC,2,237,34,10,NOT WS_GROUP
     EDITTEXT        IDC_WYDAWCA,39,234,349,14,ES_AUTOHSCROLL | ES_READONLY
     LTEXT           "Zsy³a og³.:",IDC_STATIC,2,258,35,8,NOT WS_GROUP,WS_EX_RIGHT
-    COMBOBOX        IDC_ISSN,41,255,86,171,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
-    RTEXT           "Zsy³a red.:",IDC_STATIC,136,258,34,8,NOT WS_GROUP
-    COMBOBOX        IDC_INSERT,170,255,86,171,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_ISSN,38,255,53,171,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Zsy³a red.:",IDC_STATIC,95,258,34,8,NOT WS_GROUP
+    COMBOBOX        IDC_INSERT,129,255,53,171,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Korekta:",IDC_STATIC,184,258,27,8,NOT WS_GROUP
+    COMBOBOX        IDC_CBRIP,212,255,53,171,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
     GROUPBOX        "Wykorzystanie modu³ów",IDC_MODSTATISTICS,202,1,187,91
     LTEXT           "Og³oszeniowe:",IDC_STATIC,213,14,52,9,NOT WS_GROUP
     EDITTEXT        IDC_MODOGL,265,12,46,12,ES_RIGHT | ES_AUTOHSCROLL | ES_READONLY | NOT WS_TABSTOP
@@ -1891,8 +1893,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 7,1,0,0
- PRODUCTVERSION 7,1,0,0
+ FILEVERSION 7,2,0,0
+ PRODUCTVERSION 7,2,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -1909,12 +1911,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Agora SA"
             VALUE "FileDescription", "Manam"
-            VALUE "FileVersion", "7.1.0.0"
+            VALUE "FileVersion", "7.2.0.0"
             VALUE "InternalName", "Manam"
             VALUE "LegalCopyright", "© Marcin Buchwald"
             VALUE "OriginalFilename", "Manam.exe"
             VALUE "ProductName", "Manager Makiet"
-            VALUE "ProductVersion", "7.1.0.0"
+            VALUE "ProductVersion", "7.2.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -1992,6 +1994,11 @@ BEGIN
 END
 
 IDD_ADDDESC AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_INFO AFX_DIALOG_LAYOUT
 BEGIN
     0
 END

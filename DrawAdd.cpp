@@ -1618,7 +1618,7 @@ CString CDrawAdd::EpsName(const CManFormat format, bool copyOldEPS, const bool b
 {
     static const TCHAR* aExt[] = { _T(".eps"), _T(".ps"), _T(".pdf") };
     const TCHAR* extension = aExt[(uint8_t)format];
-    const bool czy_zajawka = wersja.Find(_T("z")) >= 0;
+    const bool czy_zajawka = wersja.Find(_T('z')) >= 0;
     if (nreps == -1 && !czy_zajawka) return CString(_T("brak nr atexa"));
     theApp.SetRegistryBase(_T("GenEPS"));
 
