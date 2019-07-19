@@ -84,7 +84,7 @@ void CGridFrm::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 
     switch (lHint) {
         case HINT_UPDATE_WINDOW:    // redraw entire window
-            if (!pSender) SetDlgItemText(IDC_GAZETA, pDoc->gazeta + " " + pDoc->data);
+            if (!pSender) SetDlgItemText(IDC_GAZETA, pDoc->gazeta + ' ' + pDoc->data);
             InvalAll();
             break;
 
@@ -384,7 +384,7 @@ void CGridFrm::OnPrint(CDC* pDC, CPrintInfo* pInfo)
         CSize vp = pDC->GetWindowExt();
         vp.cx *= 11; vp.cy *= 11;
         pDC->SetWindowExt(vp);
-        pDC->TextOut(2700, 0, GetDocument()->gazeta + _T(" ") + GetDocument()->data);
+        pDC->TextOut(2700, 0, GetDocument()->gazeta + _T(' ') + GetDocument()->data);
         pDC->RestoreDC(-1);
     }
 

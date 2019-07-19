@@ -27,8 +27,8 @@ CDrawPage::~CDrawPage()
 {
     // ogloszenia spadaja poza makiete
     for (const auto& pAdd : m_adds) {
-        const auto px = pszpalt_x*m_pDocument->m_pagerow_size + m_pDocument->m_pagerow_size / 2 + pAdd->posx;
-        const CRect rect(pmodulx*px, pmoduly*(-1 - pAdd->posy), pmodulx*(px + pAdd->sizex), pmoduly*(-1 - pAdd->posy - pAdd->sizey));
+        const auto px = pszpalt_x * m_pDocument->m_pagerow_size + m_pDocument->m_pagerow_size / 2 + pAdd->posx;
+        const CRect rect(pmodulx * px, pmoduly * (-1 - pAdd->posy), pmodulx * (px + pAdd->sizex), pmoduly * (-1 - pAdd->posy - pAdd->sizey));
         pAdd->MoveTo(rect);
         pAdd->fizpage = pAdd->posx = pAdd->posy = 0;
         pAdd->UpdateInfo();
@@ -54,8 +54,7 @@ void CDrawPage::Serialize(CArchive& ar)
         space_red.Serialize(ar);
         auto ile_krat = (WORD)m_kraty_niebazowe.size();
         ar << ile_krat;
-        for (WORD i = 0; i < ile_krat; ++i) {
-            auto& krata = m_kraty_niebazowe[i];
+        for (auto& krata : m_kraty_niebazowe) {
             ar << krata.m_szpalt_x;
             ar << krata.m_szpalt_y;
             krata.m_space_locked.Serialize(ar);
@@ -568,16 +567,14 @@ BOOL CDrawPage::OnOpen(CDrawView* /*pView*/)
 }
 
 std::vector<int> CDrawPage::CleanKraty(const bool dbSave)
-{	// lista krat w postaci hiword == szpalt_x, loword == szpalt_y
+{   // lista krat w postaci hiword == szpalt_x, loword == szpalt_y
     std::vector<int> ret;
     auto& adds = m_adds;
     auto end = std::end(m_kraty_niebazowe);
-    auto new_end = std::remove_if(begin(m_kraty_niebazowe), end,
-        [&adds](const CKrataNiebazowa& kn) {
-        for (const auto& pAdd : adds)
-            if (pAdd->szpalt_x == kn.m_szpalt_x && pAdd->szpalt_y == kn.m_szpalt_y)
-                return false;
-        return true;
+    auto new_end = std::remove_if(begin(m_kraty_niebazowe), end, [&adds](const CKrataNiebazowa& kn) {
+        return std::none_of(std::begin(adds), std::end(adds), [&kn](const CDrawAdd* a) noexcept {
+            return a->szpalt_x == kn.m_szpalt_x && a->szpalt_y == kn.m_szpalt_y;
+        });
     });
     if (dbSave)
         for (auto it = new_end; it != end; ++it)
@@ -775,13 +772,9 @@ void CDrawPage::SetBaseKrata(const int s_x, const int s_y, const bool refresh)
         jezli nie to zmien krate bazowa. jeeli incremental to dopisz */
     if (szpalt_x == s_x && szpalt_y == s_y) return;
 
-    CKrataNiebazowa* cached = nullptr;
-    for (auto& kn : m_kraty_niebazowe)
-        if (kn.m_szpalt_x == s_x &&  kn.m_szpalt_y == s_y) {
-            cached = &kn; break;
-        };
-
-    if (cached != nullptr) {
+    const auto check = [s_x, s_y](const CKrataNiebazowa& kn) { return kn.m_szpalt_x == s_x && kn.m_szpalt_y == s_y; };
+    const auto cached = std::find_if(std::begin(m_kraty_niebazowe), std::end(m_kraty_niebazowe), check);
+    if (cached != std::end(m_kraty_niebazowe)) {
         cached->m_szpalt_x = szpalt_x;
         cached->m_szpalt_y = szpalt_y;
         std::swap(cached->m_space, space);
@@ -794,8 +787,8 @@ void CDrawPage::SetBaseKrata(const int s_x, const int s_y, const bool refresh)
             auto& kn = m_kraty_niebazowe.back();
             const auto& lastred = kn.m_space_red;
             const auto& lastlocked = kn.m_space_locked;
-            const auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
-            for (size_t module = 0; module < ilemod; ++module) {
+            const auto ilemod = szpalt_x * szpalt_y;
+            for (int module = 0; module < ilemod; ++module) {
                 const bool isRed = lastred[module];
                 const bool isLock = lastlocked[module];
                 if (isRed || isLock) {
@@ -803,10 +796,10 @@ void CDrawPage::SetBaseKrata(const int s_x, const int s_y, const bool refresh)
                     const CRect& src = GetNormalizedModuleRect(module);
                     for (int k = 1; k <= s_x; ++k)
                         for (int l = 1; l <= s_y; ++l) {
-                            dst.SetRect(m_position.left + (int)(CDrawObj::modx(s_x)*(k - 1)), m_position.bottom + (int)(CDrawObj::mody(s_y)*(s_y - l)),
-                                m_position.left + (int)(CDrawObj::modx(s_x)*k), m_position.bottom + (int)(CDrawObj::mody(s_y)*(s_y - l + 1))); // normalized
+                            dst.SetRect(m_position.left + (int)(CDrawObj::modx(s_x) * (k - 1)), m_position.bottom + (int)(CDrawObj::mody(s_y) * (s_y - l)),
+                                m_position.left + (int)(CDrawObj::modx(s_x) * k), m_position.bottom + (int)(CDrawObj::mody(s_y) * (s_y - l + 1))); // normalized
                             if (intsec.IntersectRect(src, dst)) {
-                                int outerBit = (s_y - l)*s_x + s_x - k;
+                                int outerBit = (s_y - l) * s_x + s_x - k;
                                 if (space[outerBit]) continue;
                                 space.SetBit(outerBit);
                                 if (isRed) space_red.SetBit(outerBit);
@@ -968,10 +961,10 @@ bool CDrawPage::CheckRozmKrat()
     if (!m_pDocument->GetCRozm(szpalt_x, szpalt_y))
         isValid = false;
     else for (const auto& kn : m_kraty_niebazowe)
-        if (!m_pDocument->GetCRozm(kn.m_szpalt_x, kn.m_szpalt_y)) {
-            isValid = false;
-            break;
-        }
+            if (!m_pDocument->GetCRozm(kn.m_szpalt_x, kn.m_szpalt_y)) {
+                isValid = false;
+                break;
+            }
 
     return isValid;
 } // CheckRozmKrat
@@ -981,7 +974,7 @@ bool CDrawPage::GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destN
     const TCHAR* aExt[] = { _T(".eps"), _T(".ps"), _T(".pdf") };
     destName = theApp.GetProfileString(_T("GenEPS"), pArg->format == CManFormat::EPS ? _T("EpsDst") : _T("PsDst"), _T(""));
     destName += ((destName.Right(1) == _T("\\")) ? _T("") : _T("\\"));
-    int pos = m_pDocument->gazeta.Find(_T(" "));
+    int pos = m_pDocument->gazeta.Find(_T(' '));
     if (pArg->format > CManFormat::EPS) {
         CString dbDestName(' ', 20);
         CManODPNETParms orapar {
@@ -1135,7 +1128,7 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
                             };
                             orapar.outParamsCount = 1;
                             theManODPNET.EI("begin pagina.get_boundingbox(:mak_xx,:str_xx,:bb); end;", orapar);
-                            line = CStringA(tofind[i]) + " " + CW2A(wBoundingBox);
+                            line = CStringA(tofind[i]) + ' ' + CW2A(wBoundingBox);
                         }
                     } else
                         line.Format("%%%%BoundingBox: %d %d %d %d", bx1, by1, bx2, by2);
@@ -1143,7 +1136,7 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
                     case 6: line = CStringA(tofind[i]) + (kolor == 1 ? " Black" : towrite[i]);
                         break;
                     default:
-                        line = CStringA(tofind[i]) + " ";
+                        line = CStringA(tofind[i]) + ' ';
                         if (i < 7) line.Append(towrite[i]);
                 } // switch
                 if (++i == 8) break;

@@ -491,7 +491,7 @@ void CKolorTool::OnLButtonDown(CDrawView* pView, const UINT nFlags, const CPoint
                 if (pAdd->wersja.IsEmpty() || pAdd->wersja == _T(" "))
                     pAdd->wersja = ("." + frame->GetKolorText());
                 else {
-                    int p = pAdd->wersja.Find(_T("."));
+                    int p = pAdd->wersja.Find(_T('.'));
                     if (p < 0) pAdd->wersja += ("." + frame->GetKolorText());
                     else pAdd->wersja = pAdd->wersja.Left(p + 1) + frame->GetKolorText();
                 }

@@ -1558,7 +1558,7 @@ void CDBOpenDlg::OnOK()
     if (IsDlgButtonChecked(IDC_LIB))
         GetDlgItemText(IDC_WERSJE_LIB, m_dt);
     CDialog::OnOK();
-    if (m_mutacja.IsEmpty()) m_mutacja = _T(" ");
+    if (m_mutacja.IsEmpty()) m_mutacja = _T(' ');
     if (!IsDlgButtonChecked(IDC_LIB))
         m_dt = m_dtime.Format(c_ctimeData);
     const bool ignoreSel = m_date_combo.GetSelCount() == 0;
@@ -1568,14 +1568,14 @@ void CDBOpenDlg::OnOK()
             m_date_combo.GetText(i, s);
             s.SetAt(2, _T('-'));
             s.SetAt(5, _T('-'));
-            m_arrDaty.emplace_back(m_tytul + _T(" ") + m_mutacja + _T("_") + s);
+            m_arrDaty.emplace_back(m_tytul + _T(' ') + m_mutacja + _T('_') + s);
             if (IsDlgButtonChecked(IDC_MEMSTAT)) {
                 const bool ignoreSelMut = m_mutacja_combo.GetSelCount() == 0;
                 const int rc2 = m_mutacja_combo.GetCount();
                 for (int j = 0; j < rc2; ++j)
                     if (ignoreSelMut || m_mutacja_combo.GetSel(j)) {
                         m_mutacja_combo.GetText(j, m);
-                        m_arrDaty.emplace_back(m_tytul + _T(" ") + m + _T("_") + s);
+                        m_arrDaty.emplace_back(m_tytul + _T(' ') + m + _T('_') + s);
                     }
             }
         }
@@ -1588,7 +1588,7 @@ void CDBOpenDlg::OnOK()
         for (int j = 0; j < rc2; ++j)
             if (ignoreSelMut || m_mutacja_combo.GetSel(j)) {
                 m_mutacja_combo.GetText(j, m);
-                m_arrDaty.emplace_back(m_tytul + _T(" ") + m + _T("_") + m_dt);
+                m_arrDaty.emplace_back(m_tytul + _T(' ') + m + _T('_') + m_dt);
             }
     }
 }
@@ -1612,7 +1612,7 @@ void CDBOpenDlg::RefreshCombo()
     CString tyt, mut;
     GetDlgItemText(ID_TYTUL, tyt);
     GetDlgItemText(ID_MUTACJA, mut);
-    if (mut.IsEmpty()) mut = _T(" ");
+    if (mut.IsEmpty()) mut = _T(' ');
     CManODPNETParms orapar {
         { CManDbType::DbTypeVarchar2, &tyt },
         { CManDbType::DbTypeVarchar2, &mut }

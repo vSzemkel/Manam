@@ -1445,7 +1445,7 @@ void CDrawDoc::PrintInfo(CDC* pDC, const int max_n, const int wspol_na_str)  // 
     for (int i = 1; i <= max_n; ++i) {
         rect.SetRect(pmodulx, (i - 1)*(wspol_na_str * 40 + 2)*(-pmoduly), (int)(5.5*iHorizScale), ((i - 1)*(wspol_na_str * 40 + 2) + 1)*(-pmoduly));
         pDC->FillRect(rect, (CBrush*)pDC->SelectStockObject(WHITE_BRUSH));
-        CString info = (gazeta.IsEmpty() && data.IsEmpty() ? _T("") : _T("EDYCJA: ") + gazeta + _T(" ") + data);
+        CString info = (gazeta.IsEmpty() && data.IsEmpty() ? _T("") : _T("EDYCJA: ") + gazeta + _T(' ') + data);
         info += ((prowadzacy1.IsEmpty() && prowadzacy2.IsEmpty()) ? _T("") : _T("         PROWADZ¥CY: ") + (prowadzacy1.IsEmpty() ? prowadzacy2 : prowadzacy1) + ((!prowadzacy1.IsEmpty() && !prowadzacy2.IsEmpty()) ? _T("  DWÓJKA: ") + prowadzacy2 : _T("")));
         info += (sekretarz.IsEmpty() ? _T("") : _T("    ODPOWIEDZIALNY: ") + sekretarz);
         pDC->DrawText(info, info.GetLength(), rect, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);

@@ -69,12 +69,12 @@ bool CDrawDoc::DBOpenDoc(TCHAR* makieta)
 
     data = dlg.m_dt;
     dayws = data.Mid(6, 4) + data.Mid(3, 2) + data.Mid(0, 2);
-    daydir = dayws + _T("\\");
+    daydir = dayws + _T('\\');
     disableMenu = TRUE;
     if (!theManODPNET.OpenManamDoc(this)) {
         if (m_mak_xx != 0) {
             theManODPNET.RmSysLock(this);
-            if (iDocType != DocType::grzbiet_drukowany) AfxGetMainWnd()->MessageBox(_T("B³¹d czytania stron makiety"), gazeta + _T(" ") + data, MB_OK);
+            if (iDocType != DocType::grzbiet_drukowany) AfxGetMainWnd()->MessageBox(_T("B³¹d czytania stron makiety"), gazeta + _T(' ') + data, MB_OK);
         }
         frame->SetStatusBarInfo(_T(""));
         return disableMenu = false;
@@ -91,7 +91,7 @@ bool CDrawDoc::DBOpenDoc(TCHAR* makieta)
     }
 
     SetTitleAndMru();
-    frame->SetStatusBarInfo("Gotowy - Makieta " + gazeta + " " + data);
+    frame->SetStatusBarInfo("Gotowy - Makieta " + gazeta + ' ' + data);
     theApp.EndWaitCursor();
     SetModifiedFlag(false);
     disableMenu = false;
@@ -149,7 +149,7 @@ void CDrawDoc::DBSaveAs(const bool isSaveAs)
     BeginWaitCursor();
 
     const bool doSaveAdds = (iDocType != DocType::makieta_lib && (m_mak_xx == -1 || !isSaveAs));
-    ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo((LPCTSTR)_T("Trwa zapis makiety ") + gazeta + _T(" ") + data);
+    ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo((LPCTSTR)_T("Trwa zapis makiety ") + gazeta + _T(' ') + data);
     if (theManODPNET.SaveManamDoc(this, isSaveAs, doSaveAdds)) {
         if (!doSaveAdds) {
             auto pos = std::remove_if(m_objects.begin(), m_objects.end(), [](CDrawObj*& pObj) {
