@@ -22,7 +22,7 @@ extern BOOL cancelGenEPS;
 CLIPFORMAT CDrawView::m_cfDraw = (CLIPFORMAT)::RegisterClipboardFormat(_T("Automatyczne makietowanie"));
 /////////////////////////////////////////////////////////////////////////////
 
-static std::array rgiZoomFactor = { 60, 70, 85, 100, 125, 150, 200, 250, 300, 400, 500, 750, 1000 };
+static constexpr std::array rgiZoomFactor = { 60, 70, 85, 100, 125, 150, 200, 250, 300, 400, 500, 750, 1000 };
 
 /////////////////////////////////////////////////////////////////////////////
 // CDrawView

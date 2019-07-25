@@ -111,7 +111,7 @@ class CDrawAdd final : public CDrawObj
     void SetDotM(bool setFlag); // parsuje wersjê i ustawia lub cofa .m
 
   private:
-    static const int ciMaxRings;             // maksymalna iloœæ obwodnic precla
+    static constexpr int ciMaxRings = 4;     // maksymalna iloœæ obwodnic precla
     std::unique_ptr<CPoint[]> aPrecelWertex; // tablica wierzcho³ków precla
     CString m_precel_flag;                   // flaga precla, przechowywana po to, by niepotrzebnie nie liczyæ obwodnic po OnOpen
     int* aRingWertexCnt;                     // tablica iloœci wierzcho³ków na poszczególnych obwodnicach, w³asciciel pamiêci: aPrecelWertex

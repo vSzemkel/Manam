@@ -6,13 +6,11 @@
 
 class CSpacerDlg : public CDialog
 {
-    // Construction
-public:
+  public:
     CSpacerDlg(CDrawAdd* vAdd, CWnd* pParent = nullptr);   // standard constructor
     static BOOL Deal(CDrawAdd* vAdd);
 
-    // Dialog Data
-        //{{AFX_DATA(CSpacerDlg)
+    //{{AFX_DATA(CSpacerDlg)
     enum { IDD = IDD_SPACER };
     std::vector<CString> m_typ_precel_arr;
     CDateTimeCtrl m_lastemisionctl;
@@ -46,9 +44,14 @@ public:
     BOOL    m_wsekcji;
     BOOL    m_sekcja;
     //}}AFX_DATA
-private:
-    static const int narrowcx, widecx, olcx, normalcy;
-    static const int qfExact, qfSectionExact, qfSecParExact;
+  private:
+    static constexpr int narrowcx = 333;
+    static constexpr int widecx = 475;
+    static constexpr int olcx = 535;
+    static constexpr int normalcy = 380;
+    static constexpr int qfExact = 33;
+    static constexpr int qfSectionExact = 58;
+    static constexpr int qfSecParExact = 62;
     CDrawAdd* pub;
     int m_mak_xx;
     int m_add_xx;
@@ -63,10 +66,9 @@ private:
     void SetBlokadaState();   //ustawia status kontrolki do blokady miejsca odpowiednio do flagi warunków zamówienia
     void EnableMultiCond(BOOL flag) const;
     void InsertRequestNoDup(CString& kiedy, CString& mut);
-    // Overrides
-    // ClassWizard generated virtual function overrides
-    //{{AFX_VIRTUAL(CSpacerDlg)
+
 protected:
+    //{{AFX_VIRTUAL(CSpacerDlg)
     void OnOK() override;
     void OnCancel() override;
     BOOL DestroyWindow() override;
@@ -74,7 +76,6 @@ protected:
     void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
     //}}AFX_VIRTUAL
 
-    // Generated message map functions
     //{{AFX_MSG(CSpacerDlg)
     afx_msg void OnLocked();
     afx_msg void OnKratowe();

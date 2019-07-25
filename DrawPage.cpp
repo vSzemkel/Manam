@@ -772,7 +772,7 @@ void CDrawPage::SetBaseKrata(const int s_x, const int s_y, const bool refresh)
         jezli nie to zmien krate bazowa. jeeli incremental to dopisz */
     if (szpalt_x == s_x && szpalt_y == s_y) return;
 
-    const auto check = [s_x, s_y](const CKrataNiebazowa& kn) { return kn.m_szpalt_x == s_x && kn.m_szpalt_y == s_y; };
+    const auto check = [s_x, s_y](const CKrataNiebazowa& kn) noexcept { return kn.m_szpalt_x == s_x && kn.m_szpalt_y == s_y; };
     const auto cached = std::find_if(std::begin(m_kraty_niebazowe), std::end(m_kraty_niebazowe), check);
     if (cached != std::end(m_kraty_niebazowe)) {
         cached->m_szpalt_x = szpalt_x;

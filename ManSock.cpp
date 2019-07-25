@@ -8,8 +8,6 @@
 #include "Manam.h"
 #include "ManSock.h"
 
-static const int MSG_LEN = 1024;
-
 #if 0
 BEGIN_MESSAGE_MAP(CManSock, CSocket)
     //{{AFX_MSG_MAP(CManSock)

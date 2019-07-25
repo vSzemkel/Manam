@@ -13,7 +13,7 @@
 
 class CFlag final
 {
-public:
+  public:
     CFlag(const CFlag& f);                              // copy constructor
     CFlag(CFlag&& f) noexcept;                          // move constructor
     explicit CFlag(size_t s = CRITICAL_SIZE);           // default constructor, how many bytes to store
@@ -57,11 +57,11 @@ public:
     int GetBitCnt(bool val) const noexcept;
     void SetBit(size_t pos, bool val = true) noexcept;
 
-protected:
+  protected:
     void SetSize(size_t s);                                 // okreœla rozmiar flagi, zarz¹dza pamiêci¹
     char* GetRawFlag() const noexcept;                      // wskaŸnik do buforu z danymi flagi - do wewnêtrznych manipulacji
 
-private:
+  private:
     static const size_t DBRAW_BLOCK = 4;                    // wielkoœc logicznej paczki bajtów wymienianych z baz¹ danych
     static const size_t RAW_MOD_SIZE = 2 * DBRAW_BLOCK;     // d³ugoœc napisu RAW definiuj¹cego atomow¹ paczkê bajtów z bazy
     static const size_t CRITICAL_SIZE = sizeof(uintptr_t);  // do ilu bajtów operacje na fladze mo¿na robiæ wprost na rejestrach

@@ -14,14 +14,14 @@ public:
     virtual ~CAtexKrat() = default;
     // Implementation
 public:
+    static constexpr int DIM_LIMIT = 16;      // jak gestej kraty podstawowej szukamy
     bool isValid;   // flaga poprawnosci parsowania napisu w konstruktorze
     bool isToSmall; // gêstoœæ obliczonej kraty przekracza DIM_LIMIT
     bool Compute(int* sizex, int* sizey, int* s_x, int* s_y); // liczy rozmiary ogloszenia i krate strony
-    static const int DIM_LIMIT;     // jak gestej kraty podstawowej szukamy
-    static const int ADJUST_LEVEL;  // przez max ile mnozymy rozmiar podstawowy
-    static const int KRATA_PASKOWA; // od takiego wymiaru wysokoœci szerokoœæ jest ujednolicana na 1 szpalte
 private:
-    static const float TOLERANCE;	// wzgledna tolerancja rozmiaru
+    static constexpr int ADJUST_LEVEL = 6;    // przez max ile mnozymy rozmiar podstawowy
+    static constexpr int KRATA_PASKOWA = 10;  // od takiego wymiaru wysokoœci szerokoœæ jest ujednolicana na 1 szpalte
+    static constexpr float TOLERANCE = 0.05f; // wzgledna tolerancja rozmiaru
     float dy;			// wysokosc strony
     float xcol;			// ile szpalt na stronie zajmuje ogloszenie
     float szpalt_x;		// ile jest szpalt na stronie
@@ -58,8 +58,8 @@ public:
     afx_msg void OnDefineModelid();
     afx_msg void OnModeSwitch();
 private:
-    static const double TOLERANCE; // wzgledna tolerancja rozmiaru
-    bool m_autocalcMode;           // tryb kalkulatora czy rêczny
+    static constexpr double TOLERANCE = 0.011f; // wzgledna tolerancja rozmiaru
+    bool m_autocalcMode;                        // tryb kalkulatora czy rêczny
     int m_x;
     int m_y;
     int m_lightx;

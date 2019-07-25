@@ -34,8 +34,6 @@ constexpr SpadInfo aSpadInfo[] = {
     { SpadInfo::just_center, SpadInfo::just_center, false, false }, // 15
 };
 
-const int CDrawAdd::ciMaxRings = 4;
-
 IMPLEMENT_SERIAL(CDrawAdd, CDrawObj, 0)
 
 CDrawAdd::CDrawAdd() noexcept : bank{0}
@@ -1616,7 +1614,7 @@ bool CDrawAdd::LocatePreview(CFile& fEps, unsigned long* lOffset, unsigned long*
 
 CString CDrawAdd::EpsName(const CManFormat format, bool copyOldEPS, const bool bModifTest)
 {
-    static const TCHAR* aExt[] = { _T(".eps"), _T(".ps"), _T(".pdf") };
+    static constexpr TCHAR* aExt[] = { _T(".eps"), _T(".ps"), _T(".pdf") };
     const TCHAR* extension = aExt[(uint8_t)format];
     const bool czy_zajawka = wersja.Find(_T('z')) >= 0;
     if (nreps == -1 && !czy_zajawka) return CString(_T("brak nr atexa"));

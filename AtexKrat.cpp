@@ -6,11 +6,6 @@
 #include "Manam.h"
 #include "DrawDoc.h"
 
-const int CAtexKrat::DIM_LIMIT = 16;
-const int CAtexKrat::ADJUST_LEVEL = 6;
-const int CAtexKrat::KRATA_PASKOWA = 10;
-const float CAtexKrat::TOLERANCE = 0.05f;
-
 #pragma region CAtexKrat
 CAtexKrat::CAtexKrat(const TCHAR *atexKratInfo, CDrawDoc* vDoc)
 {
@@ -77,8 +72,6 @@ bool CAtexKrat::Compute(int* sizex, int* sizey, int* s_x, int* s_y)
 #pragma endregion
 
 #pragma region CKratCalc 
-const double CKratCalc::TOLERANCE = 0.011f;
-
 IMPLEMENT_DYNAMIC(CKratCalc, CDialog)
 
 BEGIN_MESSAGE_MAP(CKratCalc, CDialog)

@@ -21,7 +21,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // arrays of IDs used to initialize control bars
 
-static UINT BASED_CODE indicators[] =
+static constexpr UINT BASED_CODE indicators[] =
 {
     ID_SEPARATOR,           // status line indicator
     ID_INDICATOR_OPENSTAT,

@@ -8,15 +8,6 @@
 #include "QueView.h"
 #include "Spacer.h"
 
-const int CSpacerDlg::narrowcx = 333;
-const int CSpacerDlg::widecx = 475;
-const int CSpacerDlg::olcx = 535;
-const int CSpacerDlg::normalcy = 380;
-
-const int CSpacerDlg::qfSecParExact = 62;
-const int CSpacerDlg::qfSectionExact = 58;
-const int CSpacerDlg::qfExact = 33;
-
 static CString kroklastChoice = _T("*");
 static CTime emisionlastChoice;
 
@@ -343,7 +334,7 @@ void CSpacerDlg::OnSelchangeKrok()
 
 void CSpacerDlg::OnExactplace()
 {
-    BOOL isClear = !IsDlgButtonChecked(IDC_EXACTPLACE);
+    const BOOL isClear = !IsDlgButtonChecked(IDC_EXACTPLACE);
     GetDlgItem(IDC_SEKCJA)->EnableWindow(isClear);
     GetDlgItem(IDC_WSEKCJI)->EnableWindow(isClear);
     GetDlgItem(IDC_PAGEPARITY)->EnableWindow(isClear);
