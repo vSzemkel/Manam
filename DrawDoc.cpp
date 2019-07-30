@@ -117,13 +117,13 @@ CDrawDoc::CDrawDoc() :
     lf.lfCharSet = EASTEUROPE_CHARSET;
     lf.lfOutPrecision = OUT_DEVICE_PRECIS;
     lf.lfClipPrecision = CLIP_LH_ANGLES;
-    ::StringCchCopy(lf.lfFaceName, 32, theApp.GetProfileString(_T("Settings"), _T("PageFontFace"), _T("Arial Narrow")));
+    ::StringCchCopy((wchar_t*)lf.lfFaceName, 32, theApp.GetProfileString(_T("Settings"), _T("PageFontFace"), _T("Arial Narrow")));
     if (!m_pagefont.CreateFontIndirect(&lf))
         m_pagefont.CreateStockObject(SYSTEM_FONT);
 
     lf.lfHeight = theApp.GetProfileInt(_T("Settings"), _T("AddFontSize"), -5);  //~4pt
     lf.lfPitchAndFamily = FF_SWISS | VARIABLE_PITCH;
-    ::StringCchCopy(lf.lfFaceName, 32, theApp.GetProfileString(_T("Settings"), _T("AddFontFace"), _T("Small Fonts")));
+    ::StringCchCopy((wchar_t*)lf.lfFaceName, 32, theApp.GetProfileString(_T("Settings"), _T("AddFontFace"), _T("Small Fonts")));
     if (!m_addfont.CreateFontIndirect(&lf))
         m_addfont.CreateStockObject(SYSTEM_FONT);
     m_grzbietMenu.LoadMenu(IDR_MENUGRZBIET);
@@ -165,8 +165,8 @@ void CDrawDoc::OnCloseDocument()
 
     COleDocument::OnCloseDocument();
 
-    if (!((CMDIFrameWnd*)AfxGetMainWnd())->MDIGetActive())
-        ((CMainFrame*)AfxGetMainWnd())->SetOpenStatus(_T(""));
+    if (!(static_cast<CMDIFrameWnd*>(AfxGetMainWnd()))->MDIGetActive())
+        (static_cast<CMainFrame*>(AfxGetMainWnd()))->SetOpenStatus(_T(""));
 }
 
 BOOL CDrawDoc::SaveModified()
@@ -230,10 +230,10 @@ void CDrawDoc::Serialize(CArchive& ar)
         ar << sekretarz;
         ar << symWydawcy;
         //serializacja spotow
-        ar << (WORD)m_spot_makiety.size();
+        ar << static_cast<WORD>(m_spot_makiety.size());
         for (const auto sp : m_spot_makiety)
             ar << sp;
-        ar << (WORD)m_pages.size();
+        ar << static_cast<WORD>(m_pages.size());
         for (const auto& pPage : m_pages) {
             pPage->CleanKraty(FALSE);
             pPage->Serialize(ar);
@@ -262,7 +262,7 @@ void CDrawDoc::Serialize(CArchive& ar)
         ar >> wTemp; m_spot_makiety.resize(wTemp);
         DWORD tm;
         for (DWORD i = 0; i < wTemp; ++i) {
-            ar >> tm; m_spot_makiety[i] = (UINT)tm;
+            ar >> tm; m_spot_makiety[i] = static_cast<UINT>(tm);
         }
         // serializacja stron
         ar >> wTemp;
@@ -291,7 +291,7 @@ void CDrawDoc::Draw(CDC* pDC, CDrawView* pView)
         CRect r;
         pView->GetClientRect(r);
         pDC->DPtoLP(r);
-        pDC->FillRect(r, &((CMainFrame*)AfxGetMainWnd())->robgcolor);
+        pDC->FillRect(r, &(static_cast<CMainFrame*>(AfxGetMainWnd()))->robgcolor);
     }
 
     for (const auto& p : m_pages) {
@@ -302,7 +302,7 @@ void CDrawDoc::Draw(CDC* pDC, CDrawView* pView)
 
     const auto psize = m_pages.size();
     if (psize > 0 && ((psize & 1) == 0)) { // makieta ma rozkladowke
-        CDrawPage* pPage = m_pages[psize / 2];
+        const CDrawPage* pPage = m_pages[psize / 2];
         const CRect& pRozkl = pPage->m_position;
         CRect r(pRozkl.right - vscale, pRozkl.top - pmoduly - vscale, pRozkl.right + vscale, pRozkl.bottom + vscale);
         pDC->FillRect(r, pPage->pagina_type == PaginaType::roman ? (CBrush*)pDC->SelectStockObject(WHITE_BRUSH) : &((CMainFrame*)AfxGetMainWnd())->rzym);
@@ -322,7 +322,7 @@ void CDrawDoc::Draw(CDC* pDC, CDrawView* pView)
             p->DrawAcDeadline(pDC, &p->m_position);
 }
 
-void CDrawDoc::DrawQue(CDC* pDC, CQueView *pView)
+void CDrawDoc::DrawQue(CDC* pDC)
 {
     for (const auto& a : m_addsque) {
         a->Draw(pDC);
@@ -763,9 +763,9 @@ void CDrawDoc::OnFileSaveAs()
 {
     CString fname = GetPathName();
     if (fname.IsEmpty())
-        fname = _T("*");
+        fname = _T('*');
     else {
-        const int pos = fname.ReverseFind('.');
+        const int pos = fname.ReverseFind(_T('.'));
         if (pos > -1) fname.Truncate(pos);
     }
 

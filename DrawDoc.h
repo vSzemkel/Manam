@@ -73,7 +73,7 @@ class CDrawDoc final : public COleDocument
     void DerivePages(CDrawPage* pPage);        // dziedziczenie stron
 
     void Draw(CDC* pDC, CDrawView* pView);
-    void DrawQue(CDC* pDC, CQueView *pView);
+    void DrawQue(CDC* pDC);
     void Print(CDC* pDC);
     void PrintPage(CDC* pDC, CDrawPage* pPage);
     void Add(CDrawObj* pObj);

@@ -20,7 +20,7 @@ class CDrawObj : public CObject
     CDrawObj(const CRect& position) noexcept;
 
     ~CDrawObj() override = default;
-    virtual void Draw(CDC* pDC) {};
+    virtual void Draw(CDC*) {};
     virtual void Print(CDC* pDC) { Draw(pDC); }
     virtual void UpdateInfo() {}
     virtual void DrawKolor(CDC* pDC, const CRect& pos) const;

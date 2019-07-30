@@ -144,7 +144,7 @@ void CDrawAdd::Draw(CDC* pDC)
 {
     ASSERT_VALID(this);
 
-    auto mainWnd = reinterpret_cast<CMainFrame*>(AfxGetMainWnd());
+    auto mainWnd = static_cast<CMainFrame*>(AfxGetMainWnd());
     CBrush* pOldBrush = pDC->SelectObject(CDrawDoc::GetSpotBrush(kolor >> 3));
     CPen* pOldPen = pDC->SelectObject(&(mainWnd->pen));
 
@@ -464,10 +464,10 @@ CString CDrawAdd::PrepareBuf(const TCHAR* const ch) const
     else
         bufor.AppendFormat(_T("%i"), fizpage >> 16);
 
-    bufor.AppendFormat(_T("%s%i%s%i%s%s%s"), ch, posx, ch, posy, ch, nazwa, ch);
+    bufor.AppendFormat(_T("%s%i%s%i%s%s%s"), ch, posx, ch, posy, ch, (LPCTSTR)nazwa, ch);
     if (nreps > -1)
         bufor.AppendFormat(_T("%li"), nreps);
-    bufor.AppendFormat(_T("%s%s%s%s%s%s%s%s\n"), ch, CDrawDoc::kolory[kolor == ColorId::full ? 1 : kolor >> 3], ch, logpage, ch, remarks, ch, wersja);
+    bufor.AppendFormat(_T("%s%s%s%s%s%s%s%s\n"), ch, (LPCTSTR)CDrawDoc::kolory[kolor == ColorId::full ? 1 : kolor >> 3], ch, (LPCTSTR)logpage, ch, (LPCTSTR)remarks, ch, (LPCTSTR)wersja);
 
     return bufor;
 }
@@ -545,8 +545,8 @@ BOOL CDrawAdd::OnOpen(CDrawView* pView)
     if (dlg.m_epsok < 2) flags.showeps = dlg.m_epsok;
     flags.reserv = dlg.m_flaga_rezerw;
     flags.locked = (fizpage ? dlg.m_locked : FALSE);
-    flags.studio = (StudioStatus)dlg.m_studio;
-    dlg.m_always ? czaskto.Format(_T("# [%s]"), (LPCTSTR)dlg.m_sprzedal) : czaskto.Format(_T("%s %s [%s]"), dlg.m_data_czob.Format(c_ctimeData), dlg.m_godz_czob.Format(_T("%H:%M")), (LPCTSTR)dlg.m_sprzedal);
+    flags.studio = static_cast<StudioStatus>(dlg.m_studio);
+    dlg.m_always ? czaskto.Format(_T("# [%s]"), (LPCTSTR)dlg.m_sprzedal) : czaskto.Format(_T("%s %s [%s]"), (LPCTSTR)dlg.m_data_czob.Format(c_ctimeData), (LPCTSTR)dlg.m_godz_czob.Format(_T("%H:%M")), (LPCTSTR)dlg.m_sprzedal);
     const int pom_fizpage = ((dlg.m_fizpage << 16) + ((dlg.m_rzymnum) ? PaginaType::roman : PaginaType::arabic));
     SetPosition(pom_fizpage, dlg.m_posx, dlg.m_posy, dlg.m_sizex, dlg.m_sizey); // robi updateinfo
     if (!dlg.m_precel_flag.IsEmpty() && dlg.m_precel_flag != m_precel_flag) {
@@ -1518,7 +1518,7 @@ dajWymiarKraty:
     }
 
     if (powtorka != 0) { // skopiuj powtorke
-        msg.Format(_T("ad=%li&dd=%s"), nreps, m_pDocument->dayws);
+        msg.Format(_T("ad=%li&dd=%s"), nreps, (LPCTSTR)m_pDocument->dayws);
         auto pFile = theApp.OpenURL(1, msg);
         if (pFile)
             try {

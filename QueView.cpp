@@ -93,7 +93,7 @@ void CQueView::OnDraw(CDC* pDC)
 
     pDrawDC->FillRect(client, &brush);
 
-    pDoc->DrawQue(pDrawDC, this);
+    pDoc->DrawQue(pDrawDC);
 
     if (pDrawDC != pDC) {
         pDC->SetMapMode(MM_TEXT);

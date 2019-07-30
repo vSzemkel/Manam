@@ -449,7 +449,7 @@ void CDrawApp::FileRefresh(CDrawDoc* refreshDoc)
             if (vDoc->m_mak_xx < 0 && vDoc->iDocType != DocType::grzbiet_drukowany) // offline
                 doce.emplace_back(vDoc->GetPathName());
             else // online 
-                doce.emplace_back(vDoc->gazeta + _T("_") + d + CDrawDoc::asDocTypeExt[static_cast<int8_t>(vDoc->iDocType)]);
+                doce.emplace_back(vDoc->gazeta + _T('_') + d + CDrawDoc::asDocTypeExt[static_cast<int8_t>(vDoc->iDocType)]);
 
             tytuly.emplace_back(vDoc->GetTitle());
         }
@@ -457,7 +457,7 @@ void CDrawApp::FileRefresh(CDrawDoc* refreshDoc)
         if (refreshDoc) break;
     }
     // otwórz ponownie w odwrotnej kolejnoœci
-    for (int i = (int)doce.size() - 1; i >= 0; i--) {
+    for (int i = (int)doce.size() - 1; i >= 0; --i) {
         OPENRO = aIsRO[i];
         initCZV = (ToolbarMode)aSwCZV[i];
         if (OpenDocumentFile(doce[i]))
