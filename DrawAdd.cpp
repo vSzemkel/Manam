@@ -1392,10 +1392,9 @@ bool CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by
     if (m_pub_xx > 0) {
         CString sBBox = theManODPNET.GetProdInfo(m_pub_xx, cKolor, ileMat);
         if (sBBox != _T("!")) {
-            bool status = _stscanf_s(sBBox, _T("%f %f %f %f"), bx1, by1, bx2, by2) == 4;
+            const bool status = _stscanf_s(sBBox, _T("%f %f %f %f"), bx1, by1, bx2, by2) == 4;
             if (!status) { // przesz³o przez EpsTest, ale nie ma ProdInfo
                 bReqProdInfo = true;
-                if (powtorka > 0) EpsName(CManFormat::EPS, false);
                 CManODPNETParms orapar { CManDbType::DbTypeInt32, &m_pub_xx };
                 theManODPNET.EI("begin epstest.request_prod_info(:pub_xx); end;", orapar);
             } else
@@ -1552,7 +1551,7 @@ bool CDrawAdd::CopyNewFile(const CString& srcPath, const CString& dstPath)
             dstTime -= 2; // blad - dlaczego nowy plik czasem jest 2 sekundy pozniejszy
             if (srcStat.m_mtime < dstTime) {
                 CString cs;
-                cs.Format(_T("Nieudana próba kopiowania pliku\n\nz\t%s\ndo\t%s\n\nPlik Ÿród³owy jest starszy ni¿ plik docelowy.\nSprawdŸ czy poprawnie zaznaczono powórkê."), srcPath, dstPath);
+                cs.Format(_T("Nieudana próba kopiowania pliku\n\nz\t%s\ndo\t%s\n\nPlik Ÿród³owy jest starszy ni¿ plik docelowy.\nSprawdŸ czy poprawnie zaznaczono powórkê."), (LPCTSTR)srcPath, (LPCTSTR)dstPath);
                 ::MessageBox(nullptr, cs, APP_NAME, MB_OK | MB_ICONERROR);
             }
             return false;
@@ -1560,7 +1559,7 @@ bool CDrawAdd::CopyNewFile(const CString& srcPath, const CString& dstPath)
     }
     if (!::CopyFile(srcPath, dstPath, FALSE)) {
         CString cs;
-        cs.Format(_T("B³¹d kopiowania (errno=%lu) pliku %s"), GetLastError(), srcPath);
+        cs.Format(_T("B³¹d kopiowania (errno=%lu) pliku %s"), GetLastError(), (LPCTSTR)srcPath);
         ::MessageBox(nullptr, cs, APP_NAME, MB_OK | MB_ICONERROR);
         return false;
     }
@@ -1572,7 +1571,7 @@ bool CDrawAdd::EpsFromATEX(const CString& num, const CString& dstPath)
     CString sAtexEPS = theApp.GetProfileString(_T("GenEPS"), _T("EpsATEX"), _T("T:\\ATEX\\EPS\\"));
     CFileFind ff;
     CString sAtexFile;
-    sAtexFile.Format(_T("%s%i\\%s.eps"), sAtexEPS, _ttoi(num.Mid(num.GetLength() - 2)), num);
+    sAtexFile.Format(_T("%s%i\\%s.eps"), (LPCTSTR)sAtexEPS, _ttoi(num.Mid(num.GetLength() - 2)), (LPCTSTR)num);
     return ff.FindFile(sAtexFile) && CopyFile(sAtexFile, dstPath + ".eps", FALSE);
 }
 
@@ -1674,7 +1673,7 @@ CString CDrawAdd::EpsName(const CManFormat format, bool copyOldEPS, const bool b
                         if (actualAttr.ftLastWriteTime.dwHighDateTime > powtAttr.ftLastWriteTime.dwHighDateTime ||
                             (actualAttr.ftLastWriteTime.dwHighDateTime == powtAttr.ftLastWriteTime.dwHighDateTime && actualAttr.ftLastWriteTime.dwLowDateTime > powtAttr.ftLastWriteTime.dwLowDateTime)) {
                             CString msg;
-                            msg.Format(_T("SprawdŸ czy poprawnie zaznaczono powórkê:\n\n%s\n\nPlik docelowy jest nowszy ni¿ archiwum."), num);
+                            msg.Format(_T("SprawdŸ czy poprawnie zaznaczono powórkê:\n\n%s\n\nPlik docelowy jest nowszy ni¿ archiwum."), (LPCTSTR)num);
                             ::MessageBox(nullptr, msg, APP_NAME, MB_OK | MB_ICONERROR);
                             copyOldEPS = FALSE;
                         }
@@ -1764,22 +1763,22 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
             ::MessageBox(pArg->pDlg->m_hWnd, _T("Na produkcyjnej wersji kolumny brakuje materia³u: ") + eps_name, _T("Brak og³oszenia"), MB_ICONWARNING);
 
         ::StringCchPrintfA(s, n_size, ".25 .1 .9 %.2f %.2f %.2f %.2f R\r\n", gpx, gpy, x, y); dest.Write(s, (UINT)strlen(s));
-        ::StringCchPrintfA(s, n_size, "(%s) %.2f %.2f %d /Switzerland Po\r\n", CStringA(eps_name), (x + gpx), (y - podpisH), podpisH);  dest.Write(s, (UINT)strlen(s));
+        ::StringCchPrintfA(s, n_size, "(%s) %.2f %.2f %d /Switzerland Po\r\n", (LPCSTR)CStringA(eps_name), (x + gpx), (y - podpisH), podpisH); dest.Write(s, (UINT)strlen(s));
         return false;
     }
 
     TRY {
         // kopiuj podwaly
         CString podwal(theApp.GetString(_T("EpsPodwaly"), _T("")));
-    if (copyEps && podwal.Find(_T(":")) >= 0 && wersja != DERV_TMPL_WER && pPage->name.Find(_T("RED")) >= 0) {
+    if (copyEps && podwal.Find(_T(':')) >= 0 && wersja != DERV_TMPL_WER && pPage->name.Find(_T("RED")) >= 0) {
         podwal += ((podwal.Right(1) == _T("\\")) ? _T("") : _T("\\"));
-        CString fname = eps_name.Mid(eps_name.ReverseFind(_T('\\')) + 1);
+        const CString fname = eps_name.Mid(eps_name.ReverseFind(_T('\\')) + 1);
         if (theApp.GetInt(_T("PodwalySubDir"), 0) == 0)
             podwal += fname;
         else {
-            CString sPodwalDir(podwal + theApp.activeDoc->data.Mid(3, 2) + theApp.activeDoc->data.Mid(0, 2) + _T("\\"));
+            CString sPodwalDir(podwal + theApp.activeDoc->data.Mid(3, 2) + theApp.activeDoc->data.Mid(0, 2) + _T('\\'));
             if (::CreateDirectory(sPodwalDir, nullptr) || GetLastError() == ERROR_ALREADY_EXISTS) {
-                sPodwalDir += theApp.activeDoc->gazeta.Mid(0, 3) + theApp.activeDoc->gazeta.Mid(4, 2) + _T("\\");
+                sPodwalDir += theApp.activeDoc->gazeta.Mid(0, 3) + theApp.activeDoc->gazeta.Mid(4, 2) + _T('\\');
                 if (::CreateDirectory(sPodwalDir, nullptr) || GetLastError() == ERROR_ALREADY_EXISTS)
                     podwal = sPodwalDir + fname;
             } else
@@ -1803,9 +1802,9 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
             theManODPNET.EI("begin :pod := pagina.podpis(:pub_xx); end;", orapar);
             dopodpisu = uPodpis;
         } else
-            dopodpisu.Format("%li%s", nreps, CStringA(wersja));
+            dopodpisu.Format("%li%s", nreps, (LPCSTR)CStringA(wersja));
 
-        ::StringCchPrintfA(s, n_size, "(%s) %.2f %.2f %d /Switzerland Po\r\n", dopodpisu, (x + gpx), (y - podpisH), podpisH); dest.Write(s, (UINT)strlen(s));
+        ::StringCchPrintfA(s, n_size, "(%s) %.2f %.2f %d /Switzerland Po\r\n", (LPCSTR)dopodpisu, (x + gpx), (y - podpisH), podpisH); dest.Write(s, (UINT)strlen(s));
         if (this->flags.reksbtl) {
             ::StringCchPrintfA(s, n_size, "(REKLAMA) %.2f %.2f 1 %d /Switzerland textLR\r\n", x, y - podpisH, podpisH);
             dest.Write(s, (UINT)strlen(s));
@@ -1858,16 +1857,16 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
                 else
                     x -= fMargDoGrb + 0.5f*(x2 - x1);
                 y += 0.5f * (gpy + y1 - y2);
-                ::StringCchPrintfA(s, n_size, "%.2f %.2f translate %s translate\r\n", x, y, sTrans);  dest.Write(s, (UINT)strlen(s));
+                ::StringCchPrintfA(s, n_size, "%.2f %.2f translate %s translate\r\n", x, y, (LPCSTR)sTrans); dest.Write(s, (UINT)strlen(s));
                 if (bLewaStrona) {
-                    ::StringCchPrintfA(s, n_size, ".5 (%s) 0 -5.5 1 7 /GWFranklinBold textKLR\r\n", sReklama); dest.Write(s, (UINT)strlen(s));
+                    ::StringCchPrintfA(s, n_size, ".5 (%s) 0 -5.5 1 7 /GWFranklinBold textKLR\r\n", (LPCSTR)sReklama); dest.Write(s, (UINT)strlen(s));
                 }
             } else {
                 const char* f = (strncmp("0 26", sTrans, 4) == 0) ? "/GWTimesCondensed" : "/GWFranklinBold";
                 if (!bLewaStrona || spad_flag == 11)
-                    ::StringCchPrintfA(s, n_size, "%s translate 90 rotate 2 (%s) 0 1.5 1 7 %s textKLR -90 rotate\r\n", sTrans, sReklama, f);
+                    ::StringCchPrintfA(s, n_size, "%s translate 90 rotate 2 (%s) 0 1.5 1 7 %s textKLR -90 rotate\r\n", (LPCSTR)sTrans, (LPCSTR)sReklama, f);
                 else
-                    ::StringCchPrintfA(s, n_size, "%s translate 90 rotate 2 (%s) 0 %.2f 1 7 %s textKLR -90 rotate\r\n", sTrans, sReklama, x1 - x2 - 7, f);
+                    ::StringCchPrintfA(s, n_size, "%s translate 90 rotate 2 (%s) 0 %.2f 1 7 %s textKLR -90 rotate\r\n", (LPCSTR)sTrans, (LPCSTR)sReklama, x1 - x2 - 7, f);
                 dest.Write(s, (UINT)strlen(s));
             }
         } else {
@@ -1908,13 +1907,13 @@ bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
     const auto y = (float)((szpalt_y + 1 - posy - sizey)*(pRoz->h + pRoz->sh)*mm2pkt);
 
     if (theApp.isOpiMode)
-        nazwa.Format(_T("%s%s%03i.eps"), m_pDocument->gazeta.Left(3), m_pDocument->gazeta.Mid(4, 2), txtposx);
+        nazwa.Format(_T("%s%s%03i.eps"), (LPCTSTR)m_pDocument->gazeta.Left(3), (LPCTSTR)m_pDocument->gazeta.Mid(4, 2), txtposx);
 
     pArg->pDlg->OglInfo(pArg->iChannelId, "Drobne: " + nazwa);
 
     bool bReadFromATEX = false;
     CString sURL;
-    sURL.Format(_T("drw_xx=%i&kiedy=%s&nr_porz=%i"), m_pDocument->id_drw, m_pDocument->dayws, txtposx);
+    sURL.Format(_T("drw_xx=%i&kiedy=%s&nr_porz=%i"), m_pDocument->id_drw, (LPCTSTR)m_pDocument->dayws, txtposx);
     auto pFile = theApp.OpenURL(2, sURL);
     if (pFile) {
         try {
@@ -1949,11 +1948,11 @@ bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
 
     ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", -x1, -y1);  dest.Write(s, (UINT)strlen(s));
     ::StringCchPrintfA(s, n_size, "%.2f %.2f %.2f %.2f clipEPS \r\nclip newpath\r\n", x1, y1, x2 - x1, y2 - y1);  dest.Write(s, (UINT)strlen(s));
-    ::StringCchPrintfA(s, n_size, "%%%%BeginDocument: %s\r\n", CStringA(nazwa)); dest.Write(s, (UINT)strlen(s));
+    ::StringCchPrintfA(s, n_size, "%%%%BeginDocument: %s\r\n", (LPCSTR)CStringA(nazwa)); dest.Write(s, (UINT)strlen(s));
     dest.Flush();
 
     if (theApp.isOpiMode) {
-        ::StringCchPrintfA(s, n_size, "%sDR %s\r\n", OPI_TAG, CStringA(nazwa));
+        ::StringCchPrintfA(s, n_size, "%sDR %s\r\n", OPI_TAG, (LPCSTR)CStringA(nazwa));
         dest.Write(s, (UINT)strlen(s));
     } else 
         CDrawAdd::EmbedEpsFile(pArg, dest, nazwa);

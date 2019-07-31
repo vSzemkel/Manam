@@ -197,8 +197,8 @@ void CQueView::OnMouseMove(const UINT nFlags, CPoint point)
         theApp.unQueing = FALSE;
     }
 
-    CDrawObj* pObj = GetDocument()->ObjectAtQue(point);
-    ((CMainFrame *)AfxGetMainWnd())->SetStatusBarInfo(pObj ? pObj->info : "");
+    const CDrawObj* pObj = GetDocument()->ObjectAtQue(point);
+    static_cast<CMainFrame*>(AfxGetMainWnd())->SetStatusBarInfo(pObj ? pObj->info : "");
 }
 
 void CQueView::OnLButtonUp(const UINT nFlags, const CPoint point)

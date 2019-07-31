@@ -85,7 +85,7 @@ void CSplitFrame::OnSize(const UINT nType, const int cx, const int cy)
 {
     CMDIChildWndEx::OnSize(nType, cx, cy);
 
-    static UINT uiLastType = -1;
+    static UINT uiLastType = UINT_MAX;
 
     if (nType != uiLastType && (nType == SIZE_RESTORED || nType == SIZE_MAXIMIZED) && m_initialized && theApp.activeDoc) {
         CRect r;

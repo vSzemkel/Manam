@@ -2997,7 +2997,7 @@ CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
     else
         sProcInfo.Trim().Replace(_T("  "), _T(" "));
 
-    m_memstat.Format(_T("Zu¿ycie pamiêci: %u/%u [MB]\n%s"), static_cast<uint32_t>((ms.ullTotalPhys - ms.ullAvailPhys) / 0x100000), static_cast<uint32_t>(ms.ullTotalPhys / 0x100000), sProcInfo);
+    m_memstat.Format(_T("Zu¿ycie pamiêci: %u/%u [MB]\n%s"), static_cast<uint32_t>((ms.ullTotalPhys - ms.ullAvailPhys) / 0x100000), static_cast<uint32_t>(ms.ullTotalPhys / 0x100000), (LPCTSTR)sProcInfo);
 }
 
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)

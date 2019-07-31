@@ -50,7 +50,7 @@ bool CDrawDoc::DBOpenDoc(TCHAR* makieta)
 
     theApp.default_title = dlg.m_tytul;
     theApp.default_mut = dlg.m_mutacja;
-    gazeta.Format(_T("%s %s"), dlg.m_tytul, dlg.m_mutacja);
+    gazeta.Format(_T("%s %s"), (LPCTSTR)dlg.m_tytul, (LPCTSTR)dlg.m_mutacja);
 
     // moze byc juz otwarte
     auto frame = reinterpret_cast<CMainFrame*>(AfxGetMainWnd());

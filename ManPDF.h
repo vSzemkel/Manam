@@ -10,7 +10,7 @@ class CDrawAdd;
 class CManPDF
 {
   public:
-    static constexpr unsigned long ulNotFound = -1L;
+    static constexpr unsigned long ulNotFound = ULONG_MAX;
     static constexpr char seppdf[]  = {'<', '>', '/', '[', ']'};
     static constexpr char sepline[] = {(char)10, (char)13, (char)0};
     static constexpr char septok[]  = {(char)9, (char)10, (char)13, (char)32, (char)0};

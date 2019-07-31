@@ -12,7 +12,7 @@ create or replace PACKAGE BODY "EPSTEST" as
     vactual_cntid cid_info.xx%type;
   begin
     select min(p.contentid) into vactual_cntid 
-      from pub@oraent p, pub@oraent p2
+      from atex.pub p, atex.pub p2
      where p2.contentid=vcntid and p.vnoflag='Y'
        and p.adno=p2.adno and p.pubno=p2.pubno;
     return vactual_cntid;
@@ -108,13 +108,13 @@ create or replace PACKAGE BODY "EPSTEST" as
        return;
     end if;
     
-    select max(ci.xx),nvl(max(ap.contentid),-1) into vfileid,vatex_cntid from cid_info ci,pub@oraent ap
+    select max(ci.xx),nvl(max(ap.contentid),-1) into vfileid,vatex_cntid from cid_info ci,atex.pub ap
      where ap.pdate=to_date(vkiedy,sr.vfShortDate) and ap.adno=vadno and ap.edition=vol and ap.vnoflag='Y' and ap.contentid=ci.atex_cntid(+);
     if vfileid is not null then
        return;
     end if;
 
-    select max(ci.xx),nvl(max(ap.contentid),-1) into vfileid,vatex_cntid from cid_info ci,pub@oraent ap
+    select max(ci.xx),nvl(max(ap.contentid),-1) into vfileid,vatex_cntid from cid_info ci,atex.pub ap
      where ap.pdate=to_date(vkiedy,sr.vfShortDate) and ap.adno=vadno and ap.vnoflag='Y' and ap.contentid=ci.atex_cntid(+);
     if vfileid is not null then
        return;
@@ -158,10 +158,27 @@ create or replace PACKAGE BODY "EPSTEST" as
     
     open vrefCur for
       select '<ogloszenie><adno>'||adno||'</adno><vno>'||vno||'</vno><pubno>'||pubno||'</pubno></ogloszenie>'
-        from pub@oraent ap, cid_info ci where ci.xx=vcntid and nvl(ci.atex_cntid,ci.xx)=ap.contentid;
+        from atex.pub ap, cid_info ci where ci.xx=vcntid and nvl(ci.atex_cntid,ci.xx)=ap.contentid;
        
     select atex_cntid into vcntid from cid_info where xx=vcntid;
   end get_paczka_xml;
+  
+  procedure get_paczka_xml1 ( -- zastepuje get_paczka_xml po wdrozeniu octopusowego EpsTesta
+    vcntid in out cid_info.xx%type,
+    vapp_source out cid_info.app_source%type,
+    vrefCur out sr.refCur
+  ) as begin
+    select app_source into vapp_source from cid_info where xx=vcntid;
+    if vapp_source in (cDual,cPrft) then 
+      return;
+    end if;
+    
+    open vrefCur for
+      select adno,vno,pubno from atex.pub ap,cid_info ci 
+       where ci.xx=vcntid and nvl(ci.atex_cntid,ci.xx)=ap.contentid;
+       
+    select atex_cntid into vcntid from cid_info where xx=vcntid;
+  end get_paczka_xml1;
   
   procedure get_paczka_xml2 (
     vadno in spacer_pub.adno%type,
@@ -171,7 +188,7 @@ create or replace PACKAGE BODY "EPSTEST" as
     vcc binary_integer;
     vmsg varchar2(6);
   begin
-    select count(1) into vcc from pub@oraent ap where ap.adno=vadno and ap.pdate=vkiedy and ap.vnoflag='Y' and ap.ppage<>'CM';
+    select count(1) into vcc from atex.pub ap where ap.adno=vadno and ap.pdate=vkiedy and ap.vnoflag='Y' and ap.ppage<>'CM';
     if vcc = 0 then
        raise_application_error(-20001,'Dla podanego adno='||vadno||' na '||to_char(vkiedy,sr.vfShortDate)||' material nie powinien byc sprawdzany');
     end if;
@@ -184,8 +201,32 @@ create or replace PACKAGE BODY "EPSTEST" as
      
     open vrefCur for
       select '<ogloszenie><adno>'||adno||'</adno><vno>'||vno||'</vno><pubno>'||pubno||'</pubno></ogloszenie>'
-        from pub@oraent ap where adno=vadno and pdate=vkiedy and vnoflag='Y';
+        from atex.pub ap where adno=vadno and pdate=vkiedy and vnoflag='Y';
   end get_paczka_xml2;
+
+  procedure get_paczka_xml3 ( -- zastepuje get_paczka_xml po wdrozeniu octopusowego EpsTesta
+    vadno in spacer_pub.adno%type,
+    vkiedy in makieta.kiedy%type,
+    vrefCur out sr.refCur
+  ) as 
+    vcc binary_integer;
+    vmsg varchar2(6);
+  begin
+    select count(1) into vcc from atex.pub ap where ap.adno=vadno and ap.pdate=vkiedy and ap.vnoflag='Y' and ap.ppage<>'CM';
+    if vcc = 0 then
+       raise_application_error(-20001,'Dla podanego adno='||vadno||' na '||to_char(vkiedy,sr.vfShortDate)||' material nie powinien byc sprawdzany');
+    end if;
+
+    select min(d.tytul||' '||d.mutacja) into vmsg from drzewo d,makieta m,spacer_pub p
+     where m.drw_xx=d.xx and p.mak_xx=m.xx and p.powtorka is not null and p.adno=vadno and m.kiedy=vkiedy and (p.flaga_rezerw=1 or nvl(czas_obow,0)<=makdate(m.xx));
+    if vmsg is not null then
+       raise_application_error(-20002,'Dla podanego adno='||vadno||' w makiecie '||vmsg||' na '||to_char(vkiedy,sr.vfShortDate)||' jest zaznaczona powtorka i nowy material nie moze byc sprawdzany');
+    end if;
+     
+    open vrefCur for
+      select adno,vno,pubno from atex.pub
+       where adno=vadno and pdate=vkiedy and vnoflag='Y';
+  end get_paczka_xml3;
 
   procedure check_makieta_prod (
      vmak_xx in makieta.xx%type,
@@ -237,7 +278,7 @@ create or replace PACKAGE BODY "EPSTEST" as
    insert into modemix# (contentid,paper,edition,pdate,adno,pubno,kod_oddzialu,adtypno,resstate,cus2name,modelid)
         select ap.contentid,ap.paper,ap.edition,ap.pdate,ap.adno,ap.pubno,
                ad.kod_oddzialu,ap.adtypno,ap.resstate,ad.cus2name,ap.modelid
-          from pub@oraent ap, ad@oraent ad
+          from atex.pub ap, atex.ad ad
          where ap.pdate between vfirstEd and vlastEd
            and decode_oddzial(ad.kod_oddzialu)=vmutacja 
            and ap.adno=ad.adno and ap.vno=ad.vno and ap.vnoflag='Y' and ad.vnoflag='Y' 
@@ -320,7 +361,7 @@ create or replace PACKAGE BODY "EPSTEST" as
          and m.xx=p.mak_xx and p.adno=vadno and p.powtorka is null and p.cid_xx is null;
       if vcntid>0 then
          select max(xx) into vcntid from cid_info ci 
-          where status>0 and epstest_adno=vadno and atex_cntid in (select max(contentid) from pub@oraent where edition=vmutacja and pdate=vdkiedy and adno=vadno and vnoflag='Y');
+          where status>0 and epstest_adno=vadno and atex_cntid in (select max(contentid) from atex.pub where edition=vmutacja and pdate=vdkiedy and adno=vadno and vnoflag='Y');
          if vcntid is not null then
             store_cntid(vcntid);
          elsif vadno < 20000000 then
@@ -391,7 +432,7 @@ create or replace PACKAGE BODY "EPSTEST" as
            from cid_info ci where xx=vcntid;
       return;
     elsif vapp_source in (cIbok,cXmls) then 
-       update cid_info ci set ci.epstest_kiedy=(select min(ap.pdate) from pub@oraent ap 
+       update cid_info ci set ci.epstest_kiedy=(select min(ap.pdate) from atex.pub ap 
               where ap.contentid=ci.atex_cntid and ap.pdate>sysdate and ap.vnoflag='Y' and ap.ppage<>'CM')
         where ci.xx=vcntid;
     end if;
@@ -405,34 +446,34 @@ create or replace PACKAGE BODY "EPSTEST" as
        update cid_info set atex_cntid=vatex_cntid where atex_cntid=vold_cntid;
     end if;
 
-    select count(1) into vold_cntid from pub@oraent ap 
+    select count(1) into vold_cntid from atex.pub ap 
      where ap.contentid=vatex_cntid and ap.paper='WWW' and ap.edition is null
-       and not exists (select 1 from pub@oraent ap2 where ap2.paper<>'WWW' and ap2.contentid=ap.contentid);
+       and not exists (select 1 from atex.pub ap2 where ap2.paper<>'WWW' and ap2.contentid=ap.contentid);
     if vold_cntid>0 then
        open vrefCur for 
           select to_char(ap.pdate,sr.vfShortDate),ap.adno,'00' zsyla,decode(ap.adtypno,2,1,3,2,9,3,0) isCLF
-            from pub@oraent ap where 0=1;
+            from atex.pub ap where 0=1;
        return;
     end if;
     
     store_cntid(vcntid);
     
     select count(1) into vold_cntid
-      from pub@oraent ap, drzewo d, makieta m
+      from atex.pub ap, drzewo d, makieta m
      where ap.contentid=vatex_cntid and ap.paper=d.tytul and ap.edition=d.mutacja 
        and ap.pdate=m.kiedy and m.drw_xx=d.xx and ap.vnoflag='Y' and ap.ppage<>'CM';
     if vold_cntid=0 then
-       select count(1) into vold_cntid from pub@oraent ap 
+       select count(1) into vold_cntid from atex.pub ap 
         where ap.contentid=vcntid and ap.vnoflag='Y' and ap.ppage<>'CM' and ap.edition='RP';
        if vold_cntid=0 then
-          select count(1) into vold_cntid from pub@oraent ap 
+          select count(1) into vold_cntid from atex.pub ap 
            where ap.contentid=vatex_cntid and ap.vnoflag='Y' and ap.ppage<>'CM' and ap.edition is null and ap.paper<>'WWW';
           if vold_cntid>0 then
             update cid_info set preview_path='W ATEXie nie okreslono atrybutu EDITION dla contentid='||vatex_cntid where preview_path is null and xx=vcntid;
             commit;
             raise_application_error(-20002,'W ATEXie nie okreslono atrybutu EDITION dla contentid='||vatex_cntid);
           else
-            select count(1) into vold_cntid from pub@oraent ap, drzewo d, makieta m 
+            select count(1) into vold_cntid from atex.pub ap, drzewo d, makieta m 
              where ap.contentid=vatex_cntid and ap.vnoflag='Y' and ap.ppage<>'CM' and decode(ap.paper,'TCG','DLO',ap.paper)=d.tytul 
                and (d.mutacja=ap.edition or ap.adtypno in (2,3,9)) and ap.pdate=m.kiedy and d.xx=m.drw_xx;
             if vold_cntid=0 then
@@ -443,16 +484,16 @@ create or replace PACKAGE BODY "EPSTEST" as
           end if;
           
           open vrefCur for
-          select to_char(ap.pdate,sr.vfShortDate),ap.adno,nvl(w.sym,decode_oddzial(ap.edition)) zsyla,decode(ap.adtypno,2,1,3,2,9,3,0) isCLF
-            from pub@oraent ap, drzewo d, makieta m, wydawca w
+          select distinct to_char(ap.pdate,sr.vfShortDate),ap.adno,nvl(w.sym,decode_oddzial(ap.edition)) zsyla,decode(ap.adtypno,2,1,3,2,9,3,0) isCLF
+            from atex.pub ap, drzewo d, makieta m, wydawca w
            where ap.contentid=vatex_cntid and ap.vnoflag='Y' and ap.ppage<>'CM' and d.tytul='DLO'
              and (d.mutacja=ap.edition or ap.adtypno in (2,3,9)) and d.xx=m.drw_xx and ap.pdate=m.kiedy 
              and m.kiedy>sysdate and m.wyd_xx=w.xx(+)
            order by 1,2;
        else
           open vrefCur for
-             select to_char(ap.pdate,sr.vfShortDate),ap.adno,'00' zsyla,decode(ap.adtypno,2,1,3,2,9,3,0) isCLF
-               from pub@oraent ap where ap.contentid=vatex_cntid and ap.vnoflag='Y' and ap.pdate>sysdate and ap.ppage<>'CM';
+             select distinct to_char(ap.pdate,sr.vfShortDate),ap.adno,'00' zsyla,decode(ap.adtypno,2,1,3,2,9,3,0) isCLF
+               from atex.pub ap where ap.contentid=vatex_cntid and ap.vnoflag='Y' and ap.pdate>sysdate and ap.ppage<>'CM';
        end if;
        return;
     end if;
@@ -460,7 +501,7 @@ create or replace PACKAGE BODY "EPSTEST" as
     open vrefCur for
     select distinct to_char(ap.pdate,sr.vfShortDate),ap.adno,case when ap.paper in ('TAM','TCG','TDN','TPR','TTU') and ap.edition='RP' 
       then '00' else nvl(w.sym,decode_oddzial(ap.edition)) end zsyla,decode(ap.adtypno,2,1,3,2,9,3,0) isCLF
-      from cid_info ci, pub@oraent ap, drzewo d, makieta m, wydawca w
+      from cid_info ci, atex.pub ap, drzewo d, makieta m, wydawca w
      where ci.xx=vcntid and ap.contentid in (select ci2.atex_cntid from cid_info ci2 where ci2.xx=vcntid) and ap.vnoflag='Y' and ap.ppage<>'CM'
        and d.tytul=ap.paper and d.mutacja=ap.edition and d.xx=m.drw_xx and ap.pdate=m.kiedy 
        and nvl(ci.epstest_kiedy,m.kiedy)<=m.kiedy and m.kiedy>sysdate and m.wyd_xx=w.xx(+)
@@ -556,13 +597,13 @@ create or replace PACKAGE BODY "EPSTEST" as
                   and m.kiedy=ap.pdate and m.xx=p.mak_xx and p.adno=ap.adno and p.typ_xx=t.xx
                   and (instr(ap.modelid,'#')>0 or instr(ap.modelid,'^')>0 or instr(ap.modelid,'@')>0 or upper(ap.modelid)=upper(t.modelid)) 
                   and decode(ap.colourcnt,0,1,1,2,4)=p.ile_kol) atexOK
-                 from cid_info ci, pub@oraent ap
+                 from cid_info ci, atex.pub ap
             where ci.xx=vcntid and ap.contentid=vatex_cntid and ap.vnoflag='Y'
               and not exists (select 1 from cid_info ci2 where ci2.xx>ci.xx and ci2.atex_cntid=ci.atex_cntid)
             order by atexOK desc
     ) where rownum=1;
     if vvnoflag is null then
-       select min(ap.vnoflag) into vvnoflag from pub@oraent ap where ap.contentid=vatex_cntid; 
+       select min(ap.vnoflag) into vvnoflag from atex.pub ap where ap.contentid=vatex_cntid; 
        if vvnoflag is null then
           update cid_info set preview_path='W ATEXie nie odnaleziono contentid: '||vatex_cntid where preview_path is null and xx=vcntid;
           commit;
@@ -585,7 +626,7 @@ create or replace PACKAGE BODY "EPSTEST" as
              ci.preview_path,
              0 konwertujDoXml,
              decode(p.powtorka,null,decode((select count(1) from cid_present cp where cp.cid=p.cid_xx and cp.zsy_xx=m.wyd_xx),0,'NIE','TAK'),'REP') ispresent,
-             decode(p.eps_present,0,'NIE',1,'TAK',decode((select count(1) from atex.track@oraent t where t.adno=p.adno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO')) akceptacja,
+             decode(p.eps_present,0,'NIE',1,'TAK',decode((select count(1) from atex.track t where t.adno=p.adno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO')) akceptacja,
              to_char(m.data_zm + cWyprzedzenieWysylania,sr.vfLongDate) zamkniecie,
              es.app_code,
              case when bitand(s.drukarnie,7)=s.drukarnie then 'A' when bitand(s.drukarnie,7)=0 then 'W' else 'AW' end setup,
@@ -603,12 +644,12 @@ create or replace PACKAGE BODY "EPSTEST" as
              ci.preview_path,
              1 konwertujDoXml,
              'NIE' ispresent,
-             decode((select count(1) from atex.track@oraent t where t.adno=ap.adno and t.vno=ap.vno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO') akceptacja,
+             decode((select count(1) from atex.track t where t.adno=ap.adno and t.vno=ap.vno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO') akceptacja,
              to_char(m.data_zm + cWyprzedzenieWysylania,sr.vfLongDate) zamkniecie,
              es.app_code,
              (select case when bitand(s.drukarnie,7)=s.drukarnie then 'A' when bitand(s.drukarnie,7)=0 then 'W' else 'AW' end from spacer_strona s where s.mak_xx=m.xx and s.nr_porz=1) setup,
              vfilepath path
-        from pub@oraent ap, cid_info ci, drzewo d, makieta m, epstest_app_source es
+        from atex.pub ap, cid_info ci, drzewo d, makieta m, epstest_app_source es
        where ci.xx=vcntid and ap.contentid=vatex_cntid and ci.app_source=es.xx(+)
          and d.tytul=ap.paper and d.mutacja=ap.edition and m.kiedy=ap.pdate
          and d.xx=m.drw_xx and ap.vnoflag='Y' and ap.modelid is not null and rownum=1
@@ -622,12 +663,12 @@ create or replace PACKAGE BODY "EPSTEST" as
              ci.preview_path,
              2 konwertujDoXml,
              'NIE' ispresent,
-             decode((select count(1) from atex.track@oraent t where t.adno=ap.adno and t.vno=ap.vno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO') akceptacja,
+             decode((select count(1) from atex.track t where t.adno=ap.adno and t.vno=ap.vno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO') akceptacja,
              null zamkniecie,
              es.app_code,
              '?' setup,
              vfilepath path
-        from cid_info ci, pub@oraent ap, page@oraent pg, epstest_app_source es
+        from cid_info ci, atex.pub ap, atex.page pg, epstest_app_source es
        where ci.xx=vcntid and ap.contentid=vatex_cntid and ci.app_source=es.xx(+)
          and ap.paper=pg.paper and ap.ppage=pg.page and ap.vnoflag='Y' and rownum=1
          and not exists (select 1 from cid_info ci2 where ci2.xx>ci.xx and ci2.atex_cntid=ci.atex_cntid)
@@ -655,7 +696,7 @@ create or replace PACKAGE BODY "EPSTEST" as
       select ci.xx,
              ap.contentid,
              decode(p.powtorka,null,decode((select count(1) from cid_present cp where cp.cid=p.cid_xx and cp.zsy_xx=m.wyd_xx),0,'NIE','TAK'),'REP') ispresent,
-             decode(p.eps_present,0,'NIE',1,'TAK',decode((select count(1) from atex.track@oraent t where t.adno=ap.adno and t.vno=ap.vno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO')) akceptacja,
+             decode(p.eps_present,0,'NIE',1,'TAK',decode((select count(1) from atex.track t where t.adno=ap.adno and t.vno=ap.vno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO')) akceptacja,
              ap.paper tytul,ap.edition mutacja,
              t.sym symbol,
              r.width szerokosc,
@@ -666,7 +707,7 @@ create or replace PACKAGE BODY "EPSTEST" as
              ci.material_path,
              ci.preview_path,
              0 wersja
-        from pub@oraent ap, spacer_pub p, drzewo d, makieta m, wydawca w, 
+        from atex.pub ap, spacer_pub p, drzewo d, makieta m, wydawca w, 
              typ_ogloszenia t, spacer_rozm r, cid_info ci
        where ap.pdate=m.kiedy and m.kiedy=vdkiedy
          and ap.vnoflag='Y' and ap.adno=p.adno and p.adno=vadno
@@ -678,7 +719,7 @@ create or replace PACKAGE BODY "EPSTEST" as
       select ci.xx,
              ap.contentid,
              decode((select count(1) from cid_present cp where cp.cid=ap.contentid and cp.zsy_xx=m.wyd_xx),0,'NIE','TAK') ispresent,
-             decode((select count(1) from atex.track@oraent t where t.adno=ap.adno and t.vno=ap.vno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO') akceptacja,
+             decode((select count(1) from atex.track t where t.adno=ap.adno and t.vno=ap.vno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO') akceptacja,
              ap.paper tytul,ap.edition mutacja,
              ap.modelid symbol,
              nvl(nvl((select min(r.width) from spacer_rozm_modelid r where r.modelid=ap.modelid),(select r.width  from makieta m2,spacer_pub p,typ_ogloszenia t,spacer_rozm r where rownum=1 and m2.drw_xx=d.xx and upper(t.modelid)=upper(ap.modelid) and m2.xx=p.mak_xx and m2.kiedy between sysdate-60 and sysdate and r.pub_xx=p.xx and p.typ_xx=t.xx)),0) szerokosc,
@@ -689,7 +730,7 @@ create or replace PACKAGE BODY "EPSTEST" as
              ci.material_path,
              ci.preview_path,
              1 wersja
-        from pub@oraent ap, page@oraent pg, drzewo d, makieta m, wydawca w, cid_info ci
+        from atex.pub ap, atex.page pg, drzewo d, makieta m, wydawca w, cid_info ci
        where ap.pdate=m.kiedy and m.kiedy=vdkiedy
          and ap.paper=pg.paper and ap.ppage=pg.page and ap.adtypno in (4,5) 
          and ap.vnoflag='Y' and ap.adno=vadno 
@@ -702,7 +743,7 @@ create or replace PACKAGE BODY "EPSTEST" as
       select ci.xx,
              ap.contentid,
              decode((select count(1) from cid_present cp where cp.cid=ap.contentid),0,'NIE','TAK') ispresent,
-             decode((select count(1) from atex.track@oraent t where t.adno=ap.adno and t.vno=ap.vno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO') akceptacja,
+             decode((select count(1) from atex.track t where t.adno=ap.adno and t.vno=ap.vno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO') akceptacja,
              ap.paper tytul,ap.edition mutacja,
              ap.modelid symbol,
              ap.xsize*pg.colwidth + (ap.xsize-1)*pg.colspace,
@@ -713,7 +754,7 @@ create or replace PACKAGE BODY "EPSTEST" as
              ci.material_path,
              ci.preview_path,
              2 wersja
-        from pub@oraent ap, page@oraent pg, cid_info ci
+        from atex.pub ap, atex.page pg, cid_info ci
        where ap.pdate=vdkiedy
          and ap.paper=pg.paper and ap.ppage=pg.page 
          and ap.vnoflag='Y' and ap.adno=vadno 
@@ -728,7 +769,7 @@ create or replace PACKAGE BODY "EPSTEST" as
     vcntid in cid_info.xx%type
   ) as begin
      update spacer_pub set cid_xx=vcntid where xx in ( /* ma byc zgodny albo tytul albo mutacja */ 
-            select p.xx from spacer_pub p, makieta m, drzewo d, pub@oraent ap, cid_info ci
+            select p.xx from spacer_pub p, makieta m, drzewo d, atex.pub ap, cid_info ci
              where ap.contentid=ci.atex_cntid and ci.xx=vcntid 
                and (ap.paper=d.tytul or ap.edition=d.mutacja)
                and ap.vnoflag='Y' and nvl(ci.epstest_kiedy,m.kiedy)=m.kiedy
@@ -746,7 +787,7 @@ create or replace PACKAGE BODY "EPSTEST" as
     
     insert into eps_present_log (kiedy,ope_xx,adno,contentid)
          select sysdate,vope_xx,max(adno),vfileid
-           from pub@oraent where contentid=vcntid;
+           from atex.pub where contentid=vcntid;
   end log_change;
 
   procedure cntid_change_notify (
@@ -765,12 +806,12 @@ create or replace PACKAGE BODY "EPSTEST" as
     vcc pls_integer;
   begin
     if vapp_source not in ('DUAL','ZAJW','ARCH','PRFT') then
-       select count(1) into vcc from pub@oraent ap where ap.contentid=vatex_cntid and ap.vnoflag='Y' and ap.ppage<>'CM';
+       select count(1) into vcc from atex.pub ap where ap.contentid=vatex_cntid and ap.vnoflag='Y' and ap.ppage<>'CM';
        if vcc = 0 then
           raise_application_error(-20001,'Dla podanego contentid='||vatex_cntid||' material nie powinien byc sprawdzany');
        end if;
 
-       select count(1) into vcc from pub@oraent ap
+       select count(1) into vcc from atex.pub ap
         where ap.contentid=vatex_cntid and ap.modelid is null and ap.adtypno in (4,5);
        if vcc > 0 then
           raise_application_error(-20002,'Blad w ATEX: Dla contentid='||vatex_cntid||' nie mozna ustalic, czy to drobne, czy modulowe');
@@ -798,7 +839,7 @@ create or replace PACKAGE BODY "EPSTEST" as
     
     if vapp_source in ('IBOK','XMLS') then
        insert into eps_present_log (adno,kiedy,contentid,ope_xx) 
-            select max(adno),sysdate,vfileid,9 from pub@oraent where contentid=vatex_cntid;
+            select max(adno),sysdate,vfileid,9 from atex.pub where contentid=vatex_cntid;
     elsif vapp_source = 'EPSTEST' then
        update cid_info set epstest_kiedy=to_date(substr(material_path,1,10),sr.vfShortDate),material_path=substr(material_path,11)
         where xx=vfileid;
@@ -857,7 +898,7 @@ create or replace PACKAGE BODY "EPSTEST" as
     if vcid_xx is null then
        select max(ci.xx) into vcid_xx from cid_info ci 
         where ci.status>0 and ci.atex_cntid in (
-          select max(ap.contentid) from drzewo d,makieta m,spacer_pub p,pub@oraent ap 
+          select max(ap.contentid) from drzewo d,makieta m,spacer_pub p,atex.pub ap 
            where d.xx=m.drw_xx and m.xx=p.mak_xx and p.xx=vpub_xx
              and ap.paper=d.tytul and ap.edition=d.mutacja and ap.pdate=m.kiedy and ap.adno=p.adno and ap.vnoflag='Y');
        if vcid_xx is not null then
@@ -916,14 +957,13 @@ create or replace PACKAGE BODY "EPSTEST" as
   end store_prod_info;
   
   procedure request_prod_info(vpub_xx in spacer_pub.xx%type)
-  as begin
-     insert into eps_present_log (adno,kiedy,contentid,ope_xx) 
-          select p.adno,m.kiedy,get_cid(p.xx),13 from spacer_pub p,makieta m where p.xx=vpub_xx and p.mak_xx=m.xx;
-          
+  as begin          
      delete from eps_present_log e --usuwanie starych dubli
       where (e.adno,e.kiedy,e.contentid,e.ope_xx) in (
-            select p.adno,m.kiedy,get_cid(p.xx),13 from spacer_pub p,makieta m where p.xx=vpub_xx and p.mak_xx=m.xx)
-        and exists (select 1 from eps_present_log e2 where e2.xx>e.xx and e2.adno=e.adno and e2.kiedy=e.kiedy and e2.contentid=e.contentid and e2.ope_xx=e.ope_xx);
+            select p.adno,m.kiedy,get_cid(p.xx),13 from spacer_pub p,makieta m where p.xx=vpub_xx and p.mak_xx=m.xx);
+
+     insert into eps_present_log (adno,kiedy,contentid,ope_xx) 
+          select p.adno,m.kiedy,get_cid(p.xx),13 from spacer_pub p,makieta m where p.xx=vpub_xx and p.mak_xx=m.xx;
   end request_prod_info;
 
   procedure log_workflow (

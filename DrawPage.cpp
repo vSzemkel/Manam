@@ -598,20 +598,20 @@ void CDrawPage::SetNr(const int i)
 
 void CDrawPage::UpdateInfo()
 {
-    info.Format(_T("Strona %s %s"), GetNrPaginy(), caption);
-    if (!name.IsEmpty()) info.AppendFormat(_T(" - %s"), name);
+    info.Format(_T("Strona %s %s"), (LPCTSTR)GetNrPaginy(), (LPCTSTR)caption);
+    if (!name.IsEmpty()) info.AppendFormat(_T(" - %s"), (LPCTSTR)name);
     if (m_pDocument->iDocType != DocType::grzbiet_drukowany && (kolor & ColorId::spot) > 0)
-        info.AppendFormat(_T(" | %s"), CDrawDoc::kolory[m_pDocument->m_spot_makiety[kolor >> 3]]); // w kolory 0-brak, 1==full
-    info.AppendFormat(_T(" | %s"), m_deadline.Format(c_ctimeCzas));
+        info.AppendFormat(_T(" | %s"), (LPCTSTR)CDrawDoc::kolory[m_pDocument->m_spot_makiety[kolor >> 3]]); // w kolory 0-brak, 1==full
+    info.AppendFormat(_T(" | %s"), (LPCTSTR)m_deadline.Format(c_ctimeCzas));
     if (!m_dervinfo.IsEmpty())
-        info.AppendFormat(_T(" | %s"), m_dervinfo);
+        info.AppendFormat(_T(" | %s"), (LPCTSTR)m_dervinfo);
     if (!this->mutred.IsEmpty()) {
         CString mr;
         int ilePokazac = 30, mutredLen = mutred.GetLength();
         if (ilePokazac > mutredLen) ilePokazac = mutredLen;
         for (int i = 0; i < ilePokazac; i += 2)
-            mr.AppendFormat(_T(", %s"), mutred.Mid(i, 2));
-        info.AppendFormat(_T(" | redakcyjna: %s"), mr.Mid(2));
+            mr.AppendFormat(_T(", %s"), (LPCTSTR)mutred.Mid(i, 2));
+        info.AppendFormat(_T(" | redakcyjna: %s"), (LPCTSTR)mr.Mid(2));
         if (mutredLen > 30) info.Append(_T("..."));
     }
 }
@@ -933,11 +933,11 @@ bool CDrawPage::StaleElementy(PGENEPSARG pArg, CFile& handle)
                 elem.Format(_T("%.3f %.3f translate\r\n"), x, y); handle.Write(CStringA(elem), elem.GetLength());
                 CString logo = theApp.GetProfileString(_T("GenEPS"), _T("EpsSrc"), _T(""));
                 logo += CString(((logo.Right(1) == "\\") ? "" : "\\")) + "logo\\" + logoName;
-                elem.Format(_T("beginManamEPS\r\n%%%%BeginDocument: %s\r\n"), logo); handle.Write(CStringA(elem), elem.GetLength());
+                elem.Format(_T("beginManamEPS\r\n%%%%BeginDocument: %s\r\n"), (LPCTSTR)logo); handle.Write(CStringA(elem), elem.GetLength());
 
                 if (theApp.isOpiMode) {
                     auto buf = reinterpret_cast<char*>(pArg->cBigBuf);
-                    StringCchPrintfA(buf, n_size, "%sLG %s\r\n", OPI_TAG, CStringA(logoName));
+                    StringCchPrintfA(buf, n_size, "%sLG %s\r\n", OPI_TAG, (LPCSTR)CStringA(logoName));
                     handle.Write(buf, (UINT)strlen(buf));
                 } else
                     CDrawAdd::EmbedEpsFile(pArg, handle, logo);
@@ -1015,7 +1015,7 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
     bool isDrobEPS = name.Find(_T("DR")) > -1;
     const bool fileWarn = GetDestName(pArg, num, dest_name);
     CString sUid;
-    sUid.Format(_T(" guid: %s"), GenerateGUIDString());
+    sUid.Format(_T(" guid: %s"), (LPCTSTR)GenerateGUIDString());
     const char* const tofind[] = { "%!PS-Adobe-3.1 EPSF-3.0", "%%BoundingBox:", "%%Creator:", "%%Title:", "%%CreationDate:", "%%Copyright:", "%%DocumentProcessColors:", "MIEJSCE_NA_EPS" };
     CStringA towrite[7];
     towrite[0] = "%!PS-Adobe-3.1";
@@ -1078,8 +1078,10 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
             int dervNum;
             CString sdervNum;
             if (_stscanf_s(m_dervinfo.Mid(7), _T("%i"), &dervNum) == 1)
-                sdervNum.Format(_T("%s%03i"), theApp.activeDoc->dayws, dervNum);
-            uzupEpsPath += (((uzupEpsPath.Right(1) == "\\") ? "" : "\\") + m_dervinfo.Left(3) + m_dervinfo.Mid(4, 2) + sdervNum + _T(".eps"));
+                sdervNum.Format(_T("%s%03i"), (LPCTSTR)theApp.activeDoc->dayws, dervNum);
+            if (uzupEpsPath.Right(1) != '\\')
+                uzupEpsPath += '\\';
+            uzupEpsPath.AppendFormat(_T("%s%s%s%s"), (LPCTSTR)m_dervinfo.Left(3), (LPCTSTR)m_dervinfo.Mid(4, 2), (LPCTSTR)sdervNum, _T(".eps"));
             if (externFile.Open(uzupEpsPath, CFile::modeRead | CFile::shareDenyWrite, &fEx)) {
                 isUzupEPS = true;
                 externFile.Close();
@@ -1262,14 +1264,14 @@ bool CDrawPage::MovePageToOpiServer(PGENEPSARG pArg, CMemFile&& pOpiFile) const
     const CString sAppId(APP_NAME + theApp.m_app_version);
     const CStringA attachmentName(pOpiFile.GetFileName());
     const CStringA sOpiLine = "--" + sOpiSeparator + "--\r\n";
-    sFormData.Format("--%s\r\nContent-Disposition: form-data; name=\"", sOpiSeparator);
-    sFormBody.AppendFormat("%suser\"\r\n\r\n%s\r\n", sFormData, CStringA(theManODPNET.m_userName));
-    sFormBody.AppendFormat("%sdaydir\"\r\n\r\n%s\r\n", sFormData, CStringA(m_pDocument->dayws));
-    sFormBody.AppendFormat("%sftype\"\r\n\r\nPAGE\r\n", sFormData);
-    sFormBody.AppendFormat("%sfname\"\r\n\r\n%s\r\n", sFormData, attachmentName);
-    sFormBody.AppendFormat("%sfsize\"\r\n\r\n%llu\r\n", sFormData, attachmentLength);
-    sFormBody.AppendFormat("%sversion\"\r\n\r\n%s\r\n", sFormData, CStringA(sAppId));
-    sFormBody.AppendFormat("%sfile\"; filename=\"%s\"\r\nContent-Type: application/postscript\r\n\r\n", sFormData, attachmentName);
+    sFormData.Format("--%s\r\nContent-Disposition: form-data; name=\"", (LPCSTR)sOpiSeparator);
+    sFormBody.AppendFormat("%suser\"\r\n\r\n%s\r\n", (LPCSTR)sFormData, (LPCSTR)CStringA(theManODPNET.m_userName));
+    sFormBody.AppendFormat("%sdaydir\"\r\n\r\n%s\r\n", (LPCSTR)sFormData, (LPCSTR)CStringA(m_pDocument->dayws));
+    sFormBody.AppendFormat("%sftype\"\r\n\r\nPAGE\r\n", (LPCSTR)sFormData);
+    sFormBody.AppendFormat("%sfname\"\r\n\r\n%s\r\n", (LPCSTR)sFormData, (LPCSTR)attachmentName);
+    sFormBody.AppendFormat("%sfsize\"\r\n\r\n%llu\r\n", (LPCSTR)sFormData, (LPCSTR)attachmentLength);
+    sFormBody.AppendFormat("%sversion\"\r\n\r\n%s\r\n", (LPCSTR)sFormData, (LPCSTR)CStringA(sAppId));
+    sFormBody.AppendFormat("%sfile\"; filename=\"%s\"\r\nContent-Type: application/postscript\r\n\r\n", (LPCSTR)sFormData, (LPCSTR)attachmentName);
 
     INTERNET_PORT nPort;
     DWORD dwServiceType;

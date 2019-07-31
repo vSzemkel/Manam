@@ -108,7 +108,7 @@ CDrawDoc::CDrawDoc() :
     isRO(0), isSIG(0), isACD(0),
     data(CTime::GetCurrentTime().Format(c_ctimeData))
 {
-    m_pagerow_size = 10 + 2 * theApp.GetProfileInt(_T("General"), _T("PagesInRow"), 0);
+    m_pagerow_size = static_cast<uint16_t>(10 + 2 * theApp.GetProfileInt(_T("General"), _T("PagesInRow"), 0));
     // font
     LOGFONT lf { 0 };
     lf.lfHeight = theApp.GetProfileInt(_T("Settings"), _T("PageFontSize"), -11);  //~8pt
@@ -117,13 +117,13 @@ CDrawDoc::CDrawDoc() :
     lf.lfCharSet = EASTEUROPE_CHARSET;
     lf.lfOutPrecision = OUT_DEVICE_PRECIS;
     lf.lfClipPrecision = CLIP_LH_ANGLES;
-    ::StringCchCopy((wchar_t*)lf.lfFaceName, 32, theApp.GetProfileString(_T("Settings"), _T("PageFontFace"), _T("Arial Narrow")));
+    ::StringCchCopy(lf.lfFaceName, 32, theApp.GetProfileString(_T("Settings"), _T("PageFontFace"), _T("Arial Narrow")));
     if (!m_pagefont.CreateFontIndirect(&lf))
         m_pagefont.CreateStockObject(SYSTEM_FONT);
 
     lf.lfHeight = theApp.GetProfileInt(_T("Settings"), _T("AddFontSize"), -5);  //~4pt
     lf.lfPitchAndFamily = FF_SWISS | VARIABLE_PITCH;
-    ::StringCchCopy((wchar_t*)lf.lfFaceName, 32, theApp.GetProfileString(_T("Settings"), _T("AddFontFace"), _T("Small Fonts")));
+    ::StringCchCopy(lf.lfFaceName, 32, theApp.GetProfileString(_T("Settings"), _T("AddFontFace"), _T("Small Fonts")));
     if (!m_addfont.CreateFontIndirect(&lf))
         m_addfont.CreateStockObject(SYSTEM_FONT);
     m_grzbietMenu.LoadMenu(IDR_MENUGRZBIET);

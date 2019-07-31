@@ -69,7 +69,8 @@ CDrawApp NEAR theApp;
 CDrawApp::CDrawApp() : m_InternetSession(APP_NAME)
 {
     BYTE i, *p = static_cast<BYTE*>(::LockResource(::LoadResource(nullptr, ::FindResource(nullptr, (LPCTSTR)VS_VERSION_INFO, RT_VERSION))));
-    for (i = 0, p += 36; *((WORD*)p) == 0 && i < 4; p += 2, i++); // 36 == 3*WORD + sizeof(L"VS_VERSION_INFO")
+    for (i = 0, p += 36; *((WORD*)p) == 0 && i < 4; p += 2, i++)
+        ; // 36 == 3*WORD + sizeof(L"VS_VERSION_INFO")
     auto ffi = reinterpret_cast<VS_FIXEDFILEINFO*>(p);
     m_app_version.Format(_T(" %u.%u.%u.%u"), (ffi->dwFileVersionMS & 0xffff0000) >> 16, (ffi->dwFileVersionMS & 0x0000ffff), (ffi->dwFileVersionLS & 0xffff0000) >> 16, (ffi->dwFileVersionLS & 0x0000ffff));
 }
@@ -91,7 +92,7 @@ BOOL CDrawApp::InitInstance()
 
     SetRegistryKey(_T("(c) Marcin Buchwald"));
 
-    LoadStdProfileSettings(10);  // Load standard INI file options (including MRU)
+    LoadStdProfileSettings(10); // Load standard INI file options (including MRU)
 
     FromIniFile();
 
@@ -118,11 +119,11 @@ BOOL CDrawApp::InitInstance()
     EnableShellOpen();
     RegisterShellFileTypes();
 
-    // simple command line parsing 
+    // simple command line parsing
     m_nCmdShow = SW_SHOWMAXIMIZED;
     pMainFrame->ShowWindow(m_nCmdShow);
 
-    // wielki bufor tekstowy 
+    // wielki bufor tekstowy
     bigBuf = static_cast<TCHAR*>(::VirtualAlloc(nullptr, bigSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
     if (!bigBuf) {
         AfxMessageBox(_T("Zbyt ma³o pamiêci do uruchomienia aplikacji"), MB_ICONSTOP);
@@ -148,9 +149,9 @@ BOOL CDrawApp::InitInstance()
     disableMenu = FALSE;
 
     if (m_lpCmdLine[0])
-        OpenDocumentFile(m_lpCmdLine); 	// open an existing document
+        OpenDocumentFile(m_lpCmdLine); // open an existing document
 
-    OnIdle(0);  // updates buttons before showing the window
+    OnIdle(0); // updates buttons before showing the window
     SetRegistryBase(_T(""));
 
     return TRUE;
@@ -176,12 +177,12 @@ int CDrawApp::ExitInstance()
     WriteInt(_T("Wydruk"), colsPerPage);
     WriteInt(_T("ShowDeadline"), showDeadline);
     WriteInt(_T("ShowAcDeadline"), showAcDeadline);
-    WriteInt(_T("ribbonStyle"), (int)ribbonStyle);
+    WriteInt(_T("ribbonStyle"), static_cast<int>(ribbonStyle));
     WriteInt(_T("initZoom"), m_initZoom);
 
     SetRegistryBase(_T("GenEPS"));
-    WriteInt(_T("OpiMode"), (int)isOpiMode);
-    WriteInt(_T("ParallelGen"), (int)isParalellGen);
+    WriteInt(_T("OpiMode"), static_cast<int>(isOpiMode));
+    WriteInt(_T("ParallelGen"), static_cast<int>(isParalellGen));
 
     for (const auto& b : CDrawDoc::brushe)
         delete b;
@@ -233,7 +234,7 @@ bool CDrawApp::ConnecttoDB()
     if (en == NO_ERROR)
         for (unsigned int row = 0; row < pift->dwNumEntries; ++row) {
             pifr = &pift->table[row];
-            if (pifr->dwPhysAddrLen == 6 && pifr->dwOperStatus == MIB_IF_OPER_STATUS_OPERATIONAL) {//&& jest polaczona
+            if (pifr->dwPhysAddrLen == 6 && pifr->dwOperStatus == MIB_IF_OPER_STATUS_OPERATIONAL) { //&& jest polaczona
                 mac.Format(_T("%02X%02X%02X%02X%02X%02X"), pifr->bPhysAddr[0], pifr->bPhysAddr[1], pifr->bPhysAddr[2], pifr->bPhysAddr[3], pifr->bPhysAddr[4], pifr->bPhysAddr[5]);
                 break;
             }
@@ -242,7 +243,7 @@ bool CDrawApp::ConnecttoDB()
     // pobierz wersjê programu
     CString sClientInfo;
     m_local_ip = inet_ntoa(ia);
-    sClientInfo.Format(_T("%s %u %s%s"), m_local_ip, m_manam_port, APP_NAME, m_app_version);
+    sClientInfo.Format(_T("%s %u %s%s"), (LPCTSTR)m_local_ip, m_manam_port, APP_NAME, (LPCTSTR)m_app_version);
 
     int gru_xx;
     CString adapter(en == NO_ERROR && pifr ? reinterpret_cast<char*>(pifr->bDescr) : "VPN?");
@@ -281,7 +282,7 @@ bool CDrawApp::ConnecttoDB()
         AfxMessageBox(errinfo + _T(". Zadzwoñ do Centrum i poproœ o jego zmianê lub u¿yj opcji Makieta->Administracja->Zmiana has³a"));
     }
 
-    ((CMainFrame*)m_pMainWnd)->SetLogonStatus(msg);
+    static_cast<CMainFrame*>(m_pMainWnd)->SetLogonStatus(msg);
     return true;
 }
 
@@ -380,7 +381,7 @@ void CDrawApp::OnAppAbout()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CDrawApp commands 
+// CDrawApp commands
 
 void CDrawApp::OnDisableMenu(CCmdUI* pCmdUI)
 {
@@ -398,7 +399,7 @@ void CDrawApp::OnLogin()
     if (!SaveAllModified()) return; // zapisz zmiany
 
     disableMenu = TRUE;
-    CMDIChildWnd *vWnd; // pozamykaj okna
+    CMDIChildWnd* vWnd; // pozamykaj okna
     auto mainFrame = reinterpret_cast<CMainFrame*>(m_pMainWnd);
     while (vWnd = mainFrame->MDIGetActive())
         vWnd->DestroyWindow();
@@ -426,7 +427,7 @@ void CDrawApp::OnFileRefresh()
 
 void CDrawApp::FileRefresh(CDrawDoc* refreshDoc)
 {
-    CMDIChildWnd *vWnd;	// pozamykaj okna
+    CMDIChildWnd* vWnd; // pozamykaj okna
     CByteArray aIsRO, aSwCZV;
     std::vector<CString> doce, tytuly;
 
@@ -444,11 +445,12 @@ void CDrawApp::FileRefresh(CDrawDoc* refreshDoc)
             aSwCZV.Add((BYTE)vDoc->swCZV);
             CString d{vDoc->data};
             if (vDoc->iDocType != DocType::makieta_lib) {
-                d.SetAt(2, '-'); d.SetAt(5, '-');
+                d.SetAt(2, '-');
+                d.SetAt(5, '-');
             }
             if (vDoc->m_mak_xx < 0 && vDoc->iDocType != DocType::grzbiet_drukowany) // offline
                 doce.emplace_back(vDoc->GetPathName());
-            else // online 
+            else // online
                 doce.emplace_back(vDoc->gazeta + _T('_') + d + CDrawDoc::asDocTypeExt[static_cast<int8_t>(vDoc->iDocType)]);
 
             tytuly.emplace_back(vDoc->GetTitle());
@@ -465,7 +467,7 @@ void CDrawApp::FileRefresh(CDrawDoc* refreshDoc)
     }
     OPENRO = FALSE;
     initCZV = ToolbarMode::normal;
-    (grupa&UserRole::dea) ? ((CMDIFrameWnd*)m_pMainWnd)->MDICascade() : ((CMDIFrameWnd*)m_pMainWnd)->MDITile(MDITILE_HORIZONTAL);
+    (grupa & UserRole::dea) ? static_cast<CMDIFrameWnd*>(m_pMainWnd)->MDICascade() : static_cast<CMDIFrameWnd*>(m_pMainWnd)->MDITile(MDITILE_HORIZONTAL);
 }
 
 void CDrawApp::OnFileDBOpenRO()
@@ -708,7 +710,7 @@ bool CDrawApp::TryUpgradeImage() const
 {
     CString cmdLine(::GetCommandLine()), sBackupImage;
     cmdLine = cmdLine.Mid(1, cmdLine.Find(_T(".exe")) + 3);
-    sBackupImage.Format(_T("%s%s.exe"), cmdLine.Left(cmdLine.GetLength() - 4), m_app_version);
+    sBackupImage.Format(_T("%s%s.exe"), (LPCTSTR)cmdLine.Left(cmdLine.GetLength() - 4), (LPCTSTR)m_app_version);
     // nie wiadomo, czy mamy prawo do systemu plików
     if (!::MoveFileEx(cmdLine, sBackupImage, MOVEFILE_REPLACE_EXISTING))
         return false;
