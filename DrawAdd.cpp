@@ -1877,7 +1877,7 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
 
     ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", -x1, -y1); dest.Write(s, (UINT)strlen(s));
     ::StringCchPrintfA(s, n_size, "%.2f %.2f %.2f %.2f clipEPS \r\nclip newpath\r\n", x1, y1, x2 - x1, y2 - y1); dest.Write(s, (UINT)strlen(s));
-    ::StringCchPrintfA(s, n_size, "%%%%BeginDocument: %s\r\n", CStringA(eps_name)); dest.Write(s, (UINT)strlen(s));
+    ::StringCchPrintfA(s, n_size, "%%%%BeginDocument: %s\r\n", (LPCSTR)CStringA(eps_name)); dest.Write(s, (UINT)strlen(s));
     dest.Flush();
 
     if (theApp.isOpiMode) {

@@ -316,7 +316,7 @@ void CDrawView::OnDraw(CDC* pDC)
     ASSERT_VALID(pDoc);
 
     CBitmap bitmap;
-    CBitmap *pOldBitmap;
+    CBitmap* pOldBitmap;
 
     // only paint the rect that needs repainting
     CRect client;
@@ -397,7 +397,7 @@ BOOL CDrawView::IsSelected(const CObject* pDocItem) const
 void CDrawView::OnCancelEdit()
 {
     // deactivate any in-place active item on this view!
-    COleClientItem *pActiveItem = GetDocument()->GetInPlaceActiveItem(this);
+    COleClientItem* pActiveItem = GetDocument()->GetInPlaceActiveItem(this);
     if (pActiveItem != nullptr) {
         // if we found one, deactivate it
         pActiveItem->Close();
@@ -416,7 +416,7 @@ void CDrawView::OnCancelEdit()
 
 void CDrawView::OnSetFocus(CWnd* pOldWnd)
 {
-    COleClientItem *pActiveItem = GetDocument()->GetInPlaceActiveItem(this);
+    COleClientItem* pActiveItem = GetDocument()->GetInPlaceActiveItem(this);
     if (pActiveItem != nullptr &&
         pActiveItem->GetItemState() == COleClientItem::activeUIState) {
         // need to set focus to this item if it is in the same view
@@ -477,22 +477,23 @@ void CDrawView::Select(CDrawObj* pObj, const bool bAdd)
 
         auto pPage = dynamic_cast<CDrawPage *>(pObj);
         if (bAdd && pPage) {
+            const auto& pages = GetDocument()->m_pages;
             const int iHitPos = GetDocument()->GetIPage(pPage);
-            for (int i = iHitPos - 1; i >= 0; i--)
-                if (IsSelected(GetDocument()->m_pages[i]))
+            for (int i = iHitPos - 1; i >= 0; --i)
+                if (IsSelected(pages[i]))
                     for (int j = i + 1; j < iHitPos; ++j)
-                        Select((CDrawObj *)GetDocument()->m_pages[j], true);
-            const auto pc = (int)GetDocument()->m_pages.size();
+                        Select((CDrawObj *)pages[j], true);
+            const auto pc = (int)pages.size();
             for (int i = iHitPos + 1; i < pc; ++i)
-                if (IsSelected(GetDocument()->m_pages[i]))
+                if (IsSelected(pages[i]))
                     for (int j = iHitPos + 1; j < i; ++j)
-                        Select((CDrawObj *)GetDocument()->m_pages[j], true);
+                        Select((CDrawObj *)pages[j], true);
         }
     }
 
     m_selection.push_back(pObj);
     InvalObj(pObj);
-    GetDocument()->UpdateAllViews(this, HINT_UPDATE_GRID, (CDrawAdd *)pObj); //zeby grid zareagowal
+    GetDocument()->UpdateAllViews(this, HINT_UPDATE_GRID, (CDrawAdd *)pObj);
 }
 
 // rect is in device coordinates
@@ -709,8 +710,7 @@ void CDrawView::OnEditClear()
 
     // now remove the selection from the document
     for (auto& pObj : m_selection) {
-        auto pAdd = dynamic_cast<CDrawAdd *>(pObj);
-        if (pAdd) {
+        if (auto pAdd = dynamic_cast<CDrawAdd *>(pObj)) {
             if (pAdd->flags.derived) continue;
             if (pAdd->m_add_xx > 0) {
                 AfxMessageBox(_T("Wska¿ emisje przeznaczone do usuniêcia"), MB_ICONINFORMATION | MB_OK);
@@ -718,8 +718,7 @@ void CDrawView::OnEditClear()
             }
             to_tell = true;
         } else {
-            auto pPage = dynamic_cast<CDrawPage *>(pObj);
-            if (pPage) {
+            if (auto pPage = dynamic_cast<CDrawPage *>(pObj)) {
                 if (pPage->m_dervlvl == DervType::adds && !pPage->m_adds.empty())
                     continue;
                 if (std::any_of(pPage->m_adds.cbegin(), pPage->m_adds.cend(), [](auto pAdd) noexcept { return pAdd->flags.derived > 0; }))
@@ -1526,7 +1525,7 @@ BOOL CDrawView::ModifyMutczas(const int n)
         pPage->m_mutczas += n;
         int pos = pPage->m_dervinfo.ReverseFind('a');
         CString cs;
-        cs.Format(_T("%s %i)"), pPage->m_dervinfo.Left(++pos), pPage->m_mutczas);
+        cs.Format(_T("%s %i)"), (LPCTSTR)pPage->m_dervinfo.Left(++pos), pPage->m_mutczas);
         pPage->m_dervinfo = cs;
         pPage->UpdateInfo();
         GetDocument()->SetModifiedFlag();
@@ -1546,7 +1545,7 @@ BOOL CDrawView::OnCommand(WPARAM wParam, LPARAM lParam)
 void CDrawView::OnIrfan() // single Add selected
 {
     CString eps_name = dynamic_cast<CDrawAdd*>(m_selection.front())->EpsName(CManFormat::EPS, false);
-    if (eps_name.Mid(1, 1) != _T(":")) {
+    if (eps_name.Mid(1, 1) != _T(':')) {
         AfxMessageBox(_T("Preview niedostêpne. Brak materia³u"));
         return;
     }
@@ -1554,7 +1553,7 @@ void CDrawView::OnIrfan() // single Add selected
     if (irfDir.IsEmpty())
         AfxMessageBox(_T("Ustaw œcie¿kê do IrfanView"));
     else
-        _wspawnl(_P_DETACH, irfDir + _T("\\i_view32"), _T("i_view32"), eps_name, NULL);
+        _wspawnl(_P_DETACH, (LPCTSTR)(irfDir + _T("\\i_view32")), (LPCTSTR)_T("i_view32"), (LPCTSTR)eps_name, NULL);
 }
 
 void CDrawView::OnPrevKolumnaDruk() // single Page selected
@@ -1562,7 +1561,7 @@ void CDrawView::OnPrevKolumnaDruk() // single Page selected
     CString sURL;
     auto pPage = dynamic_cast<CDrawPage *>(m_selection.front());
     const int iNrPorz = theApp.activeDoc->GetIPage(pPage);
-    sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s&nrstrony=%i&format=pdf&rozmiar=1"), theApp.activeDoc->gazeta.Left(3), theApp.activeDoc->gazeta.Mid(4, 2), theApp.activeDoc->dayws, iNrPorz == 0 ? (int)theApp.activeDoc->m_pages.size() : iNrPorz);
+    sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s&nrstrony=%i&format=pdf&rozmiar=1"), (LPCTSTR)theApp.activeDoc->gazeta.Left(3), (LPCTSTR)theApp.activeDoc->gazeta.Mid(4, 2), (LPCTSTR)theApp.activeDoc->dayws, iNrPorz == 0 ? (int)theApp.activeDoc->m_pages.size() : iNrPorz);
     CDrawApp::OpenWebBrowser(4, sURL);
 }
 
@@ -1589,20 +1588,20 @@ void CDrawView::OnPrevPdf() // single Add or Page selected
                 if (status < -1)
                     AfxMessageBox(_T("Ten materia³ nie zosta³ dopuszczony do druku przez EpsTest"));
                 if (sUrl.Find(_T('?')) < 0)
-                    sUrl.AppendFormat(_T("?date=%s&nreps=%li&name=%s"), doc->dayws, pAdd->nreps, doc->gazeta.Left(3) + doc->gazeta.Mid(4, 2));
+                    sUrl.AppendFormat(_T("?date=%s&nreps=%li&name=%s"), (LPCTSTR)doc->dayws, pAdd->nreps, (LPCTSTR)(doc->gazeta.Left(3) + doc->gazeta.Mid(4, 2)));
             }
         } else {
             int d, m, r;
             _stscanf_s(doc->data, c_formatDaty, &d, &m, &r);
             CTime tEdycja(r, m, d, 0, 0, 0);
             if (tEdycja > CTime::GetCurrentTime()) {
-                AfxMessageBox(doc->symWydawcy == _T("-") ? _T("Brak zsy³aj¹cego") : _T("Brak materia³u"));
+                AfxMessageBox(doc->symWydawcy == _T('-') ? _T("Brak zsy³aj¹cego") : _T("Brak materia³u"));
                 return;
             }
-            sUrl.Format(IDS_ARCH_URL, tEdycja.Format(c_ctimeDataWs), pAdd->nreps);
+            sUrl.Format(IDS_ARCH_URL, (LPCTSTR)tEdycja.Format(c_ctimeDataWs), pAdd->nreps);
         }
     } else // powtorka jest pokazywana z katalogu docelowego
-        sUrl.Format(IDS_ARCH_URL, doc->dayws, pAdd->nreps);
+        sUrl.Format(IDS_ARCH_URL, (LPCTSTR)doc->dayws, pAdd->nreps);
 
     if (sUrl.IsEmpty())
         AfxMessageBox(_T("Brak materia³u"));
@@ -1620,9 +1619,9 @@ void CDrawView::OnPrevDig()
 
     CString dataSepia = GetDocument()->data;
     auto buf = reinterpret_cast<char *>(theApp.bigBuf);
-    dataSepia = dataSepia.Mid(6) + "-" + dataSepia.Mid(3, 2) + "-" + dataSepia.Mid(0, 2);
-    CString sURL, sUrlTemplate = _T("adno=%li&kiedy=%s");
-    sURL.Format(sUrlTemplate, pAdd->nreps, dataSepia);
+    dataSepia = dataSepia.Mid(6) + '-' + dataSepia.Mid(3, 2) + '-' + dataSepia.Mid(0, 2);
+    CString sURL;
+    sURL.Format(_T("adno=%li&kiedy=%s"), pAdd->nreps, (LPCTSTR)dataSepia);
     auto pFile = theApp.OpenURL(5, sURL);
     if (pFile) {
         const auto iXmlLen = pFile->Read(buf, bigSize);
@@ -1663,7 +1662,7 @@ void CDrawView::OnPrevDig()
         AfxMessageBox(_T("Brak skojarzenia z .xmlw"), MB_ICONERROR);
 }
 
-void CDrawView::OnAtexSyg() //single Add selected
+void CDrawView::OnAtexSyg() // single Add selected
 {
     auto pAdd = dynamic_cast<CDrawAdd *>(m_selection.front());
     if (pAdd->nreps < MIN_VALID_ADNO) {
@@ -1672,7 +1671,7 @@ void CDrawView::OnAtexSyg() //single Add selected
     }
 
     CString sUrl;
-    sUrl.Format(_T("t=%s&m=%s&k=%s&a=%li"), GetDocument()->gazeta.Left(3), pAdd->flags.derived ? "RP" : GetDocument()->gazeta.Mid(4, 2), GetDocument()->data, pAdd->nreps);
+    sUrl.Format(_T("t=%s&m=%s&k=%s&a=%li"), (LPCTSTR)GetDocument()->gazeta.Left(3), (LPCTSTR)(pAdd->flags.derived ? _T("RP") : GetDocument()->gazeta.Mid(4, 2)), (LPCTSTR)GetDocument()->data, pAdd->nreps);
     CDrawApp::OpenWebBrowser(7, sUrl);
 }
 

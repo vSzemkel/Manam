@@ -1373,8 +1373,9 @@ BOOL CDrzDlg::OnInitDialog()
         m_kol_combo.AddString(fstr);
     }
     m_kol_combo.SelectString(0, m_ile_kolumn);
-    m_kiedy.SetTime(&CTime::GetCurrentTime());
-    SelectDrzewo(CTime::GetCurrentTime());
+    const auto ct = CTime::GetCurrentTime();
+    m_kiedy.SetTime(&ct);
+    SelectDrzewo(ct);
     m_drz_combo.SetCurSel(0);
     return TRUE;
 }
@@ -1790,9 +1791,8 @@ void CAddFindDlg::OnUpdateNr()
     GetDlgItem(IDC_NR)->GetWindowText(typed);
     if (typed.IsEmpty()) return;
 
-    for (const auto& pObj : *m_pObList) {
-        auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
-        if (pAdd) {
+    for (const auto& pObj : *m_pObList)
+        if (auto pAdd = dynamic_cast<CDrawAdd*>(pObj)) {
             match.Format(_T("%ld"), pAdd->nreps);
             if (typed == match.Left(typed.GetLength())) {
                 matchingUpdate = true;
@@ -1803,7 +1803,6 @@ void CAddFindDlg::OnUpdateNr()
                 return;
             }
         }
-    }
 }
 /////////////////////////////////////////////////////////////////////////////
 // CInfoDlgLib dialog
@@ -2512,8 +2511,8 @@ void CDirDaysDlg::OnCab()
     while (l_odkiedy <= m_dokiedy) {
         if (l_odkiedy.GetDayOfWeek() == 1) continue; // w niedziele nie
         sZip = l_odkiedy.Format(c_ctimeDataWs);
-        sPath = m_path + sZip + "\\";
-        _spawnlp(_P_NOWAIT, "zip", "zip", "-j", m_path + sZip, sPath + "*.eps", sPath + "*.pdf", NULL);
+        sPath.AppendFormat(_T("%s%s\\"), (LPCTSTR)m_path, (LPCTSTR)sZip);
+        _spawnlp(_P_NOWAIT, "zip", "zip", "-j", (LPCTSTR)(m_path + sZip), (LPCTSTR)(sPath + "*.eps"), (LPCTSTR)(sPath + "*.pdf"), NULL);
         l_odkiedy += m_oneday;
     }
     ::WriteProfileString(_T("GenEPS"), _T("DayDirsRoot"), m_path);
@@ -3014,7 +3013,7 @@ BOOL CAboutDlg::OnInitDialog()
     CDialog::OnInitDialog();
 
     CString s;
-    s.Format(ID_APP_ABOUT, APP_NAME, theApp.m_app_version,
+    s.Format(ID_APP_ABOUT, APP_NAME, (LPCTSTR)theApp.m_app_version,
 #ifdef _WIN64
              _T("64"));
 #else

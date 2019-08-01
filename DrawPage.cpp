@@ -1269,7 +1269,7 @@ bool CDrawPage::MovePageToOpiServer(PGENEPSARG pArg, CMemFile&& pOpiFile) const
     sFormBody.AppendFormat("%sdaydir\"\r\n\r\n%s\r\n", (LPCSTR)sFormData, (LPCSTR)CStringA(m_pDocument->dayws));
     sFormBody.AppendFormat("%sftype\"\r\n\r\nPAGE\r\n", (LPCSTR)sFormData);
     sFormBody.AppendFormat("%sfname\"\r\n\r\n%s\r\n", (LPCSTR)sFormData, (LPCSTR)attachmentName);
-    sFormBody.AppendFormat("%sfsize\"\r\n\r\n%llu\r\n", (LPCSTR)sFormData, (LPCSTR)attachmentLength);
+    sFormBody.AppendFormat("%sfsize\"\r\n\r\n%llu\r\n", (LPCSTR)sFormData, attachmentLength);
     sFormBody.AppendFormat("%sversion\"\r\n\r\n%s\r\n", (LPCSTR)sFormData, (LPCSTR)CStringA(sAppId));
     sFormBody.AppendFormat("%sfile\"; filename=\"%s\"\r\nContent-Type: application/postscript\r\n\r\n", (LPCSTR)sFormData, (LPCSTR)attachmentName);
 

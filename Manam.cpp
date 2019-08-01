@@ -277,7 +277,8 @@ bool CDrawApp::ConnecttoDB()
     }
 
     if (!errinfo.IsEmpty()) {
-        CManODPNETParms orapar2 { CManDbType::DbTypeVarchar2, &(connDlg.m_loginname + ": " + errinfo) };
+        CString s{connDlg.m_loginname + ": " + errinfo};
+        CManODPNETParms orapar2 { CManDbType::DbTypeVarchar2, &s };
         theManODPNET.EI("call dump_error(:msg)", orapar2);
         AfxMessageBox(errinfo + _T(". Zadzwoñ do Centrum i poproœ o jego zmianê lub u¿yj opcji Makieta->Administracja->Zmiana has³a"));
     }

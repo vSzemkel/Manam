@@ -509,7 +509,7 @@ bool CManPDF::EmbedPDF(CFile& src, const unsigned int objNr, const CDrawAdd& pAd
     xrefOffset = 0L;
     renumMap.clear();
 
-    const unsigned long offset = GetMediaBox(nullptr, &bbx1, &bby1, &bbx2, &bby2, (HANDLE)src.m_hFile);
+    const unsigned long offset = GetMediaBox(nullptr, &bbx1, &bby1, &bbx2, &bby2, src.m_hFile);
     if (offset == 0L) return false;
     StringCchPrintfA(cStore, bigSize, "/BBox [ %.2f %.2f %.2f %.2f ]\x0a", bbx1, bby1, bbx2, bby2);
     trg.Write(cStore, (UINT)strlen(cStore));
@@ -692,8 +692,8 @@ bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* const trgName)
             if (pos >= 0) fname.Delete(0, pos + 1);
             pos = fname.ReverseFind('.');
             if (pos >= 0) fname.Truncate(pos);
-            embAlias.emplace_back("/" + fname);
-            StringCchPrintfA(cStore, bigSize, "/%s %u 0 R\x0a", fname, i - dziury);
+            embAlias.emplace_back('/' + fname);
+            StringCchPrintfA(cStore, bigSize, "/%s %u 0 R\x0a", (LPCSTR)CStringA(fname), i - dziury);
             trg.Write(cStore, (UINT)strlen(cStore));
         }
         trg.Write(">>\x0a", 3); trg.Write("endobj\x0a", 7);
@@ -730,17 +730,17 @@ bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* const trgName)
             auto pRozm = pAdd->m_pDocument->GetCRozm(pAdd->szpalt_x, pAdd->szpalt_y, pAdd->typ_xx);
             const auto px = (float)(mm2pkt * ((pAdd->posx + pAdd->sizex - 1) * (pRozm->w + pRozm->sw) - pRozm->sw));
             const auto py = (float)(-1 * mm2pkt * (pAdd->posy + pAdd->sizey - 1) * (pRozm->h + pRozm->sh) - podpisH);
-            fname.Format(_T("%li%s"), pAdd->nreps, pAdd->wersja);
+            fname.Format(_T("%li%s"), pAdd->nreps, (LPCTSTR)pAdd->wersja);
             // pdf ogloszenia
             if (!embAlias[i - pocz].IsEmpty()) {
-                cs.Format(_T("%s Do\012"), embAlias[i - pocz]);
-                ::StringCchCopyA(&cStore[contentLen], n_size - contentLen, CStringA(cs));
+                cs.Format(_T("%s Do\012"), (LPCTSTR)embAlias[i - pocz]);
+                ::StringCchCopyA(&cStore[contentLen], n_size - contentLen, (LPCSTR)CStringA(cs));
             } else {
                 fname = "Nie odnaleziono pliku: " + fname;
                 const auto w = (float)(mm2pkt * (pAdd->sizex * (pRozm->w + pRozm->sw) - pRozm->sw));
                 const auto h = (float)(mm2pkt * (pAdd->sizey * (pRozm->h + pRozm->sh) - pRozm->sh));
                 cs.Format(_T("q %.2f %.2f %.2f %.2f re S Q\012"), px, py + podpisH, -w, h);
-                ::StringCchCopyA(&cStore[contentLen], n_size - contentLen, CStringA(cs));
+                ::StringCchCopyA(&cStore[contentLen], n_size - contentLen, (LPCSTR)CStringA(cs));
             }
             contentLen += cs.GetLength();
 
@@ -756,7 +756,7 @@ bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* const trgName)
             auto contentBuf = std::make_unique<unsigned char[]>(bigSize);
             if (!contentBuf)
                 throw CManPDFExc(_T("CreatePDF: b³¹d pamiêci przy pakowaniu contentu"));
-            unsigned long initLen = contentLen, pakLen = bigSize;
+            unsigned long pakLen = bigSize;
 #ifndef _WIN64
             if (compress(contentBuf.get(), &pakLen, (unsigned char*)cStore, contentLen))
                 throw CManPDFExc(_T("CreatePDF: b³¹d pakowania contentu"));

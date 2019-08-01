@@ -68,7 +68,7 @@ void CGridFrm::Dump(CDumpContext& dc) const
 
 BOOL CGridFrm::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, const DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, const UINT nID, CCreateContext* pContext)
 {
-    BOOL ret = CFormView::Create(lpszClassName, lpszWindowName, dwStyle, rect, pParentWnd, nID, pContext);
+    const BOOL ret = CFormView::Create(lpszClassName, lpszWindowName, dwStyle, rect, pParentWnd, nID, pContext);
     OnInitialUpdate();
     return ret;
 }
@@ -127,19 +127,18 @@ void CGridFrm::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 
 void CGridFrm::InvalAll()
 {
-    auto pDoc = (CDrawDoc*)GetDocument();
+    auto pDoc = GetDocument();
     ASSERT(pDoc->IsKindOf(RUNTIME_CLASS(CDrawDoc)));
 
     lcPubList.SetRedraw(FALSE);
-    int nRow = 0, ile = pDoc->AddsCount();
+    int nRow = 0;
+    const int ile = pDoc->AddsCount();
     while (lcPubList.GetItemCount() > ile)
         lcPubList.DeleteItem(0);
 
-    for (const auto& pObj : pDoc->m_objects) {
-        auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
-        if (pAdd)
+    for (const auto& pObj : pDoc->m_objects)
+        if (auto pAdd = dynamic_cast<CDrawAdd*>(pObj))
             RefreshRow(nRow++, pAdd);
-    }
 
     CSize sTotalSize = GetTotalSize();
     sTotalSize.cy = ROWHEIGHT*(3 + lcPubList.GetItemCount());
@@ -292,7 +291,7 @@ void CGridFrm::OnShowrept()
             ::StringCchCopy(mutacja, 5, _T("0"));
 
         auto line = reinterpret_cast<char*>(theApp.bigBuf);
-        sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s"), tytul, mutacja, vDoc->data);
+        sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s"), (LPCTSTR)tytul, (LPCTSTR)mutacja, (LPCTSTR)vDoc->data);
         auto pFile = theApp.OpenURL(3, sURL);
         if (pFile) {
             while (pFile->ReadString(theApp.bigBuf, bigSize))
@@ -304,11 +303,10 @@ void CGridFrm::OnShowrept()
                     break;
                 }
                 if (sscanf_s(line, "%li,%s", &adno, kiedypowt, 32) == 2) {
-                    CDrawAdd* ad = vDoc->AddExists(adno);
-                    if (ad) {
+                    if (CDrawAdd* ad = vDoc->AddExists(adno)) {
                         ad->skad_ol = &kiedypowt[11];
                         kiedypowt[10] = '\0';
-                        ad->lastAdnoUsed = kiedypowt;
+                        ad->lastAdnoUsed = (LPCTSTR)kiedypowt;
                     }
                 }
             }

@@ -60,7 +60,7 @@ void CQueView::OnDraw(CDC* pDC)
     ASSERT_VALID(pDoc);
 
     CBitmap bitmap;
-    CBitmap *pOldBitmap;
+    CBitmap* pOldBitmap;
 
     // only paint the rect that needs repainting
     CRect client;

@@ -163,14 +163,14 @@ struct OdpHelper final
         auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
         const BOOL found = odr->HasRows;
         while (odr->Read()) {
-            int i1 = odr->GetInt32(0);
-            int i2 = odr->GetInt32(1);
-            int i3 = odr->GetInt32(2);
-            int i4 = odr->GetInt32(3);
-            int i5 = odr->GetInt32(4);
-            int i6 = odr->GetInt32(5);
-            int i7 = odr->GetInt32(6);
-            int i8 = odr->GetInt32(7);
+            auto i1 = odr->GetInt16(0);
+            auto i2 = odr->GetInt16(1);
+            auto i3 = odr->GetInt16(2);
+            auto i4 = odr->GetInt16(3);
+            auto i5 = odr->GetByte(4);
+            auto i6 = odr->GetByte(5);
+            auto i7 = odr->GetInt32(6);
+            auto i8 = odr->GetByte(7);
             roz.emplace_back(i1, i2, i3, i4, i5, i6, i7, i8); // serialize this
         }
 
@@ -403,7 +403,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
         pPage->wyd_xx = static_cast<UINT>(strCur->GetInt32(22));
         if (m_doc->iDocType == DocType::grzbiet_drukowany) {
             pPage->m_mutczas = strCur->GetInt32(23); // mutczas
-            StringCchPrintf(theApp.bigBuf, bigSize, _T("%s (mutacja %i)"), pPage->m_dervinfo, pPage->m_mutczas);
+            StringCchPrintf(theApp.bigBuf, bigSize, _T("%s (mutacja %i)"), (LPCTSTR)pPage->m_dervinfo, pPage->m_mutczas);
             pPage->m_dervinfo = theApp.bigBuf;
         }
 
@@ -417,7 +417,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
                 ivy = pubCur->GetInt32(11); // sizey
                 szpalt_x = pubCur->GetInt32(4); // szpalt_x
                 szpalt_y = pubCur->GetInt32(5); // szpalt_y
-                const CRect rt(pos, CSize((int)(ivx*modulx), (int)(ivy*(-1)*moduly)));
+                const CRect rt(pos, CSize((int)(ivx * modulx), (int)(ivy * (-1) * moduly)));
                 auto pAdd = new CDrawAdd(rt);
                 pAdd->m_pub_xx = pubCur->GetInt32(0); // xx
                 pAdd->m_add_xx = pubCur->GetInt32(1); // add_xx
@@ -1216,11 +1216,11 @@ BOOL CManODPNET::FillNiekratoweInternal(const int szpalt_x, const int szpalt_y, 
             auto sym = OdpHelper::ReadOdrString(odr, 1);
             m_typ_ogl_combo->AddString(sym);
             typ_xx = odr->GetInt32(0);
-            m_typ_ogl_arr->Add(typ_xx);
+            m_typ_ogl_arr->Add(static_cast<WORD>(typ_xx));
             if (typ == typ_xx)
                 m_typ_ogl_combo->SelectString(0, sym);
-            m_typ_sizex_arr->Add(odr->GetInt32(2));
-            m_typ_sizey_arr->Add(odr->GetInt32(3));
+            m_typ_sizex_arr->Add(odr->GetByte(2));
+            m_typ_sizey_arr->Add(odr->GetByte(3));
             m_typ_precel_arr->emplace_back(OdpHelper::ReadOdrString(odr, 4));
         }
         m_lastErrorMsg.Empty();
@@ -1402,7 +1402,6 @@ BOOL CManODPNET::LoadMakietaDirs(const int idm)
 BOOL CManODPNET::F4(CDrawDoc* doc, CListCtrl* list, const BOOL initialize)
 {
     CString cs;
-    CDrawAdd* vAdd;
     int id, rc = 0;
     auto adnos = gcnew List<int>();
     auto fileIds = gcnew List<int>();
@@ -1417,7 +1416,7 @@ BOOL CManODPNET::F4(CDrawDoc* doc, CListCtrl* list, const BOOL initialize)
             auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
             while (odr->Read()) {
                 id = odr->GetInt32(0);
-                if (vAdd = doc->AddExists(id)) {
+                if (CDrawAdd* vAdd = doc->AddExists(id)) {
                     cs.Format(_T("%i"), id);
                     list->InsertItem(rc, cs, 2);
                     list->SetCheck(rc, FALSE);
@@ -1458,7 +1457,7 @@ BOOL CManODPNET::F4(CDrawDoc* doc, CListCtrl* list, const BOOL initialize)
                     list->SetCheck(i, FALSE);
                     list->SetItem(i, 0, LVIF_IMAGE, _T(""), 2, LVIF_IMAGE, LVIF_IMAGE, 0);
                     list->GetItemText(i, 0, theApp.bigBuf, bigSize);
-                    vAdd = doc->AddExists(_ttol(theApp.bigBuf));
+                    const CDrawAdd* vAdd = doc->AddExists(_ttol(theApp.bigBuf));
                     adnos->Add(vAdd->nreps);
                     fileIds->Add(vAdd->iFileId);
                     ::StringCchPrintf(theApp.bigBuf, n_size, _T("%d"), vAdd->iFileId);

@@ -355,23 +355,19 @@ void CDrawDoc::Print(CDC* pDC)
     for (const auto& p : m_pages)
         p->Print(pDC);
 
-    for (const auto& pObj : m_objects) { // og³oszenia
-        auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
-        if (pAdd) pAdd->Print(pDC);
-    }
+    for (const auto& pObj : m_objects) // og³oszenia
+        if (auto pAdd = dynamic_cast<CDrawAdd*>(pObj))
+            pAdd->Print(pDC);
 
-    for (const auto& pObj : m_objects) { // opisy maj¹ przykrywaæ og³oszenia
-        auto pOpi = dynamic_cast<CDrawOpis*>(pObj);
-        if (pOpi) pOpi->Print(pDC);
-    }
+    for (const auto& pObj : m_objects) // opisy maj¹ przykrywaæ og³oszenia
+        if (auto pOpi = dynamic_cast<CDrawOpis*>(pObj))
+            pOpi->Print(pDC);
 
-    for (const auto& pObj : m_objects) { // a jeszcze na wierzchu nazwa i eps ogl
-        const auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
-        if (pAdd) {
+    for (const auto& pObj : m_objects) // a jeszcze na wierzchu nazwa i eps ogl
+        if (const auto pAdd = dynamic_cast<CDrawAdd*>(pObj)) {
             const CRect& rect = pAdd->GetPrintRect();
             pAdd->DrawDesc(pDC, rect);
         }
-    }
 
     if (!isSIG && theApp.isRDBMS)
         DrawPageCross(pDC);
@@ -438,8 +434,7 @@ void CDrawDoc::RemoveQue(CDrawAdd* pObj)
 
 void CDrawDoc::Remove(CDrawObj* pObj)
 {
-    auto pPage = dynamic_cast<CDrawPage*>(pObj);
-    if (pPage)
+    if (auto pPage = dynamic_cast<CDrawPage*>(pObj))
         RemovePage(pPage);
     else {
         const auto pos = std::find(m_objects.begin(), m_objects.end(), pObj);
@@ -994,11 +989,9 @@ void CDrawDoc::OnExport()
 
     try {
         CStdioFile file(dlg.m_ofn.lpstrFile, CFile::modeWrite | CFile::typeUnicode | CFile::modeCreate);
-        for (const auto& pObj : m_objects) {
-            auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
-            if (pAdd)
+        for (const auto& pObj : m_objects)
+            if (auto pAdd = dynamic_cast<CDrawAdd*>(pObj))
                 file.WriteString(pAdd->PrepareBuf(_T("\t")));
-        }
 
         file.Close();
     } catch (CException* ex) {
@@ -1074,7 +1067,7 @@ bool CDrawDoc::Add4Pages()
     if (dlg.DoModal() != IDOK)
         return false;
 
-    const CRect r{0};
+    const CRect r{};
     const int n = _ttoi(dlg.m_ile_kolumn);
     const auto last = (int)m_pages.size();
     for (int i = last; i < last + n; ++i) {
@@ -1107,7 +1100,7 @@ bool CDrawDoc::AddDrz4Pages(LPCTSTR ile_kolumn)
     gazeta = dlg.m_gazeta;
     id_drw = dlg.m_id_drw;
 
-    const CRect r{0};
+    const CRect r{};
     const int n = _ttoi(dlg.m_ile_kolumn);
     const auto last = (int)m_pages.size();
     for (int i = last; i < last + n; ++i) {
@@ -1197,10 +1190,9 @@ float CDrawDoc::PowAdd2Mod(const bool queryQue) const
         for (const auto& a : m_addsque)
             pow += mod_count(a);
     } else {
-        for (const auto& pObj : m_objects) {
-            auto a = dynamic_cast<CDrawAdd*>(pObj);
-            if (a) pow += mod_count(a);
-        }
+        for (const auto& pObj : m_objects)
+            if (auto a = dynamic_cast<CDrawAdd*>(pObj))
+                pow += mod_count(a);
     }
 
     return nearbyintf(100 * pow) / 100;
@@ -1845,10 +1837,10 @@ void CDrawDoc::OnUpdateSyncpow(CCmdUI* pCmdUI)
 void CDrawDoc::OnDelremarks()
 {
     if (IDYES == AfxMessageBox(_T("Czy usun¹æ uwagi ze wszystkich og³oszeñ"), MB_ICONQUESTION | MB_YESNO)) {
-        for (const auto& pObj : m_objects) {
-            auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
-            if (pAdd) pAdd->remarks.Empty();
-        }
+        for (const auto& pObj : m_objects)
+            if (auto pAdd = dynamic_cast<CDrawAdd*>(pObj)) 
+                pAdd->remarks.Empty();
+
         UpdateAllViews(nullptr);
     }
 }
