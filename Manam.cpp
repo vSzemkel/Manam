@@ -400,10 +400,9 @@ void CDrawApp::OnLogin()
     if (!SaveAllModified()) return; // zapisz zmiany
 
     disableMenu = TRUE;
-    CMDIChildWnd* vWnd; // pozamykaj okna
     auto mainFrame = reinterpret_cast<CMainFrame*>(m_pMainWnd);
-    while (vWnd = mainFrame->MDIGetActive())
-        vWnd->DestroyWindow();
+    while (CMDIChildWnd* vWnd = mainFrame->MDIGetActive())
+        vWnd->DestroyWindow(); // pozamykaj okna
 
     mainFrame->SetLogonStatus(_T("OFFLINE"));
 
@@ -435,8 +434,8 @@ void CDrawApp::FileRefresh(CDrawDoc* refreshDoc)
     // zapisz zmiany
     if (refreshDoc ? !refreshDoc->SaveModified() : !SaveAllModified()) return;
     // zapamiêtaj nazwy i zamknij
-    while (vWnd = ((CMDIFrameWnd*)m_pMainWnd)->MDIGetActive()) {
-        auto vDoc = (CDrawDoc*)((CMDIFrameWnd*)vWnd)->GetActiveDocument();
+    while (vWnd = static_cast<CMDIFrameWnd*>(m_pMainWnd)->MDIGetActive()) {
+        auto vDoc = (CDrawDoc*)vWnd->GetActiveDocument();
         if (refreshDoc && refreshDoc != vDoc) {
             ((CMDIFrameWnd*)m_pMainWnd)->MDINext();
             continue;

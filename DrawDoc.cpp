@@ -165,8 +165,8 @@ void CDrawDoc::OnCloseDocument()
 
     COleDocument::OnCloseDocument();
 
-    if (!(static_cast<CMDIFrameWnd*>(AfxGetMainWnd()))->MDIGetActive())
-        (static_cast<CMainFrame*>(AfxGetMainWnd()))->SetOpenStatus(_T(""));
+    if (!static_cast<CMDIFrameWnd*>(AfxGetMainWnd())->MDIGetActive())
+        static_cast<CMainFrame*>(AfxGetMainWnd())->SetOpenStatus(_T(""));
 }
 
 BOOL CDrawDoc::SaveModified()
@@ -305,7 +305,7 @@ void CDrawDoc::Draw(CDC* pDC, CDrawView* pView)
         const CDrawPage* pPage = m_pages[psize / 2];
         const CRect& pRozkl = pPage->m_position;
         CRect r(pRozkl.right - vscale, pRozkl.top - pmoduly - vscale, pRozkl.right + vscale, pRozkl.bottom + vscale);
-        pDC->FillRect(r, pPage->pagina_type == PaginaType::roman ? (CBrush*)pDC->SelectStockObject(WHITE_BRUSH) : &((CMainFrame*)AfxGetMainWnd())->rzym);
+        pDC->FillRect(r, pPage->pagina_type == PaginaType::roman ? (CBrush*)pDC->SelectStockObject(WHITE_BRUSH) : &static_cast<CMainFrame*>(AfxGetMainWnd())->rzym);
     }
 
     for (const auto& pObj : m_objects) {
@@ -498,7 +498,7 @@ CDrawAdd* CDrawDoc::FindAddAt(const int i) const
 int CDrawDoc::GetAdPosition(const CDrawAdd* pAdd) const
 {
     int n = 0;
-    const auto count_position = [&](auto p) noexcept->bool {
+    const auto count_position = [&](auto p) noexcept -> bool {
         if (dynamic_cast<CDrawAdd*>(p) == nullptr) return false;
         ++n;
         return pAdd == p;
@@ -626,7 +626,9 @@ int CDrawDoc::ComputePageOrderNr(const CRect& position) const
         col++;
     const int row = position.top / (-8 * pmoduly);
     const int ord = row * m_pagerow_size + col;
-    ASSERT(ord < (int)m_pages.size());
+    const int size = (int)m_pages.size();
+    if (ord >= size)
+        return size - 1;
     return ord;
 }
 
@@ -852,8 +854,7 @@ bool CDrawDoc::Import(const bool check_exist) // tu dodaje na koncu do m_objects
 
 bool CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, const bool check_exist)
 { // tworzenie ogloszen importowanych z pliku tekstowego
-    enum nazcstr : uint8_t
-    {
+    enum nazcstr : uint8_t {
         kratka,
         fizpag,
         pox,
@@ -947,8 +948,9 @@ bool CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, const 
     pObj->SetPosition(fizpage, posx, posy, sx, sy);
     if (pObj->fizpage == 0) {
         pos.y -= pmoduly;
-        if (pszpalt_y*pmoduly - pos.y > m_size.cy*vscale) {
-            pos.y = -pmoduly; pos.x -= pszpalt_x*pmodulx;
+        if (pszpalt_y * pmoduly - pos.y > m_size.cy * vscale) {
+            pos.y = -pmoduly;
+            pos.x -= pszpalt_x * pmodulx;
         }
     }
     pObj->Invalidate();
@@ -1183,16 +1185,17 @@ void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_
 
 float CDrawDoc::PowAdd2Mod(const bool queryQue) const
 {
-    float pow = 0.0;
+    float pow = 0.0f;
     auto mod_count = [](const CDrawAdd* a) noexcept -> float { return (float)(a->sizex * a->sizey * pmodcnt) / (a->szpalt_x * a->szpalt_y); };
+    // pow = std::reduce(std::begin(m_addsque), std::end(m_addsque), 0.0f, [](float sum, const CDrawAdd* a) noexcept - >float { return sum + (float)(a->sizex * a->sizey * pmodcnt) / (a->szpalt_x * a->szpalt_y); });
 
     if (queryQue) {
-        for (const auto& a : m_addsque)
-            pow += mod_count(a);
+        for (const auto& ad : m_addsque)
+            pow += mod_count(ad);
     } else {
         for (const auto& pObj : m_objects)
-            if (auto a = dynamic_cast<CDrawAdd*>(pObj))
-                pow += mod_count(a);
+            if (auto ad = dynamic_cast<CDrawAdd*>(pObj)) // filter range in C++20, then reduce
+                pow += mod_count(ad);
     }
 
     return nearbyintf(100 * pow) / 100;
@@ -1415,7 +1418,7 @@ void CDrawDoc::PrintInfo(CDC* pDC, const int max_n, const int wspol_na_str)  // 
 {
     ASSERT_VALID(this);
     CFont m_font, m_vertfont;
-    CFont *pOldFont;
+    CFont* pOldFont;
     LOGFONT lf;
     m_pagefont.GetLogFont(&lf);
     lf.lfHeight = -11;
@@ -1487,14 +1490,14 @@ void CDrawDoc::OnFileDrzewo() // zmiana drzewa
     EndWaitCursor();
 }
 
-CString CDrawDoc::XmlReadText(IXmlReader *reader)
+CString CDrawDoc::XmlReadText(IXmlReader* reader)
 {
     XmlNodeType nodeType;
-    const wchar_t *tmp;
+    const wchar_t* tmp;
     reader->Read(&nodeType);
     reader->Read(&nodeType);
     reader->GetValue(&tmp, nullptr);
-    CString ret { tmp };
+    CString ret {tmp};
     if (nodeType == XmlNodeType_Text) reader->Read(&nodeType);
     return ret;
 }
@@ -1526,8 +1529,8 @@ second_paper:
         pFile->Close();
 
         auto reader = CComPtr<IXmlReader> {};
-        CreateXmlReader(__uuidof(reader), reinterpret_cast<void**>(&reader), nullptr);
-        auto stream = CComPtr<IStream>(SHCreateMemStream((const BYTE*)buf, bytesRead));
+        ::CreateXmlReader(__uuidof(reader), reinterpret_cast<void**>(&reader), nullptr);
+        auto stream = CComPtr<IStream>(::SHCreateMemStream((const BYTE*)buf, bytesRead));
         reader->SetInput(stream);
 
         XmlNodeType nodeType;
@@ -1786,7 +1789,7 @@ CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, const
         if (pPage->FindSpace(pObj, &posx, &posy, sx, sy)) {
             pObj->posx = posx; pObj->posy = posy;
             pPage->AddAdd(pObj);
-            pObj->m_position.SetRect(pPage->m_position.left + (posx - 1)*pmodulx, pPage->m_position.top - posy*pmoduly, pPage->m_position.left + (posx + sx - 1)*pmodulx, pPage->m_position.top - (posy + sy)*pmoduly);
+            pObj->m_position.SetRect(pPage->m_position.left + (posx - 1) * pmodulx, pPage->m_position.top - posy * pmoduly, pPage->m_position.left + (posx + sx - 1) * pmodulx, pPage->m_position.top - (posy + sy) * pmoduly);
         }
     } else
         AdvanceAsidePos(pos);
