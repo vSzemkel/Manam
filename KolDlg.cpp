@@ -734,7 +734,7 @@ void CAddDlg::OnDelall()
             theApp.FileRefresh();
         else {
             vActiveDoc->m_addsque.erase(std::find(vActiveDoc->m_addsque.begin(), vActiveDoc->m_addsque.end(), CQueView::selected_add));
-            vActiveDoc->SetModifiedFlag(TRUE);
+            vActiveDoc->SetModifiedFlag();
             vActiveDoc->ArrangeQue();
         };
     }

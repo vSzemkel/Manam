@@ -52,6 +52,7 @@ class CDrawDoc final : public COleDocument
     HMENU GetDefaultMenu() override;        // dla grzbietu zmien menu
     void Serialize(CArchive& ar) override;  // overridden for document i/o
     BOOL SaveModified() override;           // plik do pliku , baza do bazy
+    void SetModifiedFlag(BOOL modified = TRUE) override;
 
     template<class T = CDrawView> T* GetPanelView() const noexcept;
     const CSize& GetSize() const noexcept { return m_size; }

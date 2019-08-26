@@ -462,8 +462,10 @@ void CDrawApp::FileRefresh(CDrawDoc* refreshDoc)
     for (int i = (int)doce.size() - 1; i >= 0; --i) {
         OPENRO = aIsRO[i];
         initCZV = (ToolbarMode)aSwCZV[i];
-        if (OpenDocumentFile(doce[i]))
-            theApp.activeDoc->SetTitle(tytuly[i]);
+        if (OpenDocumentFile(doce[i])) {
+            activeDoc->SetTitle(tytuly[i]);
+            activeDoc->SetModifiedFlag(FALSE);
+        }
     }
     OPENRO = FALSE;
     initCZV = ToolbarMode::normal;

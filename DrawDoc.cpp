@@ -190,6 +190,24 @@ BOOL CDrawDoc::SaveModified()
     return CDocument::SaveModified();
 }
 
+void CDrawDoc::SetModifiedFlag(const BOOL modified)
+{
+    auto title = GetTitle();
+    if (!title.IsEmpty()) {
+        const auto length = title.GetLength();
+        const auto final = title[length - 1];
+        if (modified && final != _T('*'))
+            title.Append(_T(" *"));
+        else if (!modified && final == _T('*'))
+            title.Truncate(length - 2);
+        else
+            return;
+        SetTitle(title);
+    }
+
+    CDocument::SetModifiedFlag(modified);
+}
+
 void CDrawDoc::SetTitleAndMru(const bool addRecentFiles)
 {
     CString makieta;
@@ -627,9 +645,9 @@ int CDrawDoc::ComputePageOrderNr(const CRect& position) const
     const int row = position.top / (-8 * pmoduly);
     const int ord = row * m_pagerow_size + col;
     const int size = (int)m_pages.size();
-    if (ord >= size)
-        return size - 1;
-    return ord;
+    if (ord < size)
+        return ord;
+    return size - 1;
 }
 
 void CDrawDoc::MoveBlockOfPages(const int iSrcOrd, const int iDstOrd, const int iCnt)
@@ -1055,7 +1073,7 @@ void CDrawDoc::NumberPages()
 void CDrawDoc::OnNumberPages()
 {
     NumberPages();
-    SetModifiedFlag(TRUE);  //vu
+    SetModifiedFlag();
 }
 
 void CDrawDoc::OnAdd4Pages()

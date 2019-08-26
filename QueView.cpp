@@ -230,7 +230,7 @@ void CQueView::OnEditClear()
         auto& q = GetDocument()->m_addsque;
         q.erase(std::find(std::begin(q), std::end(q), CQueView::selected_add));
         GetDocument()->ArrangeQue();
-        GetDocument()->SetModifiedFlag(TRUE);
+        GetDocument()->SetModifiedFlag();
         Invalidate(TRUE);
     }
 }

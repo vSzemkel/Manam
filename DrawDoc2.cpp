@@ -90,11 +90,11 @@ bool CDrawDoc::DBOpenDoc(TCHAR* makieta)
         OnShowAcDeadline();
     }
 
-    SetTitleAndMru();
     frame->SetStatusBarInfo("Gotowy - Makieta " + gazeta + ' ' + data);
     theApp.EndWaitCursor();
-    SetModifiedFlag(false);
+    SetModifiedFlag(FALSE);
     disableMenu = false;
+    SetTitleAndMru();
     return true;
 }
 
@@ -819,7 +819,7 @@ void CDrawDoc::OnAsideAdds()
     }
 
     UpdateAllViews(nullptr);
-    SetModifiedFlag(TRUE);
+    SetModifiedFlag();
 }
 
 ////////////////////////////////////////////// ini kolory
