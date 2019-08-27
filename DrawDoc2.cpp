@@ -90,7 +90,6 @@ bool CDrawDoc::DBOpenDoc(TCHAR* makieta)
         OnShowAcDeadline();
     }
 
-    frame->SetStatusBarInfo("Gotowy - Makieta " + gazeta + ' ' + data);
     theApp.EndWaitCursor();
     SetModifiedFlag(FALSE);
     disableMenu = false;

@@ -219,7 +219,12 @@ void CDrawDoc::SetTitleAndMru(const bool addRecentFiles)
         makieta.SetAt(len - 8, _T('-'));
     }
 
-    SetTitle(CString(iDocType == DocType::grzbiet_drukowany ? "Grzbiet drukowany " : "Makieta ") + makieta + (isRO ? ((theApp.grupa & UserRole::dea) ? " [tylko do rezerwacji]" : " [tylko do odczytu]") : ""));
+    CString title;
+    title.Append(iDocType == DocType::grzbiet_drukowany ? _T("Grzbiet drukowany ") : _T("Makieta "));
+    title.Append(makieta);
+    if (isRO)
+        title.Append(theApp.grupa & UserRole::dea ? _T(" [tylko do rezerwacji]") : _T(" [tylko do odczytu]"));
+    SetTitle(title);
     if (!addRecentFiles) return;
 
     ASSERT(gazeta.GetLength() == 6);

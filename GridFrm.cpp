@@ -306,7 +306,7 @@ void CGridFrm::OnShowrept()
                     if (CDrawAdd* ad = vDoc->AddExists(adno)) {
                         ad->skad_ol = &kiedypowt[11];
                         kiedypowt[10] = '\0';
-                        ad->lastAdnoUsed = (LPCTSTR)kiedypowt;
+                        ad->lastAdnoUsed = (LPCSTR)kiedypowt;
                     }
                 }
             }

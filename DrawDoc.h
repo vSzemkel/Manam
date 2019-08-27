@@ -48,10 +48,10 @@ class CDrawDoc final : public COleDocument
     ~CDrawDoc() override;
     BOOL OnNewDocument() override;
     BOOL OnOpenDocument(LPCTSTR pszPathName) override;
-    void OnCloseDocument() override;
+    BOOL SaveModified() override;
     HMENU GetDefaultMenu() override;        // dla grzbietu zmien menu
-    void Serialize(CArchive& ar) override;  // overridden for document i/o
-    BOOL SaveModified() override;           // plik do pliku , baza do bazy
+    void OnCloseDocument() override;
+    void Serialize(CArchive& ar) override;
     void SetModifiedFlag(BOOL modified = TRUE) override;
 
     template<class T = CDrawView> T* GetPanelView() const noexcept;

@@ -1893,8 +1893,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 7,2,0,2
- PRODUCTVERSION 7,2,0,2
+ FILEVERSION 7,2,0,3
+ PRODUCTVERSION 7,2,0,3
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -1911,12 +1911,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Agora SA"
             VALUE "FileDescription", "Manam"
-            VALUE "FileVersion", "7.2.0.2"
+            VALUE "FileVersion", "7.2.0.3"
             VALUE "InternalName", "Manam"
             VALUE "LegalCopyright", "© Marcin Buchwald"
             VALUE "OriginalFilename", "Manam.exe"
             VALUE "ProductName", "Manager Makiet"
-            VALUE "ProductVersion", "7.2.0.2"
+            VALUE "ProductVersion", "7.2.0.3"
         END
     END
     BLOCK "VarFileInfo"
