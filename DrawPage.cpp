@@ -527,7 +527,7 @@ BOOL CDrawPage::OnOpen(CDrawView* /*pView*/)
 
     SetBaseKrata(dlg.m_szpalt_x, dlg.m_szpalt_y);
 
-    int i, pom_nr = (dlg.m_nr << 16) + (dlg.m_rzymska ? PaginaType::roman : PaginaType::arabic);
+    int i, pom_nr = MAKELONG(dlg.m_rzymska ? PaginaType::roman : PaginaType::arabic, dlg.m_nr);
     if (nr != pom_nr) {
         // sprawdz czy istnieje juz taka strona - bo numer/typ_num nie moze sie powtarzac
         if (std::any_of(std::begin(m_pDocument->m_pages), std::end(m_pDocument->m_pages), [pom_nr](const auto p){ return p->nr == pom_nr; }))
@@ -578,7 +578,7 @@ std::vector<int> CDrawPage::CleanKraty(const bool dbSave)
     });
     if (dbSave)
         for (auto it = new_end; it != end; ++it)
-            ret.push_back(((*it).m_szpalt_x << 16) + (*it).m_szpalt_y);
+            ret.push_back(MAKELONG(it->m_szpalt_y, it->m_szpalt_x));
     m_kraty_niebazowe.erase(new_end, end);
 
     return ret;

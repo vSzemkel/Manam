@@ -465,8 +465,7 @@ CString CDrawAdd::PrepareBuf(const TCHAR* const ch) const
         bufor.AppendFormat(_T("%i"), fizpage >> 16);
 
     bufor.AppendFormat(_T("%s%i%s%i%s%s%s"), ch, posx, ch, posy, ch, (LPCTSTR)nazwa, ch);
-    if (nreps > -1)
-        bufor.AppendFormat(_T("%li"), nreps);
+    bufor.AppendFormat(_T("%li"), nreps);
     bufor.AppendFormat(_T("%s%s%s%s%s%s%s%s\n"), ch, (LPCTSTR)CDrawDoc::kolory[kolor == ColorId::full ? 1 : kolor >> 3], ch, (LPCTSTR)logpage, ch, (LPCTSTR)remarks, ch, (LPCTSTR)wersja);
 
     return bufor;
@@ -547,7 +546,7 @@ BOOL CDrawAdd::OnOpen(CDrawView* pView)
     flags.locked = (fizpage ? dlg.m_locked : FALSE);
     flags.studio = static_cast<StudioStatus>(dlg.m_studio);
     dlg.m_always ? czaskto.Format(_T("# [%s]"), (LPCTSTR)dlg.m_sprzedal) : czaskto.Format(_T("%s %s [%s]"), (LPCTSTR)dlg.m_data_czob.Format(c_ctimeData), (LPCTSTR)dlg.m_godz_czob.Format(_T("%H:%M")), (LPCTSTR)dlg.m_sprzedal);
-    const int pom_fizpage = ((dlg.m_fizpage << 16) + ((dlg.m_rzymnum) ? PaginaType::roman : PaginaType::arabic));
+    const int pom_fizpage = MAKELONG(dlg.m_rzymnum ? PaginaType::roman : PaginaType::arabic, dlg.m_fizpage);
     SetPosition(pom_fizpage, dlg.m_posx, dlg.m_posy, dlg.m_sizex, dlg.m_sizey); // robi updateinfo
     if (!dlg.m_precel_flag.IsEmpty() && dlg.m_precel_flag != m_precel_flag) {
         m_precel_flag = dlg.m_precel_flag;

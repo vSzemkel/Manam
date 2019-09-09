@@ -953,9 +953,9 @@ int CDrawDoc::Nr2NrPorz(const TCHAR *s) const noexcept
         if ((nr_porz = CDrawObj::Arabska(s)) == 0)
             nr_porz = -1;
         else
-            nr_porz = GetIPage((nr_porz << 16) + PaginaType::roman);
+            nr_porz = GetIPage(MAKELONG(PaginaType::roman, nr_porz));
     else
-        nr_porz = GetIPage((nr_porz << 16) + PaginaType::arabic);
+        nr_porz = GetIPage(MAKELONG(PaginaType::arabic, nr_porz));
     return nr_porz;
 }
 

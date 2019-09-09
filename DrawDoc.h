@@ -109,7 +109,7 @@ class CDrawDoc final : public COleDocument
     void OnDBImportMinus();
     void OnDrawOpcje();
     bool Import(bool check_exist);
-    bool CreateAdd(LPCTSTR adBuf, TCHAR sepChar, CPoint& pos, bool check_exist);
+    bool CreateAdd(LPTSTR adBuf, TCHAR sepChar, CPoint& pos, bool check_exist);
     bool DBImport(bool synchronize = false);
     CDrawAdd* AddExists(long nr) const;
     CDrawAdd* PubXXExists(int pub_xx) const;
@@ -237,10 +237,9 @@ private:
 template<class T> T* CDrawDoc::GetPanelView() const noexcept
 {
     POSITION pos = GetFirstViewPosition();
-    while (pos != nullptr) {
-        auto view = dynamic_cast<T*>(GetNextView(pos));
-        if (view)
+    while (pos != nullptr)
+        if (auto view = dynamic_cast<T*>(GetNextView(pos)))
             return view;
-    }
+
     return nullptr;
 }

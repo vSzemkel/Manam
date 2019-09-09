@@ -182,7 +182,7 @@ void CGridFrm::Select(CDrawAdd* pObj, int i)
 int CGridFrm::FindRow(DWORD_PTR key) const
 {
     const int rc = lcPubList.GetItemCount();
-    for (int n = 0; n < rc; n++)
+    for (int n = 0; n < rc; ++n)
         if (lcPubList.GetItemData(n) == key)
             return n;
 
@@ -270,25 +270,23 @@ void CGridFrm::OnShowrept()
     HDITEM hi = { 0 };
     hi.mask = HDI_TEXT;
     if (showLastAdnoUsed) {
-        ::StringCchCopy(theApp.bigBuf, n_size, _T("Numer z"));
-        hi.pszText = theApp.bigBuf;
+        hi.pszText = _T("Numer z");
         hcHeader.SetItem(powtorka, &hi);
-        ::StringCchCopy(theApp.bigBuf, n_size, _T("Oddzia³"));
-        hi.pszText = theApp.bigBuf;
+        hi.pszText = _T("Oddzia³");
         hcHeader.SetItem(oldadno, &hi);
 
         long adno;
         CString sURL;
         char kiedypowt[32];
         CDrawDoc* vDoc = GetDocument();
-        TCHAR *ch, tytul[10], mutacja[5];
+        TCHAR tytul[10], mutacja[5];
 
         ::StringCchCopy(tytul, 10, vDoc->gazeta);
-        if (ch = _tcschr(tytul, ' ')) {
+        if (TCHAR* ch = _tcschr(tytul, ' ')) {
             ::StringCchCopy(mutacja, 5, ch + 1);
             *ch = '\0';
         } else
-            ::StringCchCopy(mutacja, 5, _T("0"));
+            ::StringCchCopy(mutacja, 5, _T('\0'));
 
         auto line = reinterpret_cast<char*>(theApp.bigBuf);
         sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s"), (LPCTSTR)tytul, (LPCTSTR)mutacja, (LPCTSTR)vDoc->data);
@@ -314,11 +312,9 @@ void CGridFrm::OnShowrept()
             pFile->Close();
         }
     } else {
-        ::StringCchCopy(theApp.bigBuf, n_size, _T("Powtórka"));
-        hi.pszText = theApp.bigBuf;
+        hi.pszText = _T("Powtórka");
         hcHeader.SetItem(powtorka, &hi);
-        ::StringCchCopy(theApp.bigBuf, n_size, _T("z ATEX"));
-        hi.pszText = theApp.bigBuf;
+        hi.pszText = _T("z ATEX");
         hcHeader.SetItem(oldadno, &hi);
     }
 
@@ -355,7 +351,7 @@ void CGridFrm::OnUpdateSort(CCmdUI* pCmdUI)
 /***************************** DRUKOWANIE ********************************/
 BOOL CGridFrm::OnPreparePrinting(CPrintInfo* pInfo)
 {
-    BOOL ret = DoPreparePrinting(pInfo);
+    const BOOL ret = DoPreparePrinting(pInfo);
     isLandscape = pInfo->m_pPD->GetDevMode()->dmOrientation == DMORIENT_LANDSCAPE;
     pInfo->SetMaxPage((int)ceil((float)lcPubList.GetItemCount() / (isLandscape ? LANDROWSPERPAGE : PORTROWSPERPAGE)));
     return ret;

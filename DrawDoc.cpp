@@ -94,7 +94,7 @@ void CDrawDoc::OnDisableDB(CCmdUI* pCmdUI)
 
 void CDrawDoc::OnUpdateEpsdata(CCmdUI* pCmdUI)
 {
-    pCmdUI->Enable(!disableMenu && theApp.isRDBMS && theApp.grupa&(UserRole::mas | UserRole::stu));
+    pCmdUI->Enable(!disableMenu && theApp.isRDBMS && theApp.grupa & (UserRole::mas | UserRole::stu));
 }
 
 void CDrawDoc::OnDisableGrbNotSaved(CCmdUI* pCmdUI)
@@ -104,14 +104,12 @@ void CDrawDoc::OnDisableGrbNotSaved(CCmdUI* pCmdUI)
 /////////////////////////////////////////////////////////////////////////////
 // CDrawDoc construction/destruction
 
-CDrawDoc::CDrawDoc() :
-    isRO(0), isSIG(0), isACD(0),
-    data(CTime::GetCurrentTime().Format(c_ctimeData))
+CDrawDoc::CDrawDoc() : isRO(0), isSIG(0), isACD(0), data(CTime::GetCurrentTime().Format(c_ctimeData))
 {
     m_pagerow_size = static_cast<uint16_t>(10 + 2 * theApp.GetProfileInt(_T("General"), _T("PagesInRow"), 0));
     // font
-    LOGFONT lf { 0 };
-    lf.lfHeight = theApp.GetProfileInt(_T("Settings"), _T("PageFontSize"), -11);  //~8pt
+    LOGFONT lf{0};
+    lf.lfHeight = theApp.GetProfileInt(_T("Settings"), _T("PageFontSize"), -11); // ~8pt
     lf.lfPitchAndFamily = VARIABLE_PITCH;
     lf.lfWeight = FW_NORMAL;
     lf.lfCharSet = EASTEUROPE_CHARSET;
@@ -121,7 +119,7 @@ CDrawDoc::CDrawDoc() :
     if (!m_pagefont.CreateFontIndirect(&lf))
         m_pagefont.CreateStockObject(SYSTEM_FONT);
 
-    lf.lfHeight = theApp.GetProfileInt(_T("Settings"), _T("AddFontSize"), -5);  //~4pt
+    lf.lfHeight = theApp.GetProfileInt(_T("Settings"), _T("AddFontSize"), -5); // ~4pt
     lf.lfPitchAndFamily = FF_SWISS | VARIABLE_PITCH;
     ::StringCchCopy(lf.lfFaceName, 32, theApp.GetProfileString(_T("Settings"), _T("AddFontFace"), _T("Small Fonts")));
     if (!m_addfont.CreateFontIndirect(&lf))
@@ -274,7 +272,8 @@ void CDrawDoc::Serialize(CArchive& ar)
         m_addfont.CreateFontIndirect(&lf);
 
         WORD wTemp;
-        ar >> wTemp; id_drw = wTemp;
+        ar >> wTemp;
+        id_drw = wTemp;
         ar >> gazeta;
         ar >> data;
         ar >> prowadzacy1;
@@ -282,10 +281,12 @@ void CDrawDoc::Serialize(CArchive& ar)
         ar >> sekretarz;
         ar >> symWydawcy;
         // serializacja spotow
-        ar >> wTemp; m_spot_makiety.resize(wTemp);
+        ar >> wTemp;
+        m_spot_makiety.resize(wTemp);
         DWORD tm;
         for (DWORD i = 0; i < wTemp; ++i) {
-            ar >> tm; m_spot_makiety[i] = static_cast<UINT>(tm);
+            ar >> tm;
+            m_spot_makiety[i] = static_cast<UINT>(tm);
         }
         // serializacja stron
         ar >> wTemp;
@@ -304,7 +305,6 @@ void CDrawDoc::Serialize(CArchive& ar)
     }
     COleDocument::Serialize(ar);
 }
-
 
 ///////////////RYSOWANIE I DRUKOWANIE ////////////////////////////////////////////////////////
 // CDrawDoc implementation
@@ -417,7 +417,7 @@ void CDrawDoc::PrintPage(CDC* pDC, CDrawPage* pPage)
 
     for (const auto& pAdd : pPage->m_adds) {
         pDC->SetWindowOrg(2 * (pPage->m_position.left / CLIENT_SCALE - 5 * vscale) - pAdd->m_position.left / CLIENT_SCALE,
-            2 * (pPage->m_position.top / CLIENT_SCALE - 18 * vscale + pmoduly) - pAdd->m_position.top / CLIENT_SCALE + 2 * (pPage->pagina / 51) * pmoduly);
+                          2 * (pPage->m_position.top / CLIENT_SCALE - 18 * vscale + pmoduly) - pAdd->m_position.top / CLIENT_SCALE + 2 * (pPage->pagina / 51) * pmoduly);
         const auto& rect = pAdd->GetPrintRect();
         pAdd->DrawDesc(pDC, rect);
     }
@@ -432,7 +432,7 @@ void CDrawDoc::PrintPage(CDC* pDC, CDrawPage* pPage)
         DrawPageCross(pDC);
 }
 
-////////// CDRAWOBJ _M_OBJECTS LIST ?/////////////////////////////       
+////////// CDRAWOBJ _M_OBJECTS LIST ?/////////////////////////////
 void CDrawDoc::Add(CDrawObj* pObj)
 {
     SetModifiedFlag();
@@ -485,7 +485,7 @@ CDrawObj* CDrawDoc::ObjectAt(const CPoint& point) const
 {
     auto coll = const_cast<std::vector<CDrawObj*>*>(&m_objects); // use span<CDrawObj*> in C++ 20
 check:
-    auto found = std::find_if(std::rbegin(*coll), std::rend(*coll), [&point](const auto& p) {return p->Contains(point); });
+    auto found = std::find_if(std::rbegin(*coll), std::rend(*coll), [&point](const auto& p) { return p->Contains(point); });
     if (found != std::rend(*coll))
         return *found;
 
@@ -725,15 +725,17 @@ void CDrawDoc::ComputeCanvasSize()
 {
     CClientDC dc{nullptr};
     auto r = div((int)m_pages.size(), m_pagerow_size);
-    if (r.quot < 3) r.quot = 3;
-    else if (r.rem > 0) r.quot++;
+    if (r.quot < 3)
+        r.quot = 3;
+    else if (r.rem > 0)
+        r.quot++;
     const CSize new_size(dc.GetDeviceCaps(HORZRES), m_pages.empty() ? dc.GetDeviceCaps(VERTRES) : (int)(pmoduly / vscale * (1 + 8 * r.quot)));
 
     // if size changed then iterate over views and reset
     if (new_size != m_size) {
         m_size = new_size;
-        auto *pView = GetPanelView();
-        if (pView) pView->SetPageSize();
+        if (auto pView = GetPanelView())
+            pView->SetPageSize();
     }
 }
 
@@ -800,7 +802,7 @@ void CDrawDoc::OnFileSaveAs()
 }
 
 //////////////////////////////////////////////////////////////////////
-////////// IMPORT 
+////////// IMPORT
 
 void CDrawDoc::OnImport(const bool fromDB)
 {
@@ -850,7 +852,7 @@ void CDrawDoc::OnImportPlus(const bool fromDB)
     UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
 }
 
-bool CDrawDoc::Import(const bool check_exist) // tu dodaje na koncu do m_objects najwyzej sie potem usunie 
+bool CDrawDoc::Import(const bool check_exist) // tu dodaje na koncu do m_objects najwyzej sie potem usunie
 {
     CFileDialog dlg(TRUE, _T("txt"), _T(""), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Og³oszenia (*.txt)|*.txt| Wszystkie pliki (*.*)|*.*||"), nullptr);
     if (dlg.DoModal() != IDOK)
@@ -875,7 +877,7 @@ bool CDrawDoc::Import(const bool check_exist) // tu dodaje na koncu do m_objects
     return ok;
 }
 
-bool CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, const bool check_exist)
+bool CDrawDoc::CreateAdd(LPTSTR adBuf, const TCHAR sepChar, CPoint& pos, const bool check_exist)
 { // tworzenie ogloszen importowanych z pliku tekstowego
     enum nazcstr : uint8_t {
         kratka,
@@ -889,61 +891,63 @@ bool CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, const 
         remark,
         wer,
         dodomu
-    } i = theApp.includeKratka ? kratka : fizpag;
+    } col = theApp.includeKratka ? kratka : fizpag;
 
     CString p_remarks, p_nazwa, p_logpage, p_wersja;
     UINT p_kolor = 0;
     long p_nreps = 0;
-    TCHAR st[21];
 
     int sx, sy, fizpage = 0, posx = 0, posy = 0;
     // interesuj¹ nas tylko linie które zaczynaj¹ siê od rozmiaru KxW
-    if (adBuf == nullptr || _stscanf_s(adBuf, _T("%ix%i"), &sx, &sy) != 2)
+    auto token = _tcstok(adBuf, &sepChar);
+    if (token == nullptr || _stscanf_s(token, _T("%ix%i"), &sx, &sy) != 2)
         return FALSE;
 
     int szpalt_x = pszpalt_x;
     int szpalt_y = pszpalt_y;
-    adBuf = _tcschr(adBuf, sepChar) + 1;
 
-    while (*adBuf != _T('\n') && i != dodomu) {
-        auto pdest = _tcschr(adBuf, sepChar);
-        auto result = (pdest != nullptr) ? ((pdest - adBuf) > 20 ? 20 : pdest - adBuf) : 0;
-        ::StringCchCopyN(st, 21, adBuf, result);
-        st[result] = 0;
-
-        if (result == 0 && pdest == nullptr) // urwana linia
+    while (col != dodomu) {
+        token = _tcstok(nullptr, &sepChar);
+        if (token == nullptr || *token == _T('\n')) // urwana linia
             break;
 
-        switch (i) {
+        switch (col) {
             case kratka:
-                _stscanf_s(st, _T("%ix%i"), &szpalt_x, &szpalt_y);
-                i = fizpag;
+                _stscanf_s(token, _T("%ix%i"), &szpalt_x, &szpalt_y);
                 break;
-            case fizpag: fizpage = _istdigit(st[0])
-                ? (_ttoi(st) << 16) + PaginaType::arabic
-                : (CDrawObj::Arabska(st) << 16) + PaginaType::roman;
-                i = pox;
+            case fizpag:
+                fizpage = _istdigit(token[0]) ? MAKELONG(PaginaType::arabic, _ttoi(token))
+                                              : MAKELONG(PaginaType::roman, CDrawObj::Arabska(token));
                 break;
-            case pox: posx = ((fizpage == 0) ? 0 : (result == 0 ? szpalt_x + 1 - sx : _ttoi(st))); i = poy; break;
-            case poy: posy = ((fizpage == 0) ? 0 : (result == 0 ? szpalt_y + 1 - sy : _ttoi(st))); i = nazw; break;
-            case nazw: p_nazwa = st; i = nrep; break;
+            case pox:
+                posx = ((fizpage == 0) ? 0 : (token == nullptr ? szpalt_x + 1 - sx : _ttoi(token)));
+                break;
+            case poy:
+                posy = ((fizpage == 0) ? 0 : (token == nullptr ? szpalt_y + 1 - sy : _ttoi(token)));
+                break;
+            case nazw:
+                p_nazwa = token;
+                break;
             case nrep:
-            {
-                p_nreps = _ttol(st);
+                p_nreps = _ttol(token);
                 if (p_nreps == 0) p_nreps = -1;
-                i = kolo;
-            }
-            break;
-            case kolo: p_kolor = (result == 0 ? ColorId::brak : ValidKolor(st)); i = logp; break;
-            case logp: p_logpage = CString(st).Left(5); i = remark; break;
-            case remark: p_remarks = st; i = wer; break;
-            case wer: p_wersja = CString(st).Left(5); i = dodomu; break;
+                break;
+            case kolo:
+                p_kolor = (token == nullptr ? ColorId::brak : ValidKolor(token));
+                break;
+            case logp:
+                p_logpage = token;
+                p_logpage.Truncate(5);
+                break;
+            case remark:
+                p_remarks = token;
+                break;
+            case wer:
+                p_wersja = token;
+                p_wersja.Truncate(5);
+                break;
         }
-
-        if (pdest == nullptr)
-            i = dodomu;
-        else if (i != dodomu)
-            adBuf = ++pdest;
+        col = static_cast<nazcstr>(col + 1);
     }
 
     if (check_exist && AddExists(p_nreps) != nullptr) {
@@ -964,10 +968,10 @@ bool CDrawDoc::CreateAdd(LPCTSTR adBuf, const TCHAR sepChar, CPoint& pos, const 
     pObj->wersja = p_wersja;
     pObj->szpalt_x = szpalt_x;
     pObj->szpalt_y = szpalt_y;
-    if (fizpage && (szpalt_x != pszpalt_x || szpalt_y != pszpalt_y)) {
-        CDrawPage* vPage = GetPage(fizpage);
-        if (vPage) vPage->SetBaseKrata(szpalt_x, szpalt_y, TRUE);
-    }
+    if (fizpage && (szpalt_x != pszpalt_x || szpalt_y != pszpalt_y))
+        if (CDrawPage* vPage = GetPage(fizpage)) 
+            vPage->SetBaseKrata(szpalt_x, szpalt_y, TRUE);
+
     pObj->SetPosition(fizpage, posx, posy, sx, sy);
     if (pObj->fizpage == 0) {
         pos.y -= pmoduly;
@@ -1028,48 +1032,49 @@ void CDrawDoc::OnExport()
 // NUMEROWANIE I DODAWANIE STRON
 void CDrawDoc::NumberPages()
 {
-    int iFirstPageNumber = 1;
-    int iFirstPageToNumber = 1;
+    int NextPageNumber = 1;
+    int FirstPageToNumber = 1;
     // dla stron arabskich dopuszczamy przenumerowanie od zadanej
     auto pView = GetPanelView();
     if (pView->m_selection.size() == 1) {
         auto pSelPage = dynamic_cast<CDrawPage*>(pView->m_selection.front());
         if (pSelPage != nullptr && pSelPage->pagina_type == PaginaType::arabic) {
-            iFirstPageNumber = pSelPage->pagina;
-            iFirstPageToNumber = GetIPage(pSelPage);
-            if (iFirstPageToNumber < 0) return; // wystêpuje podczas copy/paste grupy stron
+            NextPageNumber = pSelPage->pagina;
+            FirstPageToNumber = GetIPage(pSelPage);
+            if (FirstPageToNumber < 0) return; // wystêpuje podczas copy/paste grupy stron
         }
     }
     // sprawdzamy, czy nie powstan¹ duble w numeracji
     const auto pc = (int)m_pages.size();
-    const int iLastPageNumber = iFirstPageNumber + pc - iFirstPageToNumber;
-    for (int i = 1; i < iFirstPageToNumber; ++i) {
-        const int iNrToCheck = m_pages[i]->pagina;
-        if (iFirstPageNumber <= iNrToCheck && iNrToCheck <= iLastPageNumber) {
-            iFirstPageNumber = iFirstPageToNumber = 1;
+    const int LastPageNumber = NextPageNumber + pc - FirstPageToNumber;
+    for (int i = 1; i < FirstPageToNumber; ++i) {
+        const int NrToCheck = m_pages[i]->pagina;
+        if (NextPageNumber <= NrToCheck && NrToCheck <= LastPageNumber) {
+            NextPageNumber = FirstPageToNumber = 1;
             break;
         }
     }
     // przenumerowujemy strony od pocz¹tku lub zaznaczonej a¿ do ostatniej
     if (theApp.GetProfileInt(_T("General"), _T("CiaglaNumeracja"), 0))
-        for (int i = iFirstPageToNumber; i <= pc; ++i) {
+        for (int i = FirstPageToNumber; i <= pc; ++i) {
             auto pObj = m_pages[i % pc];
-            pObj->SetNr(((iFirstPageNumber++) << 16) + pObj->pagina_type);
-    } else {
-        int rz = 0;
-        for (int i = iFirstPageToNumber; i <= pc; ++i) {
+            pObj->SetNr(MAKELONG(pObj->pagina_type, NextPageNumber++));
+        }
+    else {
+        int NextRomanNumber = 1;
+        for (int i = FirstPageToNumber; i <= pc; ++i) {
             auto pObj = m_pages[i % pc];
-            if (pObj->pagina_type == PaginaType::roman) {
-                pObj->SetNr(((++rz) << 16) + PaginaType::roman);
-                iFirstPageNumber++;
-            } else
-                pObj->SetNr((((iFirstPageNumber++) - rz) << 16) + PaginaType::arabic);
+            if (pObj->pagina_type == PaginaType::roman)
+                pObj->SetNr(MAKELONG(PaginaType::roman, NextRomanNumber++));
+            else
+                pObj->SetNr(MAKELONG(PaginaType::arabic, NextPageNumber - NextRomanNumber));
+            NextPageNumber++;
         }
     }
     // przenumerowanie od ostatniej wymaga przywrócenia numeru
-    if (iFirstPageToNumber == 0) {
+    if (FirstPageToNumber == 0) {
         auto pPage = m_pages[0];
-        pPage->SetNr(((--iFirstPageNumber - pc) << 16) + pPage->pagina_type);
+        pPage->SetNr(MAKELONG(pPage->pagina_type, --NextPageNumber - pc));
     }
 
     UpdateAllViews(nullptr);
@@ -1165,9 +1170,12 @@ void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_
         l_modogl = l_modred = l_modrez = 0;
         int pmods = page->szpalt_x * page->szpalt_y;
         for (int j = 0; j < pmods; ++j) {
-            if (page->space_red[j]) l_modred++;
-            else if (page->space_locked[j]) l_modrez++;
-            else if (page->space[j]) l_modogl++;
+            if (page->space_red[j])
+                l_modred++;
+            else if (page->space_locked[j])
+                l_modrez++;
+            else if (page->space[j])
+                l_modogl++;
         }
         if (pmods != pmodcnt) {
             const auto norm = (float)pmodcnt / pmods;
@@ -1175,7 +1183,9 @@ void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_
             l_modred = (UINT)nearbyintf((float)l_modred * norm);
             l_modrez = (UINT)nearbyintf((float)l_modrez * norm);
         }
-        *m_modogl += l_modogl; *m_modred += l_modred; *m_modrez += l_modrez;
+        *m_modogl += l_modogl;
+        *m_modred += l_modred;
+        *m_modrez += l_modrez;
 
         // og³oszenia dla krat niebazowych
         if (page->m_kraty_niebazowe.empty())
@@ -1437,7 +1447,7 @@ void CDrawDoc::OnFileInfo()
     }
 }
 
-void CDrawDoc::PrintInfo(CDC* pDC, const int max_n, const int wspol_na_str)  // wspol_na_str =1 lub 2- 50  lub 100 str na wydruku
+void CDrawDoc::PrintInfo(CDC* pDC, const int max_n, const int wspol_na_str) // wspol_na_str =1 lub 2- 50  lub 100 str na wydruku
 {
     ASSERT_VALID(this);
     CFont m_font, m_vertfont;
@@ -1461,32 +1471,34 @@ void CDrawDoc::PrintInfo(CDC* pDC, const int max_n, const int wspol_na_str)  // 
     CRect rect;
     const int iHorizScale = m_pagerow_size * pmodulx;
     for (int i = 1; i <= max_n; ++i) {
-        rect.SetRect(pmodulx, (i - 1)*(wspol_na_str * 40 + 2)*(-pmoduly), (int)(5.5*iHorizScale), ((i - 1)*(wspol_na_str * 40 + 2) + 1)*(-pmoduly));
+        rect.SetRect(pmodulx, (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(5.5 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
         pDC->FillRect(rect, (CBrush*)pDC->SelectStockObject(WHITE_BRUSH));
-        CString info = (gazeta.IsEmpty() && data.IsEmpty() ? _T("") : _T("EDYCJA: ") + gazeta + _T(' ') + data);
-        info += ((prowadzacy1.IsEmpty() && prowadzacy2.IsEmpty()) ? _T("") : _T("         PROWADZ¥CY: ") + (prowadzacy1.IsEmpty() ? prowadzacy2 : prowadzacy1) + ((!prowadzacy1.IsEmpty() && !prowadzacy2.IsEmpty()) ? _T("  DWÓJKA: ") + prowadzacy2 : _T("")));
-        info += (sekretarz.IsEmpty() ? _T("") : _T("    ODPOWIEDZIALNY: ") + sekretarz);
+        CString info;
+        if (!gazeta.IsEmpty() || !data.IsEmpty()) info.AppendFormat(_T("EDYCJA: %s %s"), (LPCTSTR)gazeta, (LPCTSTR)data);
+        if (!prowadzacy1.IsEmpty() || !prowadzacy2.IsEmpty()) info.AppendFormat(_T("         PROWADZ¥CY: %s"), prowadzacy1.IsEmpty() ? (LPCTSTR)prowadzacy2 : (LPCTSTR)prowadzacy1);
+        if (!prowadzacy1.IsEmpty() && !prowadzacy2.IsEmpty()) info.AppendFormat(_T("  DWÓJKA: %s"), (LPCTSTR)prowadzacy2);
+        if (!sekretarz.IsEmpty()) info.AppendFormat(_T("    ODPOWIEDZIALNY: %s"), (LPCTSTR)sekretarz);
         pDC->DrawText(info, info.GetLength(), rect, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
         info.Format(_T("str: %i/%i"), i, max_n);
         pDC->DrawText(info, info.GetLength(), rect, DT_RIGHT | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
 
-        rect.SetRect((int)(4.7*iHorizScale), (i - 1)*(wspol_na_str * 40 + 2)*(-pmoduly), (int)(4.8*iHorizScale), ((i - 1)*(wspol_na_str * 40 + 2) + 1)*(-pmoduly));
+        rect.SetRect((int)(4.7 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(4.8 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
         pDC->SetBkMode(TRANSPARENT);
         pDC->FillRect(rect, &(((CMainFrame*)AfxGetMainWnd())->cyjan));
         pDC->DrawText(_T("C"), 1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
-        rect.SetRect((int)(4.8*iHorizScale), (i - 1)*(wspol_na_str * 40 + 2)*(-pmoduly), (int)(4.9*iHorizScale), ((i - 1)*(wspol_na_str * 40 + 2) + 1)*(-pmoduly));
+        rect.SetRect((int)(4.8 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(4.9 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
         pDC->FillRect(rect, &(((CMainFrame*)AfxGetMainWnd())->magenta));
         pDC->DrawText(_T("M"), 1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
-        rect.SetRect((int)(4.9*iHorizScale), (i - 1)*(wspol_na_str * 40 + 2)*(-pmoduly), (int)(5 * iHorizScale), ((i - 1)*(wspol_na_str * 40 + 2) + 1)*(-pmoduly));
+        rect.SetRect((int)(4.9 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(5 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
         pDC->FillRect(rect, &(((CMainFrame*)AfxGetMainWnd())->yellow));
         pDC->DrawText(_T("Y"), 1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
-        rect.SetRect((int)(5 * iHorizScale), (i - 1)*(wspol_na_str * 40 + 2)*(-pmoduly), (int)(5.1*iHorizScale), ((i - 1)*(wspol_na_str * 40 + 2) + 1)*(-pmoduly));
+        rect.SetRect((int)(5 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(5.1 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
         pDC->Rectangle(rect);
         pDC->DrawText(_T("K"), 1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
         // czas wydruku
         if (vertOK) {
             auto pTempFont = reinterpret_cast<CFont*>(pDC->SelectObject(&m_vertfont));
-            rect.SetRect((int)(5.8*iHorizScale), 3 * (-pmoduly), (int)(5.9*iHorizScale), 10 * (-pmoduly));
+            rect.SetRect((int)(5.8 * iHorizScale), 3 * (-pmoduly), (int)(5.9 * iHorizScale), 10 * (-pmoduly));
             pDC->DrawText(CTime::GetCurrentTime().Format(_T("%d/%m/%Y godz. %H:%M")), 22, rect, DT_SINGLELINE | DT_NOCLIP);
             pDC->SelectObject(pTempFont);
         }
@@ -1497,7 +1509,7 @@ void CDrawDoc::PrintInfo(CDC* pDC, const int max_n, const int wspol_na_str)  // 
     if (vertOK) m_vertfont.DeleteObject();
 }
 
-void CDrawDoc::OnFileDrzewo() // zmiana drzewa 
+void CDrawDoc::OnFileDrzewo() // zmiana drzewa
 {
     CDrz1Dlg dlg;
     dlg.m_id_drw = id_drw;
@@ -1534,7 +1546,7 @@ bool CDrawDoc::DBImport(bool synchronize)
     BeginWaitCursor();
 
     long adno;
-    CDrawAdd* vAdd, *vAdd2;
+    CDrawAdd *vAdd, *vAdd2;
     bool empSet{true}, bBank{false};
     CString xRoz, xNaz, xKol, xStr, xUwa, xKrt;
     std::vector<int> syncATEX, dirtyATEX, zaporaATEX;
@@ -1589,7 +1601,6 @@ second_paper:
                 reader->Read(&nodeType);
             }
             reader->Read(&nodeType); // </ad>
-
 
             vAdd2->flags.digital = vAdd2->bank.insid < 0;
 
@@ -1703,8 +1714,10 @@ second_paper:
             if (!spfluos && !rejestracjaSpfluos)
                 adnos.Empty();
             else {
-                if (spfluos) adnos += _T("\n\n");
-                else adnos.Empty();
+                if (spfluos)
+                    adnos += _T("\n\n");
+                else
+                    adnos.Empty();
                 if (rejestracjaSpfluos) adnos += doRejetracjiAdnos + _T("\n\n");
             }
             if (ac = (int)dirtyATEX.size()) {
@@ -1735,17 +1748,17 @@ second_paper:
     return true;
 }
 
-CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, const long nr, UINT kolor, CString& warunki, const CString& uwagi, const CString& krt, CPoint& pos)
+CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString& nazwa, const long nr, UINT kolor, CString& warunki, const CString& uwagi, const CString& krt, CPoint& pos)
 {
     CString sPrecelFlag;
     int sx, sy, atex_krat, szpalt_x = 0, szpalt_y = 0, fizp = 0, posx = 0, posy = 0, typ_xx = 0;
 
-    if (_stscanf_s(krt, _T("%iX%i"), &szpalt_x, &szpalt_y) != 2) {  // og³oszenia z PROFIT'a maj¹ tu informacjê o kracie
+    if (_stscanf_s(krt, _T("%iX%i"), &szpalt_x, &szpalt_y) != 2) { // og³oszenia z PROFIT'a maj¹ tu informacjê o kracie
         szpalt_x = pszpalt_x;
         szpalt_y = pszpalt_y;
     }
 
-    if (_stscanf_s(roz, _T("%iX%i"), &sx, &sy) != 2) {  // typ nazwany w ATEX'ie
+    if (_stscanf_s(roz, _T("%iX%i"), &sx, &sy) != 2) { // typ nazwany w ATEX'ie
         sPrecelFlag = CString(' ', 64);
         CManODPNETParms orapar {
             { CManDbType::DbTypeInt32, CManDbDir::ParameterOut, &szpalt_x },
@@ -1780,14 +1793,20 @@ CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, const
                 if (krat.isValid) {
                     int _sx, _sy, _szpalt_x, _szpalt_y;
                     if (krat.Compute(&_sx, &_sy, &_szpalt_x, &_szpalt_y)) {
-                        sx = _sx; sy = _sy; szpalt_x = _szpalt_x; szpalt_y = _szpalt_y;
+                        sx = _sx;
+                        sy = _sy;
+                        szpalt_x = _szpalt_x;
+                        szpalt_y = _szpalt_y;
                     }
                 }
             }
         }
 
         if (m_pages.size() > 1 && roz == _T("LOG")) {
-            fizp = (m_pages[1])->nr; posx = 5; posy = 1; warunki += _T(" # GP");
+            fizp = m_pages[1]->nr;
+            posx = 5;
+            posy = 1;
+            warunki += _T(" # GP");
         }
     }
 
@@ -1807,10 +1826,11 @@ CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString&  nazwa, const
     pObj->remarks_atex = uwagi;
     pObj->flags.isok = 3; // WER
     pObj->SetSpaceSize(sx, sy);
-    if (fizp != 0) {  // logo albo pasek
+    if (fizp != 0) { // logo albo pasek
         auto pPage = GetPage(fizp);
         if (pPage->FindSpace(pObj, &posx, &posy, sx, sy)) {
-            pObj->posx = posx; pObj->posy = posy;
+            pObj->posx = posx;
+            pObj->posy = posy;
             pPage->AddAdd(pObj);
             pObj->m_position.SetRect(pPage->m_position.left + (posx - 1) * pmodulx, pPage->m_position.top - posy * pmoduly, pPage->m_position.left + (posx + sx - 1) * pmodulx, pPage->m_position.top - (posy + sy) * pmoduly);
         }
@@ -1857,14 +1877,17 @@ void CDrawDoc::OnSyncpow()
 
 void CDrawDoc::OnUpdateSyncpow(CCmdUI* pCmdUI)
 {
-    if (gazeta.GetLength() > 4) OnDisableMenuRO(pCmdUI); else pCmdUI->Enable(FALSE);
+    if (gazeta.GetLength() > 4)
+        OnDisableMenuRO(pCmdUI);
+    else
+        pCmdUI->Enable(FALSE);
 }
 
 void CDrawDoc::OnDelremarks()
 {
     if (IDYES == AfxMessageBox(_T("Czy usun¹æ uwagi ze wszystkich og³oszeñ"), MB_ICONQUESTION | MB_YESNO)) {
         for (const auto& pObj : m_objects)
-            if (auto pAdd = dynamic_cast<CDrawAdd*>(pObj)) 
+            if (auto pAdd = dynamic_cast<CDrawAdd*>(pObj))
                 pAdd->remarks.Empty();
 
         UpdateAllViews(nullptr);
@@ -1989,13 +2012,14 @@ void CDrawDoc::OnSetDea()
 
 void CDrawDoc::OnUpdateSetDea(CCmdUI* pCmdUI)
 {
-    pCmdUI->Enable(theApp.isRDBMS && theApp.grupa&(UserRole::kie | UserRole::mas));
-    pCmdUI->SetCheck(theApp.grupa&UserRole::dea);
+    pCmdUI->Enable(theApp.isRDBMS && theApp.grupa & (UserRole::kie | UserRole::mas));
+    pCmdUI->SetCheck(theApp.grupa & UserRole::dea);
 }
 
 void CDrawDoc::OnShowTime()
 {
-    theApp.showDeadline = !theApp.showDeadline; UpdateAllViews(nullptr);
+    theApp.showDeadline = !theApp.showDeadline;
+    UpdateAllViews(nullptr);
 }
 
 void CDrawDoc::OnShowAcDeadline()
@@ -2055,7 +2079,7 @@ void CDrawDoc::OnAccGrb()
     if (dlg.DoModal() == IDOK) {
         uint8_t mask = 0;
         if (dlg.m_ckpldrz) mask += 4;
-        if (dlg.m_ckporg)  mask += 8;
+        if (dlg.m_ckporg) mask += 8;
         if (dlg.m_ckpcdrz) mask += 16;
 
         CManODPNETParms orapar {
