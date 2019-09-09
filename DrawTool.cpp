@@ -142,8 +142,7 @@ void CSelectTool::OnLButtonDown(CDrawView* pView, const UINT nFlags, const CPoin
             if ((nFlags & MK_CONTROL) != 0)
                 pView->CloneSelection();
 
-            auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
-            if (pAdd) {
+            if (auto pAdd = dynamic_cast<CDrawAdd*>(pObj)) {
                 if (pAdd->flags.locked)
                     selectMode = SelectMode::dontmove;
                 if (pAdd->fizpage)

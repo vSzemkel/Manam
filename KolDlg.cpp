@@ -2466,10 +2466,9 @@ void CEPSDateDlg::OnClickEpsdate(NMHDR* pNMHDR, LRESULT* pResult)
 // CDirDaysDlg dialog
 
 CDirDaysDlg::CDirDaysDlg(CWnd* pParent /*=NULL*/)
-    : CDialog(CDirDaysDlg::IDD, pParent)
+    : CDialog(CDirDaysDlg::IDD, pParent), m_odkiedy(CTime::GetCurrentTime())
 {
     //{{AFX_DATA_INIT(CDirDaysDlg)
-    m_odkiedy = CTime::GetCurrentTime();
     m_dokiedy = m_odkiedy + CTimeSpan(30, 0, 0, 0);
     m_oneday = CTimeSpan(1, 0, 0, 0);
     //}}AFX_DATA_INIT

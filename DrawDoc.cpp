@@ -1061,13 +1061,13 @@ void CDrawDoc::NumberPages()
             pObj->SetNr(MAKELONG(pObj->pagina_type, NextPageNumber++));
         }
     else {
-        int NextRomanNumber = 1;
+        int LastRomanNumber = 0;
         for (int i = FirstPageToNumber; i <= pc; ++i) {
             auto pObj = m_pages[i % pc];
             if (pObj->pagina_type == PaginaType::roman)
-                pObj->SetNr(MAKELONG(PaginaType::roman, NextRomanNumber++));
+                pObj->SetNr(MAKELONG(PaginaType::roman, ++LastRomanNumber));
             else
-                pObj->SetNr(MAKELONG(PaginaType::arabic, NextPageNumber - NextRomanNumber));
+                pObj->SetNr(MAKELONG(PaginaType::arabic, NextPageNumber - LastRomanNumber));
             NextPageNumber++;
         }
     }

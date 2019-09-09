@@ -427,35 +427,34 @@ void CDrawApp::OnFileRefresh()
 
 void CDrawApp::FileRefresh(CDrawDoc* refreshDoc)
 {
-    CMDIChildWnd* vWnd; // pozamykaj okna
     CByteArray aIsRO, aSwCZV;
     std::vector<CString> doce, tytuly;
 
     // zapisz zmiany
     if (refreshDoc ? !refreshDoc->SaveModified() : !SaveAllModified()) return;
     // zapamiêtaj nazwy i zamknij
-    while (vWnd = static_cast<CMDIFrameWnd*>(m_pMainWnd)->MDIGetActive()) {
-        auto vDoc = (CDrawDoc*)vWnd->GetActiveDocument();
-        if (refreshDoc && refreshDoc != vDoc) {
+    while (auto wnd = static_cast<CMDIFrameWnd*>(m_pMainWnd)->MDIGetActive()) {
+        auto doc = static_cast<CDrawDoc*>(wnd->GetActiveDocument());
+        if (refreshDoc && refreshDoc != doc) {
             ((CMDIFrameWnd*)m_pMainWnd)->MDINext();
             continue;
         }
-        if (vDoc->m_mak_xx > 0 || !vDoc->GetPathName().IsEmpty()) {
-            aIsRO.Add((BOOL)vDoc->isRO);
-            aSwCZV.Add((BYTE)vDoc->swCZV);
-            CString d{vDoc->data};
-            if (vDoc->iDocType != DocType::makieta_lib) {
+        if (doc->m_mak_xx > 0 || !doc->GetPathName().IsEmpty()) {
+            aIsRO.Add((BOOL)doc->isRO);
+            aSwCZV.Add((BYTE)doc->swCZV);
+            CString d{doc->data};
+            if (doc->iDocType != DocType::makieta_lib) {
                 d.SetAt(2, '-');
                 d.SetAt(5, '-');
             }
-            if (vDoc->m_mak_xx < 0 && vDoc->iDocType != DocType::grzbiet_drukowany) // offline
-                doce.emplace_back(vDoc->GetPathName());
+            if (doc->m_mak_xx < 0 && doc->iDocType != DocType::grzbiet_drukowany) // offline
+                doce.emplace_back(doc->GetPathName());
             else // online
-                doce.emplace_back(vDoc->gazeta + _T('_') + d + CDrawDoc::asDocTypeExt[static_cast<int8_t>(vDoc->iDocType)]);
+                doce.emplace_back(doc->gazeta + _T('_') + d + CDrawDoc::asDocTypeExt[static_cast<int8_t>(doc->iDocType)]);
 
-            tytuly.emplace_back(vDoc->GetTitle());
+            tytuly.emplace_back(doc->GetTitle());
         }
-        vWnd->DestroyWindow();
+        wnd->DestroyWindow();
         if (refreshDoc) break;
     }
     // otwórz ponownie w odwrotnej kolejnoœci

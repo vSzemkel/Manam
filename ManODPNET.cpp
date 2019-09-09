@@ -354,10 +354,10 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
 {
     BOOL ogloszenieNaNastepnaStrone = FALSE;
     CString op_zew, sekcja, op_sek, pl, op_pl, poz_na_str;
-    int ind, ivar, ivx, ivy, szpalt_x, szpalt_y, s_x, s_y, d, m, r, g, min;
+    int ivar, s_x, s_y, d, m, r, g, min;
     m_doc->isRED = ((CDrawApp*)AfxGetApp())->GetProfileInt(_T("General"), _T("Captions"), 1) != 0;
     while (strCur->Read()) {
-        ind = strCur->GetInt32(1);
+        const int ind = strCur->GetInt32(1);
         if (ind >= m_objetosc) return FALSE;
         auto pPage = m_doc->m_pages[ind];
         pPage->id_str = strCur->GetInt32(0);
@@ -413,10 +413,10 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
                 if (ogloszenieNaNastepnaStrone = (ivar != pPage->id_str))
                     break;
 
-                ivx = pubCur->GetInt32(10); // sizex
-                ivy = pubCur->GetInt32(11); // sizey
-                szpalt_x = pubCur->GetInt32(4); // szpalt_x
-                szpalt_y = pubCur->GetInt32(5); // szpalt_y
+                int ivx = pubCur->GetInt32(10); // sizex
+                int ivy = pubCur->GetInt32(11); // sizey
+                const int szpalt_x = pubCur->GetInt32(4); // szpalt_x
+                const int szpalt_y = pubCur->GetInt32(5); // szpalt_y
                 const CRect rt(pos, CSize((int)(ivx * modulx), (int)(ivy * (-1) * moduly)));
                 auto pAdd = new CDrawAdd(rt);
                 pAdd->m_pub_xx = pubCur->GetInt32(0); // xx

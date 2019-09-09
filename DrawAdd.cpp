@@ -184,7 +184,7 @@ void CDrawAdd::Draw(CDC* pDC)
                 }
                 break;
             case ToolbarMode::tryb_studia:
-                int iKolInd = ((CMainFrame*)AfxGetMainWnd())->GetKolorInd(wersja.Right(wersja.GetLength() - wersja.Find(_T(".")) - 1));
+                int iKolInd = mainWnd->GetKolorInd(wersja.Right(wersja.GetLength() - wersja.Find(_T(".")) - 1));
                 if (iKolInd == -1)
                     iKolInd = 0;
                 pDC->FillRect(rect, CDrawDoc::GetSpotBrush(iKolInd ? (iKolInd + 1) % CDrawDoc::brushe.size() : 0));
@@ -1441,8 +1441,8 @@ bool CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by
         strtok(buf, CManPDF::sepline);
         bool jestBlack = false;
         int tokcount = 0;
-        char* p = strtok(buf, CManPDF::septok);
-        while (p = strtok(nullptr, CManPDF::septok)) {
+        strtok(buf, CManPDF::septok);
+        while (char* p = strtok(nullptr, CManPDF::septok)) {
             if (strtok(p, "Black") == nullptr) jestBlack = true;
             tokcount++;
         }
