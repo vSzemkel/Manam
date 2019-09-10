@@ -184,10 +184,10 @@ void CDrawAdd::Draw(CDC* pDC)
                 }
                 break;
             case ToolbarMode::tryb_studia:
-                int iKolInd = mainWnd->GetKolorInd(wersja.Right(wersja.GetLength() - wersja.Find(_T(".")) - 1));
-                if (iKolInd == -1)
-                    iKolInd = 0;
-                pDC->FillRect(rect, CDrawDoc::GetSpotBrush(iKolInd ? (iKolInd + 1) % CDrawDoc::brushe.size() : 0));
+                int kolInd = 0;
+                if (auto pos = _tcschr(wersja, _T('.')))
+                    kolInd = (1 + mainWnd->GetKolorInd(pos + 1)) % CDrawDoc::brushe.size();
+                pDC->FillRect(rect, CDrawDoc::GetSpotBrush(kolInd));
         }
         if (aRectClip)
             pDC->SelectClipRgn(nullptr);

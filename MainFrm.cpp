@@ -382,7 +382,7 @@ CString CMainFrame::GetKolorText() const noexcept
     return s;
 }
 
-int CMainFrame::GetKolorInd(const CString& text) const noexcept
+int CMainFrame::GetKolorInd(LPCTSTR text) const noexcept
 {
     const int ind = m_KolorBox->FindString(0, text);
     return ind == CB_ERR ? -1 : ind;

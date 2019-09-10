@@ -30,7 +30,7 @@ public:
     int GetCaptionBoxSize() const;
     void SetToolbarBitmap(ToolbarMode bPrevMode, ToolbarMode bNewMode);
 
-    int GetKolorInd(const CString& text) const noexcept;
+    int GetKolorInd(LPCTSTR text) const noexcept;
     DWORD GetCaptionDataItem(int ind) const;
     CString GetKolorText() const noexcept;
     void InsKolorBox();
