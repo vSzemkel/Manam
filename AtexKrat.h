@@ -21,7 +21,7 @@ public:
 private:
     static constexpr int ADJUST_LEVEL = 6;    // przez max ile mnozymy rozmiar podstawowy
     static constexpr int KRATA_PASKOWA = 10;  // od takiego wymiaru wysokoœci szerokoœæ jest ujednolicana na 1 szpalte
-    static constexpr float TOLERANCE = 0.05f; // wzgledna tolerancja rozmiaru
+    static constexpr float TOLERANCE = 0.05F; // wzgledna tolerancja rozmiaru
     float dy;			// wysokosc strony
     float xcol;			// ile szpalt na stronie zajmuje ogloszenie
     float szpalt_x;		// ile jest szpalt na stronie
@@ -58,7 +58,7 @@ public:
     afx_msg void OnDefineModelid();
     afx_msg void OnModeSwitch();
 private:
-    static constexpr double TOLERANCE = 0.011f; // wzgledna tolerancja rozmiaru
+    static constexpr double TOLERANCE = 0.011F; // wzgledna tolerancja rozmiaru
     bool m_autocalcMode;                        // tryb kalkulatora czy rêczny
     int m_x;
     int m_y;

@@ -228,7 +228,7 @@ void CDrawDoc::SetTitleAndMru(const bool addRecentFiles)
     ASSERT(gazeta.GetLength() == 6);
     const auto posDate = makieta.ReverseFind(_T(' '));
     const auto makBuf = makieta.GetBuffer();
-    makieta.CopyChars(makBuf + 6, makBuf + posDate, len - posDate + 1);
+    CString::CopyChars(makBuf + 6, makBuf + posDate, len - posDate + 1);
     makieta.SetAt(6, _T('_'));
     makieta.Truncate(len - posDate + 6);
     makieta.Append(asDocTypeExt[static_cast<int8_t>(iDocType)]);
@@ -1218,7 +1218,7 @@ void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_
 
 float CDrawDoc::PowAdd2Mod(const bool queryQue) const
 {
-    float pow = 0.0f;
+    float pow = 0.0F;
     auto mod_count = [](const CDrawAdd* a) noexcept -> float { return (float)(a->sizex * a->sizey * pmodcnt) / (a->szpalt_x * a->szpalt_y); };
     // pow = std::reduce(std::begin(m_addsque), std::end(m_addsque), 0.0f, [](float sum, const CDrawAdd* a) noexcept - >float { return sum + (float)(a->sizex * a->sizey * pmodcnt) / (a->szpalt_x * a->szpalt_y); });
 

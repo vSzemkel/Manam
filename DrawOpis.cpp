@@ -125,7 +125,7 @@ BOOL CDrawOpis::OnOpen(CDrawView* /*pView*/)
         return FALSE;
     info = dlg.m_opis;
     if (dlg.m_Centruj)
-        m_Scale = 1.0f;
+        m_Scale = 1.0F;
 
     SetDirty(); Invalidate();
     return TRUE;

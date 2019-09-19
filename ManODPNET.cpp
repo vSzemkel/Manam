@@ -1726,7 +1726,7 @@ CString CManODPNET::GetProdInfo(const int pub_xx, LPTSTR kolor, int* ileMat)
 }
 
 CString CManODPNET::AdnoDlaZajawki(int* p, int* o)
-{	// wejscie <zaj_xx, mak_xx>, wyjscie <oldadno, powtorka>
+{   // wejscie <zaj_xx, mak_xx>, wyjscie <oldadno, powtorka>
     CString sAdno;
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();

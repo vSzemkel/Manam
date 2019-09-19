@@ -25,9 +25,9 @@ constexpr auto BRAK = _T("(brak)");
 constexpr auto FULL = _T("(full)");
 constexpr COLORREF BIALY = RGB(255, 255, 255);
 // gen eps
-constexpr float mm2pkt = 0.2835f; // 1mm = 2.835pt
-constexpr float pkt2mm = 0.3527f; // 1pt = 0.3527mm
-constexpr float pkt_10m = 2.835f;
+constexpr float mm2pkt = 0.2835F; // 1mm = 2.835pt
+constexpr float pkt2mm = 0.3527F; // 1pt = 0.3527mm
+constexpr float pkt_10m = 2.835F;
 constexpr int podpisH = 6; // 2.1162 [mm]
 constexpr int preview_offset = 32;
 
