@@ -635,8 +635,9 @@ void CDrawPage::RemoveAdd(CDrawAdd* pAdd, const bool removeFromAdds)
 {
     auto itAdd = std::find(m_adds.cbegin(), m_adds.cend(), pAdd);
     if (itAdd != m_adds.end()) {
-        SetBaseKrata((*itAdd)->szpalt_x, (*itAdd)->szpalt_y);
-        RealizeSpace(*itAdd);
+        const CDrawAdd* pAdd = *itAdd;
+        SetBaseKrata(pAdd->szpalt_x, pAdd->szpalt_y);
+        RealizeSpace(pAdd);
         if (removeFromAdds)
             m_adds.erase(itAdd);
     } else { // gdy dwie strony maja ten sam numer - to nie ma prawa sie zdarzyc
@@ -768,8 +769,8 @@ bool CDrawPage::CheckSpaceDiffKraty(const CDrawAdd* pObj, const int x, const int
 
 void CDrawPage::SetBaseKrata(const int s_x, const int s_y, const bool refresh)
 {
-    /*  poszukaj czy taka krata jest juz zdefiniowana na tej stronie.
-        jezli nie to zmien krate bazowa. jeeli incremental to dopisz */
+    /*  poszukaj, czy taka krata jest juz zdefiniowana na tej stronie.
+        jezeli tak, to zmien krate bazowa, jezeli nie, to dopisz do listy */
     if (szpalt_x == s_x && szpalt_y == s_y) return;
 
     const auto check = [s_x, s_y](const CKrataNiebazowa& kn) noexcept { return kn.m_szpalt_x == s_x && kn.m_szpalt_y == s_y; };
