@@ -78,7 +78,8 @@ class CDrawApp : public CWinAppEx
     static void CTimeToShortDate(const CTime& tData, CString& sData); // konwertuje datê przekazan¹ jako CTime do formatu dd/mm/rrrr
     static bool OpenWebBrowser(const TCHAR* sUrl);                    // otwiera przegladarke Internet Explorer i przekazuje jej sUrl
     static void OpenWebBrowser(size_t service, const TCHAR* sUrl);    // otwiera przegladarke Internet Explorer i przekazuje jej sUrl
-    static void SetErrorMessage(LPTSTR lpBuffer);
+    static void SetErrorMessage(LPTSTR lpBuffer);                     // wyciaga systemowy komunikat na podstawie numeru lasterr
+    static void TryAppendDirSep(CString& path);                       // jesli sciezka nie konczy sie separatorem, to dopisuje
 
     bool ConnecttoDB();
     bool TryUpgradeImage() const; // proba upgrade'u wersji programu na podstawie obrazu zapisanego w bazie

@@ -45,7 +45,7 @@ class CDrawAdd final : public CDrawObj
     int sizey;
     int typ_xx;             // FK_TYP_OGLOSZENIA
     int nag_xx{1};          // FK_NAGLOWEK_OGLOSZENIA, identyfikator górnego nag³ówka redakcyjnego
-    int fizpage;            //fizpage & PaginaType::roman == PaginaType::roman to jest rzymska paginacja
+    int fizpage;            // fizpage & PaginaType::roman == PaginaType::roman to jest rzymska paginacja
     int txtposx;
     int txtposy;
     int precelWertexCnt{0}; // iloœæ wierzcho³ków precla, 0 jesli precelWertexCnt == 4

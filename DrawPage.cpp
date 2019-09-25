@@ -934,7 +934,7 @@ bool CDrawPage::StaleElementy(PGENEPSARG pArg, CFile& handle)
                 if (_stscanf_s(elem, _T("#%s %f %f logo"), logoName, 64, &x, &y) != 3) return FALSE;
                 elem.Format(_T("%.3f %.3f translate\r\n"), x, y); handle.Write(CStringA(elem), elem.GetLength());
                 CString logo = theApp.GetProfileString(_T("GenEPS"), _T("EpsSrc"), _T(""));
-                if (logo[logo.GetLength() - 1] != _T('\\')) logo.AppendChar(_T('\\'));
+                CDrawApp::TryAppendDirSep(logo);
                 logo.AppendFormat(_T("logo\\%s"), logoName);
                 elem.Format(_T("beginManamEPS\r\n%%%%BeginDocument: %s\r\n"), (LPCTSTR)logo); handle.Write(CStringA(elem), elem.GetLength());
 
@@ -976,7 +976,7 @@ bool CDrawPage::GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destN
 {
     constexpr TCHAR* aExt[] = { _T(".eps"), _T(".ps"), _T(".pdf") };
     destName = theApp.GetProfileString(_T("GenEPS"), pArg->format == CManFormat::EPS ? _T("EpsDst") : _T("PsDst"), _T(""));
-    if (destName[destName.GetLength() - 1] != _T('\\')) destName.AppendChar(_T('\\'));
+    CDrawApp::TryAppendDirSep(destName);
     int pos = m_pDocument->gazeta.Find(_T(' '));
     if (pArg->format > CManFormat::EPS) {
         CString dbDestName(' ', 20);
@@ -1059,7 +1059,7 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
     CString drobneEpsPath;
     if (isDrobEPS && !theApp.isOpiMode) {
         drobneEpsPath = theApp.GetProfileString(_T("GenEPS"), _T("EpsDrobne"), _T(""));
-        if (drobneEpsPath[drobneEpsPath.GetLength() - 1] != _T('\\')) drobneEpsPath.AppendChar(_T('\\'));
+        CDrawApp::TryAppendDirSep(drobneEpsPath);
         drobneEpsPath.AppendFormat(_T("%s\\%s%s%s.eps"), (LPCTSTR)m_pDocument->data.Left(2), (LPCTSTR)m_pDocument->gazeta.Left(3), (LPCTSTR)m_pDocument->gazeta.Mid(4, 2), (LPCTSTR)num);
         if (externFile.Open(drobneEpsPath, CFile::modeRead | CFile::shareDenyWrite, &fEx)) {
             externFile.Close();
@@ -1083,7 +1083,7 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
             CString sdervNum;
             if (_stscanf_s(m_dervinfo.Mid(7), _T("%i"), &dervNum) == 1)
                 sdervNum.Format(_T("%s%03i"), (LPCTSTR)theApp.activeDoc->dayws, dervNum);
-            if (uzupEpsPath[uzupEpsPath.GetLength() - 1] != _T('\\')) uzupEpsPath.AppendChar(_T('\\'));
+            CDrawApp::TryAppendDirSep(uzupEpsPath);
             uzupEpsPath.AppendFormat(_T("%s%s%s%s"), (LPCTSTR)m_dervinfo.Left(3), (LPCTSTR)m_dervinfo.Mid(4, 2), (LPCTSTR)sdervNum, _T(".eps"));
             if (externFile.Open(uzupEpsPath, CFile::modeRead | CFile::shareDenyWrite, &fEx)) {
                 isUzupEPS = true;

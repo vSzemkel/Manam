@@ -660,6 +660,12 @@ void CDrawApp::SetErrorMessage(LPTSTR lpBuffer)
     ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, dw, LANG_USER_DEFAULT, lpBuffer, n_size, nullptr);
 }
 
+void CDrawApp::TryAppendDirSep(CString& path)
+{
+    if (path[path.GetLength() - 1] != _T('\\'))
+        path.AppendChar(_T('\\'));
+}
+
 std::unique_ptr<CHttpFile> CDrawApp::OpenURL(const size_t service, const CString& sUrl)
 {
     if (!isRDBMS) {

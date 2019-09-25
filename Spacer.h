@@ -62,8 +62,8 @@ class CSpacerDlg : public CDialog
     bool m_firstSearch{true};
     bool m_olSelected{false};
 
-    int GetQueryFlag() const; //oblicza flagê warunków zamówienia co do miejsca
-    void SetBlokadaState();   //ustawia status kontrolki do blokady miejsca odpowiednio do flagi warunków zamówienia
+    int GetQueryFlag() const; // oblicza flagê warunków zamówienia co do miejsca
+    void SetBlokadaState();   // ustawia status kontrolki do blokady miejsca odpowiednio do flagi warunków zamówienia
     void EnableMultiCond(BOOL flag) const;
     void InsertRequestNoDup(CString& kiedy, CString& mut);
 
@@ -73,7 +73,7 @@ protected:
     void OnCancel() override;
     BOOL DestroyWindow() override;
     BOOL OnInitDialog() override;
-    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override; // DDX/DDV support
     //}}AFX_VIRTUAL
 
     //{{AFX_MSG(CSpacerDlg)

@@ -1577,7 +1577,7 @@ bool CDrawAdd::EpsFromATEX(const CString& num, const CString& dstPath)
 CString CDrawAdd::FindZajawka(CString& root, const CString& ext) const
 {
     CFileFind ff;
-    if (root[root.GetLength() - 1] != _T('\\')) root.AppendChar(_T('\\'));
+    CDrawApp::TryAppendDirSep(root);
     CString s = root + nazwa + ext;
     if (ff.FindFile(s)) return s;
     if (root == _T("\\") || !ff.FindFile(root + _T("*.*"))) return _T("");
@@ -1624,7 +1624,7 @@ CString CDrawAdd::EpsName(const CManFormat format, bool copyOldEPS, const bool b
     num.Format(_T("%ld"), nreps);
     if (eps_path.IsEmpty() && theApp.isOpiMode && powtorka == 0 && !czy_zajawka)
         return _T("::\\") + num + extension;
-    if (eps_path[eps_path.GetLength() - 1] != _T('\\')) eps_path.AppendChar(_T('\\'));
+    CDrawApp::TryAppendDirSep(eps_path);
 
     if (czy_zajawka) {
         int status;
@@ -1703,7 +1703,7 @@ CString CDrawAdd::EpsName(const CManFormat format, bool copyOldEPS, const bool b
             if (ff.FindFile(s + ".tif")) return num + t2e;
             ff.Close();
             zera = theApp.GetString(_T("EpsOld"), _T("!!stare"));
-            if (zera[zera.GetLength() - 1] != _T('\\')) zera.AppendChar(_T('\\'));
+            CDrawApp::TryAppendDirSep(zera);
             zera = eps_path + zera + num;
             if (ff.FindFile(zera + extension)) {
                 s = zera;
@@ -1772,7 +1772,7 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
         // kopiuj podwaly
         CString podwal(theApp.GetString(_T("EpsPodwaly"), _T("")));
     if (copyEps && podwal.Find(_T(':')) >= 0 && wersja != DERV_TMPL_WER && pPage->name.Find(_T("RED")) >= 0) {
-        if (podwal[podwal.GetLength() - 1] != _T('\\')) podwal.AppendChar(_T('\\'));
+        CDrawApp::TryAppendDirSep(podwal);
         const CString fname = eps_name.Mid(eps_name.ReverseFind(_T('\\')) + 1);
         if (theApp.GetInt(_T("PodwalySubDir"), 0) == 0)
             podwal += fname;
@@ -1855,10 +1855,10 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
             if (pPage->m_typ_pary == 2) {
                 const auto fMargDoGrb = (float)dMargDoGrb;
                 if (bLewaStrona)
-                    x += fMargDoGrb - 0.5f*(x2 - x1) + gpx;
+                    x += fMargDoGrb - 0.5F * (x2 - x1) + gpx;
                 else
-                    x -= fMargDoGrb + 0.5f*(x2 - x1);
-                y += 0.5f * (gpy + y1 - y2);
+                    x -= fMargDoGrb + 0.5F * (x2 - x1);
+                y += 0.5F * (gpy + y1 - y2);
                 ::StringCchPrintfA(s, n_size, "%.2f %.2f translate %s translate\r\n", x, y, (LPCSTR)sTrans); dest.Write(s, (UINT)strlen(s));
                 if (bLewaStrona) {
                     ::StringCchPrintfA(s, n_size, ".5 (%s) 0 -5.5 1 7 /GWFranklinBold textKLR\r\n", (LPCSTR)sReklama); dest.Write(s, (UINT)strlen(s));
@@ -1905,8 +1905,8 @@ bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
     auto pRoz = m_pDocument->GetCRozm(szpalt_x, szpalt_y, typ_xx);
 
     float x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
-    const auto x = (float)((posx - 1)*(pRoz->w + pRoz->sw)*mm2pkt);
-    const auto y = (float)((szpalt_y + 1 - posy - sizey)*(pRoz->h + pRoz->sh)*mm2pkt);
+    const auto x = (float)((posx - 1) * (pRoz->w + pRoz->sw) * mm2pkt);
+    const auto y = (float)((szpalt_y + 1 - posy - sizey) * (pRoz->h + pRoz->sh) * mm2pkt);
 
     if (theApp.isOpiMode)
         nazwa.Format(_T("%s%s%03i.eps"), (LPCTSTR)m_pDocument->gazeta.Left(3), (LPCTSTR)m_pDocument->gazeta.Mid(4, 2), txtposx);
