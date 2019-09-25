@@ -1577,7 +1577,7 @@ bool CDrawAdd::EpsFromATEX(const CString& num, const CString& dstPath)
 CString CDrawAdd::FindZajawka(CString& root, const CString& ext) const
 {
     CFileFind ff;
-    root += ((root.Right(1) == _T("\\")) ? _T("") : _T("\\"));
+    if (root[root.GetLength() - 1] != _T('\\')) root.AppendChar(_T('\\'));
     CString s = root + nazwa + ext;
     if (ff.FindFile(s)) return s;
     if (root == _T("\\") || !ff.FindFile(root + _T("*.*"))) return _T("");
@@ -1624,7 +1624,7 @@ CString CDrawAdd::EpsName(const CManFormat format, bool copyOldEPS, const bool b
     num.Format(_T("%ld"), nreps);
     if (eps_path.IsEmpty() && theApp.isOpiMode && powtorka == 0 && !czy_zajawka)
         return _T("::\\") + num + extension;
-    eps_path += ((eps_path.Right(1) == _T("\\")) ? _T("") : _T("\\"));
+    if (eps_path[eps_path.GetLength() - 1] != _T('\\')) eps_path.AppendChar(_T('\\'));
 
     if (czy_zajawka) {
         int status;
@@ -1679,8 +1679,10 @@ CString CDrawAdd::EpsName(const CManFormat format, bool copyOldEPS, const bool b
                 }
 
                 if (copyOldEPS /*&& !inArch*/) { // skopiuj powtórkê
-                    CopyNewFile(s + extension, eps_path + m_pDocument->daydir + num + _T(".eps"));
-                    s = eps_path + m_pDocument->daydir + num;
+                    CString newPath;
+                    newPath.Format(_T("%s%s%s"), (LPCTSTR)eps_path, (LPCTSTR)m_pDocument->daydir, (LPCTSTR)num);
+                    CopyNewFile(s + extension, newPath + _T(".eps"));
+                    s = newPath;
                 }
                 goto modifTest;
             }
@@ -1695,13 +1697,13 @@ CString CDrawAdd::EpsName(const CManFormat format, bool copyOldEPS, const bool b
         zera = CString('0', max(0, numlen - poIle));
 
         if (theApp.GetInt(_T("SubDirSearch"), 1)) {
-            s = eps_path + num.Left(poIle) + zera + _T("\\") + num;
+            s.Format(_T("%s%s%s\\%s"), (LPCTSTR)eps_path, (LPCTSTR)num.Left(poIle), (LPCTSTR)zera, (LPCTSTR)num);
             if (ff.FindFile(s + extension)) goto modifTest;
             ff.Close();
             if (ff.FindFile(s + ".tif")) return num + t2e;
             ff.Close();
             zera = theApp.GetString(_T("EpsOld"), _T("!!stare"));
-            zera += ((zera.Right(1) == _T("\\")) ? _T("") : _T("\\"));
+            if (zera[zera.GetLength() - 1] != _T('\\')) zera.AppendChar(_T('\\'));
             zera = eps_path + zera + num;
             if (ff.FindFile(zera + extension)) {
                 s = zera;
@@ -1752,10 +1754,10 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
         eps_name = wersja == DERV_TMPL_WER ? nazwa : EpsName(CManFormat::EPS, copyEps); // albo nazwa pliku ze sciezka, albo info o bledzie
     pArg->pDlg->OglInfo(pArg->iChannelId, eps_name);
 
-    auto x = (float)((posx - 1)*(pRozKraty->w + pRozKraty->sw)*mm2pkt);
-    auto y = (float)((szpalt_y + 1 - posy - sizey)*(pRozKraty->h + pRozKraty->sh)*mm2pkt + (pArg->bSignAll ? podpisH : podpisH / 2));   // miejsce gdzie sie zaczyna eps bez podpisu
-    const auto gpx = (float)((sizex*(pRozAdd->w + pRozAdd->sw) - pRozAdd->sw)*mm2pkt);
-    const auto gpy = (float)((sizey*(pRozAdd->h + pRozAdd->sh) - pRozAdd->sh)*mm2pkt);
+    auto x = (float)((posx - 1) * (pRozKraty->w + pRozKraty->sw) * mm2pkt);
+    auto y = (float)((szpalt_y + 1 - posy - sizey) * (pRozKraty->h + pRozKraty->sh) * mm2pkt + (pArg->bSignAll ? podpisH : podpisH / 2)); // miejsce gdzie sie zaczyna eps bez podpisu
+    const auto gpx = (float)((sizex * (pRozAdd->w + pRozAdd->sw) - pRozAdd->sw) * mm2pkt);
+    const auto gpy = (float)((sizey * (pRozAdd->h + pRozAdd->sh) - pRozAdd->sh) * mm2pkt);
 
     if (eps_name.Mid(1, 1) != _T(":")) {
         if (pArg->format == CManFormat::PS && pArg->bDoKorekty == 0)
@@ -1770,14 +1772,15 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
         // kopiuj podwaly
         CString podwal(theApp.GetString(_T("EpsPodwaly"), _T("")));
     if (copyEps && podwal.Find(_T(':')) >= 0 && wersja != DERV_TMPL_WER && pPage->name.Find(_T("RED")) >= 0) {
-        podwal += ((podwal.Right(1) == _T("\\")) ? _T("") : _T("\\"));
+        if (podwal[podwal.GetLength() - 1] != _T('\\')) podwal.AppendChar(_T('\\'));
         const CString fname = eps_name.Mid(eps_name.ReverseFind(_T('\\')) + 1);
         if (theApp.GetInt(_T("PodwalySubDir"), 0) == 0)
             podwal += fname;
         else {
-            CString sPodwalDir(podwal + theApp.activeDoc->data.Mid(3, 2) + theApp.activeDoc->data.Mid(0, 2) + _T('\\'));
+            CString sPodwalDir;
+            sPodwalDir.Format(_T("%s%s%s\\"), (LPCTSTR)podwal, (LPCTSTR)theApp.activeDoc->data.Mid(3, 2), (LPCTSTR)theApp.activeDoc->data.Mid(0, 2));
             if (::CreateDirectory(sPodwalDir, nullptr) || GetLastError() == ERROR_ALREADY_EXISTS) {
-                sPodwalDir += theApp.activeDoc->gazeta.Mid(0, 3) + theApp.activeDoc->gazeta.Mid(4, 2) + _T('\\');
+                sPodwalDir.AppendFormat(_T("%s%s\\"), (LPCTSTR)theApp.activeDoc->gazeta.Mid(0, 3), (LPCTSTR)theApp.activeDoc->gazeta.Mid(4, 2));
                 if (::CreateDirectory(sPodwalDir, nullptr) || GetLastError() == ERROR_ALREADY_EXISTS)
                     podwal = sPodwalDir + fname;
             } else
