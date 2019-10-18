@@ -1590,6 +1590,8 @@ void CDrawView::OnPrevPdf() // single Add or Page selected
                 if (sUrl.Find(_T('?')) < 0)
                     sUrl.AppendFormat(_T("?date=%s&nreps=%li&name=%s"), (LPCTSTR)doc->dayws, pAdd->nreps, (LPCTSTR)(doc->gazeta.Left(3) + doc->gazeta.Mid(4, 2)));
             }
+            CDrawApp::OpenWebBrowser(sUrl);
+            return;
         } else {
             int d, m, r;
             _stscanf_s(doc->data, c_formatDaty, &d, &m, &r);
@@ -1603,10 +1605,7 @@ void CDrawView::OnPrevPdf() // single Add or Page selected
     } else // powtorka jest pokazywana z katalogu docelowego
         sUrl.Format(IDS_ARCH_URL, (LPCTSTR)doc->dayws, pAdd->nreps);
 
-    if (sUrl.IsEmpty())
-        AfxMessageBox(_T("Brak materia³u"));
-    else
-        CDrawApp::OpenWebBrowser(sUrl);
+    CDrawApp::OpenWebBrowser(9, sUrl);
 }
 
 void CDrawView::OnPrevDig()

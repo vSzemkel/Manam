@@ -2018,7 +2018,7 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_ARCH_URL            "http://epsilon.agora.pl/ManamOPI/Ctrl_F11.aspx?from=%s&file=%li"
+    IDS_ARCH_URL            "from=%s&file=%li"
     IDS_INITVUPDF           "%PDF-1.4\n%‚„œ”\n1 0 obj\n<<\n/Type /Catalog\n/Pages 3 0 R\n/ViewerPreferences <</FitWindow true>>\n>>\nendobj\n2 0 obj\n<<\n"
     IDS_INITVUPDF2          "/Producer (Manam)\n/Author (Marcin Buchwald)\n>>\nendobj\n3 0 obj\n<<\n/Type /Pages\n/Kids [4 0 R]\n/Count 1\n>>\nendobj\n4 0 obj\n<<\n/Type /Page\n/Parent 3 0 R\n/MediaBox [30 10 821 1161]\n/Contents 5 0 R\n/Resources <<\n\t/ProcSet [/PDF /Text /ImageC /ImageI]\n\t/Font << /FVU 6 0 R >>\n\t/XObject 7 0 R\n\t>>\n>>\nendobj\n6 0 obj\n<</Type /Font\n/Subtype /Type1\n/Encoding /WinAnsiEncoding\n/BaseFont /Helvetica\n>>\nendobj\n%Embedded PDF section\n"
     IDS_OPISEPAR            "--Manam-OPI"

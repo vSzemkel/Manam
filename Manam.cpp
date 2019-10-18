@@ -646,8 +646,7 @@ bool CDrawApp::OpenWebBrowser(const TCHAR* const sUrl)
 
 void CDrawApp::OpenWebBrowser(const size_t service, const TCHAR* const sUrl)
 {
-    auto pFile = theApp.OpenURL(service, sUrl);
-    if (pFile) {
+    if (auto pFile = theApp.OpenURL(service, sUrl)) {
         auto url = pFile->GetFileURL();
         pFile->Close();
         OpenWebBrowser(url);
@@ -662,6 +661,7 @@ void CDrawApp::SetErrorMessage(LPTSTR lpBuffer)
 
 void CDrawApp::TryAppendDirSep(CString& path)
 {
+    ASSERT(!path.IsEmpty());
     if (path[path.GetLength() - 1] != _T('\\'))
         path.AppendChar(_T('\\'));
 }
