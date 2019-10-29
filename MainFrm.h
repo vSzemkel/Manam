@@ -54,9 +54,6 @@ public:
     void SetRoleStatus();
 
 protected:
-    // control bar embedded members
-        //CMFCRibbonBar	m_wndRibbonBar;
-        //CMFCRibbonApplicationButton m_MainButton;
     CMFCStatusBar m_wndStatusBar;
     CMFCMenuBar m_wndMenuBar;
     CMFCToolBar m_wndToolBar;
@@ -64,11 +61,11 @@ protected:
     CComboBox* m_CaptionBox;
     CString m_LastSessionKolor;
     CEdit* m_CaptionEditBox;
+    CDC* m_devContext;
+
     bool CreateManamToolBar();
     LRESULT OnToolBarReset(WPARAM wp, LPARAM /*unused*/);
-    //void InitRibbon ();
-// Generated message map functions
-protected:
+
     //{{AFX_MSG(CMainFrame)
     afx_msg void OnFullScreen();
     afx_msg void OnToolBarCustomize();

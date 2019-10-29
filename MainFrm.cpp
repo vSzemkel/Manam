@@ -40,6 +40,7 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
+    ReleaseDC(m_devContext);
     cyjan.DeleteObject();
     magenta.DeleteObject();
     yellow.DeleteObject();
@@ -67,6 +68,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
         TRACE("Failed to create status bar\n");
         return -4;      // fail to create
     }
+
+    m_devContext = GetDC();
     SetOpenStatus(_T(""));
 
     LOGPEN m_logpen;
@@ -226,13 +229,9 @@ void CMainFrame::SetToolbarBitmap(const ToolbarMode bPrevMode, const ToolbarMode
     DBIniCaptionCombo(theApp.GetProfileInt(_T("General"), _T("Captions"), 1) == 1, theApp.activeDoc->id_drw);
 }
 
-//void CMainFrame::InitRibbon() {
-    // todo: adapt example from MFC Extensions set
-//}
-
 void CMainFrame::SetOpenStatus(LPCTSTR t)
 {
-    const CSize s = GetDC()->GetTextExtent(t, (int)_tcslen(t));
+    const CSize s = m_devContext->GetTextExtent(t, (int)_tcslen(t));
     m_wndStatusBar.SetPaneInfo(1, ID_INDICATOR_OPENSTAT, s.cx ? SBPS_NORMAL : SBPS_NOBORDERS | SBPS_DISABLED, (int)(0.8 * s.cx));
     m_wndStatusBar.SetPaneText(1, t);
     if (MDIGetActive()) { // w grzbiecie ukryj toolbar
@@ -243,7 +242,7 @@ void CMainFrame::SetOpenStatus(LPCTSTR t)
 
 void CMainFrame::SetLogonStatus(LPCTSTR t)
 {
-    const CSize s = GetDC()->GetTextExtent(t, (int)_tcslen(t));
+    const CSize s = m_devContext->GetTextExtent(t, (int)_tcslen(t));
     m_wndStatusBar.SetPaneInfo(2, ID_INDICATOR_LOGIN, SBPS_NORMAL, (int)(0.8 * s.cx));
     m_wndStatusBar.SetPaneText(2, t);
     SetRoleStatus();
@@ -251,15 +250,23 @@ void CMainFrame::SetLogonStatus(LPCTSTR t)
 
 void CMainFrame::SetRoleStatus()
 {
-    CString role;
-    if (theApp.grupa&UserRole::dea) role = _T("DEALER");
-    else if (theApp.grupa&UserRole::mas) role = _T("MASTER");
-    else if (theApp.grupa&UserRole::adm) role = _T("ADMINISTRATOR");
-    else if (theApp.grupa&UserRole::kie) role = _T("KIEROWNIK");
-    else if (theApp.grupa&UserRole::stu) role = _T("STUDIO");
-    else if (theApp.grupa&UserRole::red) role = _T("REDAKTOR");
-    else role = _T("GOŒÆ");
-    CSize s = GetDC()->GetTextExtent(role);
+    LPCTSTR role = [] {
+        if (theApp.grupa & UserRole::dea)
+            return _T("DEALER");
+        else if (theApp.grupa & UserRole::mas)
+            return _T("MASTER");
+        else if (theApp.grupa & UserRole::adm)
+            return _T("ADMINISTRATOR");
+        else if (theApp.grupa & UserRole::kie)
+            return _T("KIEROWNIK");
+        else if (theApp.grupa & UserRole::stu)
+            return _T("STUDIO");
+        else if (theApp.grupa & UserRole::red)
+            return _T("REDAKTOR");
+        else
+            return _T("GOŒÆ");
+    }();
+    CSize s = m_devContext->GetTextExtent(role);
     m_wndStatusBar.SetPaneInfo(3, ID_INDICATOR_ROLE, SBPS_NORMAL, (int)(0.8 * s.cx));
     m_wndStatusBar.SetPaneText(3, role);
 }
@@ -270,7 +277,7 @@ void CMainFrame::InsComboNrSpotow(const int new_i)
     if (theApp.swCZV == ToolbarMode::tryb_studia) return;
     const auto old_i = m_KolorBox->GetCount() - (int)CDrawDoc::kolory.size();
     if (old_i > new_i)
-        for (int i = old_i - 1; i >= new_i; i--)
+        for (int i = old_i - 1; i >= new_i; --i)
             m_KolorBox->DeleteString(i);
     else if (old_i >= 0)
         for (int i = old_i; i < new_i; ++i)

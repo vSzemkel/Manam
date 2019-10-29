@@ -478,9 +478,9 @@ create or replace package body pagina is
   begin
     select count(1) into vcrossday from makieta m, drzewo d 
      where m.xx=vmak_xx AND m.drw_xx=d.xx 
-       and d.tytul in ('DLO','DGW') and m.kiedy=to_date('19/06/2019',sr.vfshortdate);  
+       and d.tytul in ('DLO','DGW') and m.kiedy=to_date('31/10/2019',sr.vfshortdate);  
     if vcrossday>0 then
-      select '(Œroda' || vckreska || 'czwartek, 19' || vckreska || '20 czerwca 2019)' into voutText from dual;
+      select '(Czwartek' || vckreska || 'pi¹tek, 31 paŸdziernika' || vckreska || '1 listopada 2019)' into voutText from dual;
       return;
     end if;
     
@@ -746,7 +746,7 @@ end set_config;
    		  into vprn_mak_xx, vflag, vparity, vpagesize
         from spacer_prn_makieta pm, makieta m, spacer_strona s, typ_paginy tp
        where pm.drw_xx=m.drw_xx and m.xx=s.mak_xx and str_xx=vstr_xx and m.xx=vmak_xx
-         and pm.parity=bitand(nr_porz,1) and pm.is_wzorzec>1 and pm.typ_xx=tp.xx(+);
+         and pm.parity=bitand(nr_porz,1) and pm.is_wzorzec>1 and nvl(instr(sciezka,'RED'),0)=0 and pm.typ_xx=tp.xx(+);
     exception
       when no_data_found then
         raise_application_error(-20001,'GEN_PS: Nie zdefiniowano zadnej makiety PRN dla tego tytulu.');
