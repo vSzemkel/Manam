@@ -146,23 +146,6 @@ create or replace PACKAGE BODY "EPSTEST" as
          
   end transmisja;
   
-  procedure get_paczka_xml (
-    vcntid in out cid_info.xx%type,
-    vapp_source out cid_info.app_source%type,
-    vrefCur out sr.refCur
-  ) as begin
-    select app_source into vapp_source from cid_info where xx=vcntid;
-    if vapp_source in (cDual,cPrft) then 
-      return;
-    end if;
-    
-    open vrefCur for
-      select '<ogloszenie><adno>'||adno||'</adno><vno>'||vno||'</vno><pubno>'||pubno||'</pubno></ogloszenie>'
-        from atex.pub ap, cid_info ci where ci.xx=vcntid and nvl(ci.atex_cntid,ci.xx)=ap.contentid;
-       
-    select atex_cntid into vcntid from cid_info where xx=vcntid;
-  end get_paczka_xml;
-  
   procedure get_paczka_xml1 ( -- zastepuje get_paczka_xml po wdrozeniu octopusowego EpsTesta
     vcntid in out cid_info.xx%type,
     vapp_source out cid_info.app_source%type,
@@ -180,31 +163,7 @@ create or replace PACKAGE BODY "EPSTEST" as
     select atex_cntid into vcntid from cid_info where xx=vcntid;
   end get_paczka_xml1;
   
-  procedure get_paczka_xml2 (
-    vadno in spacer_pub.adno%type,
-    vkiedy in makieta.kiedy%type,
-    vrefCur out sr.refCur
-  ) as 
-    vcc binary_integer;
-    vmsg varchar2(6);
-  begin
-    select count(1) into vcc from atex.pub ap where ap.adno=vadno and ap.pdate=vkiedy and ap.vnoflag='Y' and ap.ppage<>'CM';
-    if vcc = 0 then
-       raise_application_error(-20001,'Dla podanego adno='||vadno||' na '||to_char(vkiedy,sr.vfShortDate)||' material nie powinien byc sprawdzany');
-    end if;
-
-    select min(d.tytul||' '||d.mutacja) into vmsg from drzewo d,makieta m,spacer_pub p
-     where m.drw_xx=d.xx and p.mak_xx=m.xx and p.powtorka is not null and p.adno=vadno and m.kiedy=vkiedy and (p.flaga_rezerw=1 or nvl(czas_obow,0)<=makdate(m.xx));
-    if vmsg is not null then
-       raise_application_error(-20002,'Dla podanego adno='||vadno||' w makiecie '||vmsg||' na '||to_char(vkiedy,sr.vfShortDate)||' jest zaznaczona powtorka i nowy material nie moze byc sprawdzany');
-    end if;
-     
-    open vrefCur for
-      select '<ogloszenie><adno>'||adno||'</adno><vno>'||vno||'</vno><pubno>'||pubno||'</pubno></ogloszenie>'
-        from atex.pub ap where adno=vadno and pdate=vkiedy and vnoflag='Y';
-  end get_paczka_xml2;
-
-  procedure get_paczka_xml3 ( -- zastepuje get_paczka_xml po wdrozeniu octopusowego EpsTesta
+  procedure get_paczka_xml3 ( -- zastepuje get_paczka_xml2 po wdrozeniu octopusowego EpsTesta
     vadno in spacer_pub.adno%type,
     vkiedy in makieta.kiedy%type,
     vrefCur out sr.refCur
@@ -227,6 +186,16 @@ create or replace PACKAGE BODY "EPSTEST" as
       select adno,vno,pubno from atex.pub
        where adno=vadno and pdate=vkiedy and vnoflag='Y';
   end get_paczka_xml3;
+
+  procedure get_delink (
+     vlastchange in eps_present_log.xx%type,
+     vrefCur out sr.refCur
+  ) as begin
+     open vrefCur for 
+        select xx,contentid,to_char(kiedy,'rrrrmmdd'),adno from eps_present_log 
+         where xx>=vlastchange and ope_xx=14 and wf_completed=0 
+         order by xx asc;
+  end get_delink;
 
   procedure check_makieta_prod (
      vmak_xx in makieta.xx%type,

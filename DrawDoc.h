@@ -220,16 +220,16 @@ private:
     CMenu m_grzbietMenu;
     CTime dataZamkniecia;
     CString lastSearchNazwa;
-    float drobneH{0};                                 // wysokoœæ drobnych na stronie
+    float drobneH{0};                                // wysokoœæ drobnych na stronie
     long lastSearchNrAtex;
     long lastSearchNrSpacer;
     int findNextInd;
 
-    void SetTitleAndMru(bool addRecentFiles = true); // wywo³uje base->SetTitle przekazuj¹c odpowiednie parametry i opcjonalnie dodaje do MRU
-    void AdvanceAsidePos(CPoint& p) const;           // wylicza polozenie kolejnego nastepnego ogloszenia z boku
+    std::array<UINT,4> ModCount() const;             // raport iloœci modu³ów poszczególnych typów
     float PowAdd2Mod(bool queryQue) const;
+    void AdvanceAsidePos(CPoint& p) const;           // wylicza polozenie kolejnego nastepnego ogloszenia z boku
+    void SetTitleAndMru(bool addRecentFiles = true); // wywo³uje base->SetTitle przekazuj¹c odpowiednie parametry i opcjonalnie dodaje do MRU
     bool MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo);
-    void ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_modwol) const;
 };
 
 /////////////////////////////////////////////////////////////////////////////

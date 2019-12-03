@@ -1146,13 +1146,14 @@ bool CDrawDoc::AddDrz4Pages(LPCTSTR ile_kolumn)
     return true;
 }
 
-void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_modwol) const
+std::array<UINT,4> CDrawDoc::ModCount() const
 {
     UINT selectedPagesCount{0};
-    UINT l_modogl, l_modred, l_modrez;
     const auto view = GetPanelView();
+    std::array<UINT,4> ret;
+    auto& [m_modogl, m_modred, m_modrez, m_modwol] = ret;
 
-    *m_modogl = *m_modred = *m_modrez = 0;
+    m_modogl = m_modred = m_modrez = 0;
     for (const auto& page : m_pages) {
         if (page->m_dervlvl == DervType::proh)
             continue;
@@ -1160,14 +1161,14 @@ void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_
         const bool isPageSelected = view->IsSelected(page);
         if (selectedPagesCount == 0 && isPageSelected) {
             selectedPagesCount = 1;
-            *m_modogl = *m_modred = *m_modrez = 0;
+            m_modogl = m_modred = m_modrez = 0;
         } else if (selectedPagesCount > 0)
             if (isPageSelected)
                 selectedPagesCount++;
             else
                 continue;
 
-        l_modogl = l_modred = l_modrez = 0;
+        UINT l_modogl{0}, l_modred{0}, l_modrez{0};
         int pmods = page->szpalt_x * page->szpalt_y;
         for (int j = 0; j < pmods; ++j) {
             if (page->space_red[j])
@@ -1183,9 +1184,9 @@ void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_
             l_modred = (UINT)nearbyintf((float)l_modred * norm);
             l_modrez = (UINT)nearbyintf((float)l_modrez * norm);
         }
-        *m_modogl += l_modogl;
-        *m_modred += l_modred;
-        *m_modrez += l_modrez;
+        m_modogl += l_modogl;
+        m_modred += l_modred;
+        m_modrez += l_modrez;
 
         // og³oszenia dla krat niebazowych
         if (page->m_kraty_niebazowe.empty())
@@ -1196,14 +1197,14 @@ void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_
             const int sx = kn.m_szpalt_x;
             const int sy = kn.m_szpalt_y;
             page->SetBaseKrata(sx, sy, true);
-            l_modogl = l_modred = l_modrez = 0;
+            l_modogl = 0;
             pmods = sx * sy;
             for (int j = 0; j < pmods; ++j)
                 if (page->space[j] && !page->space_red[j] && !page->space_locked[j])
                     l_modogl++;
             if (pmods != pmodcnt)
                 l_modogl = (UINT)nearbyintf((float)(l_modogl * pmodcnt) / pmods);
-            *m_modogl += l_modogl;
+            m_modogl += l_modogl;
         }
         page->SetBaseKrata(init_szpalt_x, init_szpalt_y, true);
     }
@@ -1211,9 +1212,10 @@ void CDrawDoc::ModCount(UINT* m_modogl, UINT* m_modred, UINT* m_modrez, UINT* m_
     if (selectedPagesCount == 0)
         selectedPagesCount = (UINT)m_pages.size();
     const auto total_modules = selectedPagesCount * pmodcnt;
-    *m_modwol = total_modules - *m_modogl - *m_modred - *m_modrez;
-    if (*m_modwol > total_modules)
-        *m_modwol = 0;
+    m_modwol = total_modules - m_modogl - m_modred - m_modrez;
+    if (m_modwol > total_modules)
+        m_modwol = 0;
+    return ret;
 }
 
 float CDrawDoc::PowAdd2Mod(const bool queryQue) const
@@ -1237,8 +1239,7 @@ float CDrawDoc::PowAdd2Mod(const bool queryQue) const
 void CDrawDoc::OnFileInfo()
 {
     if (!theApp.isRDBMS || m_mak_xx < 0) {
-        UINT ogl, red, rez, wol;
-        ModCount(&ogl, &red, &rez, &wol);
+        const auto [ogl, red, rez, wol] = ModCount();
         const auto oglp = (float)ogl / pmodcnt;
         const auto redp = (float)red / pmodcnt;
         const auto rezp = (float)rez / pmodcnt;
@@ -1330,11 +1331,15 @@ void CDrawDoc::OnFileInfo()
             dlg.m_godz_wykupu = dlg.m_data_wykupu = CTime(r, m, d, g, min, 0);
 
         CString oldMutGrb = dlg.m_grzbiet;
-        ModCount(&dlg.m_modogl, &dlg.m_modred, &dlg.m_modrez, &dlg.m_modwol);
-        dlg.m_modoglp = (float)dlg.m_modogl / pmodcnt;
-        dlg.m_modredp = (float)dlg.m_modred / pmodcnt;
-        dlg.m_modrezp = (float)dlg.m_modrez / pmodcnt;
-        dlg.m_modwolp = (float)dlg.m_modwol / pmodcnt;
+        const auto [ogl, red, rez, wol] = ModCount();
+        dlg.m_modogl = ogl;
+        dlg.m_modoglp = (float)ogl / pmodcnt;
+        dlg.m_modred = red;
+        dlg.m_modredp = (float)red / pmodcnt;
+        dlg.m_modrez = rez;
+        dlg.m_modrezp = (float)rez / pmodcnt;
+        dlg.m_modwol = wol;
+        dlg.m_modwolp = (float)wol / pmodcnt;
         dlg.m_modcnt = PowAdd2Mod(false);
         dlg.m_quecnt = PowAdd2Mod(true);
         if (dlg.DoModal() != IDOK) return;
