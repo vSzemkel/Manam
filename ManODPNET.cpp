@@ -163,15 +163,15 @@ struct OdpHelper final
         auto odr = cmd->ExecuteReader(CommandBehavior::SingleResult);
         const BOOL found = odr->HasRows;
         while (odr->Read()) {
-            auto i1 = odr->GetInt16(0);
-            auto i2 = odr->GetInt16(1);
-            auto i3 = odr->GetInt16(2);
-            auto i4 = odr->GetInt16(3);
-            auto i5 = odr->GetByte(4);
-            auto i6 = odr->GetByte(5);
-            auto i7 = odr->GetInt32(6);
-            auto i8 = odr->GetByte(7);
-            roz.emplace_back(i1, i2, i3, i4, i5, i6, i7, i8); // serialize this
+            auto w = static_cast<WORD>(odr->GetInt16(0));
+            auto h = static_cast<WORD>(odr->GetInt16(1));
+            auto sw = static_cast<WORD>(odr->GetInt16(2));
+            auto sh = static_cast<WORD>(odr->GetInt16(3));
+            auto szpalt_x = odr->GetByte(4);
+            auto szpalt_y = odr->GetByte(5);
+            auto typ_xx = odr->GetInt32(6);
+            auto scale_it = static_cast<bool>(odr->GetByte(7));
+            roz.push_back({typ_xx, w, h, sw, sh, szpalt_x, szpalt_y, scale_it}); // serialize this
         }
 
         odr->Close();

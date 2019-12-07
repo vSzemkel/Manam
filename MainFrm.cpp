@@ -231,8 +231,9 @@ void CMainFrame::SetToolbarBitmap(const ToolbarMode bPrevMode, const ToolbarMode
 
 void CMainFrame::SetOpenStatus(LPCTSTR t)
 {
-    const CSize s = m_devContext->GetTextExtent(t, (int)_tcslen(t));
-    m_wndStatusBar.SetPaneInfo(1, ID_INDICATOR_OPENSTAT, s.cx ? SBPS_NORMAL : SBPS_NOBORDERS | SBPS_DISABLED, (int)(0.8 * s.cx));
+    //const CSize s = m_devContext->GetTextExtent(t, (int)_tcslen(t));
+    //m_wndStatusBar.SetPaneInfo(1, ID_INDICATOR_OPENSTAT, s.cx ? SBPS_NORMAL : SBPS_NOBORDERS | SBPS_DISABLED, (int)(0.8 * s.cx));
+    m_wndStatusBar.SetPaneInfo(1, ID_INDICATOR_OPENSTAT, SBPS_NORMAL | SBPS_DISABLED, 20 + 3 * (int)_tcslen(t));
     m_wndStatusBar.SetPaneText(1, t);
     if (MDIGetActive()) { // w grzbiecie ukryj toolbar
         const BOOL showToolbar = theApp.activeDoc->iDocType != DocType::grzbiet_drukowany;

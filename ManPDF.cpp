@@ -540,18 +540,18 @@ bool CManPDF::EmbedPDF(CFile& src, const unsigned int objNr, const CDrawAdd& pAd
     EmbedKey(cStore, "/Resources");
     EmbedContents(src, offset);
     trg.Write("endobj\x0a", 7);
-    for (auto it : renumMap) {
-        EmbedRef(src, it.first);
-        it.second *= -1;
+    for (auto& [k,v] : renumMap) {
+        EmbedRef(src, k);
+        v *= -1;
     }
     int cc;
     do { // tyle obrotow jaka glebokosc referencji
         cc = 0;
-        for (auto it : renumMap)
-            if (it.second > 0) {
-                EmbedRef(src, it.first);
-                it.second *= -1;
-                cc++;
+        for (auto& [k,v] : renumMap)
+            if (v > 0) {
+                EmbedRef(src, k);
+                v *= -1;
+                ++cc;
             }
     } while (cc > 0);
     return true;

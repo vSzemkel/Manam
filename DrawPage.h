@@ -134,24 +134,12 @@ private:
 // CRozm
 struct CRozm final
 {
-    CRozm() noexcept : CRozm(468, 575, 40, 34, 5, 6, 0, false) {}
-    CRozm(WORD m_w, WORD m_h, WORD m_sw, WORD m_sh, BYTE m_szpalt_x, BYTE m_szpalt_y, int m_typ_xx, bool m_scale_it) noexcept :
-        w(m_w),
-        h(m_h),
-        sw(m_sw),
-        sh(m_sh),
-        szpalt_x(m_szpalt_x),
-        szpalt_y(m_szpalt_y),
-        scale_it(m_scale_it),
-        typ_xx(m_typ_xx)
-    {
-    }
-    int typ_xx;
-    WORD w;
-    WORD h;
-    WORD sw;
-    WORD sh;
-    BYTE szpalt_x;
-    BYTE szpalt_y;
-    bool scale_it;
+    int typ_xx{0};
+    WORD w{468};
+    WORD h{575};
+    WORD sw{40};
+    WORD sh{34};
+    BYTE szpalt_x{5};
+    BYTE szpalt_y{6};
+    bool scale_it{false};
 };

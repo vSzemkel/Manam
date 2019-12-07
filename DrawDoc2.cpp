@@ -852,15 +852,15 @@ void CDrawDoc::IniRozm()
     CString bf;
     for (i = 1; i <= n; ++i) {
         bf.Format(_T("%i"), i); // tylko kraty inne niz 5x6
-        m_rozm.emplace_back(theApp.GetInt(_T("w") + bf, 0), theApp.GetInt(_T("h") + bf, 0),
-            theApp.GetInt(_T("sw") + bf, 0), theApp.GetInt(_T("sh") + bf, 0),
-            theApp.GetInt(_T("szpalt_x") + bf, 0), theApp.GetInt(_T("szpalt_y") + bf, 0), 0, FALSE);
+        m_rozm.push_back({0, (WORD)theApp.GetInt(_T("w") + bf, 0), (WORD)theApp.GetInt(_T("h") + bf, 0),
+                          (WORD)theApp.GetInt(_T("sw") + bf, 0), (WORD)theApp.GetInt(_T("sh") + bf, 0),
+                          (BYTE)theApp.GetInt(_T("szpalt_x") + bf, 0), (BYTE)theApp.GetInt(_T("szpalt_y") + bf, 0), false});
     }
     n = theApp.GetProfileInt(_T("EPSNiekratowe"), _T("Amount"), 0);
     for (i = 1; i <= n; ++i) {
         bf.Format(_T("%i"), i);
-        m_rozm.emplace_back(theApp.GetProfileInt(_T("EPSNiekratowe"), _T("w") + bf, 0), theApp.GetProfileInt(_T("Niekratowe"), _T("h") + bf, 0), 0, 0, 0, 0,
-            theApp.GetProfileInt(_T("EPSNiekratowe"), _T("typ_xx") + bf, 0), FALSE);
+        m_rozm.push_back({(int)theApp.GetProfileInt(_T("EPSNiekratowe"), _T("typ_xx") + bf, 0), (WORD)theApp.GetProfileInt(_T("EPSNiekratowe"), _T("w") + bf, 0),
+                          (WORD)theApp.GetProfileInt(_T("EPSNiekratowe"), _T("h") + bf, 0), 0, 0, 0, 0, false});
     }
 } // IniRozm
 
