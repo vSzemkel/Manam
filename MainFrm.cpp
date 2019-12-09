@@ -40,7 +40,6 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
-    ReleaseDC(m_devContext);
     cyjan.DeleteObject();
     magenta.DeleteObject();
     yellow.DeleteObject();
@@ -64,13 +63,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
         return -3;      // fail to create
     }
 
-    if (!m_wndStatusBar.Create(this) || !m_wndStatusBar.SetIndicators(indicators, sizeof(indicators) / sizeof(UINT))) {
+    if (!m_wndStatusBar.Create(this) || !m_wndStatusBar.SetIndicators(indicators, _countof(indicators))) {
         TRACE("Failed to create status bar\n");
         return -4;      // fail to create
     }
-
-    m_devContext = GetDC();
-    SetOpenStatus(_T(""));
 
     LOGPEN m_logpen;
     m_logpen.lopnWidth.x = 1;
@@ -104,6 +100,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     m_logbrush.lbColor = RGB(200, 200, 220);
     if (!robgcolor.CreateBrushIndirect(&m_logbrush))
         return -10;
+
+    SetOpenStatus(_T(""));
 
     return 0;
 }
@@ -231,9 +229,9 @@ void CMainFrame::SetToolbarBitmap(const ToolbarMode bPrevMode, const ToolbarMode
 
 void CMainFrame::SetOpenStatus(LPCTSTR t)
 {
-    //const CSize s = m_devContext->GetTextExtent(t, (int)_tcslen(t));
-    //m_wndStatusBar.SetPaneInfo(1, ID_INDICATOR_OPENSTAT, s.cx ? SBPS_NORMAL : SBPS_NOBORDERS | SBPS_DISABLED, (int)(0.8 * s.cx));
-    m_wndStatusBar.SetPaneInfo(1, ID_INDICATOR_OPENSTAT, SBPS_NORMAL | SBPS_DISABLED, 20 + 3 * (int)_tcslen(t));
+    int width = 36; // only two nonempty cases: WRITE and READ 
+    if (t[0] == 'R') width -= 6;
+    m_wndStatusBar.SetPaneInfo(1, ID_INDICATOR_OPENSTAT, t[0] != TCHAR{0} ? SBPS_NORMAL : SBPS_NOBORDERS | SBPS_DISABLED, width);
     m_wndStatusBar.SetPaneText(1, t);
     if (MDIGetActive()) { // w grzbiecie ukryj toolbar
         const BOOL showToolbar = theApp.activeDoc->iDocType != DocType::grzbiet_drukowany;
@@ -243,7 +241,9 @@ void CMainFrame::SetOpenStatus(LPCTSTR t)
 
 void CMainFrame::SetLogonStatus(LPCTSTR t)
 {
-    const CSize s = m_devContext->GetTextExtent(t, (int)_tcslen(t));
+    auto dc = GetDC();
+    const CSize s = dc->GetTextExtent(t, (int)_tcslen(t));
+    ReleaseDC(dc);
     m_wndStatusBar.SetPaneInfo(2, ID_INDICATOR_LOGIN, SBPS_NORMAL, (int)(0.8 * s.cx));
     m_wndStatusBar.SetPaneText(2, t);
     SetRoleStatus();
@@ -267,7 +267,11 @@ void CMainFrame::SetRoleStatus()
         else
             return _T("GOŒÆ");
     }();
-    CSize s = m_devContext->GetTextExtent(role);
+
+    auto dc = GetDC();
+    const CSize s = dc->GetTextExtent(role);
+    ReleaseDC(dc);
+
     m_wndStatusBar.SetPaneInfo(3, ID_INDICATOR_ROLE, SBPS_NORMAL, (int)(0.8 * s.cx));
     m_wndStatusBar.SetPaneText(3, role);
 }

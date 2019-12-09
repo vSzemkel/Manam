@@ -61,7 +61,6 @@ protected:
     CComboBox* m_CaptionBox;
     CString m_LastSessionKolor;
     CEdit* m_CaptionEditBox;
-    CDC* m_devContext;
 
     bool CreateManamToolBar();
     LRESULT OnToolBarReset(WPARAM wp, LPARAM /*unused*/);
