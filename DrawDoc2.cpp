@@ -856,11 +856,12 @@ void CDrawDoc::IniRozm()
                           (WORD)theApp.GetInt(_T("sw") + bf, 0), (WORD)theApp.GetInt(_T("sh") + bf, 0),
                           (BYTE)theApp.GetInt(_T("szpalt_x") + bf, 0), (BYTE)theApp.GetInt(_T("szpalt_y") + bf, 0), false});
     }
-    n = theApp.GetProfileInt(_T("EPSNiekratowe"), _T("Amount"), 0);
+    theApp.SetRegistryBase(_T("EPSNiekratowe"));
+    n = theApp.GetInt(_T("Amount"), 0);
     for (i = 1; i <= n; ++i) {
         bf.Format(_T("%i"), i);
-        m_rozm.push_back({(int)theApp.GetProfileInt(_T("EPSNiekratowe"), _T("typ_xx") + bf, 0), (WORD)theApp.GetProfileInt(_T("EPSNiekratowe"), _T("w") + bf, 0),
-                          (WORD)theApp.GetProfileInt(_T("EPSNiekratowe"), _T("h") + bf, 0), 0, 0, 0, 0, false});
+        m_rozm.push_back({(int)theApp.GetInt(_T("typ_xx") + bf, 0), (WORD)theApp.GetInt(_T("w") + bf, 0),
+                          (WORD)theApp.GetInt(_T("h") + bf, 0), 0, 0, 0, 0, false});
     }
 } // IniRozm
 

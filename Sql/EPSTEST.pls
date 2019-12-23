@@ -316,10 +316,12 @@ create or replace PACKAGE BODY "EPSTEST" as
   ) as 
     vpowtkiedy date;
     vlink varchar2(256);
+    vlinknew varchar2(256);
     vcntid cid_info.xx%type;
     vdkiedy date := to_date(vkiedy,sr.vfshortdate);
-    vlinknew varchar2(256) := 'http://epsilon.agora.pl/PdfRepository/GetPdfWithEmbedData.aspx?name='||vtytul||vmutacja||'&date='||to_char(vdkiedy,'rrrrmmdd')||'&nreps='||vadno;
   begin
+    select uri||'name='||vtytul||vmutacja||'&date='||to_char(vdkiedy,'rrrrmmdd')||'&nreps='||vadno
+      into vlinknew from manam_uri where xx=10;
     if vdkiedy < sysdate - 15 then
       open vrefcur for
         select -1,vlinknew from dual;
@@ -333,7 +335,7 @@ create or replace PACKAGE BODY "EPSTEST" as
           where status>0 and epstest_adno=vadno and atex_cntid in (select max(contentid) from atex.pub where edition=vmutacja and pdate=vdkiedy and adno=vadno and vnoflag='Y');
          if vcntid is not null then
             store_cntid(vcntid);
-         elsif vadno < 20000000 then
+         /*elsif vadno < 20000000 then
             select max(ci.xx) into vcntid from drzewo d,makieta m,cid_info ci
              where d.tytul=vtytul and d.mutacja=vmutacja and m.kiedy=vdkiedy
                and d.xx=m.drw_xx and ci.atex_cntid=vadno
@@ -341,7 +343,7 @@ create or replace PACKAGE BODY "EPSTEST" as
             if vcntid is not null then
                update spacer_pub set cid_xx=vcntid where adno=vadno 
                   and mak_xx in (select m.xx from drzewo d,makieta m where d.tytul=vtytul and d.mutacja=vmutacja and m.kiedy=vdkiedy and d.xx=m.drw_xx);
-            end if;
+            end if;*/
          else
             select max(z.cid_xx) into vcntid from emisja_zajawki ez,zajawka z where ez.adno=vadno and ez.zaj_xx=z.xx;
             if vcntid is not null then --zajawka
@@ -350,11 +352,11 @@ create or replace PACKAGE BODY "EPSTEST" as
          end if;
       end if;
                                                                 
-      select min(mold.kiedy),min('http://epsilon.agora.pl/PdfRepository/GetPdfWithEmbedData.aspx?name=&date='||to_char(mold.kiedy,'rrrrmmdd')||'&nreps='||pold.adno)
+      select min(mold.kiedy),min(u.uri||'name=&date='||to_char(mold.kiedy,'rrrrmmdd')||'&nreps='||pold.adno)
         into vpowtkiedy,vlink
-        from drzewo d, makieta m, spacer_pub p, spacer_pub pold, makieta mold
+        from drzewo d,makieta m,spacer_pub p,manam_uri u,spacer_pub pold,makieta mold
        where d.tytul=vtytul and d.mutacja=vmutacja and m.kiedy=vdkiedy and p.adno=vadno and p.powtorka is not null
-         and d.xx=m.drw_xx and m.xx=p.mak_xx and pold.cid_xx=get_cid(p.xx) and pold.mak_xx=mold.xx;
+         and u.xx=10 and d.xx=m.drw_xx and m.xx=p.mak_xx and pold.cid_xx=get_cid(p.xx) and pold.mak_xx=mold.xx;
       if vpowtkiedy is not null and vpowtkiedy < sysdate - 15 then
         open vrefCur for
           select -1,vlink from dual;

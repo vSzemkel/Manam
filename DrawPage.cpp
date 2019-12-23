@@ -1310,7 +1310,7 @@ bool CDrawPage::MovePageToOpiServer(PGENEPSARG pArg, CMemFile&& pOpiFile) const
     ses.Close();
 
     if (*reinterpret_cast<short*>(pArg->cBigBuf) != 0x4b4f) { // "OK"
-        ::MessageBox(pArg->pDlg->m_hWnd, CString(reinterpret_cast<char*>(pArg->cBigBuf)), _T("OPI Error"), MB_ICONERROR | MB_OK);
+        ::MessageBox(pArg->pDlg->m_hWnd, reinterpret_cast<TCHAR*>(pArg->cBigBuf), _T("OPI Error"), MB_ICONERROR | MB_OK);
         return false;
     }
 

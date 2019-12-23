@@ -41,8 +41,7 @@ class CFlag final
     void   operator&= (uintptr_t mask) noexcept;
     void   operator^= (const CFlag& f) noexcept;
     void   operator^= (uintptr_t mask) noexcept;
-    int operator== (const CFlag& f) const noexcept;
-    int operator!= (const CFlag& f) const noexcept;
+    bool operator== (const CFlag& f) const noexcept;
     bool operator[](size_t pos) const noexcept;
     bool   IsZero() const noexcept;
     bool   IsSet() const noexcept;

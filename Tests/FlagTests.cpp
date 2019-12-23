@@ -28,13 +28,13 @@ TEST(FlagTests, BitMaskInvert) {
 }
 
 TEST(FlagTests, BitCount) {
-    CFlag flag{"A580BD51C580BDAF"};
+    CFlag flag{ "A580BD51C580BDAF" };
 
     auto zero_cnt = flag.GetBitCnt(0);
     auto one_cnt = flag.GetBitCnt(1);
     ASSERT_EQ(zero_cnt + one_cnt, 8 * flag.GetSize()) << "New kind of bit invented!";
 
-    std::wstring p{flag.Print()};
+    std::wstring p{ flag.Print() };
     auto char0_cnt = std::count(p.begin(), p.end(), '0');
     auto char1_cnt = std::count(p.begin(), p.end(), '1');
     EXPECT_EQ(char0_cnt, zero_cnt);
@@ -52,7 +52,7 @@ TEST(FlagTests, BitCount) {
 }
 
 TEST(FlagTests, MaskShift) {
-    CFlag flag{100};
+    CFlag flag{ 100 };
     const auto block_cnt = flag.GetSize() / sizeof(intptr_t);
 
     flag |= 1;
@@ -67,17 +67,17 @@ TEST(FlagTests, MaskShift) {
 }
 
 TEST(FlagTests, SizeRoundup) {
-    CFlag f1{1};
+    CFlag f1{ 1 };
     EXPECT_EQ(f1.GetSize(), sizeof(uintptr_t));
-    CFlag f2{sizeof(uintptr_t) / 2};
+    CFlag f2{ sizeof(uintptr_t) / 2 };
     EXPECT_EQ(f2.GetSize(), sizeof(uintptr_t));
-    CFlag f3{sizeof(uintptr_t)};
+    CFlag f3{ sizeof(uintptr_t) };
     EXPECT_EQ(f3.GetSize(), sizeof(uintptr_t));
     CFlag f4{ sizeof(uintptr_t) + 1 };
     EXPECT_EQ(f4.GetSize(), 2 * sizeof(uintptr_t));
     CFlag f5{ 2 * sizeof(uintptr_t) - 2 };
     EXPECT_EQ(f5.GetSize(), 2 * sizeof(uintptr_t));
-    CFlag f10{9 * sizeof(uintptr_t) + 1};
+    CFlag f10{ 9 * sizeof(uintptr_t) + 1 };
     EXPECT_EQ(f10.GetSize(), 10 * sizeof(uintptr_t));
 }
 
@@ -87,7 +87,7 @@ TEST(FlagTests, Invert) {
     flag.Invert();
     const int zeros = flag.GetBitCnt(false);
     EXPECT_EQ(zeros, ones) << "Long case";
-    CFlag flag2{2, 4, 5, 6};
+    CFlag flag2{ 2, 4, 5, 6 };
     const int ones2 = flag2.GetBitCnt(true);
     flag2.Invert();
     const int zeros2 = flag2.GetBitCnt(false);
@@ -102,4 +102,11 @@ TEST(FlagTests, Reverse) {
     flag.Reverse(20);
     flag.Reverse(71);
     EXPECT_STREQ(raw, (LPCTSTR)(flag.ToRaw().Right(24).MakeUpper())) << "Flag clobbered";
+}
+
+TEST(FlagTests, Equality) {
+    CFlag flag1{ "A580BD51C580BDAE" };
+    CFlag flag2{ "A580BD52C580BDAF" };
+    EXPECT_FALSE(flag1 == flag2) << "Equality failed";
+    EXPECT_TRUE(flag1 != flag2) << "Inequality failed";
 }

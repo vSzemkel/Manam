@@ -385,22 +385,13 @@ uintptr_t CFlag::operator&&(const CFlag& f) const noexcept
     return flag && f.flag;
 }
 
-int CFlag::operator==(const CFlag& f) const noexcept
+bool CFlag::operator==(const CFlag& f) const noexcept
 {
     ASSERT(size == f.size);
     if (size > CRITICAL_SIZE)
         return !memcmp(flagblob_ptr, f.flagblob_ptr, size);
 
     return flag == f.flag;
-}
-
-int CFlag::operator!=(const CFlag& f) const noexcept
-{
-    ASSERT(size == f.size);
-    if (size > CRITICAL_SIZE)
-        return memcmp(flagblob_ptr, f.flagblob_ptr, size);
-
-    return flag != f.flag;
 }
 
 void CFlag::SetZero() noexcept
