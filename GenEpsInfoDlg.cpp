@@ -74,7 +74,7 @@ CGenEpsInfoDlg* CGenEpsInfoDlg::GetGenEpsInfoDlg(const BOOL bIsGen)
     return &CGenEpsInfoDlg::m_instance;
 }
 
-void CGenEpsInfoDlg::ReleaseGenEpsInfoDlg(CGenEpsInfoDlg *pDlg)
+void CGenEpsInfoDlg::ReleaseGenEpsInfoDlg(CGenEpsInfoDlg* pDlg)
 {
     ::PostMessage(pDlg->m_hWnd, WM_QUIT, 0, 0);
     ::WaitForSingleObject(CGenEpsInfoDlg::m_instance.hCreationEvent, INFINITE);
@@ -93,37 +93,29 @@ WORD CGenEpsInfoDlg::GetCpuCnt()
 
 void CGenEpsInfoDlg::SetChannelCount(int iChannelCnt)
 {
-    CRect dwr, cwr, dtwr;
-    CWnd* pChildCtrl;
+    CRect dwr, dtwr;
     CGenEpsInfoDlg::m_instance.GetWindowRect(&dwr);
     ::GetWindowRect(::GetDesktopWindow(), &dtwr);
 
     if (iChannelCnt > ciMaxChannels)
         iChannelCnt = ciMaxChannels;
 
+    auto repos = [](const int ctrl, const int offset) {
+        CRect cwr;
+        auto pChildCtrl = CGenEpsInfoDlg::m_instance.GetDlgItem(ctrl);
+        pChildCtrl->GetWindowRect(&cwr);
+        ::MapWindowPoints(nullptr, CGenEpsInfoDlg::m_instance.m_hWnd, (LPPOINT)&cwr, 2);
+        pChildCtrl->SetWindowPos(&CWnd::wndTop, cwr.left, cwr.top + offset, cwr.Width(), cwr.Height(), SWP_SHOWWINDOW);
+    };
+
     switch (iChannelCnt) {
         case 1: // defined in Manam.rc
             break;
         case 2:
-            pChildCtrl = CGenEpsInfoDlg::m_instance.GetDlgItem(IDC_SPA);
-            pChildCtrl->GetWindowRect(&cwr);
-            ::MapWindowPoints(nullptr, CGenEpsInfoDlg::m_instance.m_hWnd, (LPPOINT)&cwr, 2);
-            pChildCtrl->SetWindowPos(&CWnd::wndTop, cwr.left, cwr.top - 45, cwr.Width(), cwr.Height(), SWP_SHOWWINDOW);
-
-            pChildCtrl = CGenEpsInfoDlg::m_instance.GetDlgItem(IDC_A3_PAGE);
-            pChildCtrl->GetWindowRect(&cwr);
-            ::MapWindowPoints(nullptr, CGenEpsInfoDlg::m_instance.m_hWnd, (LPPOINT)&cwr, 2);
-            pChildCtrl->SetWindowPos(&CWnd::wndTop, cwr.left, cwr.top - 45, cwr.Width(), cwr.Height(), SWP_SHOWWINDOW);
-
-            pChildCtrl = CGenEpsInfoDlg::m_instance.GetDlgItem(IDC_OBJETOSC);
-            pChildCtrl->GetWindowRect(&cwr);
-            ::MapWindowPoints(nullptr, CGenEpsInfoDlg::m_instance.m_hWnd, (LPPOINT)&cwr, 2);
-            pChildCtrl->SetWindowPos(&CWnd::wndTop, cwr.left, cwr.top - 45, cwr.Width(), cwr.Height(), SWP_SHOWWINDOW);
-
-            pChildCtrl = CGenEpsInfoDlg::m_instance.GetDlgItem(IDCANCEL);
-            pChildCtrl->GetWindowRect(&cwr);
-            ::MapWindowPoints(nullptr, CGenEpsInfoDlg::m_instance.m_hWnd, (LPPOINT)&cwr, 2);
-            pChildCtrl->SetWindowPos(&CWnd::wndTop, cwr.left, cwr.top + 110, cwr.Width(), cwr.Height(), SWP_SHOWWINDOW);
+            repos(IDC_SPA, -45);
+            repos(IDC_A3_PAGE, -45);
+            repos(IDC_OBJETOSC, -45);
+            repos(IDCANCEL, 110);
 
             CGenEpsInfoDlg::m_instance.SetWindowPos(&CWnd::wndTop, (dtwr.right - dwr.Width()) / 2, (dtwr.bottom - dwr.Height()) / 3, dwr.Width(), 295, SWP_SHOWWINDOW);
     }
@@ -134,22 +126,24 @@ void CGenEpsInfoDlg::OglInfo(const int iChannel, const CString& s)
 {
     switch (iChannel % ciMaxChannels) {
         case 0:
-            SetDlgItemText(IDC_OGLSTR, s); break;
+            SetDlgItemText(IDC_OGLSTR, s);
+            break;
         case 1:
-            SetDlgItemText(IDC_OBJETOSC, s); break;
+            SetDlgItemText(IDC_OBJETOSC, s);
+            break;
     }
-    ShowWindow(SW_SHOW);
 }
 
 void CGenEpsInfoDlg::StrInfo(const int iChannel, const CString& s)
 {
     switch (iChannel % ciMaxChannels) {
         case 1:
-            SetDlgItemText(IDC_A3_PAGE, s); break;
+            SetDlgItemText(IDC_A3_PAGE, s);
+            break;
         default:
-            SetDlgItemText(IDC_EPSSTR, s); break;
+            SetDlgItemText(IDC_EPSSTR, s);
+            break;
     }
-    ShowWindow(SW_SHOW);
 }
 
 void CGenEpsInfoDlg::OnInterruptProcessing()
