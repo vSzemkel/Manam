@@ -455,12 +455,12 @@ int CDrawObj::Arabska(LPCTSTR rz)
     return li_sum;
 }
 
-double CDrawObj::modx(const double x)
+double CDrawObj::modx(const int x)
 {
     return ((double)pwidth / x);
 }
 
-double CDrawObj::mody(const double y)
+double CDrawObj::mody(const int y)
 {
     return ((double)phight / y);
 }

@@ -779,8 +779,8 @@ bool CDrawAdd::PtOnRing(const CPoint p) const
 
 int CDrawAdd::FindRing(const CPoint p0, const bool bOuterRing)
 {
-    enum Kierunek : uint8_t { E, S, W, N }; // okresla kierunek ostatnio znalezionego fragmentu obwodnicy
-    Kierunek eKierunek = E;
+    enum class Kierunek : uint8_t { E, S, W, N }; // okresla kierunek ostatnio znalezionego fragmentu obwodnicy
+    Kierunek eKierunek = Kierunek::E;
     const int iInitVertexCnt = precelWertexCnt;
     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p0.x*modulx), static_cast<int>(-p0.y*moduly));
     CPoint p(p0.x + 1, p0.y);
@@ -790,10 +790,10 @@ int CDrawAdd::FindRing(const CPoint p0, const bool bOuterRing)
 
     while (p != p0) {
         switch (eKierunek) {
-            case E:
+            case Kierunek::E:
                 if (p.y > 0 && p.x < szpalt_x && space[(p.y - 1)*szpalt_x + p.x] == bOuterRing) {
                     p.y--;
-                    eKierunek = N;
+                    eKierunek = Kierunek::N;
                     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
                 } else if (p.x < sizex && p.y < szpalt_y && space[p.y*szpalt_x + p.x] == bOuterRing) {
                     p.x++;
@@ -804,14 +804,14 @@ int CDrawAdd::FindRing(const CPoint p0, const bool bOuterRing)
                 } else {
                     ASSERT(p.y < sizey);
                     p.y++;
-                    eKierunek = S;
+                    eKierunek = Kierunek::S;
                     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
                 }
                 break;
-            case S:
+            case Kierunek::S:
                 if (p.x < sizex && p.y < sizey && space[p.y*szpalt_x + p.x] == bOuterRing) {
                     p.x++;
-                    eKierunek = E;
+                    eKierunek = Kierunek::E;
                     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
                 } else if (p.y < sizey && space[p.y*szpalt_x + p.x - 1] == bOuterRing) {
                     p.y++;
@@ -822,14 +822,14 @@ int CDrawAdd::FindRing(const CPoint p0, const bool bOuterRing)
                 } else {
                     ASSERT(p.x - 1 >= 0);
                     p.x--;
-                    eKierunek = W;
+                    eKierunek = Kierunek::W;
                     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
                 }
                 break;
-            case W:
+            case Kierunek::W:
                 if (p.x > 0 && p.y < sizey && space[p.y*szpalt_x + p.x - 1] == bOuterRing) {
                     p.y++;
-                    eKierunek = S;
+                    eKierunek = Kierunek::S;
                     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
                 } else if (p.x > 0 && p.y > 0 && space[(p.y - 1)*szpalt_x + p.x - 1] == bOuterRing) {
                     p.x--;
@@ -840,14 +840,14 @@ int CDrawAdd::FindRing(const CPoint p0, const bool bOuterRing)
                 } else {
                     ASSERT(p.y > 0);
                     p.y--;
-                    eKierunek = N;
+                    eKierunek = Kierunek::N;
                     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
                 }
                 break;
-            case N:
+            case Kierunek::N:
                 if (p.x > 0 && p.y > 0 && space[(p.y - 1)*szpalt_x + p.x - 1] == bOuterRing) {
                     p.x--;
-                    eKierunek = W;
+                    eKierunek = Kierunek::W;
                     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
                 } else if (p.y > 0 && space[(p.y - 1)*szpalt_x + p.x] == bOuterRing) {
                     p.y--;
@@ -858,7 +858,7 @@ int CDrawAdd::FindRing(const CPoint p0, const bool bOuterRing)
                 } else {
                     ASSERT(p.x + 1 <= sizex);
                     p.x++;
-                    eKierunek = E;
+                    eKierunek = Kierunek::E;
                     aPrecelWertex[precelWertexCnt++] = CPoint(static_cast<int>(p.x*modulx), static_cast<int>(-p.y*moduly));
                 }
                 break;

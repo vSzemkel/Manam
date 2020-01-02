@@ -29,8 +29,8 @@ class CDrawObj : public CObject
     virtual BOOL OnOpen(CDrawView* pView);
     virtual CDrawObj* Clone(CDrawDoc*) const { return nullptr; };
 
-    static double modx(double x);
-    static double mody(double y);
+    static double modx(int x);
+    static double mody(int y);
     static CString Rzymska(int i);
     static int Arabska(LPCTSTR rz);
     static CString RzCyfra(int digit, int offset);

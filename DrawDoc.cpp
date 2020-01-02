@@ -879,7 +879,7 @@ bool CDrawDoc::Import(const bool check_exist) // tu dodaje na koncu do m_objects
 
 bool CDrawDoc::CreateAdd(LPTSTR adBuf, const TCHAR sepChar, CPoint& pos, const bool check_exist)
 { // tworzenie ogloszen importowanych z pliku tekstowego
-    enum nazcstr : uint8_t {
+     enum class AddImportField : uint8_t {
         kratka,
         fizpag,
         pox,
@@ -891,7 +891,7 @@ bool CDrawDoc::CreateAdd(LPTSTR adBuf, const TCHAR sepChar, CPoint& pos, const b
         remark,
         wer,
         dodomu
-    } col = theApp.includeKratka ? kratka : fizpag;
+    } col = theApp.includeKratka ? AddImportField::kratka : AddImportField::fizpag;
 
     CString p_remarks, p_nazwa, p_logpage, p_wersja;
     UINT p_kolor = 0;
@@ -906,48 +906,48 @@ bool CDrawDoc::CreateAdd(LPTSTR adBuf, const TCHAR sepChar, CPoint& pos, const b
     int szpalt_x = pszpalt_x;
     int szpalt_y = pszpalt_y;
 
-    while (col != dodomu) {
+    while (col != AddImportField::dodomu) {
         token = _tcstok(nullptr, &sepChar);
         if (token == nullptr || *token == _T('\n')) // urwana linia
             break;
 
         switch (col) {
-            case kratka:
+            case AddImportField::kratka:
                 _stscanf_s(token, _T("%ix%i"), &szpalt_x, &szpalt_y);
                 break;
-            case fizpag:
+            case AddImportField::fizpag:
                 fizpage = _istdigit(token[0]) ? MAKELONG(PaginaType::arabic, _ttoi(token))
                                               : MAKELONG(PaginaType::roman, CDrawObj::Arabska(token));
                 break;
-            case pox:
+            case AddImportField::pox:
                 posx = ((fizpage == 0) ? 0 : (token == nullptr ? szpalt_x + 1 - sx : _ttoi(token)));
                 break;
-            case poy:
+            case AddImportField::poy:
                 posy = ((fizpage == 0) ? 0 : (token == nullptr ? szpalt_y + 1 - sy : _ttoi(token)));
                 break;
-            case nazw:
+            case AddImportField::nazw:
                 p_nazwa = token;
                 break;
-            case nrep:
+            case AddImportField::nrep:
                 p_nreps = _ttol(token);
                 if (p_nreps == 0) p_nreps = -1;
                 break;
-            case kolo:
+            case AddImportField::kolo:
                 p_kolor = (token == nullptr ? ColorId::brak : ValidKolor(token));
                 break;
-            case logp:
+            case AddImportField::logp:
                 p_logpage = token;
                 p_logpage.Truncate(5);
                 break;
-            case remark:
+            case AddImportField::remark:
                 p_remarks = token;
                 break;
-            case wer:
+            case AddImportField::wer:
                 p_wersja = token;
                 p_wersja.Truncate(5);
                 break;
         }
-        col = static_cast<nazcstr>(col + 1);
+        col = static_cast<AddImportField>((uint8_t)col + 1);
     }
 
     if (check_exist && AddExists(p_nreps) != nullptr) {
