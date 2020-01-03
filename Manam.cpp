@@ -661,8 +661,7 @@ void CDrawApp::SetErrorMessage(LPTSTR lpBuffer)
 
 void CDrawApp::TryAppendDirSep(CString& path)
 {
-    ASSERT(!path.IsEmpty());
-    if (path[path.GetLength() - 1] != _T('\\'))
+    if (path.IsEmpty() || path[path.GetLength() - 1] != _T('\\'))
         path.AppendChar(_T('\\'));
 }
 
