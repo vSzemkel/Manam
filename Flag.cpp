@@ -1,7 +1,7 @@
 
 /*
 **	CFlag jest rozszerzeniem typu int_ptr wykorzystywanego jako flaga bitowa
-**	Pole danych obiektu CFlag jest 8*size bitowe
+**	Pole danych obiektu CFlag jest BITSPERBYTE*size bitowe
 */
 
 #include "StdAfx.h"
@@ -74,14 +74,14 @@ CFlag::CFlag(const char* raw) : size(CRITICAL_SIZE)
             size += 4;
 #endif
         if (size > CRITICAL_SIZE) {
-            uint32_t l;
+            uint32_t chunk;
             char buf[RAW_MOD_SIZE + 1];
             flagblob_ptr = malloc(size);
             buf[RAW_MOD_SIZE] = '\0';
             for (size_t i = 0; DBRAW_BLOCK * i < size; ++i) {
                 memcpy(buf, &raw[len - RAW_MOD_SIZE * (i + 1)], RAW_MOD_SIZE);
-                sscanf_s(buf, "%x", &l);
-                memcpy((char*)flagblob_ptr + DBRAW_BLOCK * i, (const char*)&l, DBRAW_BLOCK);
+                sscanf_s(buf, "%x", &chunk);
+                memcpy((char*)flagblob_ptr + DBRAW_BLOCK * i, (const char*)&chunk, DBRAW_BLOCK);
             }
         } else
             sscanf_s(raw, "%Ix", &flag);
@@ -298,15 +298,16 @@ void CFlag::operator^=(const uintptr_t mask) noexcept
 CFlag CFlag::operator>>(const size_t shift) const noexcept
 {
     CFlag ret{*this};
+    const size_t total = BITS_PER_BYTE * size;
     if (size > CRITICAL_SIZE) {
-        if (shift >= 8 * size)
+        if (shift >= total)
             ret.SetZero();
         else {
             size_t i;
-            for (i = 0; i < 8 * size - shift; ++i)
+            for (i = 0; i < total - shift; ++i)
                 ret.SetBit(i, operator[](i + shift));
             for (i = 0; i < shift; ++i)
-                ret.SetBit(8 * size - 1 - i, false);
+                ret.SetBit(total - 1 - i, false);
         }
     } else
         ret.flag = (flag >> shift);
@@ -317,12 +318,13 @@ CFlag CFlag::operator>>(const size_t shift) const noexcept
 CFlag CFlag::operator<<(const size_t shift) const noexcept
 {
     CFlag ret{*this};
+    const size_t total = BITS_PER_BYTE * size;
     if (size > CRITICAL_SIZE) {
-        if (shift >= 8 * size)
+        if (shift >= total)
             ret.SetZero();
         else {
             size_t i;
-            for (i = 8 * size - 1 - shift; i != (size_t)-1; --i)
+            for (i = total - 1 - shift; i != (size_t)-1; --i)
                 ret.SetBit(i + shift, operator[](i));
             for (i = 0; i < shift; ++i)
                 ret.SetBit(i, false);
@@ -335,15 +337,16 @@ CFlag CFlag::operator<<(const size_t shift) const noexcept
 
 CFlag& CFlag::operator>>=(const size_t shift) noexcept
 {
+    const size_t total = BITS_PER_BYTE * size;
     if (size > CRITICAL_SIZE) {
-        if (shift >= 8 * size)
+        if (shift >= total)
             SetZero();
         else {
             size_t i;
-            for (i = 0; i < 8 * size - shift; ++i)
+            for (i = 0; i < total - shift; ++i)
                 SetBit(i, operator[](i + shift));
             for (i = 0; i < shift; ++i)
-                SetBit(8 * size - 1 - i, false);
+                SetBit(total - 1 - i, false);
         }
     } else
         flag >>= shift;
@@ -353,12 +356,13 @@ CFlag& CFlag::operator>>=(const size_t shift) noexcept
 
 CFlag& CFlag::operator<<=(const size_t shift) noexcept
 {
+    const size_t total = BITS_PER_BYTE * size;
     if (size > CRITICAL_SIZE) {
-        if (shift >= 8 * size)
+        if (shift >= total)
             SetZero();
         else {
             size_t i;
-            for (i = 8 * size - 1 - shift; i != (size_t)-1; --i)
+            for (i = total - 1 - shift; i != (size_t)-1; --i)
                 SetBit(i + shift, operator[](i));
             for (i = 0; i < shift; ++i)
                 SetBit(i, false);
@@ -452,7 +456,7 @@ void CFlag::CopyFlag(CByteArray* bArr)
 
 void CFlag::Reverse(const size_t len) noexcept
 {
-    if (len <= 8 * size)
+    if (len <= BITS_PER_BYTE * size)
         for (size_t l = 0, r = len - 1; l < r; ++l, --r) {
             const auto bit = operator[](l);
             SetBit(l, operator[](r));
@@ -486,30 +490,31 @@ int CFlag::GetBitCnt(const bool val) const noexcept
     for (int i = 0; i < lc; ++i)
         iIle += _mm_popcnt_u32(raw[i]);
     if (!val)
-        iIle = 8 * static_cast<int>(size) - iIle;
+        iIle = static_cast<int>(BITS_PER_BYTE * size) - iIle;
     return iIle;
 }
 
 bool CFlag::operator[](const size_t pos) const noexcept
 {
-    ASSERT(pos < 8 * size);
-    const unsigned char mask = (1 << (pos % 8));
+    ASSERT(pos < BITS_PER_BYTE * size);
+    const char mask = static_cast<char>(1 << (pos % BITS_PER_BYTE));
     char* str = GetRawFlag();
-    str += (pos / 8);
+    str += (pos / BITS_PER_BYTE);
     return *str & mask;
 }
 
 void CFlag::SetBit(const size_t pos, const bool val) noexcept
 {
-    const unsigned char mask = (1 << (pos % 8));
+    ASSERT(pos < BITS_PER_BYTE * size);
+    const char mask = static_cast<char>(1 << (pos % BITS_PER_BYTE));
     char* str = GetRawFlag();
-    str += (pos / 8);
-    *str = (val ? *str | mask : *str & (0xff - mask));
+    str += (pos / BITS_PER_BYTE);
+    *str = static_cast<char>(val ? *str | mask : *str & ~mask);
 }
 
 CString CFlag::Print() const
 {
-    const int bit_cnt = (int)size * 8;
+    const auto bit_cnt = static_cast<int>(size * BITS_PER_BYTE);
     CString display{'0', bit_cnt};
 
     for (auto i = 0; i < bit_cnt; ++i)
@@ -521,18 +526,18 @@ CString CFlag::Print() const
 
 CString CFlag::ToRaw() const
 {
-    TCHAR buf[9];
     CString raw("");
+    TCHAR buf[RAW_MOD_SIZE + 1];
     if (size > CRITICAL_SIZE) {
-        int32_t l;
+        int32_t chunk;
         auto str = (char*)flag;
         for (size_t i = 0; i < size; i += DBRAW_BLOCK) {
-            memcpy((char*)&l, &str[i], DBRAW_BLOCK);
-            ::StringCchPrintf(buf, 9, _T("%08lx"), l);
+            memcpy((char*)&chunk, &str[i], DBRAW_BLOCK);
+            ::StringCchPrintf(buf, _countof(buf), _T("%08lx"), chunk);
             raw = buf + raw;
         }
     } else {
-        ::StringCchPrintf(buf, 9, _T("%%0%IiIx"), 2 * size);
+        ::StringCchPrintf(buf, _countof(buf), _T("%%0%IiIx"), 2 * size);
         raw.Format(buf, flag);
     }
     return raw;

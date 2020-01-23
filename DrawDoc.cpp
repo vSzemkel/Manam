@@ -1220,7 +1220,7 @@ std::array<UINT,4> CDrawDoc::ModCount() const
 
 float CDrawDoc::PowAdd2Mod(const bool queryQue) const
 {
-    float pow = 0.0F;
+    float pow{};
     auto mod_count = [](const CDrawAdd* a) noexcept -> float { return (float)(a->sizex * a->sizey * pmodcnt) / (a->szpalt_x * a->szpalt_y); };
     // pow = std::reduce(std::begin(m_addsque), std::end(m_addsque), 0.0f, [](float sum, const CDrawAdd* a) noexcept - >float { return sum + (float)(a->sizex * a->sizey * pmodcnt) / (a->szpalt_x * a->szpalt_y); });
 

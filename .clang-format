@@ -8,7 +8,7 @@ ReflowComments: false
 PointerAlignment: Left
 IndentCaseLabels: true
 SpaceAfterCStyleCast: false
-SpaceBeforeCpp11BracedList: true
+SpaceBeforeCpp11BracedList: false
 SpaceBeforeParens: ControlStatements
 AllowShortIfStatementsOnASingleLine: true
 

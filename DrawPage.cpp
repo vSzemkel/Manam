@@ -118,7 +118,7 @@ inline CStringW CDrawPage::GenerateGUIDString()
 {
     const int MAX_CHAR_IN_GUID = 50;
     wchar_t buf[MAX_CHAR_IN_GUID];
-    GUID Guid = { 0 };
+    GUID Guid{0};
 
     ::CoCreateGuid(&Guid);
     ::StringFromGUID2(Guid, buf, MAX_CHAR_IN_GUID);
@@ -187,7 +187,7 @@ void CDrawPage::Draw(CDC* pDC)
 void CDrawPage::DrawDeadline(CDC* pDC, const CRect& pos) const
 {
     CFont* oldFont = pDC->SelectObject(&(m_pDocument->m_pagefont));
-    CRect dlBox(CPoint((int)(pos.left + 1.25*pmodulx), pos.top - 2 * pmoduly), CSize((int)(2.5*pmodulx), -pmoduly - 2));
+    CRect dlBox(CPoint((int)(pos.left + 1.25 * pmodulx), pos.top - 2 * pmoduly), CSize((int)(2.5 * pmodulx), -pmoduly - 2));
     pDC->Rectangle(dlBox);
     CString t = this->m_deadline.Format(_T("%H:%M"));
     DrawNapis(pDC, t, 5, dlBox, DT_CENTER | DT_BOTTOM | DT_SINGLELINE | DT_NOCLIP, TRANSPARENT);
@@ -202,7 +202,7 @@ void CDrawPage::DrawAcDeadline(CDC* pDC, const CRect& pos) const
     sDeadlines.Format(_T("R: %02i/%02i\r\nF: %02i/%02i\r\nK: %02i/%02i"), m_ac_red.GetDay(), m_ac_red.GetMonth(), m_ac_fot.GetDay(), m_ac_fot.GetMonth(), m_ac_kol.GetDay(), m_ac_kol.GetMonth());
 
     CFont* oldFont = pDC->SelectObject(&(m_pDocument->m_pagefont));
-    CRect dlBox(CPoint((int)(pos.left + 0.8*pmodulx), (int)(pos.top - 1.8*pmoduly)), CSize((int)(3.5*pmodulx - 10), (int)-3.5*pmoduly));
+    CRect dlBox(CPoint((int)(pos.left + 0.8 * pmodulx), (int)(pos.top - 1.8 * pmoduly)), CSize((int)(3.5 * pmodulx - 10), (int)-3.5 * pmoduly));
     pDC->Rectangle(dlBox);
     DrawNapis(pDC, sDeadlines, sDeadlines.GetLength(), dlBox, DT_CENTER | DT_VCENTER | DT_NOCLIP, TRANSPARENT);
     pDC->SelectObject(oldFont);
@@ -325,9 +325,9 @@ void CDrawPage::DrawKolor(CDC* pDC, const CRect& pos) const
         return;
 
     if (kolor == ColorId::full) {
-        const auto r1 = CRect(pos.left, pos.top + 3 * vscale, pos.left + (int)floor(szpalt_x*modulx / 3), pos.top);
-        const auto r2 = CRect(pos.left + (int)floor(szpalt_x*modulx / 3), pos.top + 3 * vscale, pos.right - (int)floor(szpalt_x*modulx / 3), pos.top);
-        const auto r3 = CRect(pos.right - (int)floor(szpalt_x*modulx / 3), pos.top + 3 * vscale, pos.right, pos.top);
+        const auto r1 = CRect(pos.left, pos.top + 3 * vscale, pos.left + (int)floor(szpalt_x * modulx / 3), pos.top);
+        const auto r2 = CRect(pos.left + (int)floor(szpalt_x * modulx / 3), pos.top + 3 * vscale, pos.right - (int)floor(szpalt_x * modulx / 3), pos.top);
+        const auto r3 = CRect(pos.right - (int)floor(szpalt_x * modulx / 3), pos.top + 3 * vscale, pos.right, pos.top);
         pDC->FillRect(r1, &((CMainFrame*)AfxGetMainWnd())->cyjan);
         pDC->FillRect(r2, &((CMainFrame*)AfxGetMainWnd())->magenta);
         pDC->FillRect(r3, &((CMainFrame*)AfxGetMainWnd())->yellow);
@@ -756,8 +756,8 @@ bool CDrawPage::CheckSpaceDiffKraty(const CDrawAdd* pObj, const int x, const int
             for (int k = s_y; k > 0; --k)
                 for (int l = s_x; l > 0; --l, ++bit)
                     if (sp[bit]) {
-                        CRect inter, dst {m_position.left + (int)(CDrawObj::modx(s_x) * (l - 1)), m_position.bottom + (int)(CDrawObj::mody(s_y) * (s_y - k)),
-                         /* normalized */ m_position.left + (int)(CDrawObj::modx(s_x) * l), m_position.bottom + (int)(CDrawObj::mody(s_y) * (s_y - k + 1))};
+                        CRect inter, dst{m_position.left + (int)(CDrawObj::modx(s_x) * (l - 1)), m_position.bottom + (int)(CDrawObj::mody(s_y) * (s_y - k)),
+                        /* normalized */ m_position.left + (int)(CDrawObj::modx(s_x) * l), m_position.bottom + (int)(CDrawObj::mody(s_y) * (s_y - k + 1))};
                         if (inter.IntersectRect(dstRect, dst))
                             return false;
                     }

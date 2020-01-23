@@ -1474,7 +1474,7 @@ dajWymiarKraty:
     }
 
     // check scale
-    float x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
+    float x1{}, x2{}, y1{}, y2{};
     if (pArg->format != CManFormat::PDF) {
         int ileMat;
         TCHAR cKolor[2];
@@ -1813,7 +1813,7 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
         }
     }
 
-    float x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
+    float x1{}, x2{}, y1{}, y2{};
     if (!pLeftAdd->GetProdInfo(pArg, nullptr, &x1, &y1, &x2, &y2, nullptr)) {
         ::MessageBox(pArg->pDlg->m_hWnd, f5_errInfo, _T("B³¹d"), MB_ICONERROR);
         f5_errInfo.Empty();
@@ -1904,7 +1904,7 @@ bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
     auto s = reinterpret_cast<char*>(pArg->cBigBuf);
     auto pRoz = m_pDocument->GetCRozm(szpalt_x, szpalt_y, typ_xx);
 
-    float x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
+    float x1{}, x2{}, y1{}, y2{};
     const auto x = (float)((posx - 1) * (pRoz->w + pRoz->sw) * mm2pkt);
     const auto y = (float)((szpalt_y + 1 - posy - sizey) * (pRoz->h + pRoz->sh) * mm2pkt);
 
