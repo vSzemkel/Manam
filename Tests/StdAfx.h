@@ -42,4 +42,4 @@
 
 #include "gtest/gtest.h"
 
-#include "../Manam70/Flag.h"
+#include "../Flag.h"
