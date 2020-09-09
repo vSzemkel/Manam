@@ -185,12 +185,12 @@ const gcroot<String^> OdpHelper::DbNull = "null";
 class CDrawDocDbReader
 {
 public:
-    CDrawDocDbReader(CDrawDoc* doc) : m_doc(doc), m_objetosc(0) {};
-    BOOL OpenManamDoc();	// pobiera z bazy podstawowe informacje o makiecie lub grzbiecie
+    CDrawDocDbReader(CDrawDoc* doc) : m_doc(doc) {};
+    BOOL OpenManamDoc();   // pobiera z bazy podstawowe informacje o makiecie lub grzbiecie
 private:
     CDrawDoc* m_doc;
-    int m_objetosc;
-    BOOL OpenDocContent();	// pobiera obiekty stanowice treœæ dokumentu (strony, og³oszenia, opisy)
+    int m_objetosc = 0;
+    BOOL OpenDocContent(); // pobiera obiekty stanowice treœæ dokumentu (strony, og³oszenia, opisy)
     void OpenSpot();
     void OpenOpis(OracleDataReader^ opiCur);
     void OpenQued(OracleDataReader^ queCur);

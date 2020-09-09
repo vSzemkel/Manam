@@ -1595,7 +1595,7 @@ second_paper:
             vAdd = AddExists(adno);
             vAdd2 = DBCreateAdd(xRoz, xNaz, adno, ValidKolor(xKol), xStr, xUwa, xKrt, pos);
             if (vAdd2 == nullptr)
-                continue;
+                break;
 
             reader->Read(&nodeType);
             if (!reader->IsEmptyElement()) {

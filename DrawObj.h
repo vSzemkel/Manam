@@ -47,7 +47,7 @@ class CDrawObj : public CObject
     // wyzsze bity dla ogloszenia oznaczaja id_spotu
     // dla strony wyzsze bity oznaczaja nr spotu spotI spotII itp
 
-    int GetHandleCount() const;
+    constexpr int GetHandleCount() const;
     int GetVertPrintShift() const;
     CPoint GetHandle(int nHandle) const;
     CRect GetHandleRect(int nHandleID, CDrawView* pView) const;

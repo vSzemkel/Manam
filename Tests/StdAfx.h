@@ -39,5 +39,7 @@
 
 #include <string>
 #include <strsafe.h>
-#include "flag.h"
+
 #include "gtest/gtest.h"
+
+#include "../Manam70/Flag.h"

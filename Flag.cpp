@@ -7,9 +7,8 @@
 #include "StdAfx.h"
 #include "Flag.h"
 
-CFlag::CFlag(const CFlag& f)
+CFlag::CFlag(const CFlag& f) : size(f.size)
 {
-    size = f.size;
     if (size > CRITICAL_SIZE) {
         flagblob_ptr = malloc(size);
         memcpy(flagblob_ptr, f.flagblob_ptr, size);
@@ -17,10 +16,8 @@ CFlag::CFlag(const CFlag& f)
         flag = f.flag;
 }
 
-CFlag::CFlag(CFlag&& f) noexcept
+CFlag::CFlag(CFlag&& f) noexcept : size(f.size), flag(f.flag)
 {
-    size = f.size;
-    flag = f.flag;
     if (f.size > CRITICAL_SIZE)
         f.size = CRITICAL_SIZE;
 }
