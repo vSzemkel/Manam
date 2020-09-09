@@ -169,7 +169,6 @@ bool CDrawObj::Contains(const CPoint& point) const
 
 constexpr int CDrawObj::GetHandleCount() const
 {
-    ASSERT_VALID(this);
     return 8;
 }
 
