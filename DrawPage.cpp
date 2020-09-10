@@ -823,7 +823,7 @@ void CDrawPage::ChangeMark(const size_t module, const SpaceMode mode)
     if (m_dervlvl == DervType::fixd) return;
 
     CFlag& space_mark = mode == SpaceMode::spacelock ? space_locked : space_red;
-    bool bitToSet = !space_mark[module];
+    const bool bitToSet = !space_mark[module];
     if (bitToSet && space[module]) // stoi ogloszenie lub inny marker
         return;
 
@@ -840,8 +840,8 @@ void CDrawPage::ChangeMark(const size_t module, const SpaceMode mode)
                 const CRect& dst = GetNormalizedModuleRect(m);
                 if (intsec.IntersectRect(src, dst))
                     if (space[m] != bitToSet && space_mark2[m] != bitToSet) {
-                        space.SetBit(m, bitToSet);
-                        space_mark2.SetBit(m, bitToSet);
+                        space.FlipBit(m);
+                        space_mark2.FlipBit(m);
                     } else if (intsec == dst)
                         break; // w kracie niebazowej kolizja na powierzchni pelnego modulu
             }
@@ -849,8 +849,8 @@ void CDrawPage::ChangeMark(const size_t module, const SpaceMode mode)
         SetBaseKrata(s_x, s_y, FALSE);
     }
 
-    space.SetBit(module, bitToSet);
-    space_mark.SetBit(module, bitToSet);
+    space.FlipBit(module);
+    space_mark.FlipBit(module);
 
     SetDirty();
     Invalidate();

@@ -51,7 +51,7 @@ CFlag::CFlag(const int sx, const int sy, const int szpalt_x, const int szpalt_y)
             flag = (flag << szpalt_x) + tmp;
     } else {
         for (i = 0; i < sx; ++i)
-            SetBit(i);
+            FlipBit(i);
         CFlag tmp{*this};
         for (i = 1; i < sy; ++i)
             *this = (*this << szpalt_x) | tmp;
@@ -198,7 +198,7 @@ CFlag CFlag::operator^(const CFlag& f) const noexcept
     return ret;
 }
 
-CFlag& CFlag::Invert() noexcept
+CFlag& CFlag::Flip() noexcept
 {
     if (size > CRITICAL_SIZE) {
         auto src = (uintptr_t*)flag;
@@ -498,6 +498,15 @@ bool CFlag::operator[](const size_t pos) const noexcept
     char* str = GetRawFlag();
     str += (pos / BITS_PER_BYTE);
     return *str & mask;
+}
+
+void CFlag::FlipBit(const size_t pos) noexcept
+{
+    ASSERT(pos < BITS_PER_BYTE * size);
+    const char mask = static_cast<char>(1 << (pos % BITS_PER_BYTE));
+    char* str = GetRawFlag();
+    str += (pos / BITS_PER_BYTE);
+    *str ^= mask;
 }
 
 void CFlag::SetBit(const size_t pos, const bool val) noexcept

@@ -25,7 +25,7 @@ TEST(FlagTests, BitMaskInvert)
     flag2 ^= 0xCCCCCCCC; // "11001100"
     p = flag2.Print();
     EXPECT_STREQ(p.Right(8), CString("11111111"));
-    flag2.Invert();
+    flag2.Flip();
     EXPECT_STREQ(L"00000000", (LPCTSTR)(flag2.ToRaw().Right(8))) << "Flag clobbered";
 }
 
@@ -86,21 +86,21 @@ TEST(FlagTests, SizeRoundup)
     EXPECT_EQ(f10.GetSize(), 10 * sizeof(uintptr_t));
 }
 
-TEST(FlagTests, Invert)
+TEST(FlagTests, Flip)
 {
     CFlag flag{"A580BD51C580BDAFBAADF00D"};
     const int ones = flag.GetBitCnt(true);
-    flag.Invert();
+    flag.Flip();
     const int zeros = flag.GetBitCnt(false);
     EXPECT_EQ(zeros, ones) << "Long case";
     CFlag flag2{2, 4, 5, 6};
     const int ones2 = flag2.GetBitCnt(true);
-    flag2.Invert();
+    flag2.Flip();
     const int zeros2 = flag2.GetBitCnt(false);
     EXPECT_EQ(zeros2, ones2) << "Short case";
 }
 
-TEST(FlagTests, GetSetBit)
+TEST(FlagTests, GetSetFlipBit)
 {
     CFlag flag{};
     flag.SetBit(2, true);
@@ -111,6 +111,10 @@ TEST(FlagTests, GetSetBit)
     EXPECT_EQ(*((unsigned char*)&flag + sizeof(uintptr_t)), 220) << "Set bit error";
     flag.SetBit(3, false);
     EXPECT_EQ(*((unsigned char*)&flag + sizeof(uintptr_t)), 212) << "Clear bit error";
+    flag.FlipBit(5);
+    EXPECT_EQ(*((unsigned char*)&flag + sizeof(uintptr_t)), 244) << "Flip bit error";
+    flag.FlipBit(5);
+    EXPECT_EQ(*((unsigned char*)&flag + sizeof(uintptr_t)), 212) << "Flip bit error";
 }
 
 TEST(FlagTests, Reverse)
