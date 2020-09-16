@@ -633,13 +633,12 @@ void CDrawPage::AddAdd(CDrawAdd* pAdd)
 
 void CDrawPage::RemoveAdd(CDrawAdd* pAdd, const bool removeFromAdds)
 {
-    auto itAdd = std::find(m_adds.cbegin(), m_adds.cend(), pAdd);
-    if (itAdd != m_adds.end()) {
-        const CDrawAdd* pAdd = *itAdd;
+    const auto it = std::find(m_adds.begin(), m_adds.end(), pAdd);
+    if (it != m_adds.end()) {
         SetBaseKrata(pAdd->szpalt_x, pAdd->szpalt_y);
         RealizeSpace(pAdd);
         if (removeFromAdds)
-            m_adds.erase(itAdd);
+            m_adds.erase(it);
     } else { // gdy dwie strony maja ten sam numer - to nie ma prawa sie zdarzyc
         for (const auto& p : m_pDocument->m_pages)
             if (p != this && p->nr == this->nr) {
@@ -823,7 +822,7 @@ void CDrawPage::ChangeMark(const size_t module, const SpaceMode mode)
     if (m_dervlvl == DervType::fixd) return;
 
     CFlag& space_mark = mode == SpaceMode::spacelock ? space_locked : space_red;
-    bool bitToSet = !space_mark[module];
+    const bool bitToSet = !space_mark[module];
     if (bitToSet && space[module]) // stoi ogloszenie lub inny marker
         return;
 
@@ -840,8 +839,8 @@ void CDrawPage::ChangeMark(const size_t module, const SpaceMode mode)
                 const CRect& dst = GetNormalizedModuleRect(m);
                 if (intsec.IntersectRect(src, dst))
                     if (space[m] != bitToSet && space_mark2[m] != bitToSet) {
-                        space.SetBit(m, bitToSet);
-                        space_mark2.SetBit(m, bitToSet);
+                        space.FlipBit(m);
+                        space_mark2.FlipBit(m);
                     } else if (intsec == dst)
                         break; // w kracie niebazowej kolizja na powierzchni pelnego modulu
             }
@@ -849,8 +848,8 @@ void CDrawPage::ChangeMark(const size_t module, const SpaceMode mode)
         SetBaseKrata(s_x, s_y, FALSE);
     }
 
-    space.SetBit(module, bitToSet);
-    space_mark.SetBit(module, bitToSet);
+    space.FlipBit(module);
+    space_mark.FlipBit(module);
 
     SetDirty();
     Invalidate();
@@ -1306,7 +1305,7 @@ bool CDrawPage::MovePageToOpiServer(PGENEPSARG pArg, CMemFile&& pOpiFile) const
 
     theApp.EndWaitCursor();
     if (pFile != nullptr) pFile->Close();
-    if (pSrv != nullptr) pSrv->Close();
+    pSrv->Close();
     ses.Close();
 
     if (*reinterpret_cast<short*>(pArg->cBigBuf) != 0x4b4f) { // "OK"

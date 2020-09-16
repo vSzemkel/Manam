@@ -509,7 +509,7 @@ void CKolorTool::OnLButtonDown(CDrawView* pView, const UINT nFlags, const CPoint
             };
             theManODPNET.EI("begin pagina.set_config(:mak_xx,:str_xx,:prn_mak_xx); end;", orapar);
         } else { // nag³ówki
-            const bool iscaption = ((CDrawApp*)AfxGetApp())->GetProfileInt(_T("General"), _T("Captions"), 1) == 1;
+            const bool iscaption = theApp.GetProfileInt(_T("General"), _T("Captions"), 1) == 1;
             const CString& caption = frame->GetCaption();
             if (pPage != nullptr)
                 pPage->ChangeCaption(iscaption, caption);

@@ -8,7 +8,7 @@ class CDrawOpis final : public CDrawObj
 // public: declared in macro
     CDrawOpis() noexcept {};
     CDrawOpis(const CRect& position) noexcept;
-    CDrawOpis(const CRect& position, const TCHAR *tx) noexcept;
+    CDrawOpis(const CRect& position, const TCHAR* tx) noexcept;
 
     void Draw(CDC* pDC) override;
     void Print(CDC* pDC) override;
@@ -17,8 +17,8 @@ class CDrawOpis final : public CDrawObj
     BOOL OnOpen(CDrawView* pView) override;
     CDrawObj *Clone(CDrawDoc* pDoc) const override;
 
-    int m_opi_xx;
-    float m_Scale;
+    int m_opi_xx{-1};
+    float m_Scale{1.0f};
 
 protected:
     friend class CRectTool;

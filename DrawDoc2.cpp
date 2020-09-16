@@ -148,15 +148,15 @@ void CDrawDoc::DBSaveAs(const bool isSaveAs)
     BeginWaitCursor();
 
     const bool doSaveAdds = (iDocType != DocType::makieta_lib && (m_mak_xx == -1 || !isSaveAs));
-    ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo((LPCTSTR)_T("Trwa zapis makiety ") + gazeta + _T(' ') + data);
+    GetMainWnd()->SetStatusBarInfo((LPCTSTR)_T("Trwa zapis makiety ") + gazeta + _T(' ') + data);
     if (theManODPNET.SaveManamDoc(this, isSaveAs, doSaveAdds)) {
         if (!doSaveAdds) {
-            auto pos = std::remove_if(m_objects.begin(), m_objects.end(), [](CDrawObj*& pObj) {
+            auto pos = std::remove_if(m_objects.begin(), m_objects.end(), [](const auto& pObj) {
                 if (dynamic_cast<CDrawAdd*>(pObj)) { delete pObj; return true; } return false;
             });
             m_objects.erase(pos, m_objects.end());
         }
-        ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo((LPCTSTR)_T("Zachowywanie zakoñczone pomyœlnie."));
+        GetMainWnd()->SetStatusBarInfo((LPCTSTR)_T("Zachowywanie zakoñczone pomyœlnie."));
         SetModifiedFlag(FALSE);
 
         SetTitleAndMru();
@@ -164,7 +164,7 @@ void CDrawDoc::DBSaveAs(const bool isSaveAs)
             UpdateAllViews(nullptr, HINT_SAVEAS_DELETE_SELECTION, nullptr);
     } else {
         if (isSaveAs) m_mak_xx = -1;
-        ((CMainFrame*)AfxGetMainWnd())->SetStatusBarInfo((LPCTSTR)_T("Poczas zachowywania wyst¹pi³ b³¹d. Zadzwoñ: 56158 lub napisz: velvet@agora.pl"));
+        GetMainWnd()->SetStatusBarInfo((LPCTSTR)_T("Poczas zachowywania wyst¹pi³ b³¹d. Zadzwoñ: 56158 lub napisz: velvet@agora.pl"));
     }
 
     EndWaitCursor();
@@ -175,12 +175,12 @@ void CDrawDoc::OnDBDelete()
 {
     if (!theApp.isRDBMS) return;
 
-    if (iDocType == DocType::makieta) // sprawdz czy s¹ og³oszenia poza makieta
-        for (const auto& pObj : m_objects)
-            if (dynamic_cast<CDrawAdd*>(pObj) != nullptr) {
-                AfxMessageBox(_T("Przed usuniêciem makiety proszê rêcznie usun¹æ wszystkie og³oszenia, które na niej stoj¹."));
-                return;
-            }
+    // sprawdz czy s¹ og³oszenia poza makieta
+    if (iDocType == DocType::makieta &&
+        std::any_of(m_objects.begin(), m_objects.end(), [](CDrawObj* p) { return dynamic_cast<CDrawAdd*>(p) != nullptr; })) {
+            AfxMessageBox(_T("Przed usuniêciem makiety proszê rêcznie usun¹æ wszystkie og³oszenia, które na niej stoj¹."));
+            return;
+    }
 
     if (AfxMessageBox(_T("Czy na pewno chcesz usunaæ ") + CString(iDocType == DocType::grzbiet_drukowany ? "ten grzbiet" : "tê makietê"), MB_OKCANCEL | MB_ICONQUESTION) != IDOK) return;
 
@@ -206,7 +206,7 @@ void CDrawDoc::ZmianaSpotow(const int n)
         if ((e1 == ColorId::spot) && (e2 >= m))
             p->ChangeKolor(ColorId::brak);
     }
-    ((CMainFrame*)AfxGetMainWnd())->InsComboNrSpotow(m);
+    GetMainWnd()->InsComboNrSpotow(m);
     m_spot_makiety.resize(m);
 }
 
@@ -226,13 +226,14 @@ int CDrawDoc::DBReadSpot(int n)
     return ile_spotow;
 }
 
-void CDrawDoc::ZmianaCaptions(const int old_id_drw, const int new_id_drw)
+void CDrawDoc::ChangeCaptions(const int old_id_drw, const int new_id_drw)
 {
-    //gdy dodaje strony byc moze mam wiecej mozliwosci spotu, pod warunkiem ze mam wybrane drzewo
-    if (theApp.isRDBMS && ((CDrawApp*)AfxGetApp())->GetProfileInt(_T("General"), _T("Captions"), 1) == 0)
+    // gdy dodaje strony byc moze mam wiecej mozliwosci spotu, pod warunkiem ze mam wybrane drzewo
+    if (theApp.isRDBMS && theApp.GetProfileInt(_T("General"), _T("Captions"), 1) == 0)
         for (const auto& p : m_pages)
             p->DBChangeName(new_id_drw);
-    ((CMainFrame*)AfxGetMainWnd())->IniCaptionBox(old_id_drw, new_id_drw);
+
+    GetMainWnd()->IniCaptionBox(old_id_drw, new_id_drw);
 }
 
 #ifdef _DEBUG

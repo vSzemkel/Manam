@@ -137,7 +137,7 @@ class CDrawDoc final : public COleDocument
 
     int DBReadSpot(int n);
     void ZmianaSpotow(int n);
-    void ZmianaCaptions(int old_id_drw, int new_id_drw);
+    void ChangeCaptions(int old_id_drw, int new_id_drw);
 
     void IniRozm();
     const CRozm* GetCRozm(int s_x, int s_y, int typ_xx = 0);
@@ -230,6 +230,7 @@ private:
     void AdvanceAsidePos(CPoint& p) const;           // wylicza polozenie kolejnego nastepnego ogloszenia z boku
     void SetTitleAndMru(bool addRecentFiles = true); // wywo³uje base->SetTitle przekazuj¹c odpowiednie parametry i opcjonalnie dodaje do MRU
     bool MoveOpisAfterPage(const CRect& rFrom, const CRect& rTo);
+    CMainFrame* GetMainWnd() const { return reinterpret_cast<CMainFrame*>(AfxGetMainWnd()); }
 };
 
 /////////////////////////////////////////////////////////////////////////////

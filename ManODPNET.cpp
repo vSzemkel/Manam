@@ -185,12 +185,12 @@ const gcroot<String^> OdpHelper::DbNull = "null";
 class CDrawDocDbReader
 {
 public:
-    CDrawDocDbReader(CDrawDoc* doc) : m_doc(doc), m_objetosc(0) {};
-    BOOL OpenManamDoc();	// pobiera z bazy podstawowe informacje o makiecie lub grzbiecie
+    CDrawDocDbReader(CDrawDoc* doc) : m_doc(doc) {};
+    BOOL OpenManamDoc();   // pobiera z bazy podstawowe informacje o makiecie lub grzbiecie
 private:
     CDrawDoc* m_doc;
-    int m_objetosc;
-    BOOL OpenDocContent();	// pobiera obiekty stanowice treœæ dokumentu (strony, og³oszenia, opisy)
+    int m_objetosc = 0;
+    BOOL OpenDocContent(); // pobiera obiekty stanowice treœæ dokumentu (strony, og³oszenia, opisy)
     void OpenSpot();
     void OpenOpis(OracleDataReader^ opiCur);
     void OpenQued(OracleDataReader^ queCur);
@@ -355,7 +355,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
     BOOL ogloszenieNaNastepnaStrone = FALSE;
     CString op_zew, sekcja, op_sek, pl, op_pl, poz_na_str;
     int ivar, s_x, s_y, d, m, r, g, min;
-    m_doc->isRED = ((CDrawApp*)AfxGetApp())->GetProfileInt(_T("General"), _T("Captions"), 1) != 0;
+    m_doc->isRED = theApp.GetProfileInt(_T("General"), _T("Captions"), 1) != 0;
     while (strCur->Read()) {
         const int ind = strCur->GetInt32(1);
         if (ind >= m_objetosc) return FALSE;

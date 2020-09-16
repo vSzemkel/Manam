@@ -462,7 +462,7 @@ void CManPDF::EmbedContents(CFile& src, const unsigned long offset)
         if (!tmp || !pak || !niepak)
             throw CManPDFExc(_T("EmbedContents: brak pamieci"));
         unsigned long pakLen, niepakOff = EmbedPakStream(src, loffset, pak.get(), niepak.get(), tmp.get(), 0L);
-        while (multi) {
+        while (true) {
             src.Seek(offset, CFile::begin);
             src.Read(cStore, bigSize);
             p = strstr(cStore, "/Contents");
@@ -483,7 +483,7 @@ void CManPDF::EmbedContents(CFile& src, const unsigned long offset)
 #endif
 
         unsigned int pieceLen, pieceOff = 0;
-        if (pakLen && pak[pakLen - 1] > '\x0a')
+        if (pak[pakLen - 1] > '\x0a')
             pak[pakLen++] = '\x0a';
         while (pakLen) {
             pieceLen = (pakLen > INT_MAX) ? INT_MAX : pakLen;

@@ -16,8 +16,7 @@ CDrawOpis::CDrawOpis(const CRect& position) noexcept : CDrawOpis(position, _T(""
 {
 }
 
-CDrawOpis::CDrawOpis(const CRect& position, const TCHAR *tx) noexcept :
-    CDrawObj(position), m_opi_xx(-1), m_Scale(1.0f)
+CDrawOpis::CDrawOpis(const CRect& position, const TCHAR* tx) noexcept : CDrawObj(position)
 {
     ASSERT_VALID(this);
     info = tx;

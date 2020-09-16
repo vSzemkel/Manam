@@ -1489,13 +1489,13 @@ void CDrawDoc::PrintInfo(CDC* pDC, const int max_n, const int wspol_na_str) // w
 
         rect.SetRect((int)(4.7 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(4.8 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
         pDC->SetBkMode(TRANSPARENT);
-        pDC->FillRect(rect, &(((CMainFrame*)AfxGetMainWnd())->cyjan));
+        pDC->FillRect(rect, &(GetMainWnd()->cyjan));
         pDC->DrawText(_T("C"), 1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
         rect.SetRect((int)(4.8 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(4.9 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
-        pDC->FillRect(rect, &(((CMainFrame*)AfxGetMainWnd())->magenta));
+        pDC->FillRect(rect, &(GetMainWnd()->magenta));
         pDC->DrawText(_T("M"), 1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
         rect.SetRect((int)(4.9 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(5 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
-        pDC->FillRect(rect, &(((CMainFrame*)AfxGetMainWnd())->yellow));
+        pDC->FillRect(rect, &(GetMainWnd()->yellow));
         pDC->DrawText(_T("Y"), 1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
         rect.SetRect((int)(5 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(5.1 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
         pDC->Rectangle(rect);
@@ -1522,7 +1522,7 @@ void CDrawDoc::OnFileDrzewo() // zmiana drzewa
     BeginWaitCursor();
     gazeta = dlg.m_gazeta;
     if (id_drw != dlg.m_id_drw && AfxMessageBox(_T("Czy chcesz zmieniæ kod i nazwê produktu dla tej makiety"), MB_ICONQUESTION | MB_YESNO) == IDYES) {
-        ZmianaCaptions(id_drw, dlg.m_id_drw);
+        ChangeCaptions(id_drw, dlg.m_id_drw);
         id_drw = dlg.m_id_drw;
         ZmianaSpotow((int)m_pages.size() & -4);
     }
@@ -1595,7 +1595,7 @@ second_paper:
             vAdd = AddExists(adno);
             vAdd2 = DBCreateAdd(xRoz, xNaz, adno, ValidKolor(xKol), xStr, xUwa, xKrt, pos);
             if (vAdd2 == nullptr)
-                continue;
+                break;
 
             reader->Read(&nodeType);
             if (!reader->IsEmptyElement()) {
@@ -2011,7 +2011,7 @@ void CDrawDoc::OnSetDea()
             theApp.grupa |= UserRole::dea;
         } else
             theApp.grupa ^= UserRole::dea;
-        ((CMainFrame*)AfxGetMainWnd())->SetRoleStatus();
+        GetMainWnd()->SetRoleStatus();
     }
 }
 
