@@ -2057,7 +2057,7 @@ CFlag CPrnEpsDlg::GetChoosenPages(CDrawDoc* pDoc) const noexcept
             if (end == 0) end = pc;
             if (beg == 0) beg = pc;
             for (int i = beg; i <= end; ++i)
-                wyborStron.SetBit(i % pc);
+                wyborStron.FlipBit(i % pc);
             break;
         case 2:
             ::StringCchCopy(theApp.bigBuf, n_size, m_subset);
@@ -2071,7 +2071,7 @@ CFlag CPrnEpsDlg::GetChoosenPages(CDrawDoc* pDoc) const noexcept
                 switch (m_subset.GetAt((int)(tok - theApp.bigBuf + _tcslen(tok)))) {
                     case '\0':
                     case ',':
-                        wyborStron.SetBit(beg % pc);
+                        wyborStron.FlipBit(beg % pc);
                         tok = _tcstok(nullptr, septok);
                         break;
                     case '-':
@@ -2082,7 +2082,7 @@ CFlag CPrnEpsDlg::GetChoosenPages(CDrawDoc* pDoc) const noexcept
                         else if (end == 0)
                             end = pc;
                         for (int i = beg; i <= end; ++i)
-                            wyborStron.SetBit(i % pc);
+                            wyborStron.FlipBit(i % pc);
                         tok = _tcstok(nullptr, septok);
                         break;
                     default:

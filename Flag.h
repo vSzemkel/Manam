@@ -46,15 +46,16 @@ class CFlag final
     bool   IsZero() const noexcept;
     bool   IsSet() const noexcept;
     size_t GetSize() const noexcept;
-    CFlag& Invert() noexcept;
-    void   SetZero() noexcept;
-    void   Reverse(size_t len) noexcept;
-    void   CopyFlag(CByteArray* bArr);
-    void   Serialize(CArchive& ar);
+    int GetBitCnt(bool val) const noexcept;
     CString Print() const;
     CString ToRaw() const;
-    int GetBitCnt(bool val) const noexcept;
+    CFlag& Flip() noexcept;
+    void FlipBit(size_t pos) noexcept;
     void SetBit(size_t pos, bool val = true) noexcept;
+    void SetZero() noexcept;
+    void Reverse(size_t len) noexcept;
+    void CopyFlag(CByteArray* bArr);
+    void Serialize(CArchive& ar);
 
   protected:
     void SetSize(size_t s);                                 // okreœla rozmiar flagi, zarz¹dza pamiêci¹

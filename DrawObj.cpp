@@ -167,9 +167,8 @@ bool CDrawObj::Contains(const CPoint& point) const
     return fixed.PtInRect(point);
 }
 
-int CDrawObj::GetHandleCount() const
+constexpr int CDrawObj::GetHandleCount() const
 {
-    ASSERT_VALID(this);
     return 8;
 }
 
@@ -177,10 +176,11 @@ int CDrawObj::GetHandleCount() const
 CPoint CDrawObj::GetHandle(const int nHandle) const
 {
     ASSERT_VALID(this);
-    int x, y, xCenter, yCenter;
+    LONG x, y, xCenter, yCenter;
 
     // this gets the center regardless of left/right and top/bottom ordering
     xCenter = m_position.left + m_position.Width() / 2;
+    // C++ 20: xCenter = std::midpoint(m_position.left, m_position.right);
     yCenter = m_position.top + m_position.Height() / 2;
 
     switch (nHandle) {
@@ -242,7 +242,7 @@ CRect CDrawObj::GetHandleRect(const int nHandleID, CDrawView* pView) const
     // convert to client/device coords
     pView->DocToClient(point);
     // return CRect of handle in device coords
-    CRect rect(point.x - 3, point.y - 3, point.x + 3, point.y + 3);
+    CRect rect{point.x - 3, point.y - 3, point.x + 3, point.y + 3};
     pView->ClientToDoc(rect);
     rect.NormalizeRect();
     return rect;
