@@ -23,14 +23,14 @@
     <CLRSupport>false</CLRSupport>
     <RootNamespace>Manam</RootNamespace>
     <ConfigurationType>Application</ConfigurationType>
-    <ProjectGuid>{61EA1643-896C-42C9-B085-DB883BBEBC57}</ProjectGuid>
+    <ProjectGuid>{F31FD1DE-C05A-47F6-B41E-76E7F8C4BEDC}</ProjectGuid>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
     <SpectreMitigation>false</SpectreMitigation>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows-static</VcpkgTriplet>
-    <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows-static</VcpkgTriplet>
+    <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows</VcpkgTriplet>
+    <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows</VcpkgTriplet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -43,8 +43,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir>$(PlatformTarget)\$(Configuration)\</OutDir>
-    <IntDir>$(PlatformTarget)\$(Configuration)\Tmp\</IntDir>
+    <OutDir>Tests\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>Tests\$(PlatformTarget)\$(Configuration)\Tmp\</IntDir>
     <LinkIncremental Condition="'$(Configuration)'=='Debug'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)'=='Release'">false</LinkIncremental>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
@@ -67,6 +67,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
       <ObjectFileName>$(IntermediateOutputPath)</ObjectFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -75,7 +76,7 @@
       <PrecompiledHeaderOutputFile>$(IntermediateOutputPath)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -92,17 +93,18 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UNITTEST;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BrowseInformation>true</BrowseInformation>
+      <BrowseInformationFile>$(IntDir)</BrowseInformationFile>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0415</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlibd.lib</AdditionalDependencies>
+      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlibd.lib;;gtestd.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <TargetMachine>MachineX86</TargetMachine>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
@@ -112,17 +114,18 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UNITTEST;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BrowseInformation>true</BrowseInformation>
+      <BrowseInformationFile>$(IntDir)</BrowseInformationFile>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0415</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlibd.lib</AdditionalDependencies>
+      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlibd.lib;;gtestd.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -132,20 +135,21 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UNITTEST;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <BrowseInformation>true</BrowseInformation>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <BrowseInformationFile>$(IntDir)</BrowseInformationFile>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0415</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlib.lib;gtest.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <TargetMachine>MachineX86</TargetMachine>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
@@ -160,20 +164,21 @@
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UNITTEST;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <BrowseInformation>true</BrowseInformation>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <BrowseInformationFile>$(IntDir)</BrowseInformationFile>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0415</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlib.lib;gtest.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <OptimizeReferences>true</OptimizeReferences>
@@ -212,8 +217,18 @@
     <ClCompile Include="QueView.cpp" />
     <ClCompile Include="Spacer.cpp" />
     <ClCompile Include="SplitFrm.cpp" />
-    <ClCompile Include="StdAfx.cpp">
+    <ClCompile Include="Tests\FlagTests.cpp">
+      <PrecompiledHeaderFile>..\StdAfx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Tests\ManamUnitTests.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeaderFile>..\StdAfx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Tests\MiscTests.cpp">
+      <PrecompiledHeaderFile>..\StdAfx.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Tests\PrecelTests.cpp">
+      <PrecompiledHeaderFile>..\StdAfx.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

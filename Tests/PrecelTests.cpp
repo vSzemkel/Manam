@@ -1,5 +1,5 @@
 
-#include "stdafx.h"
+#include "../StdAfx.h"
 
 TEST(PrecelTests, Podium) {
     constexpr char* bits = "00003BFF";

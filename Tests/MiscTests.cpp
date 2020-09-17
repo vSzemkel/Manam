@@ -1,5 +1,5 @@
 
-#include "stdafx.h"
+#include "../StdAfx.h"
 
 #pragma region mock
 CString RzCyfra(const int digit, const int offset) noexcept

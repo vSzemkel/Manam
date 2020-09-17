@@ -36,6 +36,9 @@
 
 // 3rd party
 #include "zlib.h"
+#ifdef UNITTEST
+#include "gtest/gtest.h"
+#endif
 
 // Manam
 #include "resource.h"

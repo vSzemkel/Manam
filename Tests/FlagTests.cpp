@@ -1,5 +1,5 @@
 
-#include "stdafx.h"
+#include "..\StdAfx.h"
 
 TEST(FlagTests, DefaultLattice)
 {
@@ -133,5 +133,4 @@ TEST(FlagTests, Equality)
     CFlag flag1{"A580BD51C580BDAE"};
     CFlag flag2{"A580BD52C580BDAF"};
     EXPECT_FALSE(flag1 == flag2) << "Equality failed";
-    EXPECT_TRUE(flag1 != flag2) << "Inequality failed";
 }
