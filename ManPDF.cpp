@@ -67,14 +67,14 @@ char* CManPDF::pdftok(char* str)
 }
 
 const char* CManPDF::memstr(const char* const buf, const char* const pat, const size_t patlen)
-{
+{   // assert(sizeof(buf) == n_size);
     const auto bufend = buf + n_size;
     const auto ret = std::search(buf, bufend, pat, pat + patlen);
     if (ret < bufend)
         return ret;
 
     return nullptr;
-} // memstr
+}
 
 unsigned long CManPDF::SearchPattern(CFile& f, const char* const pat) const
 {
