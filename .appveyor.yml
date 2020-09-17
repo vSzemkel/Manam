@@ -18,6 +18,8 @@ before_build:
 
     vcpkg install gtest:x64-windows
 
+    vcpkg install zlib:x64-windows
+
     vcpkg install zlib:x64-windows-static
 
     vcpkg integrate install
