@@ -179,9 +179,8 @@ CPoint CDrawObj::GetHandle(const int nHandle) const
     LONG x, y, xCenter, yCenter;
 
     // this gets the center regardless of left/right and top/bottom ordering
-    xCenter = m_position.left + m_position.Width() / 2;
-    // C++ 20: xCenter = std::midpoint(m_position.left, m_position.right);
-    yCenter = m_position.top + m_position.Height() / 2;
+    xCenter = m_position.left + (m_position.Width() >> 1);
+    yCenter = m_position.top + (m_position.Height() >> 1);
 
     switch (nHandle) {
         default:

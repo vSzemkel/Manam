@@ -1823,8 +1823,8 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
     ::StringCchPrintfA(s, n_size, "beginManamEPS \r\n"); dest.Write(s, (UINT)strlen(s));
     if (pPage->m_typ_pary < 2) {
         // spad zdefiniowany dla krawedzi
-        x += aSpadInfo[spad_flag].adjust_x * (gpx - (x2 - x1)) / 2;
-        y += aSpadInfo[spad_flag].adjust_y * (gpy - (y2 - y1)) / 2;
+        x += static_cast<uint8_t>(aSpadInfo[spad_flag].adjust_x) * (gpx - (x2 - x1)) / 2;
+        y += static_cast<uint8_t>(aSpadInfo[spad_flag].adjust_y) * (gpy - (y2 - y1)) / 2;
         ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", x, y);  dest.Write(s, (UINT)strlen(s));
         // skalowanie
         const float scalx = (x2 == x1 || !pRozAdd->scale_it || !aSpadInfo[spad_flag].scale_x) ? 1 : gpx / (x2 - x1);
