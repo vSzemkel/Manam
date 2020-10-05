@@ -461,9 +461,9 @@ void CDrawView::DocToClient(CRect& rect)
     rect.NormalizeRect();
 }
 
-void CDrawView::Select(CDrawObj* pObj, const bool bAdd)
+void CDrawView::Select(CDrawObj* pObj, const SelectUpdateMode mode)
 {
-    if (!bAdd) {
+    if (mode == SelectUpdateMode::replace) {
         OnUpdate(nullptr, HINT_UPDATE_SELECTION, nullptr);
         m_selection.clear();
     }
@@ -472,22 +472,22 @@ void CDrawView::Select(CDrawObj* pObj, const bool bAdd)
         return;
 
     if (!m_selection.empty()) {
-        auto pAdd = dynamic_cast<CDrawAdd *>(pObj);
+        const auto pAdd = dynamic_cast<CDrawAdd *>(pObj);
         if (pAdd && pAdd->fizpage) return;
 
         auto pPage = dynamic_cast<CDrawPage *>(pObj);
-        if (bAdd && pPage) {
+        if (pPage && mode == SelectUpdateMode::add_range) {
             const auto& pages = GetDocument()->m_pages;
             const int iHitPos = GetDocument()->GetIPage(pPage);
             for (int i = iHitPos - 1; i >= 0; --i)
                 if (IsSelected(pages[i]))
                     for (int j = i + 1; j < iHitPos; ++j)
-                        Select((CDrawObj *)pages[j], true);
+                        Select(pages[j], SelectUpdateMode::add);
             const auto pc = (int)pages.size();
             for (int i = iHitPos + 1; i < pc; ++i)
                 if (IsSelected(pages[i]))
                     for (int j = iHitPos + 1; j < i; ++j)
-                        Select((CDrawObj *)pages[j], true);
+                        Select(pages[j], SelectUpdateMode::add);
         }
     }
 
@@ -506,7 +506,7 @@ void CDrawView::SelectWithinRect(CRect rect, const bool bAdd)
 
     for (const auto& pObj : GetDocument()->m_objects)
         if (pObj->Intersects(rect))
-            Select(pObj, true);
+            Select(pObj, SelectUpdateMode::add);
 }
 
 void CDrawView::OpenSelected()
@@ -694,7 +694,7 @@ void CDrawView::OnUpdateSingleSelect(CCmdUI* pCmdUI)
 void CDrawView::OnEditSelectAll()
 {
     for (const auto& pObj : GetDocument()->m_objects)
-        Select(pObj, true);
+        Select(pObj, SelectUpdateMode::add);
 }
 
 void CDrawView::OnUpdateEditSelectAll(CCmdUI* pCmdUI)
@@ -1509,7 +1509,7 @@ void CDrawView::OnRButtonDown(const UINT nFlags, CPoint point)
     if (!pPage) return;
     if (theApp.isRDBMS && pDoc->iDocType == DocType::grzbiet_drukowany && !pDoc->isRO) {
         CMenu mmutczas;
-        Select(pPage, false);
+        Select(pPage);
         ClientToScreen(&point);
         mmutczas.LoadMenu(IDR_MENUMUTCZAS);
         mmutczas.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, point.x, point.y, this);

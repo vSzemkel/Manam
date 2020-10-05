@@ -240,58 +240,58 @@ void CDrawAdd::DrawDesc(CDC* pDC, const CRect& rect) const
     CString buf;
     switch (theApp.m_view_top) { // vu : opis gorny
         case TEXT_NAZWA:
-            DrawTx(pDC, rect, nazwa, true);
+            DrawTxt(pDC, rect, nazwa, true);
             break;
         case TEXT_PLIK:
-            DrawTx(pDC, rect, kodModulu, true);
+            DrawTxt(pDC, rect, kodModulu, true);
             break;
         case TEXT_WARLOG:
-            DrawTx(pDC, rect, logpage, true);
+            DrawTxt(pDC, rect, logpage, true);
             break;
         case TEXT_CZASKTO:
-            DrawTx(pDC, rect, czaskto, true);
+            DrawTxt(pDC, rect, czaskto, true);
             break;
         case TEXT_UWAGI:
-            DrawTx(pDC, rect, remarks, true);
+            DrawTxt(pDC, rect, remarks, true);
             break;
         case TEXT_STUDIO:
-            DrawTx(pDC, rect, CGridFrm::studioStats[(uint8_t)this->flags.studio], true);
+            DrawTxt(pDC, rect, CGridFrm::studioStats[(uint8_t)this->flags.studio], true);
             break;
         case TEXT_EPS:
             if (nreps > -1L) {
                 buf.Format(_T("%li"), nreps);
-                DrawTx(pDC, rect, buf, true);
+                DrawTxt(pDC, rect, buf, true);
             }
     }
 
     switch (theApp.m_view_bottom) { // vu : opis dolny
         case TEXT_NAZWA:
-            DrawTx(pDC, rect, nazwa, false);
+            DrawTxt(pDC, rect, nazwa, false);
             break;
         case TEXT_PLIK:
-            DrawTx(pDC, rect, kodModulu, false);
+            DrawTxt(pDC, rect, kodModulu, false);
             break;
         case TEXT_WARLOG:
-            DrawTx(pDC, rect, logpage, false);
+            DrawTxt(pDC, rect, logpage, false);
             break;
         case TEXT_CZASKTO:
-            DrawTx(pDC, rect, czaskto, false);
+            DrawTxt(pDC, rect, czaskto, false);
             break;
         case TEXT_UWAGI:
-            DrawTx(pDC, rect, remarks, false);
+            DrawTxt(pDC, rect, remarks, false);
             break;
         case TEXT_STUDIO:
-            DrawTx(pDC, rect, CGridFrm::studioStats[(uint8_t)this->flags.studio], false);
+            DrawTxt(pDC, rect, CGridFrm::studioStats[(uint8_t)this->flags.studio], false);
             break;
         case TEXT_EPS:
             if (nreps > -1L) {
                 buf.Format(_T("%li"), nreps);
-                DrawTx(pDC, rect, buf, false);
+                DrawTxt(pDC, rect, buf, false);
             }
     }
 }
 
-void CDrawAdd::DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, const bool top) const
+void CDrawAdd::DrawTxt(CDC* pDC, const CRect& rect, LPCTSTR tx, const bool top) const
 {
     CRect r{rect};
     r += CPoint(vscale*(txtposx - TXTSHIFT), -vscale*(txtposy - TXTSHIFT));

@@ -80,7 +80,7 @@ class CDrawAdd final : public CDrawObj
     static bool EpsFromATEX(const CString& num, const CString& dstPath);
     static bool EmbedEpsFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcPath);
 
-    void DrawTx(CDC* pDC, const CRect& rect, LPCTSTR tx, bool top) const;
+    void DrawTxt(CDC* pDC, const CRect& rect, LPCTSTR tx, bool top) const;
     void DrawDesc(CDC* pDC, const CRect& rect) const; // vu : rysuje opis tekstowy og³oszenia
     void DrawPadlock(CDC* pDC, const CRect& rect) const;
     CString PrepareBuf(const TCHAR* ch) const;

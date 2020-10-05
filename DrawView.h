@@ -45,7 +45,7 @@ class CDrawView : public CScrollView
     void DocToClient(CPoint& point);
     void ClientToDoc(CPoint& point);
     void ClientToDoc(CRect& rect);
-    void Select(CDrawObj* pObj, bool bAdd = false);
+    void Select(CDrawObj* pObj, SelectUpdateMode mode = SelectUpdateMode::replace);
     void SelectWithinRect(CRect rect, bool bAdd = false);
     void OpenSelected();
     void Deselect(CDrawObj* pObj);

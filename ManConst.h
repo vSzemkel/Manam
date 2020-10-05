@@ -113,6 +113,13 @@ enum class SelectMode : uint8_t
     netSelect,
 };
 
+enum class SelectUpdateMode : uint8_t
+{
+    replace,
+    add,
+    add_range
+};
+
 enum class ToolbarMode : uint8_t
 {
     normal = 0,

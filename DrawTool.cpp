@@ -134,12 +134,15 @@ void CSelectTool::OnLButtonDown(CDrawView* pView, const UINT nFlags, const CPoin
 
         if (pObj != nullptr) {
             selectMode = SelectMode::move;
+            auto updateMode = SelectUpdateMode::replace;
+            if ((nFlags & MK_CONTROL) != 0) 
+                updateMode = SelectUpdateMode::add;
+            else if ((nFlags & MK_SHIFT) != 0) 
+                updateMode = SelectUpdateMode::add_range;
 
             if (!pView->IsSelected(pObj))
-                pView->Select(pObj, (nFlags & MK_SHIFT) != 0);
-
-            // Ctrl+Click clones the selection...
-            if ((nFlags & MK_CONTROL) != 0)
+                pView->Select(pObj, updateMode);
+            else if (updateMode == SelectUpdateMode::add)
                 pView->CloneSelection();
 
             if (auto pAdd = dynamic_cast<CDrawAdd*>(pObj)) {
@@ -191,21 +194,22 @@ void CSelectTool::OnLButtonUp(CDrawView* pView, const UINT nFlags, const CPoint&
             {
                 if (pView->m_selection.empty()) break;
                 CDrawDoc* pDoc = pView->GetDocument();
+                const auto& pages = pDoc->m_pages;
                 pObj = pView->m_selection.front();
                 pObj->SetDirty();
                 auto pPage = dynamic_cast<CDrawPage*>(pObj);
                 if (pPage) { // strona
                     int prev_pos = pDoc->GetIPage(pPage);
-                    while (prev_pos > 0 && pView->IsSelected(pDoc->m_pages[prev_pos - 1]))
-                        pPage = pDoc->m_pages[--prev_pos];
+                    while (prev_pos > 0 && pView->IsSelected(pages[prev_pos - 1]))
+                        pPage = pages[--prev_pos];
                     const int new_pos = pDoc->ComputePageOrderNr(pPage->m_position);
                     if (prev_pos == new_pos)
                         pDoc->SetPageRectFromOrd(pPage, prev_pos);
                     else {
-                        int iCnt = 1;
-                        while (prev_pos + iCnt < (int)pDoc->m_pages.size() && pView->IsSelected(pDoc->m_pages[prev_pos + iCnt]))
-                            iCnt++;
-                        pDoc->MoveBlockOfPages(prev_pos, new_pos, iCnt);
+                        int lastSelected = (int)pages.size() - 1;
+                        while (!pView->IsSelected(pages[lastSelected]))
+                            --lastSelected;
+                        pDoc->MoveBlockOfPages(prev_pos, new_pos, lastSelected - prev_pos + 1);
                     }
                 } else { // ogloszenie dopasowanie do gridu
                     auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
@@ -441,7 +445,7 @@ void CRectTool::OnLButtonUp(CDrawView* pView, const UINT nFlags, const CPoint& p
     if (point == c_down) {
         // Don't create empty objects...
         auto pObj = pView->m_selection.back();
-        pView->Select(pObj, FALSE);
+        pView->Select(pObj);
         pView->GetDocument()->Remove(pObj);
         pObj->Remove();
         selectTool.OnLButtonDown(pView, nFlags, point); // try a select!
@@ -475,8 +479,7 @@ void CKolorTool::OnLButtonDown(CDrawView* pView, const UINT nFlags, const CPoint
     if (pPage != nullptr && pPage->m_dervlvl == DervType::fixd) return;
     if (pAdd != nullptr && pAdd->flags.derived) return;
     pObj->SetDirty();
-    if (!pView->IsSelected(pObj))
-        pView->Select(pObj, (nFlags & MK_SHIFT) != 0);
+    pView->Select(pObj, (nFlags & MK_SHIFT) != 0 ? SelectUpdateMode::add : SelectUpdateMode::replace);
     if (m_drawShape == DrawShape::color) {
         int kolorek = frame->GetKolor((int)pObj->m_pDocument->m_spot_makiety.size());
         if (kolorek == CB_ERR) return;
@@ -550,8 +553,7 @@ void CLockTool::OnLButtonDown(CDrawView* pView, const UINT nFlags, const CPoint&
     // See if the click was on an page
     CDrawObj* pObj = pView->GetDocument()->ObjectAt(local);
     if (pObj != nullptr) {
-        if (!pView->IsSelected(pObj))
-            pView->Select(pObj, (nFlags & MK_SHIFT) != 0);
+        pView->Select(pObj, (nFlags & MK_SHIFT) != 0 ? SelectUpdateMode::add : SelectUpdateMode::replace);
 
         auto pPage = dynamic_cast<CDrawPage*>(pObj);
         if (m_drawShape == DrawShape::lock) {

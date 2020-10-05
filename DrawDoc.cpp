@@ -163,8 +163,8 @@ void CDrawDoc::OnCloseDocument()
 
     COleDocument::OnCloseDocument();
 
-    if (!static_cast<CMDIFrameWnd*>(AfxGetMainWnd())->MDIGetActive())
-        static_cast<CMainFrame*>(AfxGetMainWnd())->SetOpenStatus(_T(""));
+    if (!GetMainWnd()->MDIGetActive())
+        GetMainWnd()->SetOpenStatus(_T(""));
 }
 
 BOOL CDrawDoc::SaveModified()
@@ -534,7 +534,7 @@ int CDrawDoc::GetAdPosition(const CDrawAdd* pAdd) const
 void CDrawDoc::SelectAdd(CDrawAdd* pObj, const bool multiselect) const
 {
     auto pView = GetPanelView();
-    if (pView) pView->Select(pObj, multiselect);
+    if (pView) pView->Select(pObj, multiselect ? SelectUpdateMode::add : SelectUpdateMode::replace);
 }
 
 int CDrawDoc::AddsCount() const noexcept
@@ -809,7 +809,7 @@ void CDrawDoc::OnImport(const bool fromDB)
     const auto n = (int)m_objects.size();
     if ((fromDB) ? DBImport() : Import(true)) {
         auto pView = GetPanelView();
-        if (pView && pView->m_bActive) pView->Select(nullptr, FALSE);
+        if (pView && pView->m_bActive) pView->Select(nullptr);
         RemoveFromHead(n);
         UpdateAllViews(nullptr, HINT_UPDATE_WINDOW, nullptr);
     } else
@@ -1489,13 +1489,13 @@ void CDrawDoc::PrintInfo(CDC* pDC, const int max_n, const int wspol_na_str) // w
 
         rect.SetRect((int)(4.7 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(4.8 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
         pDC->SetBkMode(TRANSPARENT);
-        pDC->FillRect(rect, &(GetMainWnd()->cyjan));
+        pDC->FillRect(rect, &GetMainWnd()->cyjan);
         pDC->DrawText(_T("C"), 1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
         rect.SetRect((int)(4.8 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(4.9 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
-        pDC->FillRect(rect, &(GetMainWnd()->magenta));
+        pDC->FillRect(rect, &GetMainWnd()->magenta);
         pDC->DrawText(_T("M"), 1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
         rect.SetRect((int)(4.9 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(5 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
-        pDC->FillRect(rect, &(GetMainWnd()->yellow));
+        pDC->FillRect(rect, &GetMainWnd()->yellow);
         pDC->DrawText(_T("Y"), 1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
         rect.SetRect((int)(5 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(5.1 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
         pDC->Rectangle(rect);
