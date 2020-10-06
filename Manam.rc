@@ -472,14 +472,14 @@ END
 IDD_ABOUTBOX DIALOGEX 34, 22, 171, 177
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "Manam - sierpieñ 2019"
+CAPTION "Manam - paŸdziernik 2020"
 FONT 8, "Verdana", 0, 0, 0x0
 BEGIN
     LTEXT           "*",IDC_CLIENT,9,133,158,42
     GROUPBOX        "U¿ytkownik",IDC_STATIC,4,121,165,40
-    ICON            IDR_MAINFRAME,IDC_STATIC,7,7,20,20
+    ICON            IDR_MAINFRAME,IDC_STATIC,5,8,16,16,SS_RIGHTJUST | SS_REALSIZEIMAGE
     LTEXT           "",IDC_SIGN_TEXT,45,7,124,33
-    LTEXT           "ver 7.2",IDC_STATIC,5,28,25,8
+    LTEXT           "ver 7.2",IDC_STATIC,5,33,25,8
     LTEXT           "M\nM",IDC_MEMSTAT,4,101,166,19
     LTEXT           "Program napisany dla Agora SA \nprzez Marcina Buchwalda w latach 1999-2019.\n\n  email: velvet@agora.pl\n  www: http://gwspacer.agora.pl\n  telefon dy¿urny: 55558",IDC_STATIC,4,48,166,49,NOT WS_GROUP
     DEFPUSHBUTTON   "Zamknij",IDOK,133,73,35,14
@@ -1893,8 +1893,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 7,2,0,3
- PRODUCTVERSION 7,2,0,3
+ FILEVERSION 7,2,0,4
+ PRODUCTVERSION 7,2,0,4
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -1911,12 +1911,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Agora SA"
             VALUE "FileDescription", "Manam"
-            VALUE "FileVersion", "7.2.0.3"
+            VALUE "FileVersion", "7.2.0.4"
             VALUE "InternalName", "Manam"
             VALUE "LegalCopyright", "© Marcin Buchwald"
             VALUE "OriginalFilename", "Manam.exe"
             VALUE "ProductName", "Manager Makiet"
-            VALUE "ProductVersion", "7.2.0.3"
+            VALUE "ProductVersion", "7.2.0.4"
         END
     END
     BLOCK "VarFileInfo"

@@ -34,8 +34,8 @@ constexpr int preview_offset = 32;
 constexpr auto DERV_TMPL_WER = "$c";
 constexpr auto OPI_TAG = "%%MANAM-OPI ";
 constexpr auto APP_NAME = _T("Manam");
-constexpr int bigSize = 0x8000;   // 32kB
-constexpr size_t n_size = 0x7FFF; // (bigSize-1)
+constexpr int bigSize = 0x10000;   // 64kB
+constexpr size_t n_size = 0xFFFF; // (bigSize-1)
 #pragma endregion constants
 
 #pragma region namespacedconstants

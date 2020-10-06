@@ -478,16 +478,21 @@ void CDrawView::Select(CDrawObj* pObj, const SelectUpdateMode mode)
         auto pPage = dynamic_cast<CDrawPage *>(pObj);
         if (pPage && mode == SelectUpdateMode::add_range) {
             const auto& pages = GetDocument()->m_pages;
-            const int iHitPos = GetDocument()->GetIPage(pPage);
-            for (int i = iHitPos - 1; i >= 0; --i)
-                if (IsSelected(pages[i]))
-                    for (int j = i + 1; j < iHitPos; ++j)
-                        Select(pages[j], SelectUpdateMode::add);
             const auto pc = (int)pages.size();
-            for (int i = iHitPos + 1; i < pc; ++i)
-                if (IsSelected(pages[i]))
-                    for (int j = iHitPos + 1; j < i; ++j)
-                        Select(pages[j], SelectUpdateMode::add);
+            int hitPos = GetDocument()->GetIPage(pPage);
+            int selPos = (pc + hitPos - 1) % pc;
+            while (selPos != hitPos && !IsSelected(pages[selPos]))
+                selPos = (pc + selPos - 1) % pc;
+            if (selPos > hitPos) {
+                const auto aux = selPos - 1;
+                selPos = hitPos + 1;
+                hitPos = aux;
+            } else {
+                --hitPos;
+                ++selPos;
+            }
+            while (selPos <= hitPos)
+                Select(pages[selPos++], SelectUpdateMode::add);
         }
     }
 
@@ -517,7 +522,7 @@ void CDrawView::OpenSelected()
 
 void CDrawView::Deselect(CDrawObj* pObj)
 {
-    auto iter = std::find(begin(m_selection), end(m_selection), pObj);
+    const auto iter = std::find(begin(m_selection), end(m_selection), pObj);
     if (iter != end(m_selection)) {
         InvalObj(pObj);
         m_selection.erase(iter);

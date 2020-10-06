@@ -193,34 +193,43 @@ void CSelectTool::OnLButtonUp(CDrawView* pView, const UINT nFlags, const CPoint&
             case SelectMode::move:
             {
                 if (pView->m_selection.empty()) break;
-                CDrawDoc* pDoc = pView->GetDocument();
-                const auto& pages = pDoc->m_pages;
+                CDrawDoc* doc = pView->GetDocument();
+                const auto& pages = doc->m_pages;
                 pObj = pView->m_selection.front();
-                pObj->SetDirty();
                 auto pPage = dynamic_cast<CDrawPage*>(pObj);
-                if (pPage) { // strona
-                    int prev_pos = pDoc->GetIPage(pPage);
-                    while (prev_pos > 0 && pView->IsSelected(pages[prev_pos - 1]))
-                        pPage = pages[--prev_pos];
-                    const int new_pos = pDoc->ComputePageOrderNr(pPage->m_position);
-                    if (prev_pos == new_pos)
-                        pDoc->SetPageRectFromOrd(pPage, prev_pos);
-                    else {
-                        int lastSelected = (int)pages.size() - 1;
-                        while (!pView->IsSelected(pages[lastSelected]))
-                            --lastSelected;
-                        pDoc->MoveBlockOfPages(prev_pos, new_pos, lastSelected - prev_pos + 1);
-                    }
+                if (pPage) {
+                    // find selected range
+                    const auto last_ind = (int)pages.size() - 1;
+                    int last_sel = last_ind;
+                    while (!pView->IsSelected(pages[last_sel]))
+                        --last_sel;
+                    int first_sel = 0;
+                    while (!pView->IsSelected(pages[first_sel]))
+                        ++first_sel;
+                    // make selection coherent
+                    const int count = last_sel - first_sel + 1;
+                    if ((int)pView->m_selection.size() < count)
+                        for (int i = first_sel + 1; i < last_sel; ++i)
+                            pView->Select(pages[i], SelectUpdateMode::add);
+                    // move coherent region
+                    const int displacement = doc->ComputePageOrderNr(pPage->m_position) - doc->GetIPage(pPage);
+                    if (displacement != 0)
+                        doc->MoveBlockOfPages(first_sel, first_sel + displacement, count);
+                    else
+                        while (first_sel <= last_sel) {
+                            doc->SetPageRectFromOrd(pages[first_sel], first_sel);
+                            ++first_sel;
+                        }
                 } else { // ogloszenie dopasowanie do gridu
                     auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
                     if (pAdd) {
                         const int szpalt_x = pAdd->szpalt_x;
                         const int szpalt_y = pAdd->szpalt_y;
                         const auto adCentr = pAdd->m_position.CenterPoint();
-                        const auto srcPage = pDoc->GetPage(pAdd->fizpage);
+                        const auto srcPage = doc->GetPage(pAdd->fizpage);
 
                         CRect toPos;
-                        auto dstPage = pDoc->PageAt(adCentr);
+                        auto dstPage = doc->PageAt(adCentr);
                         if (dstPage && (dstPage->szpalt_x != szpalt_x || dstPage->szpalt_y != szpalt_y)) {
                             if (srcPage) dstPage = srcPage;
                             toPos.SetRect(dstPage->m_position.left + (int)(modulx*(pAdd->posx - 1)), dstPage->m_position.bottom + (int)(moduly*(szpalt_y - pAdd->posy + 1)),
@@ -258,15 +267,15 @@ void CSelectTool::OnLButtonUp(CDrawView* pView, const UINT nFlags, const CPoint&
                             if (!pAdd->fizpage || pAdd->m_pub_xx < 0) {
                                 pAdd->m_pub_xx = xx;
                                 if (dstPage) dstPage->RemoveAdd(pAdd);
-                                pDoc->Remove(pAdd);
-                                pDoc->AddQue(pAdd);
-                                auto vView = pDoc->GetPanelView<CQueView>();
+                                doc->Remove(pAdd);
+                                doc->AddQue(pAdd);
+                                auto vView = doc->GetPanelView<CQueView>();
                                 if (vView) pAdd->m_position = *vView->GetStoredPosition();
                             }
                             CQueView::selected_add = nullptr;
                             pView->m_bActive = FALSE;
                             pView->Invalidate(FALSE);
-                            pDoc->UpdateAllViews(pView);
+                            doc->UpdateAllViews(pView);
                             return;
                         }
                         pAdd->Invalidate();
