@@ -477,11 +477,11 @@ FONT 8, "Verdana", 0, 0, 0x0
 BEGIN
     LTEXT           "*",IDC_CLIENT,9,133,158,42
     GROUPBOX        "U¿ytkownik",IDC_STATIC,4,121,165,40
-    ICON            IDR_MAINFRAME,IDC_STATIC,5,8,16,16,SS_RIGHTJUST | SS_REALSIZEIMAGE
+    ICON            IDR_MAINFRAME,IDC_STATIC,5,8,20,20,SS_RIGHTJUST | SS_REALSIZEIMAGE
     LTEXT           "",IDC_SIGN_TEXT,45,7,124,33
     LTEXT           "ver 7.2",IDC_STATIC,5,33,25,8
     LTEXT           "M\nM",IDC_MEMSTAT,4,101,166,19
-    LTEXT           "Program napisany dla Agora SA \nprzez Marcina Buchwalda w latach 1999-2019.\n\n  email: velvet@agora.pl\n  www: http://gwspacer.agora.pl\n  telefon dy¿urny: 55558",IDC_STATIC,4,48,166,49,NOT WS_GROUP
+    LTEXT           "Program napisany dla Agora SA \nprzez Marcina Buchwalda w latach 1999-2020.\n\n  email: velvet@agora.pl\n  www: http://gwspacer.agora.pl\n  telefon dy¿urny: 55558",IDC_STATIC,4,48,166,49,NOT WS_GROUP
     DEFPUSHBUTTON   "Zamknij",IDOK,133,73,35,14
 END
 

@@ -193,14 +193,13 @@ void CSelectTool::OnLButtonUp(CDrawView* pView, const UINT nFlags, const CPoint&
             case SelectMode::move:
             {
                 if (pView->m_selection.empty()) break;
-                CDrawDoc* doc = pView->GetDocument();
-                const auto& pages = doc->m_pages;
+                CDrawDoc* pDoc = pView->GetDocument();
+                const auto& pages = pDoc->m_pages;
                 pObj = pView->m_selection.front();
                 auto pPage = dynamic_cast<CDrawPage*>(pObj);
                 if (pPage) {
                     // find selected range
-                    const auto last_ind = (int)pages.size() - 1;
-                    int last_sel = last_ind;
+                    int last_sel = (int)pages.size() - 1;
                     while (!pView->IsSelected(pages[last_sel]))
                         --last_sel;
                     int first_sel = 0;
@@ -212,24 +211,24 @@ void CSelectTool::OnLButtonUp(CDrawView* pView, const UINT nFlags, const CPoint&
                         for (int i = first_sel + 1; i < last_sel; ++i)
                             pView->Select(pages[i], SelectUpdateMode::add);
                     // move coherent region
-                    const int displacement = doc->ComputePageOrderNr(pPage->m_position) - doc->GetIPage(pPage);
+                    const int displacement = pDoc->ComputePageOrderNr(pPage->m_position) - pDoc->GetIPage(pPage);
                     if (displacement != 0)
-                        doc->MoveBlockOfPages(first_sel, first_sel + displacement, count);
+                        pDoc->MoveBlockOfPages(first_sel, first_sel + displacement, count);
                     else
                         while (first_sel <= last_sel) {
-                            doc->SetPageRectFromOrd(pages[first_sel], first_sel);
+                            pDoc->SetPageRectFromOrd(pages[first_sel], first_sel);
                             ++first_sel;
                         }
-                } else { // ogloszenie dopasowanie do gridu
+                } else { // ad aligned to the grid or description
                     auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
                     if (pAdd) {
                         const int szpalt_x = pAdd->szpalt_x;
                         const int szpalt_y = pAdd->szpalt_y;
                         const auto adCentr = pAdd->m_position.CenterPoint();
-                        const auto srcPage = doc->GetPage(pAdd->fizpage);
+                        const auto srcPage = pDoc->GetPage(pAdd->fizpage);
 
                         CRect toPos;
-                        auto dstPage = doc->PageAt(adCentr);
+                        auto dstPage = pDoc->PageAt(adCentr);
                         if (dstPage && (dstPage->szpalt_x != szpalt_x || dstPage->szpalt_y != szpalt_y)) {
                             if (srcPage) dstPage = srcPage;
                             toPos.SetRect(dstPage->m_position.left + (int)(modulx*(pAdd->posx - 1)), dstPage->m_position.bottom + (int)(moduly*(szpalt_y - pAdd->posy + 1)),
@@ -267,19 +266,20 @@ void CSelectTool::OnLButtonUp(CDrawView* pView, const UINT nFlags, const CPoint&
                             if (!pAdd->fizpage || pAdd->m_pub_xx < 0) {
                                 pAdd->m_pub_xx = xx;
                                 if (dstPage) dstPage->RemoveAdd(pAdd);
-                                doc->Remove(pAdd);
-                                doc->AddQue(pAdd);
-                                auto vView = doc->GetPanelView<CQueView>();
+                                pDoc->Remove(pAdd);
+                                pDoc->AddQue(pAdd);
+                                auto vView = pDoc->GetPanelView<CQueView>();
                                 if (vView) pAdd->m_position = *vView->GetStoredPosition();
                             }
                             CQueView::selected_add = nullptr;
                             pView->m_bActive = FALSE;
                             pView->Invalidate(FALSE);
-                            doc->UpdateAllViews(pView);
+                            pDoc->UpdateAllViews(pView);
                             return;
                         }
                         pAdd->Invalidate();
-                    }
+                    } else // description
+                        pObj->SetDirty();
                 }
             }
             break;
