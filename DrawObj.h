@@ -61,6 +61,7 @@ class CDrawObj : public CObject
     // Operations
     void Remove();
     void Invalidate();
+    void Move(UINT nChar);
     void DrawTracker(CDC* pDC, TrackerState state) const;
     void MoveHandleTo(int nHandle, const CPoint& point, CDrawView* pView = nullptr);
 

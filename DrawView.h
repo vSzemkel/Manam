@@ -115,6 +115,7 @@ class CDrawView : public CScrollView
     afx_msg void OnDisableMenuAdSelSTU(CCmdUI* pCmdUI);
     afx_msg void OnDisableMenuAdSelOPI(CCmdUI* pCmdUI);
     afx_msg void OnDisableMenuAdPageSel(CCmdUI* pCmdUI);
+    afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
     afx_msg void OnUpdateVuCkMakietowanie(CCmdUI* pCmdUI);
     afx_msg void OnUpdateViewCzasobow(CCmdUI* pCmdUI);
     afx_msg void OnUpdateViewStudio(CCmdUI* pCmdUI);

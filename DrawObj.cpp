@@ -305,6 +305,36 @@ void CDrawObj::MoveHandleTo(const int nHandle, const CPoint& point, CDrawView* p
     MoveTo(position, pView);
 }
 
+void CDrawObj::Move(const UINT nChar)
+{
+    int x = m_position.left;
+    int y = m_position.top;
+
+    switch (nChar) {
+        case VK_LEFT:
+            x -= vscale;
+            break;
+
+        case VK_UP:
+            y += vscale;
+            break;
+
+        case VK_RIGHT:
+            x += vscale;
+            break;
+
+        case VK_DOWN:
+            y -= vscale;
+            break;
+
+        default:
+            break;
+    }
+
+    m_position.MoveToXY(x, y);
+    SetDirty();
+    Invalidate();
+}
 
 void CDrawObj::Invalidate()
 {

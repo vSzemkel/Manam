@@ -31,6 +31,7 @@ IMPLEMENT_DYNCREATE(CDrawView, CScrollView)
 
 BEGIN_MESSAGE_MAP(CDrawView, CScrollView)
     //{{AFX_MSG_MAP(CDrawView)
+    ON_WM_KEYDOWN()
     ON_WM_LBUTTONUP()
     ON_WM_RBUTTONDOWN()
     ON_WM_LBUTTONDOWN()
@@ -1701,4 +1702,16 @@ void CDrawView::OnPrevKor()
             CDrawApp::OpenWebBrowser(fname);
         }
     }
+}
+
+void CDrawView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+    if (VK_LEFT <= nChar && nChar <= VK_DOWN && !m_selection.empty()) {
+        for (const auto& obj : m_selection)
+            if (dynamic_cast<CDrawOpis*>(obj))
+                obj->Move(nChar);
+        return;
+    }
+
+    CScrollView::OnKeyDown(nChar, nRepCnt, nFlags);
 }
