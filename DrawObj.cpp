@@ -305,10 +305,10 @@ void CDrawObj::MoveHandleTo(const int nHandle, const CPoint& point, CDrawView* p
     MoveTo(position, pView);
 }
 
-void CDrawObj::Move(const UINT nChar)
+void CDrawObj::MoveResize(const UINT nChar)
 {
-    int x = m_position.left;
-    int y = m_position.top;
+    int x{};
+    int y{};
 
     switch (nChar) {
         case VK_LEFT:
@@ -331,7 +331,14 @@ void CDrawObj::Move(const UINT nChar)
             break;
     }
 
-    m_position.MoveToXY(x, y);
+    if ((::GetKeyState(VK_SHIFT) & 0xff00) == 0) // move
+        m_position.MoveToXY(m_position.left + x, m_position.top + y);
+    else { // resize
+        const auto s = CSize{x >> 1, y >> 1};
+        m_position.InflateRect(s);
+        m_position += s;
+    }
+
     SetDirty();
     Invalidate();
 }

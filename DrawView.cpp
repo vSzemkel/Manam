@@ -1709,7 +1709,7 @@ void CDrawView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     if (VK_LEFT <= nChar && nChar <= VK_DOWN && !m_selection.empty()) {
         for (const auto& obj : m_selection)
             if (dynamic_cast<CDrawOpis*>(obj))
-                obj->Move(nChar);
+                obj->MoveResize(nChar);
         return;
     }
 
