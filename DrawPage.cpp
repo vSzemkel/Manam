@@ -973,7 +973,6 @@ bool CDrawPage::CheckRozmKrat()
 
 bool CDrawPage::GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destName)
 {
-    constexpr TCHAR* aExt[] = { _T(".eps"), _T(".ps"), _T(".pdf") };
     destName = theApp.GetProfileString(_T("GenEPS"), pArg->format == CManFormat::EPS ? _T("EpsDst") : _T("PsDst"), _T(""));
     CDrawApp::TryAppendDirSep(destName);
     int pos = m_pDocument->gazeta.Find(_T(' '));
@@ -992,9 +991,12 @@ bool CDrawPage::GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destN
                 dbDestName.SetAt(16, _T('e'));
         }
         destName.Append(dbDestName);
-        destName.Append(aExt[(uint8_t)pArg->format]);
-    } else
-        destName += m_pDocument->dayws + (pos < 0 ? m_pDocument->gazeta : m_pDocument->gazeta.Left(pos) + m_pDocument->gazeta.Mid(pos + 1)) + sNum + aExt[(uint8_t)pArg->format];
+        destName.Append(manamExt[(int)pArg->format]);
+    } else {
+        CString tmp = m_pDocument->gazeta;
+        if (pos >= 0) tmp.Remove(' ');
+        destName.AppendFormat(_T("%s%s%s%s"), (LPCTSTR)m_pDocument->dayws, (LPCTSTR)tmp, (LPCTSTR)sNum, manamExt[(int)pArg->format]);
+    }
 
     CFileFind ff;
     return !m_pDocument->ovEPS && ff.FindFile(destName);
@@ -1026,7 +1028,7 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
     towrite[3] = CStringA(dest_name + sUid);
     towrite[4] = CStringA(CTime::GetCurrentTime().Format(c_ctimeCzas));
     towrite[5] = "Agora SA";
-    towrite[6] = " Cyan Magenta Yellow Black";
+    towrite[6] = "Cyan Magenta Yellow Black";
 
     pArg->pDlg->StrInfo(pArg->iChannelId, CString(_T("Strona ")) + num + CString(_T(" do pliku ")) + dest_name);
 
@@ -1122,22 +1124,23 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
                     case 0:
                         line = (pArg->format > CManFormat::EPS) ? (LPCSTR)towrite[i] : tofind[i];
                         break;
-                    case 1: if (pArg->format > CManFormat::EPS) {
-                        if (m_bbox.IsEmpty()) { // pobierz BoundingBox z formatu papieru
-                            CStringW wBoundingBox(' ', 32);
-                            CManODPNETParms orapar {
-                                { CManDbType::DbTypeInt32, &m_pDocument->m_mak_xx },
-                                { CManDbType::DbTypeInt32, &this->id_str },
-                                { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &wBoundingBox }
-                            };
-                            orapar.outParamsCount = 1;
-                            theManODPNET.EI("begin pagina.get_boundingbox(:mak_xx,:str_xx,:bb); end;", orapar);
-                            line = CStringA(tofind[i]) + ' ' + CW2A(wBoundingBox);
-                        }
-                    } else
-                        line.Format("%%%%BoundingBox: %d %d %d %d", bx1, by1, bx2, by2);
+                    case 1:
+                        if (pArg->format > CManFormat::EPS) {
+                            if (m_bbox.IsEmpty()) { // pobierz BoundingBox z formatu papieru
+                                CStringW wBoundingBox(' ', 32);
+                                CManODPNETParms orapar{
+                                    {CManDbType::DbTypeInt32, &m_pDocument->m_mak_xx},
+                                    {CManDbType::DbTypeInt32, &this->id_str},
+                                    {CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &wBoundingBox}};
+                                orapar.outParamsCount = 1;
+                                theManODPNET.EI("begin pagina.get_boundingbox(:mak_xx,:str_xx,:bb); end;", orapar);
+                                line.Format("%s %s", tofind[i], (LPCSTR)CW2A(wBoundingBox));
+                            }
+                        } else
+                            line.Format("%%%%BoundingBox: %d %d %d %d", bx1, by1, bx2, by2);
                     break;
-                    case 6: line = CStringA(tofind[i]) + (kolor == 1 ? " Black" : towrite[i]);
+                    case 6: 
+                        line.Format("%s %s", tofind[i], kolor == 1 ? "Black" : (LPCSTR)towrite[i]);
                         break;
                     default:
                         line = CStringA(tofind[i]) + ' ';

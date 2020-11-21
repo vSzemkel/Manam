@@ -579,7 +579,8 @@ BOOL CDrawAdd::OnOpen(CDrawView* pView)
             uint8_t eok = this->flags.epsok;
             auto powt = (int)(this->powtorka == 0 ? 0 : (this->powtorka - CTime(POWTSEED_0)).GetDays());
             uint8_t ile_kol = this->kolor & 0x07;
-            CString czk = this->flags.reserv == 1 ? _T("") : this->czaskto;
+            CString czk;
+            if (this->flags.reserv != 1) czk = this->czaskto;
 
             CManODPNETParms orapar {
                 { CManDbType::DbTypeInt32, &this->m_pub_xx },
@@ -1612,8 +1613,7 @@ bool CDrawAdd::LocatePreview(CFile& fEps, unsigned long* lOffset, unsigned long*
 
 CString CDrawAdd::EpsName(const CManFormat format, bool copyOldEPS, const bool bModifTest)
 {
-    static constexpr TCHAR* aExt[] = { _T(".eps"), _T(".ps"), _T(".pdf") };
-    const TCHAR* extension = aExt[(uint8_t)format];
+    const TCHAR* extension = manamExt[(int)format];
     const bool czy_zajawka = wersja.Find(_T('z')) >= 0;
     if (nreps == -1 && !czy_zajawka) return CString(_T("brak nr atexa"));
     theApp.SetRegistryBase(_T("GenEPS"));
@@ -1641,8 +1641,8 @@ CString CDrawAdd::EpsName(const CManFormat format, bool copyOldEPS, const bool b
             return zaj_path.IsEmpty() ? nazwa + CString(extension) + _T(" - brak zajawki") : zaj_path;
         }
         if (powtorka == 0) { // adno_seed zajawki
-            num.Format(_T("%i"), status);
-            return (theApp.isOpiMode ? _T("::\\") : eps_path) + m_pDocument->daydir + num + extension;
+            num.Format(_T("%s%i%s"), (LPCTSTR)m_pDocument->daydir, status, extension);
+            return (theApp.isOpiMode ? CString(_T("::\\")) : eps_path) + num;
         }
     }
 

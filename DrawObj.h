@@ -35,6 +35,7 @@ class CDrawObj : public CObject
     static int Arabska(LPCTSTR rz);
     static CString RzCyfra(int digit, int offset);
     static void DrawNapis(CDC* pDC, LPCTSTR napis, int cnt, LPRECT r, UINT format, int bkMode);
+    static inline const TCHAR manamExt[][5] = {_T(".eps"), _T(".ps"), _T(".pdf")};
 
     enum TrackerState : uint8_t { normal, selected, active };
     // Attributes

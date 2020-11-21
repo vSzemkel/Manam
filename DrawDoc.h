@@ -43,7 +43,7 @@ class CDrawDoc final : public COleDocument
     static int GetIdxfromSpotID(UINT spot_id) noexcept;
     static CBrush* GetSpotBrush(int i) noexcept;
     static CString XmlReadText(IXmlReader* reader);
-    static constexpr TCHAR* asDocTypeExt[] = {_T(".DB"), _T(".LIB"), _T(".GRB")}; // rozszerzenie poszczeglnych typów dokumentow opisanych w eDocType
+    static inline const TCHAR asDocTypeExt[][5] = {_T(".DB"), _T(".LIB"), _T(".GRB")}; // rozszerzenie poszczeglnych typów dokumentow opisanych w eDocType
 
     ~CDrawDoc() override;
     BOOL OnNewDocument() override;

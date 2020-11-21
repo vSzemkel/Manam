@@ -307,8 +307,7 @@ void CDrawObj::MoveHandleTo(const int nHandle, const CPoint& point, CDrawView* p
 
 void CDrawObj::MoveResize(const UINT nChar)
 {
-    int x{};
-    int y{};
+    int x{}, y{};
 
     switch (nChar) {
         case VK_LEFT:
@@ -439,8 +438,8 @@ CString CDrawObj::RzCyfra(const int digit, const int offset)
 
 CString CDrawObj::Rzymska(const int i)
 {
-    /* vu: liczby rzymskie do kodowania pozycji systemu dziesiêtnego u¿ywaj¹ 3 ró¿nych znaków,
-           a s¹siednie pozycje maj¹ jeden znak wspólny - dalej ju¿ ³atwo :end vu */
+    /* vu: liczby rzymskie do kodowania pozycji systemu dziesietnego uzywaja 3 roznych znakow,
+           a sasiednie pozycje maja jeden znak wspolny - dalej juz latwo :end vu */
 
     if (abs(i) >= 3999) return _T("Big one");
     if (i < 0) return CString("-") + Rzymska(-i);
@@ -449,8 +448,8 @@ CString CDrawObj::Rzymska(const int i)
 
 int CDrawObj::Arabska(LPCTSTR rz)
 {
-    /* vu: liczby rzymskie zbudowane s¹ z cyfr o sta³ej wadze. Na pocz¹tek liczy siê wagê liczby w instrukcji switch.
-           drugi krok, to uwzglêdnienie sekwencji specjalnych zawy¿aj¹cych wagê jak 'IV' czy 'CM' :end vu */
+    /* vu: liczby rzymskie zbudowane sa z cyfr o stalej wadze. Na poczatek liczy sie wage liczby w instrukcji switch.
+           drugi krok, to uwzglednienie sekwencji specjalnych zawyzajacych wage jak 'IV' czy 'CM' :end vu */
 
     int li_sum = 0;
     size_t i, li_len = _tcslen(rz);

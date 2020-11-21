@@ -270,9 +270,11 @@ void CGridFrm::OnShowrept()
     HDITEM hi = { 0 };
     hi.mask = HDI_TEXT;
     if (showLastAdnoUsed) {
-        hi.pszText = _T("Numer z");
+        TCHAR col_number[] = _T("Numer z");
+        hi.pszText = col_number;
         hcHeader.SetItem(powtorka, &hi);
-        hi.pszText = _T("Oddzia³");
+        TCHAR col_division[] = _T("Oddzia³");
+        hi.pszText = col_division;
         hcHeader.SetItem(oldadno, &hi);
 
         long adno;
@@ -286,7 +288,7 @@ void CGridFrm::OnShowrept()
             ::StringCchCopy(mutacja, 5, ch + 1);
             *ch = '\0';
         } else
-            ::StringCchCopy(mutacja, 5, _T('\0'));
+            mutacja[0] = _T('\0');
 
         auto line = reinterpret_cast<char*>(theApp.bigBuf);
         sURL.Format(_T("tyt=%s&mut=%s&kiedy=%s"), (LPCTSTR)tytul, (LPCTSTR)mutacja, (LPCTSTR)vDoc->data);
@@ -312,9 +314,11 @@ void CGridFrm::OnShowrept()
             pFile->Close();
         }
     } else {
-        hi.pszText = _T("Powtórka");
+        TCHAR col_repet[] = _T("Powtórka");
+        hi.pszText = col_repet;
         hcHeader.SetItem(powtorka, &hi);
-        hi.pszText = _T("z ATEX");
+        TCHAR col_atex[] = _T("z ATEX");
+        hi.pszText = col_atex;
         hcHeader.SetItem(oldadno, &hi);
     }
 

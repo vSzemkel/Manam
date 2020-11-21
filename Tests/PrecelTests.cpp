@@ -2,7 +2,7 @@
 #include "../StdAfx.h"
 
 TEST(PrecelTests, Podium) {
-    constexpr char* bits = "00003BFF";
+    constexpr char bits[] = "00003BFF";
     CFlag flag{ bits };
 
     /*
