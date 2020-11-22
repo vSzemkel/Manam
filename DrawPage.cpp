@@ -1128,10 +1128,11 @@ bool CDrawPage::GenEPS(PGENEPSARG pArg)
                         if (pArg->format > CManFormat::EPS) {
                             if (m_bbox.IsEmpty()) { // pobierz BoundingBox z formatu papieru
                                 CStringW wBoundingBox(' ', 32);
-                                CManODPNETParms orapar{
-                                    {CManDbType::DbTypeInt32, &m_pDocument->m_mak_xx},
-                                    {CManDbType::DbTypeInt32, &this->id_str},
-                                    {CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &wBoundingBox}};
+                                CManODPNETParms orapar {
+                                    { CManDbType::DbTypeInt32, &m_pDocument->m_mak_xx },
+                                    { CManDbType::DbTypeInt32, &this->id_str },
+                                    { CManDbType::DbTypeVarchar2, CManDbDir::ParameterOut, &wBoundingBox}
+                                };
                                 orapar.outParamsCount = 1;
                                 theManODPNET.EI("begin pagina.get_boundingbox(:mak_xx,:str_xx,:bb); end;", orapar);
                                 line.Format("%s %s", tofind[i], (LPCSTR)CW2A(wBoundingBox));

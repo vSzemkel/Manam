@@ -1493,7 +1493,7 @@ void CDrawView::CheckPrintEps(const BOOL isprint)
         for (int i = 0; i < pc; ++i)
             if (wyborStron[i])
                 msg += pDoc->m_pages[i]->f5_errInfo;
-        ::MessageBox(theApp.GetMainWnd()->m_hWnd, msg.IsEmpty() ? _T("Nie ma b³êdów") : msg, _T("Raport sprawdzenia EPS"), MB_OK);
+        ::MessageBox(theApp.GetMainWnd()->m_hWnd, msg.IsEmpty() ? _T("Nie ma b³êdów") : (LPCTSTR)msg, _T("Raport sprawdzenia EPS"), MB_OK);
         if (theApp.autoMark && theApp.activeDoc) pDoc->UpdateAllViews(nullptr);
     } else if (isprint && theApp.isOpiMode && !pDlg->cancelGenEPS) {
         pDlg->ShowWindow(SW_HIDE);
@@ -1676,7 +1676,7 @@ void CDrawView::OnAtexSyg() // single Add selected
     }
 
     CString sUrl;
-    sUrl.Format(_T("t=%s&m=%s&k=%s&a=%li"), (LPCTSTR)GetDocument()->gazeta.Left(3), (LPCTSTR)(pAdd->flags.derived ? _T("RP") : GetDocument()->gazeta.Mid(4, 2)), (LPCTSTR)GetDocument()->data, pAdd->nreps);
+    sUrl.Format(_T("t=%s&m=%s&k=%s&a=%li"), (LPCTSTR)GetDocument()->gazeta.Left(3), (LPCTSTR)(pAdd->flags.derived ? _T("RP") : (LPCTSTR)GetDocument()->gazeta.Mid(4, 2)), (LPCTSTR)GetDocument()->data, pAdd->nreps);
     CDrawApp::OpenWebBrowser(7, sUrl);
 }
 
