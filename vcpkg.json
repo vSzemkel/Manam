@@ -1,0 +1,9 @@
+{
+    "name": "manam",
+    "version-string": "7.2.0.4",
+    "port-version": 1,
+    "description": "Advertisement space management and newspaper production tool",
+    "dependencies": [
+      "zlib"
+    ]
+  }

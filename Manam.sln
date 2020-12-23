@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{A96AD5
 		.clang-tidy = .clang-tidy
 		.gitignore = .gitignore
 		.vcpkg = .vcpkg
+		vcpkg.json = vcpkg.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sql", "Sql", "{871D3535-E22A-468C-B441-03DB4E32E391}"

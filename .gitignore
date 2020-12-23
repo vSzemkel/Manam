@@ -10,6 +10,7 @@
 .vs/
 .vscode/
 ipch/
+vcpkg_installed/
 
 /**/x64
 /**/x86
