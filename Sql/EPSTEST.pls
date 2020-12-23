@@ -201,6 +201,7 @@ create or replace PACKAGE BODY "EPSTEST" as
      vmak_xx in makieta.xx%type,
      vrefCur out sr.refCur
   ) as begin
+raise_application_error(-20001,'Uzyj aktualnej wersji Manamu');
    open vrefcur for select info,null from (
       select ', '||p.adno||' str. '||decode(s.nr_porz,0,m.objetosc,s.nr_porz) info
         from makieta m,spacer_strona s,spacer_pub p
@@ -222,7 +223,7 @@ create or replace PACKAGE BODY "EPSTEST" as
         from makieta m,spacer_strona s,spacer_pub p
        where m.xx=vmak_xx and s.mak_xx=m.xx and p.mak_xx=s.mak_xx and p.str_xx=s.str_xx and p.x>0 and p.powtorka is null and nvl(p.adno,-1)>0
          and p.cid_xx is not null and p.cid_xx<>nvl((select max(cp.cid) from cid_present cp 
-            where cp.kiedy=m.kiedy and cp.zsy_xx=m.wyd_xx and nvl(cp.adno,-1)=nvl(p.adno,-2)),p.cid_xx)
+            where cp.kiedy=m.kiedy and cp.zsy_xx=decode(m.wyd_xx,38,20,m.wyd_xx) and nvl(cp.adno,-1)=nvl(p.adno,-2)),p.cid_xx)
        order by decode(s.nr_porz,0,m.objetosc,s.nr_porz),p.adno))
       into vopi_url,verr_text
       from makieta m,wydawca w where m.xx=vmak_xx and m.wyd_xx=w.xx(+);
@@ -259,7 +260,7 @@ create or replace PACKAGE BODY "EPSTEST" as
       select d.tytul||' '||d.mutacja tytul,to_char(m.kiedy,sr.vfShortDate) kiedy,
              p.nazwa,t.sym,p.adno,w.sym wyd,
              decode(ci.preview_path,null,'BRAK',decode(ci.status,0,'ZLY MATERIAL','<a href="'||ci.preview_path||chr(38)||'nreps='||p.adno||chr(38)||'date='||to_char(m.kiedy,sr.vfShortDate)||chr(38)||'name='||d.tytul||' '||d.mutacja||'">JEST</a>')) status,
-             nvl2((select min(cp.cid) from cid_present cp where cp.cid=ci.xx and cp.zsy_xx=m.wyd_xx and cp.kiedy=m.kiedy) ,'TAK','NIE') dotarl
+             nvl2((select min(cp.cid) from cid_present cp where cp.cid=ci.xx and cp.zsy_xx=decode(m.wyd_xx,38,20,m.wyd_xx) and cp.kiedy=m.kiedy) ,'TAK','NIE') dotarl
         from drzewo d, makieta m, spacer_pub p, typ_ogloszenia t, wydawca w,
              modemix# a, cid_info ci
        where m.kiedy>=vdkiedy and m.kiedy<vdkiedy+21
@@ -274,7 +275,7 @@ create or replace PACKAGE BODY "EPSTEST" as
       select d.tytul||' '||d.mutacja tytul,to_char(m.kiedy,sr.vfShortDate) kiedy,
              a.cus2name,'CLF',a.adno,w.sym wyd,
              decode(ci.preview_path,null,'BRAK',decode(ci.status,0,'ZLY MATERIAL','<a href="'||ci.preview_path||chr(38)||'nreps='||a.adno||chr(38)||'date='||to_char(m.kiedy,sr.vfShortDate)||chr(38)||'name='||d.tytul||' '||d.mutacja||'">JEST</a>')) status,
-             nvl2((select min(cp.cid) from cid_present cp where cp.cid=ci.xx and cp.zsy_xx=m.wyd_xx and cp.kiedy=m.kiedy) ,'TAK','NIE') dotarl
+             nvl2((select min(cp.cid) from cid_present cp where cp.cid=ci.xx and cp.zsy_xx=decode(m.wyd_xx,38,20,m.wyd_xx) and cp.kiedy=m.kiedy) ,'TAK','NIE') dotarl
         from drzewo d, makieta m, wydawca w,
              modemix# a, cid_info ci
        where m.kiedy>=vdkiedy and m.kiedy<vdkiedy+21
@@ -292,7 +293,7 @@ create or replace PACKAGE BODY "EPSTEST" as
       select d.tytul||' '||d.mutacja tytul,to_char(m.kiedy,sr.vfShortDate) kiedy,
              a.cus2name nazwa,nvl(a.modelid,'CLF') sym,a.adno,w.sym wyd,
              decode(ci.preview_path,null,'BRAK','<a href="'||ci.preview_path||'">JEST</a>') status,
-             nvl2((select min(cp.cid) from cid_present cp where cp.cid=ci.xx and cp.zsy_xx=m.wyd_xx and cp.kiedy=m.kiedy) ,'TAK','NIE') dotarl
+             nvl2((select min(cp.cid) from cid_present cp where cp.cid=ci.xx and cp.zsy_xx=decode(m.wyd_xx,38,20,m.wyd_xx) and cp.kiedy=m.kiedy) ,'TAK','NIE') dotarl
         from drzewo d, makieta m, wydawca w,
              modemix# a, cid_info ci
        where m.kiedy>=vdkiedy and m.kiedy<vdkiedy+21
@@ -366,13 +367,13 @@ create or replace PACKAGE BODY "EPSTEST" as
             from drzewo d, makieta m, spacer_pub p, cid_info c
            where d.tytul=vtytul and d.mutacja=vmutacja and m.kiedy=vdkiedy and p.adno=vadno
              and d.xx=m.drw_xx and m.xx=p.mak_xx and get_cid(p.xx)=c.xx and c.preview_path is not null
-             and (p.powtorka is not null or exists (select 1 from cid_present cp where cp.cid=c.xx and cp.zsy_xx=m.wyd_xx))
+             and (p.powtorka is not null or exists (select 1 from cid_present cp where cp.cid=c.xx and cp.zsy_xx=decode(m.wyd_xx,38,20,m.wyd_xx)))
            union all
           select c.status-2,vlinknew
             from drzewo d, makieta m, spacer_pub p, spacer_pubstub ps, cid_info c
            where d.tytul=vtytul and d.mutacja=vmutacja and m.kiedy=vdkiedy and p.adno=vadno and p.xx=ps.xx
              and d.xx=m.drw_xx and m.xx=ps.mak_xx and get_cid(p.xx)=c.xx and c.preview_path is not null
-             and (p.powtorka is not null or exists (select 1 from cid_present cp where cp.cid=c.xx and cp.zsy_xx=m.wyd_xx));
+             and (p.powtorka is not null or exists (select 1 from cid_present cp where cp.cid=c.xx and cp.zsy_xx=decode(m.wyd_xx,38,20,m.wyd_xx)));
       end if;             
     end if; 
   end get_httpsource;
@@ -596,7 +597,7 @@ create or replace PACKAGE BODY "EPSTEST" as
              ci.material_path,
              ci.preview_path,
              0 konwertujDoXml,
-             decode(p.powtorka,null,decode((select count(1) from cid_present cp where cp.cid=p.cid_xx and cp.zsy_xx=m.wyd_xx),0,'NIE','TAK'),'REP') ispresent,
+             decode(p.powtorka,null,decode((select count(1) from cid_present cp where cp.cid=p.cid_xx and cp.zsy_xx=decode(m.wyd_xx,38,20,m.wyd_xx)),0,'NIE','TAK'),'REP') ispresent,
              decode(p.eps_present,0,'NIE',1,'TAK',decode((select count(1) from atex.track t where t.adno=p.adno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO')) akceptacja,
              to_char(m.data_zm + cWyprzedzenieWysylania,sr.vfLongDate) zamkniecie,
              es.app_code,
@@ -666,7 +667,7 @@ create or replace PACKAGE BODY "EPSTEST" as
     open vrefCur for
       select ci.xx,
              ap.contentid,
-             decode(p.powtorka,null,decode((select count(1) from cid_present cp where cp.cid=p.cid_xx and cp.zsy_xx=m.wyd_xx),0,'NIE','TAK'),'REP') ispresent,
+             decode(p.powtorka,null,decode((select count(1) from cid_present cp where cp.cid=p.cid_xx and cp.zsy_xx=decode(m.wyd_xx,38,20,m.wyd_xx)),0,'NIE','TAK'),'REP') ispresent,
              decode(p.eps_present,0,'NIE',1,'TAK',decode((select count(1) from atex.track t where t.adno=ap.adno and t.vno=ap.vno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO')) akceptacja,
              ap.paper tytul,ap.edition mutacja,
              t.sym symbol,
@@ -689,7 +690,7 @@ create or replace PACKAGE BODY "EPSTEST" as
    union all
       select ci.xx,
              ap.contentid,
-             decode((select count(1) from cid_present cp where cp.cid=ap.contentid and cp.zsy_xx=m.wyd_xx),0,'NIE','TAK') ispresent,
+             decode((select count(1) from cid_present cp where cp.cid=ap.contentid and cp.zsy_xx=decode(m.wyd_xx,38,20,m.wyd_xx)),0,'NIE','TAK') ispresent,
              decode((select count(1) from atex.track t where t.adno=ap.adno and t.vno=ap.vno and t.prodstep='Akceptacja Ogloszenia'),0,'NIE WYMAGA','NIE WIADOMO') akceptacja,
              ap.paper tytul,ap.edition mutacja,
              ap.modelid symbol,
@@ -765,6 +766,7 @@ create or replace PACKAGE BODY "EPSTEST" as
     vnew_cntid in cid_info.atex_cntid%type,
     vold_cntid in cid_info.atex_cntid%type
   ) as begin
+raise_application_error(-20001,'epstest.cntid_change_notify nie powinno byæ u¿ywane');
     update cid_info set atex_cntid=vnew_cntid where atex_cntid=vold_cntid;
   end;
   
@@ -842,7 +844,7 @@ create or replace PACKAGE BODY "EPSTEST" as
              and ci.epstest_kiedy=ci2.epstest_kiedy and ci.xx<ci2.xx);
     elsif vstatus=0 then
        select max(cid) into voldcid_xx from cid_present cp,makieta m,spacer_pub p
-        where cp.kiedy=m.kiedy and cp.adno=p.adno and cp.zsy_xx=m.wyd_xx and p.mak_xx=m.xx and p.cid_xx=vfileid;
+        where cp.kiedy=m.kiedy and cp.adno=p.adno and cp.zsy_xx=decode(m.wyd_xx,38,20,m.wyd_xx) and p.mak_xx=m.xx and p.cid_xx=vfileid;
        update spacer_pub set cid_xx=voldcid_xx where cid_xx=vfileid;
     end if;
   end store_check_result;
@@ -892,6 +894,7 @@ create or replace PACKAGE BODY "EPSTEST" as
     -- czy zostalo przetransmitowane
     select case 
       when p.powtorka is not null or nvl(instr(p.wersja,'z'),0)>0 then 2 
+      when m.wyd_xx=38 then 1 -- Azure
       else (select count(1) cc from cid_present cp where cp.cid=p.cid_xx and cp.zsy_xx in (m.wyd_xx,6) and cp.kiedy=m.kiedy) end
       into vroot_xx from spacer_pub p,makieta m
      where p.xx=vpub_xx and p.mak_xx=m.xx;
