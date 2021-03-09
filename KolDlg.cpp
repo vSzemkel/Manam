@@ -597,7 +597,7 @@ BOOL CAddDlg::OnInitDialog()
 
     // inicjuj date powtorki
     int d, m, r;
-    if (_stscanf_s(theApp.activeDoc->data, c_formatDaty, &d, &m, &r) == 3) {
+    if (m_powt == 0 && _stscanf_s(theApp.activeDoc->data, c_formatDaty, &d, &m, &r) == 3) {
         COleDateTime kon(r, m, d, 23, 59, 59);
         kon -= COleDateTimeSpan(1, 0, 0, 0);
         m_powtctrl.SetRange(nullptr, &kon);
@@ -605,8 +605,10 @@ BOOL CAddDlg::OnInitDialog()
 
     if (m_powt != 0) {
         m_powtctrl.SetTime(&m_powt);
+        m_powtctrl.SetRange(&m_powt, &m_powt);
         CDrawApp::CTimeToShortDate(m_powt, m_candidateAdnoDate);
         CheckDlgButton(IDC_CBPOWT, BST_CHECKED);
+        GetDlgItem(IDC_POWT)->EnableWindow(TRUE);
         GetDlgItem(ID_OLDADNO)->EnableWindow(TRUE);
         GetDlgItem(IDC_WERSJA)->EnableWindow(FALSE);
     }
