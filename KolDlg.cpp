@@ -604,7 +604,6 @@ BOOL CAddDlg::OnInitDialog()
     }
 
     if (m_powt != 0) {
-        m_powtctrl.SetTime(&m_powt);
         m_powtctrl.SetRange(&m_powt, &m_powt);
         CDrawApp::CTimeToShortDate(m_powt, m_candidateAdnoDate);
         CheckDlgButton(IDC_CBPOWT, BST_CHECKED);
