@@ -1,4 +1,3 @@
-// koldlg.cpp : implementation file
 
 #include "StdAfx.h"
 #include "DrawAdd.h"
@@ -599,18 +598,17 @@ BOOL CAddDlg::OnInitDialog()
     // inicjuj date powtorki
     int d, m, r;
     if (_stscanf_s(theApp.activeDoc->data, c_formatDaty, &d, &m, &r) == 3) {
-        COleDateTime pocz;
-        pocz.SetStatus(COleDateTime::null);
         COleDateTime kon(r, m, d, 23, 59, 59);
         kon -= COleDateTimeSpan(1, 0, 0, 0);
-        m_powtctrl.SetRange(&pocz, &kon);
+        m_powtctrl.SetRange(nullptr, &kon);
     }
 
     if (m_powt != 0) {
         m_powtctrl.SetTime(&m_powt);
         CDrawApp::CTimeToShortDate(m_powt, m_candidateAdnoDate);
         CheckDlgButton(IDC_CBPOWT, BST_CHECKED);
-        GetDlgItem(IDC_WERSJA)->EnableWindow(!GetDlgItem(IDC_POWT)->EnableWindow(GetDlgItem(ID_OLDADNO)->EnableWindow(TRUE)));
+        GetDlgItem(ID_OLDADNO)->EnableWindow(TRUE);
+        GetDlgItem(IDC_WERSJA)->EnableWindow(FALSE);
     }
 
     // jesli jest na stale, to tak ma zostac

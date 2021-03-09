@@ -1,4 +1,4 @@
-create or replace package body                                                                                                                                                                                                       zajawki is
+create or replace package body zajawki is
 
    -- funkcja zwraca liste krat
    function get_kraty return sr.refCur
@@ -165,7 +165,7 @@ create or replace package body                                                  
      v_newxx number;
      vactual_tpr_xx tytul_prasowy.xx%type := v_tpr_xx;
    begin
-     select xx into v_kto_xx from spacer_users where lower(loginname_ds)=v_ktomod;
+     select max(xx) into v_kto_xx from spacer_users where lower(loginname_ds)=v_ktomod;
      -- tytul musi istniec w bazie
      select count(1) into v_c from drzewo d
         where d.tytul=nvl(v_tytul, d.tytul) and d.mutacja=nvl(v_mutacja, d.mutacja);
@@ -244,7 +244,7 @@ create or replace package body                                                  
          end if;
       end if;
       
-      atex.tb_atex_utilities.get_adno@oraent(vadno);
+      atex.tb_atex_utilities.get_adno(vadno);
       if vadno is not null then
         insert into emisja_zajawki (adno,zaj_xx)
           values (vadno,vzaj_xx);
