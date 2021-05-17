@@ -175,59 +175,37 @@ constexpr int CDrawObj::GetHandleCount() const
 // returns logical coords of center of handle
 CPoint CDrawObj::GetHandle(const int nHandle) const
 {
-    ASSERT_VALID(this);
-    LONG x, y, xCenter, yCenter;
-
-    // this gets the center regardless of left/right and top/bottom ordering
-    xCenter = m_position.left + (m_position.Width() >> 1);
-    yCenter = m_position.top + (m_position.Height() >> 1);
+    const auto center = m_position.CenterPoint();
 
     switch (nHandle) {
-        default:
-            ASSERT(FALSE);
-
         case 1:
-            x = m_position.left;
-            y = m_position.top;
-            break;
+            return {m_position.left, m_position.top};
 
         case 2:
-            x = xCenter;
-            y = m_position.top;
-            break;
+            return {center.x, m_position.top};
 
         case 3:
-            x = m_position.right;
-            y = m_position.top;
-            break;
+            return {m_position.right, m_position.top};
 
         case 4:
-            x = m_position.right;
-            y = yCenter;
-            break;
+            return {m_position.right, center.y};
 
         case 5:
-            x = m_position.right;
-            y = m_position.bottom;
-            break;
+            return {m_position.right, m_position.bottom};
 
         case 6:
-            x = xCenter;
-            y = m_position.bottom;
-            break;
+            return {center.x, m_position.bottom};
 
         case 7:
-            x = m_position.left;
-            y = m_position.bottom;
-            break;
+            return {m_position.left, m_position.bottom};
 
         case 8:
-            x = m_position.left;
-            y = yCenter;
-            break;
-    }
+            return {m_position.left, center.y};
 
-    return {x, y};
+        default:
+            ASSERT(FALSE);
+            return {};
+    }
 }
 
 // return rectange of handle in logical coords
