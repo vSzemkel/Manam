@@ -508,7 +508,7 @@ CDrawAdd* CDrawDoc::ObjectAtQue(const CPoint& point) const
 
 CDrawAdd* CDrawDoc::FindAddAt(const int i) const
 {
-    int n = 0;
+    int n{0};
 
     for (const auto& pObj : m_objects) {
         auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
@@ -520,7 +520,7 @@ CDrawAdd* CDrawDoc::FindAddAt(const int i) const
 
 int CDrawDoc::GetAdPosition(const CDrawAdd* pAdd) const
 {
-    int n = 0;
+    int n{0};
     const auto count_position = [&](auto p) noexcept -> bool {
         if (dynamic_cast<CDrawAdd*>(p) == nullptr) return false;
         ++n;

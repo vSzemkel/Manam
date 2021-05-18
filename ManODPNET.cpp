@@ -1194,7 +1194,7 @@ BOOL CManODPNET::FillCombo(CComboBox* combo, LPCSTR sql, CManODPNETParms& ps, co
     }
 }
 
-BOOL CManODPNET::FillNiekratoweInternal(const int szpalt_x, const int szpalt_y, const int typ, CComboBox* m_typ_ogl_combo, CWordArray* m_typ_ogl_arr, CByteArray* m_typ_sizex_arr, CByteArray* m_typ_sizey_arr, std::vector<CString>* m_typ_precel_arr)
+BOOL CManODPNET::FillNiekratoweInternal(const int szpalt_x, const int szpalt_y, const int typ, CComboBox* m_typ_ogl_combo, CWordArray* m_typ_ogl_arr, CByteArray* m_typ_sizex_arr, CByteArray* m_typ_sizey_arr, std::vector<CString>& m_typ_precel_arr)
 {
     int typ_xx;
     auto conn = gcnew OracleConnection(g_ConnectionString);
@@ -1207,7 +1207,7 @@ BOOL CManODPNET::FillNiekratoweInternal(const int szpalt_x, const int szpalt_y, 
     m_typ_ogl_arr->RemoveAll();
     m_typ_sizex_arr->RemoveAll();
     m_typ_sizey_arr->RemoveAll();
-    m_typ_precel_arr->clear();
+    m_typ_precel_arr.clear();
 
     try {
         conn->Open();
@@ -1221,7 +1221,7 @@ BOOL CManODPNET::FillNiekratoweInternal(const int szpalt_x, const int szpalt_y, 
                 m_typ_ogl_combo->SelectString(0, sym);
             m_typ_sizex_arr->Add(odr->GetByte(2));
             m_typ_sizey_arr->Add(odr->GetByte(3));
-            m_typ_precel_arr->emplace_back(OdpHelper::ReadOdrString(odr, 4));
+            m_typ_precel_arr.emplace_back(OdpHelper::ReadOdrString(odr, 4));
         }
         m_lastErrorMsg.Empty();
         odr->Close();
@@ -1237,12 +1237,12 @@ BOOL CManODPNET::FillNiekratoweInternal(const int szpalt_x, const int szpalt_y, 
 
 BOOL CManODPNET::FillNiekratowe(CSpacerDlg* dlg, const int szpalt_x, const int szpalt_y)
 {
-    return FillNiekratoweInternal(szpalt_x, szpalt_y, dlg->m_typ_xx, &dlg->m_typ_ogl_combo, &dlg->m_typ_ogl_arr, &dlg->m_typ_sizex_arr, &dlg->m_typ_sizey_arr, &dlg->m_typ_precel_arr);
+    return FillNiekratoweInternal(szpalt_x, szpalt_y, dlg->m_typ_xx, &dlg->m_typ_ogl_combo, &dlg->m_typ_ogl_arr, &dlg->m_typ_sizex_arr, &dlg->m_typ_sizey_arr, dlg->m_typ_precel_arr);
 }
 
 BOOL CManODPNET::FillNiekratowe(CAddDlg* dlg)
 {
-    return FillNiekratoweInternal(dlg->m_szpalt_x, dlg->m_szpalt_y, dlg->m_typ_xx, &dlg->m_typ_ogl_combo, &dlg->m_typ_ogl_arr, &dlg->m_typ_sizex_arr, &dlg->m_typ_sizey_arr, &dlg->m_typ_precel_arr);
+    return FillNiekratoweInternal(dlg->m_szpalt_x, dlg->m_szpalt_y, dlg->m_typ_xx, &dlg->m_typ_ogl_combo, &dlg->m_typ_ogl_arr, &dlg->m_typ_sizex_arr, &dlg->m_typ_sizey_arr, dlg->m_typ_precel_arr);
 }
 
 void CManODPNET::IniKolorTable()
