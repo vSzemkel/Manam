@@ -1763,7 +1763,6 @@ CAddFindDlg::CAddFindDlg(CWnd* pParent /*=NULL*/)
     //{{AFX_DATA_INIT(CAddFindDlg)
     m_nreps = 0;
     m_spacer = 0;
-    m_pObList = nullptr;
     //}}AFX_DATA_INIT
 }
 
@@ -1791,7 +1790,8 @@ void CAddFindDlg::OnUpdateNr()
     GetDlgItem(IDC_NR)->GetWindowText(typed);
     if (typed.IsEmpty()) return;
 
-    for (const auto& pObj : *m_pObList)
+    const auto& objects = theApp.activeDoc->m_objects;
+    for (const auto& pObj : objects)
         if (auto pAdd = dynamic_cast<CDrawAdd*>(pObj)) {
             match.Format(_T("%ld"), pAdd->nreps);
             if (typed == match.Left(typed.GetLength())) {

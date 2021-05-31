@@ -578,15 +578,14 @@ class CAddFindDlg final : public CDialog
 {
     // Construction
 public:
-    std::vector<CDrawObj*> *m_pObList;
-    CAddFindDlg(CWnd* pParent = nullptr);	// standard constructor
+    CAddFindDlg(CWnd* pParent = nullptr); // standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CAddFindDlg)
+    CString m_nazwa;
+    long    m_nreps;
+    long    m_spacer;
     enum { IDD = IDD_ADD_FIND };
-    long	m_nreps;
-    CString	m_nazwa;
-    long	m_spacer;
     //}}AFX_DATA
 
 // Implementation

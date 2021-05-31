@@ -673,7 +673,6 @@ void CDrawDoc::OnAddFind()
 {
     findNextInd = -1;
     CAddFindDlg dlg;
-    dlg.m_pObList = &m_objects;
     if (dlg.DoModal() != IDOK) return;
     dlg.m_nazwa.MakeUpper();
     lastSearchNrAtex = (dlg.m_nreps == 0L ? LONG_MIN : dlg.m_nreps);

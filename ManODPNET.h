@@ -45,7 +45,7 @@ class CManODPNET
     CString GetHttpSource(const CString& gazeta, const CString& kiedy, int* s);
     static CManODPNETParms emptyParm;
 private:
-    BOOL FillNiekratoweInternal(int szpalt_x, int szpalt_y, int typ, CComboBox* m_typ_ogl_combo, CWordArray* m_typ_ogl_arr, CByteArray* m_typ_sizex_arr, CByteArray* m_typ_sizey_arr, std::vector<CString>* m_typ_precel_arr);
+    BOOL FillNiekratoweInternal(int szpalt_x, int szpalt_y, int typ, CComboBox* m_typ_ogl_combo, CWordArray* m_typ_ogl_arr, CByteArray* m_typ_sizex_arr, CByteArray* m_typ_sizey_arr, std::vector<CString>& m_typ_precel_arr);
 };
 
 struct CManODPNETParm
