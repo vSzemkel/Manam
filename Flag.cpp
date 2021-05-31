@@ -122,7 +122,7 @@ uintptr_t CFlag::operator!() const noexcept
     return !flag;
 }
 
-const CFlag& CFlag::operator=(const CFlag& f)
+const CFlag& CFlag::operator=(const CFlag& f) &
 {
     SetSize(f.size);
     if (size > CRITICAL_SIZE)
@@ -133,7 +133,7 @@ const CFlag& CFlag::operator=(const CFlag& f)
     return *this;
 }
 
-const CFlag& CFlag::operator=(CFlag&& f) noexcept
+const CFlag& CFlag::operator=(CFlag&& f) & noexcept
 {
     if (this != &f) {
         if (size > CRITICAL_SIZE)
@@ -211,7 +211,7 @@ CFlag& CFlag::Flip() noexcept
     return *this;
 }
 
-void CFlag::operator|=(const CFlag& f) noexcept
+void CFlag::operator|=(const CFlag& f) & noexcept
 {
     ASSERT(size == f.size);
     if (size > CRITICAL_SIZE) {
@@ -224,7 +224,7 @@ void CFlag::operator|=(const CFlag& f) noexcept
         flag |= f.flag;
 }
 
-void CFlag::operator|=(const uintptr_t mask) noexcept
+void CFlag::operator|=(const uintptr_t mask) & noexcept
 {
     if (size > CRITICAL_SIZE) {
         auto dst = (uintptr_t*)flag;
@@ -244,7 +244,7 @@ uintptr_t CFlag::operator&(const uintptr_t mask) const noexcept
     return flag & mask;
 }
 
-void CFlag::operator&=(const uintptr_t mask) noexcept
+void CFlag::operator&=(const uintptr_t mask) & noexcept
 {
     if (size > CRITICAL_SIZE) {
         auto dst = (uintptr_t*)flag;
@@ -255,7 +255,7 @@ void CFlag::operator&=(const uintptr_t mask) noexcept
         flag &= mask;
 }
 
-void CFlag::operator&=(const CFlag& f) noexcept
+void CFlag::operator&=(const CFlag& f) & noexcept
 {
     ASSERT(size == f.size);
     if (size > CRITICAL_SIZE) {
@@ -268,7 +268,7 @@ void CFlag::operator&=(const CFlag& f) noexcept
         flag &= f.flag;
 }
 
-void CFlag::operator^=(const CFlag& f) noexcept
+void CFlag::operator^=(const CFlag& f) & noexcept
 {
     ASSERT(size == f.size);
     if (size > CRITICAL_SIZE) {
@@ -281,7 +281,7 @@ void CFlag::operator^=(const CFlag& f) noexcept
         flag ^= f.flag;
 }
 
-void CFlag::operator^=(const uintptr_t mask) noexcept
+void CFlag::operator^=(const uintptr_t mask) & noexcept
 {
     if (size > CRITICAL_SIZE) {
         auto dst = (uintptr_t*)flag;
@@ -332,7 +332,7 @@ CFlag CFlag::operator<<(const size_t shift) const noexcept
     return ret;
 }
 
-CFlag& CFlag::operator>>=(const size_t shift) noexcept
+CFlag& CFlag::operator>>=(const size_t shift) & noexcept
 {
     const size_t total = BITS_PER_BYTE * size;
     if (size > CRITICAL_SIZE) {
@@ -351,7 +351,7 @@ CFlag& CFlag::operator>>=(const size_t shift) noexcept
     return *this;
 }
 
-CFlag& CFlag::operator<<=(const size_t shift) noexcept
+CFlag& CFlag::operator<<=(const size_t shift) & noexcept
 {
     const size_t total = BITS_PER_BYTE * size;
     if (size > CRITICAL_SIZE) {

@@ -22,10 +22,10 @@ class CFlag final
     explicit CFlag(const wchar_t* raw) : CFlag(CStringA(raw)){}; // Oracle RAW hexadecimal format unicode encoded
     explicit CFlag(const CByteArray& bArr);
     ~CFlag();
-    const CFlag& operator= (const CFlag& f);
-    const CFlag& operator= (CFlag&& f) noexcept;        // move assignment
-    CFlag& operator>>=(size_t shift) noexcept;
-    CFlag& operator<<=(size_t shift) noexcept;
+    const CFlag& operator= (const CFlag& f) &;
+    const CFlag& operator= (CFlag&& f) & noexcept;      // move assignment
+    CFlag& operator>>=(size_t shift) & noexcept;
+    CFlag& operator<<=(size_t shift) & noexcept;
     CFlag  operator>> (size_t shift) const noexcept;
     CFlag  operator<< (size_t shift) const noexcept;
     CFlag operator| (const CFlag& f) const noexcept;
@@ -35,12 +35,12 @@ class CFlag final
     uintptr_t operator&& (const CFlag& f) const noexcept;
     uintptr_t operator& (uintptr_t mask) const noexcept;
     uintptr_t operator! () const noexcept;
-    void operator|= (const CFlag& f) noexcept;
-    void operator|= (uintptr_t mask) noexcept;
-    void   operator&= (const CFlag& f) noexcept;
-    void   operator&= (uintptr_t mask) noexcept;
-    void   operator^= (const CFlag& f) noexcept;
-    void   operator^= (uintptr_t mask) noexcept;
+    void operator|= (const CFlag& f) & noexcept;
+    void operator|= (uintptr_t mask) & noexcept;
+    void   operator&= (const CFlag& f) & noexcept;
+    void   operator&= (uintptr_t mask) & noexcept;
+    void   operator^= (const CFlag& f) & noexcept;
+    void   operator^= (uintptr_t mask) & noexcept;
     bool operator== (const CFlag& f) const noexcept;
     bool operator[](size_t pos) const noexcept;
     bool   IsZero() const noexcept;
