@@ -16,18 +16,12 @@ before_build:
 - cmd: >-
     chcp 1250
 
-    vcpkg install gtest:x64-windows
-
-    vcpkg install zlib:x64-windows
-
-    vcpkg install zlib:x64-windows-static
-
-    vcpkg integrate install
+    vcpkg install --triplet=x64-windows-static
 
     nuget install Oracle.ManagedDataAccess -version 12.2.1100
 
     copy Oracle.ManagedDataAccess.12.2.1100\lib\net40\Oracle.ManagedDataAccess.dll .
 
 build:
-  project: Manam.sln
+  project: Manam.vcxproj
   verbosity: normal
