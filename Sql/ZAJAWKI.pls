@@ -101,10 +101,10 @@ create or replace package body zajawki is
       vpowtorka zajawka.powtorka%type;
    begin
       select z.cntid,z.cid_xx,ci.status,z.powtorka,
-             nvl2(max(ez.adno),'http://epsilon.agora.pl/PdfRepository/GetPdfWithEmbedData.aspx?name=ZAJAW&date='||to_char(max(ez.data_atex),'rrrrmmdd')||'&nreps='||max(ez.adno),ci.preview_path) 
+             nvl2(max(ez.adno),mu.uri||'name=ZAJAW&date='||to_char(max(ez.data_atex),'rrrrmmdd')||'&nreps='||max(ez.adno),ci.preview_path) 
         into vcntid,vcid_xx,vstatus,vpowtorka,vpath
-        from zajawka z,emisja_zajawki ez,cid_info ci
-       where z.xx=vxx and z.xx=ez.zaj_xx(+) and z.cid_xx=ci.xx(+)
+        from zajawka z,emisja_zajawki ez,cid_info ci,manam_uri mu
+       where z.xx=vxx and mu.xx=10 and z.xx=ez.zaj_xx(+) and z.cid_xx=ci.xx(+)
        group by z.cntid,z.cid_xx,ci.status,z.powtorka,ci.preview_path;
 
       if vcntid is null then
