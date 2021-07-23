@@ -105,7 +105,7 @@ create or replace package body zajawki is
         into vcntid,vcid_xx,vstatus,vpowtorka,vpath
         from zajawka z,emisja_zajawki ez,cid_info ci,manam_uri mu
        where z.xx=vxx and mu.xx=10 and z.xx=ez.zaj_xx(+) and z.cid_xx=ci.xx(+)
-       group by z.cntid,z.cid_xx,ci.status,z.powtorka,ci.preview_path;
+       group by z.cntid,z.cid_xx,ci.status,z.powtorka,mu.uri,ci.preview_path;
 
       if vcntid is null then
         return 'Oczekiwanie na CONTENTID';
