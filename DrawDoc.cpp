@@ -553,10 +553,9 @@ void CDrawDoc::RemoveFromHead(const int n)
 
 void CDrawDoc::RemoveFromTail(const int n)
 {
-    for (int i = 0; i < n; ++i) {
+    for (int z = n; z; --z)
         delete m_objects.back();
-        m_objects.pop_back();
-    }
+    m_objects.erase(m_objects.end() - n, m_objects.end());
 }
 
 void CDrawDoc::AddPageAt(const int idx, CDrawPage* pObj)
