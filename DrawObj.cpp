@@ -92,8 +92,8 @@ void CDrawObj::DrawTracker(CDC* pDC, const TrackerState state) const
         {
             const int nHandleCount = GetHandleCount();
             for (int nHandle = 1; nHandle <= nHandleCount; ++nHandle) {
-                const int scale = 18;
-                CPoint handle = GetHandle(nHandle);
+                constexpr int scale = 18;
+                const CPoint handle = GetHandle(nHandle);
                 pDC->PatBlt(handle.x - 2 * scale, handle.y - 2 * scale, 4 * scale, 4 * scale, BLACKNESS);
             }
         }
@@ -342,16 +342,17 @@ void CDrawObj::ChangeKolor(const UINT new_kolor)
 
 void CDrawObj::DrawKolor(CDC* pDC, const CRect& pos) const
 {
-    CRect r1, r2, r3;
     if (kolor == ColorId::full) {
-        r1 = CRect(pos.left + 1, pos.top - 1, pos.left + (int)floor((float)abs(pos.left - pos.right) / 3), pos.bottom + 1);
-        r2 = CRect(pos.left + (int)floor((float)abs(pos.left - pos.right) / 3), pos.top - 1, pos.right - (int)floor((float)abs(pos.left - pos.right) / 3), pos.bottom + 1);
-        r3 = CRect(pos.right - (int)floor((float)abs(pos.left - pos.right) / 3), pos.top - 1, pos.right - 1, pos.bottom + 1);
-        pDC->FillRect(r1, &(((CMainFrame*)AfxGetMainWnd())->cyjan));
-        pDC->FillRect(r2, &(((CMainFrame*)AfxGetMainWnd())->magenta));
-        pDC->FillRect(r3, &(((CMainFrame*)AfxGetMainWnd())->yellow));
+        const auto width = pos.Width() / 3;
+        const auto wnd = (CMainFrame*)AfxGetMainWnd();
+        const CRect r1{pos.left + 1, pos.top - 1, pos.left + width, pos.bottom + 1};
+        const CRect r2{pos.left + width, pos.top - 1, pos.right - width, pos.bottom + 1};
+        const CRect r3{pos.right - width, pos.top - 1, pos.right - 1, pos.bottom + 1};
+        pDC->FillRect(r1, &wnd->cyjan);
+        pDC->FillRect(r2, &wnd->magenta);
+        pDC->FillRect(r3, &wnd->yellow);
     } else {
-        r1 = CRect(pos.left + 1, pos.top - 1, pos.right - 1, pos.bottom + 1);
+        const CRect r1{pos.left + 1, pos.top - 1, pos.right - 1, pos.bottom + 1};
         pDC->FillRect(r1, CDrawDoc::GetSpotBrush(kolor >> 3)); // 0 brak Spot_Kolor,Spot_Brush 0-brak, 1 full
     }
 }

@@ -1584,10 +1584,10 @@ void CDrawView::OnPrevPdf() // single Add or Page selected
     }
 
     CString sUrl;
-    auto doc = GetDocument();
+    const auto doc = GetDocument();
     if (pAdd->powtorka == 0 || pAdd->powtorka > CTime::GetCurrentTime()) { // nowe lub powtórka niearchiwalna
         int status = pAdd->nreps;
-        sUrl = theManODPNET.GetHttpSource(GetDocument()->gazeta, GetDocument()->data, &status);
+        sUrl = theManODPNET.GetHttpSource(doc->gazeta, doc->data, &status);
 
         if (!sUrl.IsEmpty()) {
             if (status < 0) { // dane z qfiltr_material lub z archiwum
