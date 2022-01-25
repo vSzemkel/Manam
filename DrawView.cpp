@@ -190,9 +190,8 @@ void CDrawView::OnActivateView(const BOOL bActivate, CView* pActiveView, CView* 
 
 BOOL CDrawView::OnSetCursor(CWnd* pWnd, const UINT nHitTest, const UINT message)
 {
-
     if (CDrawTool::c_drawShape == DrawShape::add || CDrawTool::c_drawShape == DrawShape::opis)
-        return ::SetCursor(::LoadCursor(NULL, IDC_CROSS)) > 0;
+        return ::SetCursor(::LoadCursor(NULL, IDC_CROSS)) != nullptr;
 
     int cursor = -1;
     if (CDrawTool::c_drawShape == DrawShape::caption)
@@ -208,10 +207,10 @@ BOOL CDrawView::OnSetCursor(CWnd* pWnd, const UINT nHitTest, const UINT message)
     else if (CDrawTool::c_drawShape == DrawShape::red)
         cursor = IDC_RED;
 
-    if (cursor > 0)
-        return ::SetCursor(theApp.LoadCursor(cursor)) > 0;
-    else
-        return CScrollView::OnSetCursor(pWnd, nHitTest, message);
+    if (~cursor)
+        return ::SetCursor(theApp.LoadCursor(cursor)) != nullptr;
+
+    return CScrollView::OnSetCursor(pWnd, nHitTest, message);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -226,7 +225,7 @@ void CDrawView::InvalObj(CDrawObj* pObj)
         rect.right += TXTSHIFT;
         rect.top -= TXTSHIFT;
     } else {
-        auto inflation = 3 * vscale;
+        const auto inflation = 3 * vscale;
         rect.InflateRect(inflation, inflation);
     }
 

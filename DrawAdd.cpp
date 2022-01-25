@@ -1459,16 +1459,17 @@ bool CDrawAdd::CheckSrcFile(PGENEPSARG pArg)
     CString msg;
     f5_errInfo.Empty();
 
-    int iSearchTypXX = typ_xx;
+    int search_mode = typ_xx;
+    const auto& rozm = m_pDocument->m_rozm;
 dajWymiarKraty:
     // szukaj wymiarów w cachu
-    const auto pR = std::find_if(m_pDocument->m_rozm.cbegin(), m_pDocument->m_rozm.cend(), [=](const CRozm& r) {
-        return (!iSearchTypXX && szpalt_x == r.szpalt_x && szpalt_y == r.szpalt_y) || (iSearchTypXX && iSearchTypXX == r.typ_xx);
+    const auto pR = std::find_if(rozm.begin(), rozm.end(), [=](const CRozm& r) {
+        return search_mode ? (search_mode == r.typ_xx) : (szpalt_x == r.szpalt_x && szpalt_y == r.szpalt_y);
     });
 
-    if (pR == m_pDocument->m_rozm.end()) {
-        if (iSearchTypXX > 0) {
-            iSearchTypXX = 0;
+    if (pR == rozm.end()) {
+        if (search_mode > 0) {
+            search_mode = 0;
             goto dajWymiarKraty;
         }
         f5_errInfo += _T("Brak rozmiaru w bazie "); return false;

@@ -975,7 +975,7 @@ bool CDrawPage::GetDestName(PGENEPSARG pArg, const CString& sNum, CString& destN
 {
     destName = theApp.GetProfileString(_T("GenEPS"), pArg->format == CManFormat::EPS ? _T("EpsDst") : _T("PsDst"), _T(""));
     CDrawApp::TryAppendDirSep(destName);
-    int pos = m_pDocument->gazeta.Find(_T(' '));
+    const int pos = m_pDocument->gazeta.Find(_T(' '));
     if (pArg->format > CManFormat::EPS) {
         CString dbDestName(' ', 20);
         CManODPNETParms orapar {
@@ -1215,10 +1215,10 @@ foundsizex:
         }
     }
 
-    auto itAdd = m_adds.cbegin();
-    while (ok && itAdd != m_adds.cend() && !pArg->pDlg->cancelGenEPS) {
-        bool bAddOK = (*itAdd++)->RewriteEps(pArg, dest);
-        if (!bAddOK && pArg->format == CManFormat::PS && pArg->bDoKorekty == 0)
+    for (const auto& add : m_adds) {
+        if (!ok || pArg->pDlg->cancelGenEPS) break;
+        const auto res = add->RewriteEps(pArg, dest);
+        if (!res && pArg->format == CManFormat::PS && pArg->bDoKorekty == 0)
             return false;
     }
 

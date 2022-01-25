@@ -462,13 +462,13 @@ void CDrawDoc::Remove(CDrawObj* pObj)
     else {
         const auto pos = std::find(m_objects.begin(), m_objects.end(), pObj);
         if (pos != m_objects.end()) {
-            auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
+            const auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
             if (pAdd) {
-                if (pAdd->m_pub_xx != -1 && pObj != CQueView::selected_add)
+                if (~pAdd->m_pub_xx && pObj != CQueView::selected_add)
                     m_del_obj.emplace_back(EntityType::add, pAdd->m_pub_xx);
             } else {
-                auto pOpis = dynamic_cast<CDrawOpis*>(pObj);
-                if (pOpis && pOpis->m_opi_xx != -1)
+                const auto pOpis = dynamic_cast<CDrawOpis*>(pObj);
+                if (pOpis && ~pOpis->m_opi_xx)
                     m_del_obj.emplace_back(iDocType == DocType::makieta_lib ? EntityType::opis_lib : EntityType::opis, pOpis->m_opi_xx);
             }
             m_objects.erase(pos);
@@ -477,8 +477,8 @@ void CDrawDoc::Remove(CDrawObj* pObj)
 
     SetModifiedFlag();
     // call remove for each view so that the view can remove from m_selection
-    auto pView = GetPanelView();
-    if (pView) pView->Remove(pObj);
+    if (const auto pView = GetPanelView())
+        pView->Remove(pObj);
 }
 
 CDrawObj* CDrawDoc::ObjectAt(const CPoint& point) const
@@ -533,8 +533,8 @@ int CDrawDoc::GetAdPosition(const CDrawAdd* pAdd) const
 
 void CDrawDoc::SelectAdd(CDrawAdd* pObj, const bool multiselect) const
 {
-    auto pView = GetPanelView();
-    if (pView) pView->Select(pObj, multiselect ? SelectUpdateMode::add : SelectUpdateMode::replace);
+    if (auto pView = GetPanelView())
+        pView->Select(pObj, multiselect ? SelectUpdateMode::add : SelectUpdateMode::replace);
 }
 
 int CDrawDoc::AddsCount() const noexcept
@@ -598,13 +598,13 @@ void CDrawDoc::RemovePage(CDrawPage* pObj)
     for (uint32_t ii = pc - 1; ii > (uint32_t)i; --ii)
         m_pages[ii]->MoveTo(&m_pages[ii - 1]->m_position);
 
-    if (pObj->id_str != -1)
+    if (~pObj->id_str)
         m_del_obj.emplace_back(iDocType == DocType::makieta_lib ? EntityType::page_lib : EntityType::page, pObj->id_str);
     m_pages.erase(m_pages.cbegin() + i);
 
     // call remove for each view so that the view can remove from m_selection
-    auto pView = GetPanelView();
-    if (pView) pView->Remove(pObj);
+    if (auto pView = GetPanelView())
+        pView->Remove(pObj);
 
     // zmiana spotow
     const auto pc2 = (uint32_t)m_pages.size();
@@ -1034,7 +1034,7 @@ void CDrawDoc::NumberPages()
     int NextPageNumber = 1;
     int FirstPageToNumber = 1;
     // dla stron arabskich dopuszczamy przenumerowanie od zadanej
-    auto pView = GetPanelView();
+    const auto pView = GetPanelView();
     if (pView->m_selection.size() == 1) {
         auto pSelPage = dynamic_cast<CDrawPage*>(pView->m_selection.front());
         if (pSelPage != nullptr && pSelPage->pagina_type == PaginaType::arabic) {
@@ -1849,9 +1849,9 @@ CDrawAdd* CDrawDoc::DBCreateAdd(const CString& roz, const CString& nazwa, const 
 
 CDrawAdd* CDrawDoc::AddExists(const long nr) const
 {
-    if (nr != -1 && nr != 0)
+    if (~nr && nr != 0)
         for (const auto& pObj : m_objects) {
-            auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
+            const auto pAdd = dynamic_cast<CDrawAdd*>(pObj);
             if (pAdd && pAdd->nreps == nr)
                 return pAdd;
         }

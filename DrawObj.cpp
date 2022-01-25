@@ -363,9 +363,9 @@ CString CDrawObj::RzCyfra(const int digit, const int offset)
     rzymskich. Jej zawartosc ustalana jest na podstawie miejsca w zapisie pozycyjnym
     calej liczby cyfry bedacej pierwszym argumentem. Wywolywana przez CDrawObj::Rzymska end vu	*/
 
-    TCHAR ret[5]{0};
-    const TCHAR rz_cyfry[] = { 'I', 'V', 'X', 'L', 'C', 'D', 'M' };
+    constexpr const TCHAR rz_cyfry[8] = _T("IVXLCDM");
     const auto grupa_cyfr = &rz_cyfry[offset];
+    TCHAR ret[5]{0};
 
     switch (digit) {
         case 0:

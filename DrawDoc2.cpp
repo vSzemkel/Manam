@@ -781,7 +781,7 @@ int CDrawDoc::GetIPage(CDrawPage* pPage) const noexcept
 void CDrawDoc::OnAsideAdds()
 {
     CDrawPage* vPage{nullptr};
-    auto pView = GetPanelView();
+    const auto pView = GetPanelView();
     if (pView->m_selection.size() == 1)
         vPage = dynamic_cast<CDrawPage*>(pView->m_selection.front());
 
