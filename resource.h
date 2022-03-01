@@ -2,9 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by Manam.rc
 //
-
-#pragma once
-
 #define IDR_MAINFRAME                   1
 #define IDR_DRAWCLTYPE                  2
 #define IDB_SIGN                        3
@@ -429,6 +426,7 @@
 #define IDS_OPISEPAR                    40003
 #define IDS_DB_PD                       40004
 #define IDS_DB_TP                       40005
+#define IDS_DB_DV                       40006
 
 // Next default values for new objects
 // 

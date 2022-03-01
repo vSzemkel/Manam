@@ -10,7 +10,7 @@
 #include "DrawObj.h"
 
 // podpisy og³oszeñ maj¹ wspó³rzêdne z zakresu [-TXTSHIFT, TXTSHIFT]
-constexpr int TXTSHIFT = 20;
+constexpr const int TXTSHIFT = 20;
 
 class CDrawDoc;
 class CDrawAdd;
@@ -22,14 +22,14 @@ class CConnDlg final : public CDialog
 {
     // Construction
 public:
-    CConnDlg(CWnd* pParent = nullptr);   // standard constructor
+    CConnDlg(CWnd* pParent = nullptr); // standard constructor
 
 // Dialog Data
     //{{AFX_DATA(CConnDlg)
     enum { IDD = IDD_CONNDLG };
-    CString	m_loginname;
-    CString	m_passwd;
-    BOOL	m_dbtest;
+    CString m_loginname;
+    CString m_passwd;
+    int     m_dbtest;
     //}}AFX_DATA
 
 

@@ -26,7 +26,7 @@
     <ProjectGuid>{61EA1643-896C-42C9-B085-DB883BBEBC57}</ProjectGuid>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <SpectreMitigation>false</SpectreMitigation>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -185,7 +185,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
     <PostBuildEvent>
-      <Command>signtool.exe sign /f $(USERPROFILE)\OneDrive\Documents\Agora.Config\developmentIT.pfx /p agwatde $(OutDir)$(TargetName).exe</Command>
+      <Command>signtool.exe sign /fd SHA256 /f $(USERPROFILE)\OneDrive\Documents\Agora.Config\developmentIT.pfx /p agwatde $(OutDir)$(TargetName).exe</Command>
       <Message>Podpisanie wynikowego pliku</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -211,6 +211,7 @@
       <CompileAsManaged>true</CompileAsManaged>
       <ExceptionHandling>Async</ExceptionHandling>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <AdditionalUsingDirectories>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\</AdditionalUsingDirectories>
     </ClCompile>
     <ClCompile Include="ManPDF.cpp" />
     <ClCompile Include="ManSock.cpp" />

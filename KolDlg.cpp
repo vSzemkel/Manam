@@ -13,10 +13,9 @@
 // CConnDlg dialog
 
 CConnDlg::CConnDlg(CWnd* pParent /*=NULL*/)
-    : CDialog(CConnDlg::IDD, pParent)
+    : CDialog(CConnDlg::IDD, pParent), m_dbtest(0)
 {
     //{{AFX_DATA_INIT(CConnDlg)
-    m_dbtest = FALSE;
     //}}AFX_DATA_INIT
 }
 
@@ -26,7 +25,7 @@ void CConnDlg::DoDataExchange(CDataExchange* pDX)
     //{{AFX_DATA_MAP(CConnDlg)
     DDX_Text(pDX, IDC_LOGINNAME, m_loginname);
     DDX_Text(pDX, IDC_PASSWD, m_passwd);
-    DDX_Check(pDX, IDC_DBTEST, m_dbtest);
+    DDX_CBIndex(pDX, IDC_DBTEST, m_dbtest);
     //}}AFX_DATA_MAP
 }
 
@@ -66,13 +65,20 @@ void CConnDlg::OnOK()
         return;
     };
 
-    if (m_dbtest) {
+    if (m_dbtest > 0)
         AfxMessageBox(_T("Logujesz siê do bazy testowej. Efekty Twojej pracy zostan¹ utracone"), MB_ICONINFORMATION);
-        tns = theApp.GetString(_T("dbtp"));
-        if (tns.IsEmpty()) tns.LoadString(IDS_DB_TP);
-    } else {
-        tns = theApp.GetString(_T("dbpd"));
-        if (tns.IsEmpty()) tns.LoadString(IDS_DB_PD);
+    switch (m_dbtest) {
+        case 0: // PD
+            tns = theApp.GetString(_T("dbpd"));
+            if (tns.IsEmpty()) tns.LoadString(IDS_DB_PD);
+            break;
+        case 1: // TP
+            tns = theApp.GetString(_T("dbtp"));
+            if (tns.IsEmpty()) tns.LoadString(IDS_DB_TP);
+            break;
+        default: // DV
+            tns = theApp.GetString(_T("dbdv"));
+            if (tns.IsEmpty()) tns.LoadString(IDS_DB_DV);
     }
 
     theApp.BeginWaitCursor();

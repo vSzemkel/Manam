@@ -472,7 +472,7 @@ END
 IDD_ABOUTBOX DIALOGEX 34, 22, 171, 177
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "Manam - listopad 2021"
+CAPTION "Manam - luty 2022"
 FONT 8, "Verdana", 0, 0, 0x0
 BEGIN
     LTEXT           "*",IDC_CLIENT,9,133,158,42
@@ -481,7 +481,7 @@ BEGIN
     LTEXT           "",IDC_SIGN_TEXT,45,7,124,33
     LTEXT           "ver 7.2",IDC_STATIC,5,33,25,8
     LTEXT           "M\nM",IDC_MEMSTAT,4,101,166,19
-    LTEXT           "Program napisany dla Agora SA \nprzez Marcina Buchwalda w latach 1999-2020.\n\n  email: velvet@agora.pl\n  www: http://gwspacer.agora.pl\n  telefon dy¿urny: 55558",IDC_STATIC,4,48,166,49,NOT WS_GROUP
+    LTEXT           "Program napisany dla Agora SA \nprzez Marcina Buchwalda w latach 1999-2022.\n\n  email: velvet@agora.pl\n  www: http://gwspacer.agora.pl\n  telefon dy¿urny: 55558",IDC_STATIC,4,48,166,49,NOT WS_GROUP
     DEFPUSHBUTTON   "Zamknij",IDOK,133,73,35,14
 END
 
@@ -1040,18 +1040,19 @@ BEGIN
     DEFPUSHBUTTON   "&Za³ó¿",IDOK,150,121,50,14
 END
 
-IDD_CONNDLG DIALOG 0, 0, 187, 93
+IDD_CONNDLG DIALOGEX 0, 0, 187, 100
 STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Po³¹czenie z Oracle"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    EDITTEXT        IDC_PASSWD,74,35,91,13,ES_PASSWORD | ES_AUTOHSCROLL
-    EDITTEXT        IDC_LOGINNAME,74,17,91,13,ES_AUTOHSCROLL
-    PUSHBUTTON      "Cancel",IDCANCEL,39,70,50,14
-    DEFPUSHBUTTON   "Connect",IDOK,99,70,50,14,WS_DISABLED
-    RTEXT           "U¿ytkownik",IDC_STATIC,19,21,49,10
-    RTEXT           "Has³o",IDC_STATIC,18,38,49,10
-    CONTROL         "Do bazy testowej",IDC_DBTEST,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,74,53,70,10
+    RTEXT           "U¿ytkownik",IDC_STATIC,15,21,49,10
+    EDITTEXT        IDC_LOGINNAME,70,17,95,13,ES_AUTOHSCROLL
+    RTEXT           "Has³o",IDC_STATIC,14,38,49,10
+    EDITTEXT        IDC_PASSWD,70,35,95,13,ES_PASSWORD | ES_AUTOHSCROLL
+    RTEXT           "Œrodowisko",IDC_STATIC,14,55,49,10
+    COMBOBOX        IDC_DBTEST,70,53,95,58,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Cancel",IDCANCEL,39,74,50,14
+    DEFPUSHBUTTON   "Connect",IDOK,99,74,50,14,WS_DISABLED
 END
 
 IDD_ACCESS DIALOG 180, 100, 187, 146
@@ -1718,6 +1719,17 @@ BEGIN
     0
 END
 
+IDD_CONNDLG DLGINIT
+BEGIN
+    IDC_DBTEST, 0x403, 12, 0
+0x7270, 0x646f, 0x6b75, 0x7963, 0x6e6a, 0x0065, 
+    IDC_DBTEST, 0x403, 8, 0
+0x6574, 0x7473, 0x776f, 0x0065, 
+    IDC_DBTEST, 0x403, 14, 0
+0x6564, 0x6576, 0x6f6c, 0x6570, 0x7372, 0x696b, 0x0065, 
+    0
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1796,6 +1808,11 @@ BEGIN
     IDD_PRNEPS, DIALOG
     BEGIN
         BOTTOMMARGIN, 185
+    END
+
+    IDD_CONNDLG, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 93
     END
 
     IDD_GRIDFORM, DIALOG
@@ -1893,8 +1910,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 7,2,1,0
- PRODUCTVERSION 7,2,1,0
+ FILEVERSION 7,2,1,1
+ PRODUCTVERSION 7,2,1,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -1911,12 +1928,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Agora SA"
             VALUE "FileDescription", "Manam"
-            VALUE "FileVersion", "7.2.1.0"
+            VALUE "FileVersion", "7.2.1.1"
             VALUE "InternalName", "Manam"
             VALUE "LegalCopyright", "© Marcin Buchwald"
             VALUE "OriginalFilename", "Manam.exe"
             VALUE "ProductName", "Manager Makiet"
-            VALUE "ProductVersion", "7.2.1.0"
+            VALUE "ProductVersion", "7.2.1.1"
         END
     END
     BLOCK "VarFileInfo"
@@ -2003,6 +2020,11 @@ BEGIN
     0
 END
 
+IDD_CONNDLG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2024,6 +2046,7 @@ BEGIN
     IDS_OPISEPAR            "--Manam-OPI"
     IDS_DB_PD               "//db-asf.agora.pl/asf"
     IDS_DB_TP               "//db-asftp.agora.pl/asftp"
+    IDS_DB_DV               "//db-asfdv.agora.pl/asfdv"
 END
 
 STRINGTABLE
