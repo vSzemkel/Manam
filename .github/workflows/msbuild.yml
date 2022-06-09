@@ -32,6 +32,11 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget install Oracle.ManagedDataAccess -version 12.2.1100
 
+    - name: Restore vcpkg packages
+      uses: lukka/run-vcpkg@v10
+      with:
+        runVcpkgInstall: true
+
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
