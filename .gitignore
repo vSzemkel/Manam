@@ -3,6 +3,7 @@
 
 *.aps
 *.db
+*.man
 *.suo
 *.user
 *.opendb
