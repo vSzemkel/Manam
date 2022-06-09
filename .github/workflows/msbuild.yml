@@ -33,8 +33,9 @@ jobs:
       run: nuget install Oracle.ManagedDataAccess -version 12.2.1100
 
     - name: Restore vcpkg packages
-      uses: lukka/run-vcpkg@v10
+      uses: lukka/run-vcpkg@v10.2
       with:
+        vcpkgGitCommitId: '5522f28b3aa0bfefb03dfbb5eaf7248a0980f1a6'
         runVcpkgInstall: true
 
     - name: Build
