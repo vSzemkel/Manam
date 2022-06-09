@@ -35,7 +35,7 @@ jobs:
     - name: Restore vcpkg packages
       uses: lukka/run-vcpkg@v10.2
       with:
-        vcpkgGitCommitId: '5522f28b3aa0bfefb03dfbb5eaf7248a0980f1a6'
+        vcpkgGitCommitId: '9598e282a9ecde4afefd0613ccf91c973dd3ba64'
         runVcpkgInstall: true
 
     - name: Build
