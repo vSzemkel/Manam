@@ -34,7 +34,7 @@ jobs:
 
     - name: Restore vcpkg packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: vcpkg install zlib
+      run: vcpkg install
       # uses: lukka/run-vcpkg@v10.2
       # with:
         # vcpkgGitCommitId: '57bd7102d9fd880daa1b0958692294c4a125f6d8'
