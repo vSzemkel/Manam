@@ -33,10 +33,12 @@ jobs:
       run: nuget install Oracle.ManagedDataAccess -version 12.2.1100
 
     - name: Restore vcpkg packages
-      uses: lukka/run-vcpkg@v10.2
-      with:
-        vcpkgGitCommitId: '57bd7102d9fd880daa1b0958692294c4a125f6d8'
-        runVcpkgInstall: true
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: vcpkg install zlib
+      # uses: lukka/run-vcpkg@v10.2
+      # with:
+        # vcpkgGitCommitId: '57bd7102d9fd880daa1b0958692294c4a125f6d8'
+        # runVcpkgInstall: true
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
