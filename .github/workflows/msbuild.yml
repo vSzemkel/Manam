@@ -13,6 +13,7 @@ env:
   # Configuration type to build.
   # You can convert this to a build matrix if you need coverage of multiple configuration types.
   # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+  BUILD_PLATFORM: x64
   BUILD_CONFIGURATION: Debug
 
 permissions:
@@ -29,19 +30,11 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Restore NuGet packages
-      working-directory: ${{env.GITHUB_WORKSPACE}}
+      # working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget install Oracle.ManagedDataAccess -version 12.2.1100
-
-    - name: Restore vcpkg packages
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: vcpkg install --triplet=x64-windows && vcpkg integrate install
-      # uses: lukka/run-vcpkg@v10.2
-      # with:
-        # vcpkgGitCommitId: '57bd7102d9fd880daa1b0958692294c4a125f6d8'
-        # runVcpkgInstall: true
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.PROJECT_FILE_PATH}}
+      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:Platform=${{env.BUILD_PLATFORM}} ${{env.PROJECT_FILE_PATH}}
