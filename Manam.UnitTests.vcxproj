@@ -26,7 +26,7 @@
     <ProjectGuid>{F31FD1DE-C05A-47F6-B41E-76E7F8C4BEDC}</ProjectGuid>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <SpectreMitigation>false</SpectreMitigation>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows</VcpkgTriplet>
@@ -42,6 +42,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
+    <ManagedAssembly>true</ManagedAssembly>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir>$(SolutionDir)Tests\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Tests\$(PlatformTarget)\$(Configuration)\Tmp\</IntDir>
@@ -59,6 +60,9 @@
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -185,7 +189,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
     <PostBuildEvent>
-      <Command>signtool.exe sign /f $(USERPROFILE)\OneDrive\Documents\Agora.Config\developmentIT.pfx /p agwatde $(OutDir)$(TargetName).exe</Command>
+      <Command>signtool.exe sign /fd SHA256 /f $(ONEDRIVECONSUMER)\Agora.Config\developmentIT.pfx /p agwatde $(OutDir)$(TargetName).exe</Command>
       <Message>Podpisanie wynikowego pliku</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -207,10 +211,11 @@
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Manam.cpp" />
     <ClCompile Include="ManODPNET.cpp">
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <CompileAsManaged>true</CompileAsManaged>
       <ExceptionHandling>Async</ExceptionHandling>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalUsingDirectories>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\</AdditionalUsingDirectories>
     </ClCompile>
     <ClCompile Include="ManPDF.cpp" />
     <ClCompile Include="ManSock.cpp" />

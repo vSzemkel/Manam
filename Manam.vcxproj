@@ -46,6 +46,7 @@
     <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows-static</VcpkgTriplet>
   </PropertyGroup>
   <PropertyGroup>
+    <ManagedAssembly>true</ManagedAssembly>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\Tmp\</IntDir>
@@ -185,7 +186,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
     <PostBuildEvent>
-      <Command>signtool.exe sign /fd SHA256 /f $(USERPROFILE)\OneDrive\Documents\Agora.Config\developmentIT.pfx /p agwatde $(OutDir)$(TargetName).exe</Command>
+      <Command>signtool.exe sign /fd SHA256 /f $(ONEDRIVECONSUMER)\Agora.Config\developmentIT.pfx /p agwatde $(OutDir)$(TargetName).exe</Command>
       <Message>Podpisanie wynikowego pliku</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>

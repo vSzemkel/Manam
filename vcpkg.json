@@ -4,6 +4,7 @@
     "port-version": 1,
     "description": "Advertisement space management and newspaper production tool",
     "dependencies": [
+      "gtest",
       "zlib"
     ]
-  }
+}
