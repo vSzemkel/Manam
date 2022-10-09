@@ -296,11 +296,11 @@ void CSelectTool::OnLButtonUp(CDrawView* pView, const UINT nFlags, const CPoint&
                     const int szpalt_y = pAdd->szpalt_y;
                     const int mx = min(pmodulx, (int)modulx);
                     const int my = -min(pmoduly, (int)moduly);
-                    const auto x = (int)(mx * ceil((double)toPos.left / mx - 0.5));
-                    const auto y = (int)(my * ceil((double)toPos.bottom / my - 0.5));
-                    const auto cx = ceil((toPos.right - toPos.left) / modulx - 0.5);
+                    const auto x = (int)(mx * std::ceil((double)toPos.left / mx - 0.5));
+                    const auto y = (int)(my * std::ceil((double)toPos.bottom / my - 0.5));
+                    const auto cx = std::ceil((toPos.right - toPos.left) / modulx - 0.5);
                     const auto sx = (int)(cx == 0 ? modulx : cx*modulx);
-                    const auto cy = ceil((toPos.top - toPos.bottom) / moduly - 0.5);
+                    const auto cy = std::ceil((toPos.top - toPos.bottom) / moduly - 0.5);
                     const auto sy = (int)(cy == 0 ? moduly : cy*moduly);
                     const CPoint& p = toPos.CenterPoint();
                     CDrawPage *vPage = pView->GetDocument()->PageAt(p);

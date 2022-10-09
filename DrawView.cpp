@@ -289,7 +289,7 @@ void CDrawView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo)
         const auto deviceModuleWidth = pDC->GetDeviceCaps(HORZRES) / (6 * GetDocument()->m_pagerow_size);
         const auto deviceModuleHeigth = pDC->GetDeviceCaps(VERTRES) / (theApp.colsPerPage * 40 + 2); // 40 - inaczej wchodza nastepne strony - 2 na naglowek
         pDC->SetViewportOrg(2 * deviceModuleWidth, 0);
-        pDC->SetWindowOrg(0, (pInfo->m_nCurPage - 1) * (-(theApp.colsPerPage * 40 + 2)) * (pmoduly)+(int)floor((float)pmoduly / 3));
+        pDC->SetWindowOrg(0, (pInfo->m_nCurPage - 1) * (-(theApp.colsPerPage * 40 + 2)) * (pmoduly)+(int)std::floor((float)pmoduly / 3));
         pDC->SetViewportExt(deviceModuleWidth, deviceModuleHeigth);
         pDC->SetWindowExt(pmodulx, -pmoduly);
     }
@@ -1001,7 +1001,7 @@ BOOL CDrawView::OnPreparePrinting(CPrintInfo* pInfo)
             pInfo->SetMaxPage((UINT)GetDocument()->m_pages.size());
             break;
         case PrintFormat::doc:
-            pInfo->SetMaxPage((int)ceil((float)GetDocument()->m_pages.size() / (float)format));
+            pInfo->SetMaxPage((int)std::ceil((float)GetDocument()->m_pages.size() / (float)format));
             break;
         case PrintFormat::all:
             pInfo->SetMaxPage(1);

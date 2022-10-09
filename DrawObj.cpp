@@ -35,7 +35,7 @@ void CDrawObj::DrawNapis(CDC* pDC, LPCTSTR napis, const int cnt, LPRECT r, const
 
 inline int CDrawObj::GetVertPrintShift() const
 {
-    return PRINT_VOFFSET - (int)(2 * pmoduly * floor((float)m_position.top / CLIENT_SCALE / pmoduly / 40 / theApp.colsPerPage));
+    return PRINT_VOFFSET - (int)(2 * pmoduly * std::floor((float)m_position.top / CLIENT_SCALE / pmoduly / 40 / theApp.colsPerPage));
 }
 
 CRect CDrawObj::GetPrintRect() const

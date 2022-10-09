@@ -46,7 +46,7 @@ bool CAtexKrat::Compute(int* sizex, int* sizey, int* s_x, int* s_y)
     isToSmall = (dy / ymm > (float)DIM_LIMIT || szpalt_x / xcol > (float)DIM_LIMIT);
     if (isToSmall) return false;
     // dopasowanie
-    if (xcol == floor(xcol)) { // sprzedane do kraty domyslnej
+    if (xcol == std::floor(xcol)) { // sprzedane do kraty domyslnej
         *sizex = (int)xcol;
         *s_x = (int)szpalt_x;
         if (!CompY(sizey, s_y)) return false;

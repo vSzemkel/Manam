@@ -881,7 +881,7 @@ void CDrawAdd::InitPrecel(const CString& sPrecelFlag)
     // poczatkowo precel jest rowny jego otoczeniu i trzeba wylaczyc niektore moduly
     space = CFlag(sizex, sizey, szpalt_x, szpalt_y);
     // zera do ró¿nicy d³ugoœci + (zera do pe³nych 32 bitów + bity flagi)
-    space ^= CFlag(CString('0', 8 * ((int)space.GetSize() / 4 - (int)ceil((float)sPrecelFlag.GetLength() / 8))) + CString('0', (8888 - sPrecelFlag.GetLength()) % 8) + sPrecelFlag);
+    space ^= CFlag(CString('0', 8 * ((int)space.GetSize() / 4 - (int)std::ceil((float)sPrecelFlag.GetLength() / 8))) + CString('0', (8888 - sPrecelFlag.GetLength()) % 8) + sPrecelFlag);
 
     // skanuj flagê w poszukiwaniu obwodnic
     for (int x = 0; x < sizex; ++x)

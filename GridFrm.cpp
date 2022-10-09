@@ -357,7 +357,7 @@ BOOL CGridFrm::OnPreparePrinting(CPrintInfo* pInfo)
 {
     const BOOL ret = DoPreparePrinting(pInfo);
     isLandscape = pInfo->m_pPD->GetDevMode()->dmOrientation == DMORIENT_LANDSCAPE;
-    pInfo->SetMaxPage((int)ceil((float)lcPubList.GetItemCount() / (isLandscape ? LANDROWSPERPAGE : PORTROWSPERPAGE)));
+    pInfo->SetMaxPage((int)std::ceil((float)lcPubList.GetItemCount() / (isLandscape ? LANDROWSPERPAGE : PORTROWSPERPAGE)));
     return ret;
 }
 

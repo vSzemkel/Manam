@@ -325,9 +325,9 @@ void CDrawPage::DrawKolor(CDC* pDC, const CRect& pos) const
         return;
 
     if (kolor == ColorId::full) {
-        const auto r1 = CRect(pos.left, pos.top + 3 * vscale, pos.left + (int)floor(szpalt_x * modulx / 3), pos.top);
-        const auto r2 = CRect(pos.left + (int)floor(szpalt_x * modulx / 3), pos.top + 3 * vscale, pos.right - (int)floor(szpalt_x * modulx / 3), pos.top);
-        const auto r3 = CRect(pos.right - (int)floor(szpalt_x * modulx / 3), pos.top + 3 * vscale, pos.right, pos.top);
+        const auto r1 = CRect(pos.left, pos.top + 3 * vscale, pos.left + (int)std::floor(szpalt_x * modulx / 3), pos.top);
+        const auto r2 = CRect(pos.left + (int)std::floor(szpalt_x * modulx / 3), pos.top + 3 * vscale, pos.right - (int)std::floor(szpalt_x * modulx / 3), pos.top);
+        const auto r3 = CRect(pos.right - (int)std::floor(szpalt_x * modulx / 3), pos.top + 3 * vscale, pos.right, pos.top);
         pDC->FillRect(r1, &((CMainFrame*)AfxGetMainWnd())->cyjan);
         pDC->FillRect(r2, &((CMainFrame*)AfxGetMainWnd())->magenta);
         pDC->FillRect(r3, &((CMainFrame*)AfxGetMainWnd())->yellow);
