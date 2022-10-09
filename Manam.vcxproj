@@ -41,7 +41,8 @@
   <PropertyGroup Label="Vcpkg">
     <VcpkgUseStatic>true</VcpkgUseStatic>
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
-    <VcpkgManifestInstall>true</VcpkgManifestInstall>
+    <VcpkgManifestInstall>false</VcpkgManifestInstall>
+    <VcpkgConfiguration>$(Configuration)</VcpkgConfiguration>
     <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows-static</VcpkgTriplet>
     <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows-static</VcpkgTriplet>
   </PropertyGroup>
@@ -185,10 +186,6 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
-    <PostBuildEvent>
-      <Command>signtool.exe sign /fd SHA256 /f $(ONEDRIVECONSUMER)\Agora.Config\developmentIT.pfx /p agwatde $(OutDir)$(TargetName).exe</Command>
-      <Message>Podpisanie wynikowego pliku</Message>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AddListCtrl.cpp" />

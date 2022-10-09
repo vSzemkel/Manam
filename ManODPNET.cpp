@@ -3,6 +3,7 @@
 #include "DrawAdd.h"
 #include "DrawDoc.h"
 #include "DrawOpis.h"
+#include "DrawPage.h"
 #include "GenEpsInfoDlg.h"
 #include "KolDlg.h"
 #include "MainFrm.h"

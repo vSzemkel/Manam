@@ -223,7 +223,7 @@ bool CDrawApp::ConnecttoDB()
     char sHostName[256];
     gethostname(sHostName, 255);
     in_addr ia;
-    memcpy(&ia, gethostbyname(sHostName)->h_addr_list[0], 4);
+    std::memcpy(&ia, gethostbyname(sHostName)->h_addr_list[0], 4);
 
     // pobierz MAC adres
     CString mac;

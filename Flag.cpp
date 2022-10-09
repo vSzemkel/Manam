@@ -11,7 +11,7 @@ CFlag::CFlag(const CFlag& f) : size(f.size)
 {
     if (size > CRITICAL_SIZE) {
         flagblob_ptr = malloc(size);
-        memcpy(flagblob_ptr, f.flagblob_ptr, size);
+        std::memcpy(flagblob_ptr, f.flagblob_ptr, size);
     } else
         flag = f.flag;
 }
@@ -60,7 +60,7 @@ CFlag::CFlag(const int sx, const int sy, const int szpalt_x, const int szpalt_y)
 
 CFlag::CFlag(const char* raw) : size(CRITICAL_SIZE)
 {
-    size_t len = strlen(raw);
+    size_t len = std::strlen(raw);
     if (len == 0)
         return;
 
@@ -76,9 +76,9 @@ CFlag::CFlag(const char* raw) : size(CRITICAL_SIZE)
             flagblob_ptr = malloc(size);
             buf[RAW_MOD_SIZE] = '\0';
             for (size_t i = 0; DBRAW_BLOCK * i < size; ++i) {
-                memcpy(buf, &raw[len - RAW_MOD_SIZE * (i + 1)], RAW_MOD_SIZE);
+                std::memcpy(buf, &raw[len - RAW_MOD_SIZE * (i + 1)], RAW_MOD_SIZE);
                 sscanf_s(buf, "%x", &chunk);
-                memcpy((char*)flagblob_ptr + DBRAW_BLOCK * i, (const char*)&chunk, DBRAW_BLOCK);
+                std::memcpy((char*)flagblob_ptr + DBRAW_BLOCK * i, (const char*)&chunk, DBRAW_BLOCK);
             }
         } else
             sscanf_s(raw, "%Ix", &flag);
@@ -93,7 +93,7 @@ CFlag::CFlag(const CByteArray& bArr)
     size = bArr.GetSize();
     if (size > CRITICAL_SIZE) {
         flagblob_ptr = malloc(size);
-        memcpy(flagblob_ptr, bArr.GetData(), size);
+        std::memcpy(flagblob_ptr, bArr.GetData(), size);
     } else {
         flag = 0;
         auto buf = reinterpret_cast<BYTE*>(&flag);
@@ -126,7 +126,7 @@ const CFlag& CFlag::operator=(const CFlag& f) &
 {
     SetSize(f.size);
     if (size > CRITICAL_SIZE)
-        memcpy(flagblob_ptr, f.flagblob_ptr, size);
+        std::memcpy(flagblob_ptr, f.flagblob_ptr, size);
     else
         flag = f.flag;
 
@@ -538,7 +538,7 @@ CString CFlag::ToRaw() const
         int32_t chunk;
         auto str = (char*)flag;
         for (size_t i = 0; i < size; i += DBRAW_BLOCK) {
-            memcpy((char*)&chunk, &str[i], DBRAW_BLOCK);
+            std::memcpy((char*)&chunk, &str[i], DBRAW_BLOCK);
             ::StringCchPrintf(buf, _countof(buf), _T("%08lx"), chunk);
             raw = buf + raw;
         }

@@ -1045,7 +1045,7 @@ BOOL CInfoDlg::OnInitDialog()
     ::StringCchPrintf(title, 32, _T("Makieta zawiera %i modu³ów"), modtotal);
     if (modtotal < pmodcnt * m_objetosc) {
         const TCHAR sekcja[] = _T(" Sekcja");
-        memcpy(title, sekcja, sizeof(sekcja) - sizeof(TCHAR));
+        std::memcpy(title, sekcja, sizeof(sekcja) - sizeof(TCHAR));
     }
     GetDlgItem(IDOK)->EnableWindow(!m_isRO);
     SetDlgItemText(IDC_MODSTATISTICS, title);

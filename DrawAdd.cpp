@@ -2,6 +2,7 @@
 #include "StdAfx.h"
 #include "DrawAdd.h"
 #include "DrawDoc.h"
+#include "DrawPage.h"
 #include "DrawTool.h"
 #include "DrawView.h"
 #include "GenEpsInfoDlg.h"
@@ -1361,7 +1362,7 @@ void CDrawAdd::SetDotM(const bool setFlag)
     SetDirty();
 }
 
-bool CDrawAdd::BBoxFromFile(PGENEPSARG pArg, CFile& handle, float* x1, float* y1, float* x2, float* y2)
+bool CDrawAdd::BBoxFromFile(GENEPSARG* pArg, CFile& handle, float* x1, float* y1, float* x2, float* y2)
 {
     size_t res = 1;
     bool bRet = false;
@@ -1385,7 +1386,7 @@ bool CDrawAdd::BBoxFromFile(PGENEPSARG pArg, CFile& handle, float* x1, float* y1
     return bRet;
 }
 
-bool CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by1, float* bx2, float* by2, int* ileMat)
+bool CDrawAdd::GetProdInfo(GENEPSARG* pArg, TCHAR* cKolor, float* bx1, float* by1, float* bx2, float* by2, int* ileMat)
 {
     bool bReqProdInfo{false};
     // szukaj danych w bazie
@@ -1454,7 +1455,7 @@ bool CDrawAdd::GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by
     return true;
 } // GetProdInfo
 
-bool CDrawAdd::CheckSrcFile(PGENEPSARG pArg)
+bool CDrawAdd::CheckSrcFile(GENEPSARG* pArg)
 {
     CString msg;
     f5_errInfo.Empty();
@@ -1730,7 +1731,7 @@ modifTest:
     return s + extension;
 } // EpsName
 
-bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
+bool CDrawAdd::RewriteEps(GENEPSARG* pArg, CFile& dest)
 {
     CString eps_name;
     CDrawAdd* pLeftAdd = this;
@@ -1764,8 +1765,8 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
         if (pArg->format == CManFormat::PS && pArg->bDoKorekty == 0)
             ::MessageBox(pArg->pDlg->m_hWnd, _T("Na produkcyjnej wersji kolumny brakuje materia³u: ") + eps_name, _T("Brak og³oszenia"), MB_ICONWARNING);
 
-        ::StringCchPrintfA(s, n_size, ".25 .1 .9 %.2f %.2f %.2f %.2f R\r\n", gpx, gpy, x, y); dest.Write(s, static_cast<UINT>(strlen(s)));
-        ::StringCchPrintfA(s, n_size, "(%s) %.2f %.2f %d /Switzerland Po\r\n", (LPCSTR)CStringA(eps_name), (x + gpx), (y - podpisH), podpisH); dest.Write(s, static_cast<UINT>(strlen(s)));
+        ::StringCchPrintfA(s, n_size, ".25 .1 .9 %.2f %.2f %.2f %.2f R\r\n", gpx, gpy, x, y); dest.Write(s, static_cast<UINT>(std::strlen(s)));
+        ::StringCchPrintfA(s, n_size, "(%s) %.2f %.2f %d /Switzerland Po\r\n", (LPCSTR)CStringA(eps_name), (x + gpx), (y - podpisH), podpisH); dest.Write(s, static_cast<UINT>(std::strlen(s)));
         return false;
     }
 
@@ -1807,10 +1808,10 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
         } else
             dopodpisu.Format("%li%s", nreps, (LPCSTR)CStringA(wersja));
 
-        ::StringCchPrintfA(s, n_size, "(%s) %.2f %.2f %d /Switzerland Po\r\n", (LPCSTR)dopodpisu, (x + gpx), (y - podpisH), podpisH); dest.Write(s, static_cast<UINT>(strlen(s)));
+        ::StringCchPrintfA(s, n_size, "(%s) %.2f %.2f %d /Switzerland Po\r\n", (LPCSTR)dopodpisu, (x + gpx), (y - podpisH), podpisH); dest.Write(s, static_cast<UINT>(std::strlen(s)));
         if (this->flags.reksbtl) {
             ::StringCchPrintfA(s, n_size, "(REKLAMA) %.2f %.2f 1 %d /Switzerland textLR\r\n", x, y - podpisH, podpisH);
-            dest.Write(s, static_cast<UINT>(strlen(s)));
+            dest.Write(s, static_cast<UINT>(std::strlen(s)));
         }
     }
 
@@ -1822,17 +1823,17 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
     }
     const float adw = x2 - x1, adh = y2 - y1;
 
-    ::StringCchPrintfA(s, n_size, "beginManamEPS \r\n"); dest.Write(s, static_cast<UINT>(strlen(s)));
+    ::StringCchPrintfA(s, n_size, "beginManamEPS \r\n"); dest.Write(s, static_cast<UINT>(std::strlen(s)));
     if (pPage->m_typ_pary < 2) {
         // spad zdefiniowany dla krawedzi
         x += static_cast<uint8_t>(aSpadInfo[spad_flag].adjust_x) * (gpx - adw) / 2;
         y += static_cast<uint8_t>(aSpadInfo[spad_flag].adjust_y) * (gpy - adh) / 2;
-        ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", x, y);  dest.Write(s, static_cast<UINT>(strlen(s)));
+        ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", x, y);  dest.Write(s, static_cast<UINT>(std::strlen(s)));
         // skalowanie
         const float scalx = (x2 == x1 || !pRozAdd->scale_it || !aSpadInfo[spad_flag].scale_x) ? 1 : gpx / adw;
         const float scaly = (y2 == y1 || !pRozAdd->scale_it || !aSpadInfo[spad_flag].scale_y) ? 1 : gpy / adh;
         if (scalx != 1 || scaly != 1) {
-            ::StringCchPrintfA(s, n_size, "%.4f %.4f scale\r\n", scalx, scaly);  dest.Write(s, static_cast<UINT>(strlen(s)));
+            ::StringCchPrintfA(s, n_size, "%.4f %.4f scale\r\n", scalx, scaly);  dest.Write(s, static_cast<UINT>(std::strlen(s)));
         }
     }
 
@@ -1862,9 +1863,9 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
                 else
                     x -= margDoGrb + halfSize;
                 y += 0.5F * (gpy - adh);
-                ::StringCchPrintfA(s, n_size, "%.2f %.2f translate %s translate\r\n", x, y, (LPCSTR)sTrans); dest.Write(s, static_cast<UINT>(strlen(s)));
+                ::StringCchPrintfA(s, n_size, "%.2f %.2f translate %s translate\r\n", x, y, (LPCSTR)sTrans); dest.Write(s, static_cast<UINT>(std::strlen(s)));
                 if (bLewaStrona) {
-                    ::StringCchPrintfA(s, n_size, ".5 (%s) 0 -5.5 1 7 /GWFranklinBold textKLR\r\n", (LPCSTR)sReklama); dest.Write(s, static_cast<UINT>(strlen(s)));
+                    ::StringCchPrintfA(s, n_size, ".5 (%s) 0 -5.5 1 7 /GWFranklinBold textKLR\r\n", (LPCSTR)sReklama); dest.Write(s, static_cast<UINT>(std::strlen(s)));
                 }
             } else {
                 const char* f = (strncmp("0 26", sTrans, 4) == 0) ? "/GWTimesCondensed" : "/GWFranklinBold";
@@ -1872,7 +1873,7 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
                     ::StringCchPrintfA(s, n_size, "%s translate 90 rotate 2 (%s) 0 1.5 1 7 %s textKLR -90 rotate\r\n", (LPCSTR)sTrans, (LPCSTR)sReklama, f);
                 else
                     ::StringCchPrintfA(s, n_size, "%s translate 90 rotate 2 (%s) 0 %.2f 1 7 %s textKLR -90 rotate\r\n", (LPCSTR)sTrans, (LPCSTR)sReklama, x1 - x2 - 7, f);
-                dest.Write(s, static_cast<UINT>(strlen(s)));
+                dest.Write(s, static_cast<UINT>(std::strlen(s)));
             }
         } else {
             ::MessageBox(pArg->pDlg->m_hWnd, _T("Aby uzyskaæ parê kolumn z jednego materia³u wygaœ wszystkie elementy paginy"), APP_NAME, MB_ICONINFORMATION);
@@ -1880,19 +1881,19 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
         }
     }
 
-    ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", -x1, -y1); dest.Write(s, static_cast<UINT>(strlen(s)));
-    ::StringCchPrintfA(s, n_size, "%.2f %.2f %.2f %.2f clipEPS \r\nclip newpath\r\n", x1, y1, adw, adh); dest.Write(s, static_cast<UINT>(strlen(s)));
-    ::StringCchPrintfA(s, n_size, "%%%%BeginDocument: %s\r\n", (LPCSTR)CStringA(eps_name)); dest.Write(s, static_cast<UINT>(strlen(s)));
+    ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", -x1, -y1); dest.Write(s, static_cast<UINT>(std::strlen(s)));
+    ::StringCchPrintfA(s, n_size, "%.2f %.2f %.2f %.2f clipEPS \r\nclip newpath\r\n", x1, y1, adw, adh); dest.Write(s, static_cast<UINT>(std::strlen(s)));
+    ::StringCchPrintfA(s, n_size, "%%%%BeginDocument: %s\r\n", (LPCSTR)CStringA(eps_name)); dest.Write(s, static_cast<UINT>(std::strlen(s)));
     dest.Flush();
 
     if (theApp.isOpiMode) {
         ::StringCchPrintfA(s, n_size, "%s%s %s\r\n", OPI_TAG, "OG", CStringA(eps_name));
-        dest.Write(s, static_cast<UINT>(strlen(s)));
+        dest.Write(s, static_cast<UINT>(std::strlen(s)));
     } else
         CDrawAdd::EmbedEpsFile(pArg, dest, eps_name);
 
     ::StringCchPrintfA(s, n_size, "%%%%EndDocument\r\nendManamEPS\r\n");
-    dest.Write(s, static_cast<UINT>(strlen(s)));
+    dest.Write(s, static_cast<UINT>(std::strlen(s)));
     } CATCH(CFileException, e) {
         CDrawApp::SetErrorMessage(pArg->cBigBuf);
         ::MessageBox(pArg->pDlg->m_hWnd, CString("B³¹d przy przepisywaniu eps'a ") + eps_name + _T("\n ") + pArg->cBigBuf, _T("B³¹d"), MB_OK | MB_ICONERROR);
@@ -1902,7 +1903,7 @@ bool CDrawAdd::RewriteEps(PGENEPSARG pArg, CFile& dest)
         return true;
 } // RewriteEps
 
-bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
+bool CDrawAdd::RewriteDrob(GENEPSARG* pArg, CFile& dest)
 {
     auto s = reinterpret_cast<char*>(pArg->cBigBuf);
     auto pRoz = m_pDocument->GetCRozm(szpalt_x, szpalt_y, typ_xx);
@@ -1946,28 +1947,28 @@ bool CDrawAdd::RewriteDrob(PGENEPSARG pArg, CFile& dest)
         eps.Close();
     }
 
-    ::StringCchPrintfA(s, n_size, "beginManamEPS \r\n");  dest.Write(s, static_cast<UINT>(strlen(s)));
-    ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", x, y);  dest.Write(s, static_cast<UINT>(strlen(s)));
+    ::StringCchPrintfA(s, n_size, "beginManamEPS \r\n");  dest.Write(s, static_cast<UINT>(std::strlen(s)));
+    ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", x, y);  dest.Write(s, static_cast<UINT>(std::strlen(s)));
     const float scaly = (y2 == y1) ? 1 : m_pDocument->GetDrobneH() / (y2 - y1);
-    ::StringCchPrintfA(s, n_size, "1 %.4f scale\r\n", scaly);  dest.Write(s, static_cast<UINT>(strlen(s)));
+    ::StringCchPrintfA(s, n_size, "1 %.4f scale\r\n", scaly);  dest.Write(s, static_cast<UINT>(std::strlen(s)));
 
-    ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", -x1, -y1);  dest.Write(s, static_cast<UINT>(strlen(s)));
-    ::StringCchPrintfA(s, n_size, "%.2f %.2f %.2f %.2f clipEPS \r\nclip newpath\r\n", x1, y1, x2 - x1, y2 - y1);  dest.Write(s, static_cast<UINT>(strlen(s)));
-    ::StringCchPrintfA(s, n_size, "%%%%BeginDocument: %s\r\n", (LPCSTR)CStringA(nazwa)); dest.Write(s, static_cast<UINT>(strlen(s)));
+    ::StringCchPrintfA(s, n_size, "%.2f %.2f translate\r\n", -x1, -y1);  dest.Write(s, static_cast<UINT>(std::strlen(s)));
+    ::StringCchPrintfA(s, n_size, "%.2f %.2f %.2f %.2f clipEPS \r\nclip newpath\r\n", x1, y1, x2 - x1, y2 - y1);  dest.Write(s, static_cast<UINT>(std::strlen(s)));
+    ::StringCchPrintfA(s, n_size, "%%%%BeginDocument: %s\r\n", (LPCSTR)CStringA(nazwa)); dest.Write(s, static_cast<UINT>(std::strlen(s)));
     dest.Flush();
 
     if (theApp.isOpiMode) {
         ::StringCchPrintfA(s, n_size, "%sDR %s\r\n", OPI_TAG, (LPCSTR)CStringA(nazwa));
-        dest.Write(s, static_cast<UINT>(strlen(s)));
+        dest.Write(s, static_cast<UINT>(std::strlen(s)));
     } else 
         CDrawAdd::EmbedEpsFile(pArg, dest, nazwa);
 
-    ::StringCchPrintfA(s, n_size, "%%%%EndDocument\r\nendManamEPS\r\n"); dest.Write(s, static_cast<UINT>(strlen(s)));
+    ::StringCchPrintfA(s, n_size, "%%%%EndDocument\r\nendManamEPS\r\n"); dest.Write(s, static_cast<UINT>(std::strlen(s)));
 
     return true;
 } // RewriteDrob
 
-bool CDrawAdd::EmbedEpsFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcPath)
+bool CDrawAdd::EmbedEpsFile(GENEPSARG* pArg, CFile& dstFile, const CString& srcPath)
 {
     CFile srcFile;
     if (!srcFile.Open(srcPath, CFile::modeRead | CFile::typeBinary | CFile::shareDenyWrite)) {
@@ -1995,7 +1996,7 @@ bool CDrawAdd::EmbedEpsFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcP
     return ret;
 }
 
-void CDrawAdd::Preview(PGENEPSARG pArg, const int x, const int y, const int scanlinesCount, const int bytesPerScanline) const
+void CDrawAdd::Preview(GENEPSARG* pArg, const int x, const int y, const int scanlinesCount, const int bytesPerScanline) const
 {
     auto target = (BYTE*)pArg->cBigBuf;
     auto pRoz = m_pDocument->GetCRozm(szpalt_x, szpalt_y, typ_xx);

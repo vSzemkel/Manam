@@ -1,9 +1,10 @@
 
 #pragma once
 
-#include "DrawPage.h"
-
+class CDrawPage;
 class CGenEpsInfoDlg;
+
+struct GENEPSARG;
 
 class CDrawAdd final : public CDrawObj
 {
@@ -74,11 +75,11 @@ class CDrawAdd final : public CDrawObj
     BYTE spad_flag : 4; // flaga mapuj¹ca krawêdzie do wylewu na spad
 
     static void PrintPadlock(CDC* pDC, const CRect& rect);
-    static bool BBoxFromFile(PGENEPSARG pArg, CFile& handle, float* x1, float* y1, float* x2, float* y2);
+    static bool BBoxFromFile(GENEPSARG* pArg, CFile& handle, float* x1, float* y1, float* x2, float* y2);
     static bool LocatePreview(CFile& fEps, unsigned long* lOffset, unsigned long* lSize);
     static bool CopyNewFile(const CString& srcPath, const CString& dstPath);
     static bool EpsFromATEX(const CString& num, const CString& dstPath);
-    static bool EmbedEpsFile(PGENEPSARG pArg, CFile& dstFile, const CString& srcPath);
+    static bool EmbedEpsFile(GENEPSARG* pArg, CFile& dstFile, const CString& srcPath);
 
     void DrawTxt(CDC* pDC, const CRect& rect, LPCTSTR tx, bool top) const;
     void DrawDesc(CDC* pDC, const CRect& rect) const; // vu : rysuje opis tekstowy og³oszenia
@@ -101,13 +102,13 @@ class CDrawAdd final : public CDrawObj
     void SetEstPagePos(const TCHAR* description, CRect* vRect, CDrawPage* pPage);
     bool SetPagePosition(CRect* pRect, CDrawPage* pPage);
 
-    bool GetProdInfo(PGENEPSARG pArg, TCHAR* cKolor, float* bx1, float* by1, float* bx2, float* by2, int* ileMat); // szuka danych w bazie, jeœli nie ma, to otwiera i przeszukuje plik
-    bool CheckSrcFile(PGENEPSARG pArg);
-    bool RewriteEps(PGENEPSARG pArg, CFile& dest);
-    bool RewriteDrob(PGENEPSARG pArg, CFile& dest);
+    bool GetProdInfo(GENEPSARG* pArg, TCHAR* cKolor, float* bx1, float* by1, float* bx2, float* by2, int* ileMat); // szuka danych w bazie, jeœli nie ma, to otwiera i przeszukuje plik
+    bool CheckSrcFile(GENEPSARG* pArg);
+    bool RewriteEps(GENEPSARG* pArg, CFile& dest);
+    bool RewriteDrob(GENEPSARG* pArg, CFile& dest);
     CString FindZajawka(CString& root, const CString& ext) const;
     CString EpsName(CManFormat format, bool copyOldEPS, bool bModifTest = false);
-    void Preview(PGENEPSARG pArg, int x, int y, int scanlinesCount, int bytesPerScanline) const;
+    void Preview(GENEPSARG* pArg, int x, int y, int scanlinesCount, int bytesPerScanline) const;
     void SetDotM(bool setFlag); // parsuje wersjê i ustawia lub cofa .m
 
   private:

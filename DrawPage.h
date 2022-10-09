@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include "DrawObj.h"
-
 class CFlag;
 class CDrawAdd;
 class CDrawPage;
@@ -20,6 +18,7 @@ struct GENEPSARG
     CGenEpsInfoDlg* pDlg;
     HANDLE hCompletedEvent;
 };
+
 using PGENEPSARG = GENEPSARG *;
 
 struct CKrataNiebazowa final
