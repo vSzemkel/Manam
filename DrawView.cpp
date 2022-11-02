@@ -590,7 +590,7 @@ BOOL CDrawView::OnMouseWheel(const UINT nFlags, const short zDelta, const CPoint
 {
     const auto delta = zDelta / WHEEL_DELTA;
     const float fFactor = (15 + (float)delta) / 15;
-    if ((nFlags & MK_CONTROL) > 0) {
+    if (nFlags & MK_CONTROL) {
         CDrawOpis *pOpi;
         if (m_selection.size() == 1 && (pOpi = dynamic_cast<CDrawOpis *>(m_selection.front()))) {
             if ((0.1 < pOpi->m_Scale || fFactor < 1.0) && (pOpi->m_Scale < 10 || fFactor > 1.0))
@@ -600,7 +600,7 @@ BOOL CDrawView::OnMouseWheel(const UINT nFlags, const short zDelta, const CPoint
         } else {
             const CSize zoomNum((int)(m_zoomNum.cx * fFactor), (int)(m_zoomNum.cy * fFactor));
             // regulacja jest dopuszczalna w zakresie rgiZoomFactor[0]..rgiZoomFactor[size-1]
-            if ((zoomNum.cx >= 60 || fFactor > 1.0) && (zoomNum.cx <= 1000 || fFactor < 1.0))
+            if ((rgiZoomFactor.front() <= zoomNum.cx || fFactor > 1.0) && (zoomNum.cx <= rgiZoomFactor.back() || fFactor < 1.0))
                 SetZoomFactor(zoomNum, m_zoomDenom);
         }
     } else {
@@ -637,34 +637,29 @@ void CDrawView::OnDestroy()
 // GUZIKI I MENU + ICH ZMIANA
 void CDrawView::OnViewLupkaPlus()
 {
-    CSize zoomDenom;
     CSize zoomNum;
+    CSize zoomDenom{0, 0};
 
-    zoomDenom.cx = zoomDenom.cy = 0;
-
-    for (const auto& fact : rgiZoomFactor)
-        if (fact > m_zoomNum.cx) {
-            zoomNum.cx = fact;
-            zoomNum.cy = fact;
-            SetZoomFactor(zoomNum, zoomDenom);
-            break;
-        }
+    const auto it = std::upper_bound(rgiZoomFactor.cbegin(), rgiZoomFactor.cend(), m_zoomNum.cx);
+    if (it != rgiZoomFactor.cend()) {
+        zoomNum.cx = *it;
+        zoomNum.cy = *it;
+        SetZoomFactor(zoomNum, zoomDenom);
+    }
 }
 
 void CDrawView::OnViewLupkaMinus()
 {
-    CSize zoomDenom;
     CSize zoomNum;
+    CSize zoomDenom{0, 0};
 
-    zoomDenom.cx = zoomDenom.cy = 0;
-
-    for (auto it = rgiZoomFactor.rbegin(); it != rgiZoomFactor.rend(); ++it)
-        if (*it < m_zoomNum.cx) {
-            zoomNum.cx = *it;
-            zoomNum.cy = *it;
-            SetZoomFactor(zoomNum, zoomDenom);
-            break;
-        }
+    const auto it = std::lower_bound(rgiZoomFactor.cbegin(), rgiZoomFactor.cend(), m_zoomNum.cx);
+    if (it != rgiZoomFactor.cbegin()) {
+        const auto zoom = *std::prev(it);
+        zoomNum.cx = zoom;
+        zoomNum.cy = zoom;
+        SetZoomFactor(zoomNum, zoomDenom);
+    }
 }
 
 void CDrawView::OnDrawTool(const UINT tool)

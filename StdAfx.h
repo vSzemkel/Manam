@@ -29,10 +29,11 @@
 
 // STL headers
 #include <algorithm>
+#include <array>
+#include <cmath>
+#include <map>
 #include <memory>
 #include <vector>
-#include <array>
-#include <map>
 
 // 3rd party
 #include "zlib.h"
