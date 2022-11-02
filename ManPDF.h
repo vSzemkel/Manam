@@ -1,11 +1,12 @@
 
 #pragma once
 
-#include "DrawPage.h"
-
 using uintmap = std::map<unsigned int, int, std::less<>>;
 
 class CDrawAdd;
+class CDrawPage;
+class CGenEpsInfoDlg;
+struct GENEPSARG;
 
 class CManPDF
 {
@@ -16,7 +17,7 @@ class CManPDF
     static constexpr char septok[]  = {(char)9, (char)10, (char)13, (char)32, (char)0};
     static const char* memstr(const char* buf, const char* pat, size_t patlen);
 
-    CManPDF(PGENEPSARG pArg);
+    CManPDF(GENEPSARG* pArg);
     virtual ~CManPDF() = default;
     unsigned long GetMediaBox(const TCHAR* fpath, float* x1, float* y1, float* x2, float* y2, HANDLE hFile = nullptr);
     unsigned long SearchPattern(CFile& f, const char* pat) const;

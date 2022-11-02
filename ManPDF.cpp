@@ -2,12 +2,13 @@
 #include "StdAfx.h"
 #include "DrawAdd.h"
 #include "DrawDoc.h"
+#include "DrawPage.h"
 #include "GenEpsInfoDlg.h"
 #include "KolDlg.h"
 #include "Manam.h"
 #include "ManPDF.h"
 
-CManPDF::CManPDF(PGENEPSARG pArg)
+CManPDF::CManPDF(GENEPSARG* pArg)
 {
     dlg = pArg->pDlg;
     bSearchInPdfToken = false;
@@ -79,7 +80,7 @@ const char* CManPDF::memstr(const char* const buf, const char* const pat, const 
 unsigned long CManPDF::SearchPattern(CFile& f, const char* const pat) const
 {
     size_t res = 1;
-    const auto backLen = (int)strlen(pat);
+    const auto backLen = (int)std::strlen(pat);
 
     while (res > 0) { // read block from the file
         const auto filepos = (long)f.GetPosition();
@@ -205,7 +206,7 @@ void CManPDF::EmbedSection(const char* const str, const bool innerOnly)
     std::vector<char*> a;
 
     char lbound[3], rbound[3] = "";
-    ::StringCchCopyA(lbound, 3, strlen(str) <= 2 ? str : pdftok((char*)str)); // str jest otwarciem sekcji lub zlepkiem
+    ::StringCchCopyA(lbound, 3, std::strlen(str) <= 2 ? str : pdftok((char*)str)); // str jest otwarciem sekcji lub zlepkiem
     if (!strncmp(str, "<<", 2)) ::StringCchCopyA(rbound, 3, ">>");
     else if (!strncmp(str, "[", 1)) ::StringCchCopyA(rbound, 3, "]");
 
@@ -234,7 +235,7 @@ void CManPDF::EmbedSection(const char* const str, const bool innerOnly)
     if (innerOnly) { depth--; pocz++; }
     for (i = pocz; i < depth; ++i) {
         StringCchPrintfA(p, bigSize, "%s%s", a[i], i == depth - 1 ? "\x0a" : " ");
-        trg.Write(p, (UINT)strlen(p));
+        trg.Write(p, (UINT)std::strlen(p));
     }
 } // EmbedSection
 
@@ -249,7 +250,7 @@ void CManPDF::EmbedKey(const char* const buf, const char* const key)
     p = strstr((char*)buf, key);
     if (!p) return;
 
-    trg.Write(key, (UINT)strlen(key)); trg.Write(" ", 1);
+    trg.Write(key, (UINT)std::strlen(key)); trg.Write(" ", 1);
     p = pdftok(p);
     de = pdftok(nullptr);
     if (!strcmp(de, "<<") || !strcmp(de, "["))
@@ -265,7 +266,7 @@ void CManPDF::EmbedKey(const char* const buf, const char* const key)
             StringCchPrintfA(cStore, bigSize, "%u 0 R\x0a", nextObjNr++);
         } else
             StringCchPrintfA(cStore, bigSize, "%i 0 R\x0a", abs((*it).second));
-        trg.Write(cStore, (UINT)strlen(cStore));
+        trg.Write(cStore, (UINT)std::strlen(cStore));
     }
 } // EmbedKey
 
@@ -358,7 +359,7 @@ unsigned long CManPDF::EmbedPakStream(CFile& src, const unsigned long offset, un
         throw CManPDFExc(_T("EmbedPakStream: blad dekompresji"));
 #endif
 
-    memcpy(&niepak[niepakoff], pak, niepaklen);
+    std::memcpy(&niepak[niepakoff], pak, niepaklen);
 
     return niepakoff + niepaklen;
 } // EmbedPakStream
@@ -374,7 +375,7 @@ void CManPDF::EmbedRef(CFile& src, const unsigned int srcObjNr)
     }
 
     StringCchPrintfA(cStore, bigSize, "%i 0 obj %% old# %u\x0a", renumMap[srcObjNr], srcObjNr);
-    trg.Write(cStore, (UINT)strlen(cStore));
+    trg.Write(cStore, (UINT)std::strlen(cStore));
     src.Seek(offset, CFile::begin);
     src.Read(cStore, bigSize);
 
@@ -383,7 +384,7 @@ void CManPDF::EmbedRef(CFile& src, const unsigned int srcObjNr)
     char* ae = strstr(cStore, "[");
     if (end && (!de || end < de) && (!ae || end < ae)) {
         char* p = strtok(cStore, sepline);
-        p += strlen(cStore) + 1;
+        p += std::strlen(cStore) + 1;
         trg.Write(p, (UINT)(end - p));
     } else {
         if (!de || (ae && ae < de)) de = ae;
@@ -423,27 +424,27 @@ void CManPDF::EmbedContents(CFile& src, const unsigned long offset)
         p = pdftok(p); // skip token "<<"
         p = pdftok(nullptr);
         while (p && strcmp(p, "/Length")) {
-            trg.Write(p, (UINT)strlen(p));
+            trg.Write(p, (UINT)std::strlen(p));
             trg.Write(" ", 1);
             p = pdftok(nullptr);
         }
         if (!p)
             throw CManPDFExc(_T("EmbedContents: nie odnaleziono /Length pierwszej czesci"));
         StringCchPrintfA(cStore, bigSize, "/Length %u 0 R\x0a", lenObjNr = nextObjNr++);
-        trg.Write(cStore, (UINT)strlen(cStore));
+        trg.Write(cStore, (UINT)std::strlen(cStore));
         p = pdftok(nullptr);
         t = pdftok(nullptr);
         de = pdftok(nullptr);
         if (strcmp(de, "R")) {
             if (strcmp(t, ">>")) {
                 StringCchPrintfA(cStore, bigSize, "%s %s ", t, de);
-                trg.Write(cStore, (UINT)strlen(cStore));
+                trg.Write(cStore, (UINT)std::strlen(cStore));
             } else
                 trg.Write(">>\x0a", 3);
         }
         p = pdftok(nullptr);
         while (p && strcmp(p, ">>")) {
-            trg.Write(p, (UINT)strlen(p));
+            trg.Write(p, (UINT)std::strlen(p));
             trg.Write(" ", 1);
             p = pdftok(nullptr);
         }
@@ -496,7 +497,7 @@ void CManPDF::EmbedContents(CFile& src, const unsigned long offset)
     trg.Write("endstream\x0a", 10);
     if (multi) {
         StringCchPrintfA(cStore, bigSize, "endobj\x0a%u 0 obj\n%lu \x0a", lenObjNr, b);
-        trg.Write(cStore, (UINT)strlen(cStore));
+        trg.Write(cStore, (UINT)std::strlen(cStore));
     }
 } // EmbedContents
 
@@ -504,7 +505,7 @@ void CManPDF::EmbedContents(CFile& src, const unsigned long offset)
 bool CManPDF::EmbedPDF(CFile& src, const unsigned int objNr, const CDrawAdd& pAdd)
 {
     StringCchPrintfA(cStore, bigSize, "%u 0 obj\x0a<<\x0a/Type /XObject\x0a/Subtype /Form\x0a/FormType 1\x0a", objNr);
-    trg.Write(cStore, (UINT)strlen(cStore));
+    trg.Write(cStore, (UINT)std::strlen(cStore));
     // goto /Root
     xrefOffset = 0L;
     renumMap.clear();
@@ -512,7 +513,7 @@ bool CManPDF::EmbedPDF(CFile& src, const unsigned int objNr, const CDrawAdd& pAd
     const unsigned long offset = GetMediaBox(nullptr, &bbx1, &bby1, &bbx2, &bby2, src.m_hFile);
     if (offset == 0L) return false;
     StringCchPrintfA(cStore, bigSize, "/BBox [ %.2f %.2f %.2f %.2f ]\x0a", bbx1, bby1, bbx2, bby2);
-    trg.Write(cStore, (UINT)strlen(cStore));
+    trg.Write(cStore, (UINT)std::strlen(cStore));
 
     src.Seek(offset, CFile::begin);
     src.Read(cStore, bigSize);
@@ -533,7 +534,7 @@ bool CManPDF::EmbedPDF(CFile& src, const unsigned int objNr, const CDrawAdd& pAd
         StringCchPrintfA(cStore, bigSize, "/Matrix [ 1 0 0 1 %.2f %.2f ]\x0a", px, py);
     } else
         StringCchPrintfA(cStore, bigSize, "/Matrix [ %f 0 0 %f %.2f %.2f ]\x0a", sclx, scly, px, py);
-    trg.Write(cStore, (UINT)strlen(cStore));
+    trg.Write(cStore, (UINT)std::strlen(cStore));
 
     src.Seek(offset, CFile::begin);
     src.Read(cStore, bigSize);
@@ -621,7 +622,7 @@ void CManPDF::GenPDFTail(const unsigned int howMany)
     else
         trg.Seek(initxref, CFile::begin);
     StringCchPrintfA(cStore, bigSize, "xref\n0 %u\n0000000000 65535 f \x0a", objnr + 1);
-    trg.Write(cStore, (UINT)strlen(cStore));
+    trg.Write(cStore, (UINT)std::strlen(cStore));
 
     for (unsigned int i = 0; i < objnr; ++i)
         trg.Write(CStringA(offsetArr[i]), 20);
@@ -639,19 +640,19 @@ void CManPDF::GenPDFTail(const unsigned int howMany)
         sizetag += 6;
         trg.Write(cStore, (UINT)(sizetag - cStore - 1));
         StringCchPrintfA(cStore, bigSize, " %u\n", objnr + 1);
-        trg.Write(cStore, (UINT)strlen(cStore));
+        trg.Write(cStore, (UINT)std::strlen(cStore));
         char* tail = strstr(sizetag, "/");
         if (!tail) tail = strstr(sizetag, ">>");
         if (!tail)
             throw CManPDFExc(_T("GenPDFTail: nie odnaleziono tagu >>"));
-        trg.Write(tail, (UINT)strlen(tail));
+        trg.Write(tail, (UINT)std::strlen(tail));
     } else {
         StringCchPrintfA(cStore, bigSize, "trailer\n<</Size %u\n/Root 1 0 R\n/Info 2 0 R\n>>\n", objnr + 1);
-        trg.Write(cStore, (UINT)strlen(cStore));
+        trg.Write(cStore, (UINT)std::strlen(cStore));
     }
 
     StringCchPrintfA(cStore, bigSize, "startxref\n%lu\n%%%%EOF\n", initxref);
-    trg.Write(cStore, (UINT)strlen(cStore));
+    trg.Write(cStore, (UINT)std::strlen(cStore));
     trg.SetLength(trg.GetPosition());
 } // GenPDFTail
 
@@ -670,7 +671,7 @@ bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* const trgName)
 
         CString cs, fname;
         StringCchPrintfA(cStore, bigSize, "%u 0 obj\x0a<<\x0a", nextObjNr++);
-        trg.Write(cStore, (UINT)strlen(cStore));
+        trg.Write(cStore, (UINT)std::strlen(cStore));
         unsigned int kon, pocz = nextObjNr;
         kon = pocz + (unsigned int)page->m_adds.size();
 
@@ -694,7 +695,7 @@ bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* const trgName)
             if (pos >= 0) fname.Truncate(pos);
             embAlias.emplace_back('/' + fname);
             StringCchPrintfA(cStore, bigSize, "/%s %u 0 R\x0a", (LPCSTR)CStringA(fname), i - dziury);
-            trg.Write(cStore, (UINT)strlen(cStore));
+            trg.Write(cStore, (UINT)std::strlen(cStore));
         }
         trg.Write(">>\x0a", 3); trg.Write("endobj\x0a", 7);
         // osadx PDFy
@@ -720,10 +721,10 @@ bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* const trgName)
         // narysuj PDFy
         trg.Write("5 0 obj % Page Contents\012", 24);
         StringCchPrintfA(cStore, bigSize, "<< %s/Length %u 0 R >>\012stream\012", (compressContent ? "/Filter /FlateDecode " : ""), nextObjNr);
-        trg.Write(cStore, (UINT)strlen(cStore));
+        trg.Write(cStore, (UINT)std::strlen(cStore));
         long contentLen = 0L;
         StringCchPrintfA(cStore, bigSize, R"(q\0121 0 0 1 %i %i cm\012)", orgX, orgY);
-        contentLen += (UINT)strlen(cStore);
+        contentLen += (UINT)std::strlen(cStore);
 
         for (i = pocz; i < kon; ++i) {
             pAdd = page->m_adds[i - pocz];
@@ -769,7 +770,7 @@ bool CManPDF::CreatePDF(CDrawPage* page, const TCHAR* const trgName)
         //
         // dlugosc contentu
         StringCchPrintfA(cStore, bigSize, "%u 0 obj\x0a%li%cendobj\x0a", nextObjNr++, --contentLen, 10);
-        trg.Write(cStore, (UINT)strlen(cStore));
+        trg.Write(cStore, (UINT)std::strlen(cStore));
         // wygeneruj tail
         GenPDFTail();
         trg.Close();

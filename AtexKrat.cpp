@@ -3,8 +3,9 @@
 
 #include "StdAfx.h"
 #include "AtexKrat.h"
-#include "Manam.h"
 #include "DrawDoc.h"
+#include "DrawPage.h"
+#include "Manam.h"
 
 #pragma region CAtexKrat
 CAtexKrat::CAtexKrat(const TCHAR *atexKratInfo, CDrawDoc* vDoc)
@@ -22,7 +23,7 @@ bool CAtexKrat::CompX(int* sizex, int* s_x) const noexcept
 {
     for (*s_x = 1; *s_x < DIM_LIMIT; ++(*s_x)) {
         const auto tmpsizex = (float)xcol / szpalt_x * (float)*s_x;
-        *sizex = (int)nearbyintf(tmpsizex);
+        *sizex = (int)std::nearbyintf(tmpsizex);
         if (fabs(tmpsizex - *sizex) < *sizex * TOLERANCE)
             return true;
     }
@@ -33,7 +34,7 @@ bool CAtexKrat::CompY(int* sizey, int* s_y) const noexcept
 {
     for (*s_y = 1; *s_y < DIM_LIMIT; ++(*s_y)) {
         const auto tmpsizey = (float)ymm / (float)dy * (float)*s_y;
-        *sizey = (int)nearbyintf(tmpsizey);
+        *sizey = (int)std::nearbyintf(tmpsizey);
         if (fabs(tmpsizey - *sizey) < *sizey * TOLERANCE)
             return true;
     }
@@ -45,7 +46,7 @@ bool CAtexKrat::Compute(int* sizex, int* sizey, int* s_x, int* s_y)
     isToSmall = (dy / ymm > (float)DIM_LIMIT || szpalt_x / xcol > (float)DIM_LIMIT);
     if (isToSmall) return false;
     // dopasowanie
-    if (xcol == floor(xcol)) { // sprzedane do kraty domyslnej
+    if (xcol == std::floor(xcol)) { // sprzedane do kraty domyslnej
         *sizex = (int)xcol;
         *s_x = (int)szpalt_x;
         if (!CompY(sizey, s_y)) return false;

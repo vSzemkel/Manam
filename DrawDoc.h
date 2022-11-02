@@ -12,15 +12,17 @@
 
 #pragma once
 
-#include "DrawPage.h"
-
 #define A4 (5 * theApp.activeDoc->m_pagerow_size)
 #define A3 (10 * theApp.activeDoc->m_pagerow_size)
 
-class CDrawView;
+class CDrawAdd;
 class CDrawObj;
 class CDrawOpis;
+class CDrawPage;
+class CDrawView;
 class CQueView;
+
+struct CRozm;
 
 class CDrawDoc final : public COleDocument
 {

@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "DrawObj.h"
-
 class CDrawView;
 
 class CDrawTool

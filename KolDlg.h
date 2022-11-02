@@ -7,8 +7,6 @@
 #include "afxcmn.h"
 #include "afxdtctl.h"
 
-#include "DrawObj.h"
-
 // podpisy og³oszeñ maj¹ wspó³rzêdne z zakresu [-TXTSHIFT, TXTSHIFT]
 constexpr const int TXTSHIFT = 20;
 

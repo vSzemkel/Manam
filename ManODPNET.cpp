@@ -3,6 +3,7 @@
 #include "DrawAdd.h"
 #include "DrawDoc.h"
 #include "DrawOpis.h"
+#include "DrawPage.h"
 #include "GenEpsInfoDlg.h"
 #include "KolDlg.h"
 #include "MainFrm.h"
@@ -535,7 +536,7 @@ BOOL CDrawDocDbReader::OpenDocContent()
     if (m_doc->iDocType != DocType::makieta_lib)
         par->Add("refCur4", OracleDbType::RefCursor)->Direction = ParameterDirection::Output;
     OracleDataReader ^strCur, ^pubCur, ^opiCur, ^queCur;
-    CFlag multiKraty((int)ceil(m_doc->m_pages.size() / 8.0));
+    CFlag multiKraty((int)std::ceil(m_doc->m_pages.size() / 8.0));
     try {
         conn->Open();
         cmd->ExecuteNonQuery();

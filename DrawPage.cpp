@@ -325,9 +325,9 @@ void CDrawPage::DrawKolor(CDC* pDC, const CRect& pos) const
         return;
 
     if (kolor == ColorId::full) {
-        const auto r1 = CRect(pos.left, pos.top + 3 * vscale, pos.left + (int)floor(szpalt_x * modulx / 3), pos.top);
-        const auto r2 = CRect(pos.left + (int)floor(szpalt_x * modulx / 3), pos.top + 3 * vscale, pos.right - (int)floor(szpalt_x * modulx / 3), pos.top);
-        const auto r3 = CRect(pos.right - (int)floor(szpalt_x * modulx / 3), pos.top + 3 * vscale, pos.right, pos.top);
+        const auto r1 = CRect(pos.left, pos.top + 3 * vscale, pos.left + (int)std::floor(szpalt_x * modulx / 3), pos.top);
+        const auto r2 = CRect(pos.left + (int)std::floor(szpalt_x * modulx / 3), pos.top + 3 * vscale, pos.right - (int)std::floor(szpalt_x * modulx / 3), pos.top);
+        const auto r3 = CRect(pos.right - (int)std::floor(szpalt_x * modulx / 3), pos.top + 3 * vscale, pos.right, pos.top);
         pDC->FillRect(r1, &((CMainFrame*)AfxGetMainWnd())->cyjan);
         pDC->FillRect(r2, &((CMainFrame*)AfxGetMainWnd())->magenta);
         pDC->FillRect(r3, &((CMainFrame*)AfxGetMainWnd())->yellow);
@@ -874,10 +874,10 @@ void CDrawPage::BoundingBox(int* bx1, int* by1, int* bx2, int* by2) const noexce
             *bx2 = max(*bx2, x + gpx); *by2 = max(*by2, y + gpy);
         }
     }
-    *bx1 = (int)nearbyintf(*bx1 * mm2pkt);
-    *by1 = (int)nearbyintf(*by1 * mm2pkt); //-1 zeby nie obcinac u dolu
-    *bx2 = (int)nearbyintf(*bx2 * mm2pkt);
-    *by2 = (int)nearbyintf(*by2 * mm2pkt) + podpisH;
+    *bx1 = (int)std::nearbyintf(*bx1 * mm2pkt);
+    *by1 = (int)std::nearbyintf(*by1 * mm2pkt); //-1 zeby nie obcinac u dolu
+    *bx2 = (int)std::nearbyintf(*bx2 * mm2pkt);
+    *by2 = (int)std::nearbyintf(*by2 * mm2pkt) + podpisH;
 } // BoundingBox
 
 bool CDrawPage::CheckSrcFile(PGENEPSARG pArg)
@@ -940,7 +940,7 @@ bool CDrawPage::StaleElementy(PGENEPSARG pArg, CFile& handle)
                 if (theApp.isOpiMode) {
                     auto buf = reinterpret_cast<char*>(pArg->cBigBuf);
                     StringCchPrintfA(buf, n_size, "%sLG %s\r\n", OPI_TAG, (LPCSTR)CStringA(logoName));
-                    handle.Write(buf, (UINT)strlen(buf));
+                    handle.Write(buf, (UINT)std::strlen(buf));
                 } else
                     CDrawAdd::EmbedEpsFile(pArg, handle, logo);
 

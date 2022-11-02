@@ -757,7 +757,7 @@ BOOL CDrawDoc::OnOpenDocument(LPCTSTR pszPathName)
                 const auto len = dot - slash;
                 if (len <= MAX_PATH) {
                     TCHAR makieta[MAX_PATH];
-                    memcpy(makieta, slash + 1, len * sizeof(TCHAR));
+                    std::memcpy(makieta, slash + 1, len * sizeof(TCHAR));
                     makieta[len - 1] = TCHAR{0};
                     return DBOpenDoc(makieta);
                 }
@@ -1179,9 +1179,9 @@ std::array<UINT,4> CDrawDoc::ModCount() const
         }
         if (pmods != pmodcnt) {
             const auto norm = (float)pmodcnt / pmods;
-            l_modogl = (UINT)nearbyintf((float)l_modogl * norm);
-            l_modred = (UINT)nearbyintf((float)l_modred * norm);
-            l_modrez = (UINT)nearbyintf((float)l_modrez * norm);
+            l_modogl = (UINT)std::nearbyintf((float)l_modogl * norm);
+            l_modred = (UINT)std::nearbyintf((float)l_modred * norm);
+            l_modrez = (UINT)std::nearbyintf((float)l_modrez * norm);
         }
         m_modogl += l_modogl;
         m_modred += l_modred;
@@ -1202,7 +1202,7 @@ std::array<UINT,4> CDrawDoc::ModCount() const
                 if (page->space[j] && !page->space_red[j] && !page->space_locked[j])
                     l_modogl++;
             if (pmods != pmodcnt)
-                l_modogl = (UINT)nearbyintf((float)(l_modogl * pmodcnt) / pmods);
+                l_modogl = (UINT)std::nearbyintf((float)(l_modogl * pmodcnt) / pmods);
             m_modogl += l_modogl;
         }
         page->SetBaseKrata(init_szpalt_x, init_szpalt_y, true);
@@ -1232,7 +1232,7 @@ float CDrawDoc::PowAdd2Mod(const bool queryQue) const
                 pow += mod_count(ad);
     }
 
-    return nearbyintf(100 * pow) / 100;
+    return std::nearbyintf(100 * pow) / 100;
 }
 
 void CDrawDoc::OnFileInfo()

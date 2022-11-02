@@ -28,11 +28,13 @@
 #include <xmllite.h>
 
 // STL headers
-#include <algorithm>
 #include <array>
+#include <algorithm>
 #include <cmath>
+#include <cstring>
 #include <map>
 #include <memory>
+#include <utility>
 #include <vector>
 
 // 3rd party
