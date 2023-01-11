@@ -109,7 +109,7 @@
       <Culture>0x0415</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlibd.lib</AdditionalDependencies>
+      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;version.lib;zlibd.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <TargetMachine>MachineX86</TargetMachine>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
@@ -129,7 +129,7 @@
       <Culture>0x0415</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlibd.lib</AdditionalDependencies>
+      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;version.lib;zlibd.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -152,7 +152,7 @@
       <Culture>0x0415</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;version.lib;zlib.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <TargetMachine>MachineX86</TargetMachine>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
@@ -180,7 +180,7 @@
       <Culture>0x0415</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlib.lib</AdditionalDependencies>
+      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;version.lib;zlib.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <OptimizeReferences>true</OptimizeReferences>

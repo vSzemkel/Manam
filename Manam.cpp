@@ -66,14 +66,7 @@ CDrawApp NEAR theApp;
 /////////////////////////////////////////////////////////////////////////////
 // CDrawApp construction
 
-CDrawApp::CDrawApp() : m_InternetSession(APP_NAME)
-{
-    BYTE i, *p = static_cast<BYTE*>(::LockResource(::LoadResource(nullptr, ::FindResource(nullptr, (LPCTSTR)VS_VERSION_INFO, RT_VERSION))));
-    for (i = 0, p += 36; *((WORD*)p) == 0 && i < 4; p += 2, i++)
-        ; // 36 == 3*WORD + sizeof(L"VS_VERSION_INFO")
-    auto ffi = reinterpret_cast<VS_FIXEDFILEINFO*>(p);
-    m_app_version.Format(_T(" %u.%u.%u.%u"), (ffi->dwFileVersionMS & 0xffff0000) >> 16, (ffi->dwFileVersionMS & 0x0000ffff), (ffi->dwFileVersionLS & 0xffff0000) >> 16, (ffi->dwFileVersionLS & 0x0000ffff));
-}
+CDrawApp::CDrawApp() : m_InternetSession(APP_NAME) {}
 
 /////////////////////////////////////////////////////////////////////////////
 // CDrawApp initialization
@@ -123,11 +116,20 @@ BOOL CDrawApp::InitInstance()
     m_nCmdShow = SW_SHOWMAXIMIZED;
     pMainFrame->ShowWindow(m_nCmdShow);
 
-    // wielki bufor tekstowy
+    // large buffer for use in main thread
     bigBuf = static_cast<TCHAR*>(::VirtualAlloc(nullptr, bigSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
     if (!bigBuf) {
         AfxMessageBox(_T("Zbyt ma³o pamiêci do uruchomienia aplikacji"), MB_ICONSTOP);
         return FALSE;
+    }
+
+    // version info
+    TCHAR* versionData = bigBuf + MAX_PATH;
+    ::GetModuleFileName(nullptr, bigBuf, MAX_PATH);
+    ::GetFileVersionInfo(bigBuf, 0, n_size, versionData);
+    if (::VerQueryValue(versionData, _T("\\StringFileInfo\\041504b0\\ProductVersion"), (void**)&versionData, reinterpret_cast<PUINT>(bigBuf))) {
+        *--versionData = _T(' ');
+        m_app_version = versionData;
     }
 
     SetScale(CLIENT_SCALE);
