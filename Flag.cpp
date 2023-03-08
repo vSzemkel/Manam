@@ -16,15 +16,15 @@ CFlag::CFlag(const CFlag& f) : size(f.size)
         flag = f.flag;
 }
 
-CFlag::CFlag(CFlag&& f) noexcept : size(f.size), flag(f.flag)
+CFlag::CFlag(CFlag&& f) noexcept
+    : size(std::exchange(f.size, 0))
+    , flag(f.flag)
 {
-    if (f.size > CRITICAL_SIZE)
-        f.size = CRITICAL_SIZE;
 }
 
 CFlag::CFlag(size_t s)
 {
-    constexpr int mask = CRITICAL_SIZE - 1;
+    static constexpr int mask = CRITICAL_SIZE - 1;
     if (s & mask)
         s = (s + mask) & (~mask);
     size = s;
@@ -135,14 +135,8 @@ const CFlag& CFlag::operator=(const CFlag& f) &
 
 const CFlag& CFlag::operator=(CFlag&& f) & noexcept
 {
-    if (this != &f) {
-        if (size > CRITICAL_SIZE)
-            free(flagblob_ptr);
-        size = f.size;
-        flag = f.flag;
-        if (f.size > CRITICAL_SIZE)
-            f.size = CRITICAL_SIZE;
-    }
+    std::swap(size, f.size);
+    std::swap(flag, f.flag);
 
     return *this;
 }
