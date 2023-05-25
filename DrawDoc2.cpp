@@ -150,12 +150,11 @@ void CDrawDoc::DBSaveAs(const bool isSaveAs)
     const bool doSaveAdds = (iDocType != DocType::makieta_lib && (m_mak_xx == -1 || !isSaveAs));
     GetMainWnd()->SetStatusBarInfo((LPCTSTR)_T("Trwa zapis makiety ") + gazeta + _T(' ') + data);
     if (theManODPNET.SaveManamDoc(this, isSaveAs, doSaveAdds)) {
-        if (!doSaveAdds) {
-            auto pos = std::remove_if(m_objects.begin(), m_objects.end(), [](const auto& pObj) {
+        if (!doSaveAdds)
+            std::erase_if(m_objects, [](const auto& pObj) {
                 if (dynamic_cast<CDrawAdd*>(pObj)) { delete pObj; return true; } return false;
             });
-            m_objects.erase(pos, m_objects.end());
-        }
+
         GetMainWnd()->SetStatusBarInfo((LPCTSTR)_T("Zachowywanie zakoñczone pomyœlnie."));
         SetModifiedFlag(FALSE);
 
@@ -460,7 +459,7 @@ void CDrawDoc::MakietujStrone(CDrawPage* pPage)
     int i, j, k;
 
     // utworz liste ogloszen na stronie 
-    pPage->m_adds.erase(std::remove_if(pPage->m_adds.begin(), pPage->m_adds.end(), [=, &vAdds](CDrawAdd* pAdd) -> BOOL {
+    std::erase_if(pPage->m_adds, [=, &vAdds](CDrawAdd* pAdd) -> BOOL {
         if (!pAdd->flags.locked && !pAdd->flags.derived) {
             vAdds.Add(pAdd);
             pAdd->fizpage = 0;
@@ -468,7 +467,7 @@ void CDrawDoc::MakietujStrone(CDrawPage* pPage)
             return TRUE;
         }
         return FALSE;
-    }), pPage->m_adds.end());
+    });
 
     // posortuj liste pod wzgledem kryteriow rozmieszczenia ogloszenia - {skomplikowane == poczatek listy}
     const auto vAddsCount = (int)vAdds.GetSize();
@@ -790,7 +789,7 @@ void CDrawDoc::OnAsideAdds()
         for (size_t i = 0; i < pc; ++i)
             if (!(m_pages[i])->niemakietuj) {
                 vPage = m_pages[i];
-                vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd* pAdd) -> BOOL {
+                std::erase_if(vPage->m_adds, [=](CDrawAdd* pAdd) -> BOOL {
                     if (!pAdd->flags.locked && !pAdd->flags.derived) {
                         pAdd->fizpage = 0;
                         pAdd->UpdateInfo();
@@ -798,13 +797,13 @@ void CDrawDoc::OnAsideAdds()
                         return TRUE;
                     }
                     return FALSE;
-                }), vPage->m_adds.end());
+                });
             }
         AsideAdds();
     } else { // zdejmujemy og³oszenia ze wskazanej strony (wiemy, ¿e to strona makietowana)
         int iOffset = m_pagerow_size - (GetIPage(vPage) % m_pagerow_size);
         iOffset = iOffset * pszpalt_x * pmodulx + (iOffset / 2 + 1) * pmodulx;
-        vPage->m_adds.erase(std::remove_if(vPage->m_adds.begin(), vPage->m_adds.end(), [=](CDrawAdd* pAdd) -> BOOL {
+        std::erase_if(vPage->m_adds, [=](CDrawAdd* pAdd) -> BOOL {
             if (!pAdd->flags.locked && !pAdd->flags.derived) {
                 pAdd->fizpage = 0;
                 pAdd->m_position.left += iOffset;
@@ -814,7 +813,7 @@ void CDrawDoc::OnAsideAdds()
                 return TRUE;
             }
             return FALSE;
-        }), vPage->m_adds.end());
+        });
     }
 
     UpdateAllViews(nullptr);

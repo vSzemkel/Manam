@@ -62,15 +62,15 @@ private:
     bool m_autocalcMode;                        // tryb kalkulatora czy rêczny
     int m_x;
     int m_y;
-    int m_lightx;
-    int m_lighty;
-    int m_userdef_sizex;
-    int m_userdef_sizey;
-    double m_stronax;
-    double m_stronay;
-    CString m_sizex;
-    CString m_sizey;
-    CString m_modelid;
+    int m_lightx{40};
+    int m_lighty{34};
+    int m_userdef_sizex{1};
+    int m_userdef_sizey{1};
+    double m_stronax{};
+    double m_stronay{};
+    CString m_sizex{"0"};
+    CString m_sizey{"0"};
+    CString m_modelid{};
     CString m_kra_sym;
     CEdit m_wynik;
     CComboBox m_kratycombo;

@@ -5,7 +5,7 @@
 #include "DrawDoc.h"
 #include "GridFrm.h"
 
-const int CAddListCtrl::iWheelUnitY = 3 * ROWHEIGHT;
+constinit const int CAddListCtrl::iWheelUnitY = 3 * ROWHEIGHT;
 
 IMPLEMENT_DYNAMIC(CAddListCtrl, CMFCListCtrl)
 

@@ -72,7 +72,7 @@
       <CompileAs>Default</CompileAs>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ObjectFileName>$(IntermediateOutputPath)</ObjectFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

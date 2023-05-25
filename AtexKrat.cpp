@@ -24,7 +24,7 @@ bool CAtexKrat::CompX(int* sizex, int* s_x) const noexcept
     for (*s_x = 1; *s_x < DIM_LIMIT; ++(*s_x)) {
         const auto tmpsizex = (float)xcol / szpalt_x * (float)*s_x;
         *sizex = (int)std::nearbyintf(tmpsizex);
-        if (fabs(tmpsizex - *sizex) < *sizex * TOLERANCE)
+        if (std::fabs(tmpsizex - *sizex) < *sizex * TOLERANCE)
             return true;
     }
     return false;
@@ -35,7 +35,7 @@ bool CAtexKrat::CompY(int* sizey, int* s_y) const noexcept
     for (*s_y = 1; *s_y < DIM_LIMIT; ++(*s_y)) {
         const auto tmpsizey = (float)ymm / (float)dy * (float)*s_y;
         *sizey = (int)std::nearbyintf(tmpsizey);
-        if (fabs(tmpsizey - *sizey) < *sizey * TOLERANCE)
+        if (std::fabs(tmpsizey - *sizey) < *sizey * TOLERANCE)
             return true;
     }
     return false;
@@ -86,13 +86,8 @@ BEGIN_MESSAGE_MAP(CKratCalc, CDialog)
     ON_BN_CLICKED(IDC_DIR_UZU, &CKratCalc::OnModeSwitch)
 END_MESSAGE_MAP()
 
-CKratCalc::CKratCalc(CWnd* pParent /*=NULL*/) : CDialog(CKratCalc::IDD, pParent), m_modelid(_T(""))
+CKratCalc::CKratCalc(CWnd* pParent /*=NULL*/) : CDialog(CKratCalc::IDD, pParent)
 {
-    m_lightx = 40;
-    m_lighty = 34;
-    m_sizex = m_sizey = "0";
-    m_stronax = m_stronay = 0;
-    m_userdef_sizex = m_userdef_sizey = 1;
 }
 
 void CKratCalc::DoDataExchange(CDataExchange* pDX)
