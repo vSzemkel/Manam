@@ -1488,7 +1488,7 @@ void CDrawDoc::PrintInfo(CDC* pDC, const int max_n, const int wspol_na_str) // w
 
         rect.SetRect((int)(4.7 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(4.8 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
         pDC->SetBkMode(TRANSPARENT);
-        pDC->FillRect(rect, &GetMainWnd()->cyjan);
+        pDC->FillRect(rect, &GetMainWnd()->cyan);
         pDC->DrawText(_T("C"), 1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP);
         rect.SetRect((int)(4.8 * iHorizScale), (i - 1) * (wspol_na_str * 40 + 2) * (-pmoduly), (int)(4.9 * iHorizScale), ((i - 1) * (wspol_na_str * 40 + 2) + 1) * (-pmoduly));
         pDC->FillRect(rect, &GetMainWnd()->magenta);
@@ -1679,11 +1679,11 @@ second_paper:
                     aDelAdds.push_back(vAdd);
                     spfluos = true;
                 }
-                if (i == ac && !vAdd->flags.derived && abs(vAdd->flags.isok) < 3) { // nie zarejestrowane
+                if (i == ac && !vAdd->flags.derived && std::abs(vAdd->flags.isok) < 3) { // nie zarejestrowane
                     doRejetracjiAdnos.AppendFormat(_T("%li, "), adno);
                     rejestracjaSpfluos = true;
                 }
-                if (i < ac && abs(vAdd->flags.isok) < 3) { // ustaw zapore
+                if (i < ac && std::abs(vAdd->flags.isok) < 3) { // ustaw zapore
                     zaporaATEX.push_back((int)vAdd->m_pub_xx);
                     vAdd->flags.isok = 3;
                     const int p = vAdd->czaskto.Find(_T('['));

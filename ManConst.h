@@ -23,7 +23,6 @@ constexpr __time64_t POWTSEED_1 = 946598400; // 31/12/1999 01:00 data, w stosunk
                                              // kolory
 constexpr auto BRAK = _T("(brak)");
 constexpr auto FULL = _T("(full)");
-constexpr COLORREF BIALY = RGB(255, 255, 255);
 // gen eps
 constexpr float mm2pkt = 0.2835F; // 1mm = 2.835pt
 constexpr float pkt2mm = 0.3527F; // 1pt = 0.3527mm
@@ -41,44 +40,55 @@ constexpr size_t n_size = 0xFFFF; // (bigSize-1)
 #pragma region namespacedconstants
 namespace CManDbType // ODP.NET datatypes for unmanaged code
 {
-    constexpr uint8_t DbTypeByte      = 103; // OracleDbType::Byte
-    constexpr uint8_t DbTypeInt32     = 112; // OracleDbType::Int32
-    constexpr uint8_t DbTypeDouble    = 108; // OracleDbType::Double
-    constexpr uint8_t DbTypeVarchar2  = 126; // OracleDbType::Varchar2
-    constexpr uint8_t DbTypeRefCursor = 121; // OracleDbType::RefCursor
+    constinit const uint8_t DbTypeByte      = 103; // OracleDbType::Byte
+    constinit const uint8_t DbTypeInt32     = 112; // OracleDbType::Int32
+    constinit const uint8_t DbTypeDouble    = 108; // OracleDbType::Double
+    constinit const uint8_t DbTypeVarchar2  = 126; // OracleDbType::Varchar2
+    constinit const uint8_t DbTypeRefCursor = 121; // OracleDbType::RefCursor
 };
 
 namespace CManDbDir // ODP.NET parameter directions for unmanaged code
 {
-    constexpr uint8_t ParameterIn     = 1;   // ParameterDirection::Input
-    constexpr uint8_t ParameterOut    = 2;   // ParameterDirection::Output
-    constexpr uint8_t ParameterInOut  = 3;   // ParameterDirection::InputOutput
-    constexpr uint8_t ReturnValue     = 6;   // ParameterDirection::ReturnValue
+    constinit const uint8_t ParameterIn     = 1;   // ParameterDirection::Input
+    constinit const uint8_t ParameterOut    = 2;   // ParameterDirection::Output
+    constinit const uint8_t ParameterInOut  = 3;   // ParameterDirection::InputOutput
+    constinit const uint8_t ReturnValue     = 6;   // ParameterDirection::ReturnValue
+};
+
+namespace ManColor // Predefined colors
+{
+    constinit const COLORREF White = RGB(255, 255, 255);
+    constinit const COLORREF Cyan = RGB(120, 255, 255);
+    constinit const COLORREF Magenta = RGB(255, 100, 255);
+    constinit const COLORREF Yellow = RGB(255, 255, 150);
+    constinit const COLORREF RomanPage = RGB(135, 135, 135);
+    constinit const COLORREF ReadOnlyDoc = RGB(200, 200, 220);
+    constinit const COLORREF Black = RGB(0, 0, 0);
 };
 #pragma endregion namespacedconstants
 
 #pragma region flag_enums
 namespace UserRole // grupy
 { 
-    constexpr uint8_t dea = 1;
-    constexpr uint8_t red = 2;
-    constexpr uint8_t stu = 4;
-    constexpr uint8_t kie = 8;
-    constexpr uint8_t adm = 16;
-    constexpr uint8_t mas = 32;
+    constinit const uint8_t dea = 1;
+    constinit const uint8_t red = 2;
+    constinit const uint8_t stu = 4;
+    constinit const uint8_t kie = 8;
+    constinit const uint8_t adm = 16;
+    constinit const uint8_t mas = 32;
 }
 
 namespace ColorId
 {
-    constexpr uint8_t brak = 1;
-    constexpr uint8_t spot = 2;
-    constexpr uint8_t full = 4;
+    constinit const uint8_t brak = 1;
+    constinit const uint8_t spot = 2;
+    constinit const uint8_t full = 4;
 }
 
 namespace PaginaType // numeracja - odpowiada PK s³ownika TYP_NUMERACJI z bazy
 {
-    constexpr uint16_t arabic = 1;
-    constexpr uint16_t roman = 2;
+    constinit const uint16_t arabic = 1;
+    constinit const uint16_t roman = 2;
 }
 #pragma endregion flag_enums
 

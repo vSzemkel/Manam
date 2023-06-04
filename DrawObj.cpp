@@ -348,7 +348,7 @@ void CDrawObj::DrawKolor(CDC* pDC, const CRect& pos) const
         const CRect r1{pos.left + 1, pos.top - 1, pos.left + width, pos.bottom + 1};
         const CRect r2{pos.left + width, pos.top - 1, pos.right - width, pos.bottom + 1};
         const CRect r3{pos.right - width, pos.top - 1, pos.right - 1, pos.bottom + 1};
-        pDC->FillRect(r1, &wnd->cyjan);
+        pDC->FillRect(r1, &wnd->cyan);
         pDC->FillRect(r2, &wnd->magenta);
         pDC->FillRect(r3, &wnd->yellow);
     } else {
@@ -420,7 +420,7 @@ CString CDrawObj::Rzymska(const int i)
     /* vu: liczby rzymskie do kodowania pozycji systemu dziesietnego uzywaja 3 roznych znakow,
            a sasiednie pozycje maja jeden znak wspolny - dalej juz latwo :end vu */
 
-    if (abs(i) >= 3999) return _T("Big one");
+    if (std::abs(i) >= 3999) return _T("Big one");
     if (i < 0) return CString("-") + Rzymska(-i);
     return CString('M', i / 1000) + RzCyfra((i % 1000) / 100, 4) + RzCyfra((i % 100) / 10, 2) + RzCyfra(i % 10, 0);
 }

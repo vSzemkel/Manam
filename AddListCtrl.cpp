@@ -34,11 +34,11 @@ void CAddListCtrl::InitHeader()
     InsertColumn(oldadno, _T("z ATEX"), LVCFMT_RIGHT, 75);
     InsertColumn(studio, _T("Studio"), LVCFMT_RIGHT, 85);
 
-    SetBkColor(BIALY);
+    SetBkColor(ManColor::White);
     SetTextBkColor(RGB(250, 250, 250));
     SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 
-    m_SmallImageList.Create(IDB_ZNACZKI, 16, 1, BIALY);
+    m_SmallImageList.Create(IDB_ZNACZKI, 16, 1, ManColor::White);
     SetImageList(&m_SmallImageList, LVSIL_SMALL);
 }
 

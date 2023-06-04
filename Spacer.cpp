@@ -781,7 +781,7 @@ void CSpacerDlg::InsertRequestNoDup(CString& kiedy, CString& mut)
 
     const int rc = m_emisjelist.GetCount();
     for (int i = 0; i < rc; ++i)
-        if (abs((long)m_emisjelist.GetItemData(i)) == xx) return;
+        if (std::abs((long)m_emisjelist.GetItemData(i)) == xx) return;
     if (~xx)
         m_emisjelist.SetItemData(m_emisjelist.AddString(kiedy + _T(" (") + mut + _T(")")), xx);
 }

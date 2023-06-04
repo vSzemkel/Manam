@@ -374,7 +374,7 @@ void CGridFrm::OnPrint(CDC* pDC, CPrintInfo* pInfo)
     pDC->SetWindowExt((int)(dcScreen.GetDeviceCaps(LOGPIXELSX) / 1.295), (int)(dcScreen.GetDeviceCaps(LOGPIXELSX) / 1.17));
     pDC->SetViewportExt(pDC->GetDeviceCaps(LOGPIXELSX), pDC->GetDeviceCaps(LOGPIXELSX));
 
-    CPen pen(PS_SOLID, 1, RGB(0, 0, 0));  // solid black pen
+    CPen pen(PS_SOLID, 1, ManColor::Black);  // solid black pen
     CPen* pOldPen = pDC->SelectObject(&pen);
 
     if (pInfo->m_nCurPage == 1 && !pInfo->m_bPreview) { // naglowek

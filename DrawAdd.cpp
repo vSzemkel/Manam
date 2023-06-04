@@ -297,13 +297,13 @@ void CDrawAdd::DrawTxt(CDC* pDC, const CRect& rect, LPCTSTR tx, const bool top) 
     CRect r{rect};
     r += CPoint(vscale*(txtposx - TXTSHIFT), -vscale*(txtposy - TXTSHIFT));
     CFont* oldFont = pDC->SelectObject(&(m_pDocument->m_addfont));
-    pDC->SetBkColor(BIALY);
+    pDC->SetBkColor(ManColor::White);
     if (top)
         DrawNapis(pDC, tx, (int)_tcslen(tx), r, DT_LEFT | DT_TOP | DT_SINGLELINE | DT_NOCLIP, OPAQUE);
     else {
         LOGFONT lf;
         m_pDocument->m_addfont.GetObject(sizeof(LOGFONT), &lf);
-        r += CPoint(0, -vscale * abs(lf.lfHeight));
+        r += CPoint(0, -vscale * std::abs(lf.lfHeight));
         DrawNapis(pDC, tx, (int)_tcslen(tx), r, DT_LEFT | DT_TOP | DT_SINGLELINE | DT_NOCLIP, OPAQUE);
     }
     pDC->SelectObject(oldFont);
@@ -681,8 +681,8 @@ void CDrawAdd::SetPosition(const int fizp, int px, int py, int sx, int sy)
 
 void CDrawAdd::SetPosition(CRect* m_pos, CDrawPage* pPage)
 {
-    int sx = min((int)nearbyint(abs(m_pos->right - m_pos->left) / modulx), szpalt_x);
-    int sy = min((int)nearbyint(abs(m_pos->top - m_pos->bottom) / moduly), szpalt_y);
+    int sx = min((int)std::nearbyint(std::abs(m_pos->right - m_pos->left) / modulx), szpalt_x);
+    int sy = min((int)std::nearbyint(std::abs(m_pos->top - m_pos->bottom) / moduly), szpalt_y);
     int px = 0;
     int py = 0;
     bool ok{true};
@@ -1510,7 +1510,7 @@ dajWymiarKraty:
     }
     const auto scalx = (float)(((sizex * (pR->w + pR->sw) - pR->sw) * mm2pkt) / (x2 - x1));
     const auto scaly = (float)(((sizey * (pR->h + pR->sh) - pR->sh) * mm2pkt) / (y2 - y1));
-    if (fabs(scalx - 1.0) > 0.1 || fabs(scaly - 1.0) > 0.1) {
+    if (std::fabs(scalx - 1.0) > 0.1 || std::fabs(scaly - 1.0) > 0.1) {
         msg.Format(_T("%li inny rozmiar %.2fx%.2f, "), nreps, scalx, scaly);
         f5_errInfo += msg;
     } else if ((sizex == szpalt_x && scalx < 0.95) || (sizey == szpalt_y && scaly < 0.95)) {

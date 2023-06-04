@@ -221,12 +221,12 @@ void CManPDF::EmbedSection(const char* const str, const bool innerOnly)
                 renumMap[srcObjNr] = nextObjNr;
                 StringCchPrintfA(&cStore[posInCstore], bigSize, "%u", nextObjNr++);
             } else
-                StringCchPrintfA(&cStore[posInCstore], bigSize, "%i", abs((*it).second));
+                StringCchPrintfA(&cStore[posInCstore], bigSize, "%i", std::abs(it->second));
             a[a.size() - 3] = &cStore[posInCstore];
             posInCstore += 20;
         }
-        if (!strcmp(p, lbound)) depth++;
-        if (!strcmp(p, rbound)) depth--;
+        if (!strcmp(p, lbound)) ++depth;
+        if (!strcmp(p, rbound)) --depth;
     } while (p && depth > 0);
     // przepisz slownik z nowymi numerami referencji
     pocz = 0;
@@ -265,7 +265,7 @@ void CManPDF::EmbedKey(const char* const buf, const char* const key)
             renumMap[refNr] = nextObjNr;
             StringCchPrintfA(cStore, bigSize, "%u 0 R\x0a", nextObjNr++);
         } else
-            StringCchPrintfA(cStore, bigSize, "%i 0 R\x0a", abs((*it).second));
+            StringCchPrintfA(cStore, bigSize, "%i 0 R\x0a", std::abs((*it).second));
         trg.Write(cStore, (UINT)std::strlen(cStore));
     }
 } // EmbedKey

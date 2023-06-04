@@ -366,7 +366,7 @@ BOOL CDrawDocDbReader::OpenPage(OracleDataReader^ strCur, OracleDataReader^ pubC
         pPage->szpalt_y = s_y = strCur->GetInt32(10);
         ivar = strCur->GetInt32(2); // nr
         if (ivar < 0) pPage->niemakietuj = TRUE;
-        pPage->pagina = (short)abs(ivar);
+        pPage->pagina = (short)std::abs(ivar);
         ivar = strCur->GetInt32(3); // num_xx
         if (ivar < 0) {
             ivar *= -1;
@@ -1252,7 +1252,7 @@ void CManODPNET::IniKolorTable()
         delete b;
     CDrawDoc::kolory.clear(); CDrawDoc::brushe.clear(); CDrawDoc::spoty.clear();
     CDrawDoc::kolory.emplace_back(BRAK); CDrawDoc::brushe.push_back(new CBrush(RGB(190, 190, 190))); CDrawDoc::spoty.push_back(0);
-    CDrawDoc::kolory.emplace_back(FULL); CDrawDoc::brushe.push_back(new CBrush(BIALY)); CDrawDoc::spoty.push_back(0);
+    CDrawDoc::kolory.emplace_back(FULL); CDrawDoc::brushe.push_back(new CBrush(ManColor::White)); CDrawDoc::spoty.push_back(0);
 
     auto conn = gcnew OracleConnection(g_ConnectionString);
     auto cmd = conn->CreateCommand();

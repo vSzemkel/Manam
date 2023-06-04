@@ -171,9 +171,9 @@ void CKratCalc::Calculate()
         w = (m_stronax - (i - 1) * lightx) / i;
         j = 1;
         while ((modw = j * (w + lightx) - lightx) <= m_stronax) {
-            if (fabs(modw - addx) < addx * TOLERANCE)
+            if (std::fabs(modw - addx) < addx * TOLERANCE)
                 break;
-            j++;
+            ++j;
         }
         if (modw <= m_stronax) break;
     }
@@ -182,9 +182,9 @@ void CKratCalc::Calculate()
         h = (m_stronay - (k - 1) * lighty) / k;
         l = 1;
         while ((modh = l * (h + lighty) - lighty) <= m_stronay) {
-            if (fabs(modh - addy) < addy * TOLERANCE)
+            if (std::fabs(modh - addy) < addy * TOLERANCE)
                 break;
-            l++;
+            ++l;
         }
         if (modh <= m_stronay) break;
     }

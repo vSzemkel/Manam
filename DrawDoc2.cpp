@@ -828,12 +828,12 @@ void CDrawDoc::IniKolorTable()
     kolory.resize(max_col + 2);
     brushe.resize(max_col + 2);
     kolory[0] = BRAK; brushe[0] = new CBrush(RGB(190, 190, 190));
-    kolory[1] = FULL; brushe[1] = new CBrush(BIALY);
+    kolory[1] = FULL; brushe[1] = new CBrush(ManColor::White);
     CString bf;
     for (int i = 1; i <= max_col; ++i) {
         bf.Format(_T("%i"), i);
         kolory[i + 1] = theApp.GetProfileString(_T("SpotColors"), _T("Spot") + bf, _T("nie ma")).MakeUpper();
-        brushe[i + 1] = new CBrush(theApp.GetProfileInt(_T("SpotColors"), _T("Color") + bf, BIALY));
+        brushe[i + 1] = new CBrush(theApp.GetProfileInt(_T("SpotColors"), _T("Color") + bf, ManColor::White));
     }
 }
 

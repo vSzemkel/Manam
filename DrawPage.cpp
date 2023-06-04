@@ -116,7 +116,7 @@ void CDrawPage::Serialize(CArchive& ar)
 
 inline CStringW CDrawPage::GenerateGUIDString()
 {
-    const int MAX_CHAR_IN_GUID = 50;
+    static constinit const int MAX_CHAR_IN_GUID = 50;
     wchar_t buf[MAX_CHAR_IN_GUID];
     GUID Guid{0};
 
@@ -143,10 +143,10 @@ void CDrawPage::Draw(CDC* pDC)
     CBrush* pOldBrush;
     if (pagina_type == PaginaType::roman) {
         pOldBrush = pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->rzym));
-        pDC->SetBkColor(RGB(135, 135, 135));
+        pDC->SetBkColor(ManColor::RomanPage);
     } else {
         pOldBrush = reinterpret_cast<CBrush*>(pDC->SelectStockObject(WHITE_BRUSH));
-        pDC->SetBkColor(BIALY);
+        pDC->SetBkColor(ManColor::White);
     }
 
     CPen* pOldPen = pDC->SelectObject(&(((CMainFrame*)AfxGetMainWnd())->pen));
@@ -229,7 +229,7 @@ void CDrawPage::DrawReserved(CDC* pDC)
     /*	vu : zaznacza moduly za statusem zajete OZ, na ktorych jeszcze
              nie stoja ogloszenia. Wizualizuje w ten sposob miejsce z
              ogloszeniami dziedziczonymi	end vu */
-    const CFlag& vspace = GetReservedFlag();
+    CFlag vspace = GetReservedFlag();
     if (vspace.IsSet()) {
         pDC->SelectStockObject((pagina_type == PaginaType::roman ? LTGRAY_BRUSH : GRAY_BRUSH));
         const auto ilemod = static_cast<size_t>(szpalt_x * szpalt_y);
@@ -257,7 +257,7 @@ void CDrawPage::DrawGrid(CDC* pDC)
                 else
                     pDC->SelectStockObject(WHITE_BRUSH);
 
-                if (abs(rect.Height()) < 5 * vscale) {
+                if (std::abs(rect.Height()) < 5 * vscale) {
                     pDC->SelectStockObject(BLACK_PEN);
                     pDC->MoveTo(rect.left, rect.top);
                     pDC->LineTo(rect.right, rect.bottom);
@@ -328,7 +328,7 @@ void CDrawPage::DrawKolor(CDC* pDC, const CRect& pos) const
         const auto r1 = CRect(pos.left, pos.top + 3 * vscale, pos.left + (int)std::floor(szpalt_x * modulx / 3), pos.top);
         const auto r2 = CRect(pos.left + (int)std::floor(szpalt_x * modulx / 3), pos.top + 3 * vscale, pos.right - (int)std::floor(szpalt_x * modulx / 3), pos.top);
         const auto r3 = CRect(pos.right - (int)std::floor(szpalt_x * modulx / 3), pos.top + 3 * vscale, pos.right, pos.top);
-        pDC->FillRect(r1, &((CMainFrame*)AfxGetMainWnd())->cyjan);
+        pDC->FillRect(r1, &((CMainFrame*)AfxGetMainWnd())->cyan);
         pDC->FillRect(r2, &((CMainFrame*)AfxGetMainWnd())->magenta);
         pDC->FillRect(r3, &((CMainFrame*)AfxGetMainWnd())->yellow);
     } else {
@@ -338,7 +338,7 @@ void CDrawPage::DrawKolor(CDC* pDC, const CRect& pos) const
         if (m_pDocument->iDocType == DocType::grzbiet_drukowany)
             pOldBrush = reinterpret_cast<CBrush*>(pDC->SelectStockObject(LTGRAY_BRUSH));
         else pOldBrush = pDC->SelectObject(CDrawDoc::GetSpotBrush(m_pDocument->m_spot_makiety[kolor >> 3]));
-        const COLORREF bk = pDC->SetBkColor(BIALY);
+        const COLORREF bk = pDC->SetBkColor(ManColor::White);
         pDC->Rectangle(r1);
         DrawNapis(pDC, Rzymska(((kolor >> 3) + 1)), Rzymska(((kolor >> 3) + 1)).GetLength(), r1, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOCLIP, OPAQUE);
         pDC->SetBkColor(bk);

@@ -588,19 +588,19 @@ void CDrawView::OnMouseMove(const UINT nFlags, const CPoint point)
 
 BOOL CDrawView::OnMouseWheel(const UINT nFlags, const short zDelta, const CPoint pt)
 {
-    const auto delta = zDelta / WHEEL_DELTA;
+    const auto delta = zDelta * 4 / WHEEL_DELTA;
     const float fFactor = (15 + (float)delta) / 15;
     if (nFlags & MK_CONTROL) {
         CDrawOpis *pOpi;
         if (m_selection.size() == 1 && (pOpi = dynamic_cast<CDrawOpis *>(m_selection.front()))) {
-            if ((0.1 < pOpi->m_Scale || fFactor < 1.0) && (pOpi->m_Scale < 10 || fFactor > 1.0))
+            if ((0.1f < pOpi->m_Scale || fFactor < 1.f) && (pOpi->m_Scale < 10.f || fFactor > 1.f))
                 pOpi->m_Scale /= fFactor;
             pOpi->SetDirty();
             pOpi->Invalidate();
         } else {
             const CSize zoomNum((int)(m_zoomNum.cx * fFactor), (int)(m_zoomNum.cy * fFactor));
             // regulacja jest dopuszczalna w zakresie rgiZoomFactor[0]..rgiZoomFactor[size-1]
-            if ((rgiZoomFactor.front() <= zoomNum.cx || fFactor > 1.0) && (zoomNum.cx <= rgiZoomFactor.back() || fFactor < 1.0))
+            if ((rgiZoomFactor.front() <= zoomNum.cx || fFactor > 1.f) && (zoomNum.cx <= rgiZoomFactor.back() || fFactor < 1.f))
                 SetZoomFactor(zoomNum, m_zoomDenom);
         }
     } else {

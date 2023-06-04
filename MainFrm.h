@@ -40,7 +40,7 @@ public:
     BOOL DBIniCaptionCombo(bool iscaption, int id_drw);
 
     CPen pen;
-    CBrush cyjan, magenta, yellow, rzym, robgcolor;
+    CBrush cyan, magenta, yellow, rzym, robgcolor;
 
     int lastCapToolBar{0};      // 0==combo zawiera nag³ówki_eps; >0==id_drw
     bool show_spacelocks{true}; // domyœlnie pokazujemy zablokowane modu³y

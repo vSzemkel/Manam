@@ -2432,7 +2432,7 @@ BOOL CEPSDateDlg::OnInitDialog()
     GetDlgItem(ID_FILE_UPDATE)->EnableWindow(!vDoc->isRO);
 
     SetCursor(theApp.LoadStandardCursor(IDC_WAIT));
-    m_SmallImageList.Create(IDB_SMALLICONS, 16, 1, BIALY);
+    m_SmallImageList.Create(IDB_SMALLICONS, 16, 1, ManColor::White);
     m_StateImageList.Create(IDB_STATEICONS, 16, 1, RGB(255, 0, 0));
 
     m_epsdate.SetImageList(&m_SmallImageList, LVSIL_SMALL);
@@ -2860,7 +2860,7 @@ BOOL COstWer::OnInitDialog()
 {
     CDialog::OnInitDialog();
 
-    m_SmallImageList.Create(IDB_SMALLICONS, 16, 1, BIALY);
+    m_SmallImageList.Create(IDB_SMALLICONS, 16, 1, ManColor::White);
     m_StateImageList.Create(IDB_STATEICONS, 16, 1, RGB(255, 0, 0));
 
     m_adds.SetImageList(&m_SmallImageList, LVSIL_SMALL);

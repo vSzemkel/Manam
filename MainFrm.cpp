@@ -40,7 +40,7 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
-    cyjan.DeleteObject();
+    cyan.DeleteObject();
     magenta.DeleteObject();
     yellow.DeleteObject();
     rzym.DeleteObject();
@@ -72,7 +72,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     m_logpen.lopnWidth.x = 1;
     m_logpen.lopnWidth.y = 1;
     m_logpen.lopnStyle = PS_SOLID;
-    m_logpen.lopnColor = RGB(0, 0, 0);
+    m_logpen.lopnColor = ManColor::Black;
     if (!pen.CreatePenIndirect(&m_logpen))
         return -5;
 
@@ -81,23 +81,23 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     m_logbrush.lbHatch = HS_HORIZONTAL;
     m_logbrush.lbStyle = BS_SOLID;
 
-    m_logbrush.lbColor = RGB(120, 255, 255);
-    if (!cyjan.CreateBrushIndirect(&m_logbrush))
+    m_logbrush.lbColor = ManColor::Cyan;
+    if (!cyan.CreateBrushIndirect(&m_logbrush))
         return -6;
 
-    m_logbrush.lbColor = RGB(255, 100, 255);
+    m_logbrush.lbColor = ManColor::Magenta;
     if (!magenta.CreateBrushIndirect(&m_logbrush))
         return -7;
 
-    m_logbrush.lbColor = RGB(255, 255, 150);
+    m_logbrush.lbColor = ManColor::Yellow;
     if (!yellow.CreateBrushIndirect(&m_logbrush))
         return -8;
 
-    m_logbrush.lbColor = RGB(135, 135, 135);
+    m_logbrush.lbColor = ManColor::RomanPage;
     if (!rzym.CreateBrushIndirect(&m_logbrush))
         return -9;
 
-    m_logbrush.lbColor = RGB(200, 200, 220);
+    m_logbrush.lbColor = ManColor::ReadOnlyDoc;
     if (!robgcolor.CreateBrushIndirect(&m_logbrush))
         return -10;
 
