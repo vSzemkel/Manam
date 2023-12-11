@@ -4,7 +4,7 @@
 **	Pole danych obiektu CFlag jest BITSPERBYTE*size bitowe
 */
 
-#include "StdAfx.h"
+#include "pch.h"
 #include "Flag.h"
 
 CFlag::CFlag(const CFlag& f) : size(f.size)

@@ -1,7 +1,7 @@
 // AtexKrat.cpp : implementation file
 // p.xsize*pg.colwidth # p.ysizemm # p.xsize #	pg.columns # pg.height
 
-#include "StdAfx.h"
+#include "pch.h"
 #include "AtexKrat.h"
 #include "DrawDoc.h"
 #include "DrawPage.h"

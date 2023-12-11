@@ -1,5 +1,5 @@
 
-#include "StdAfx.h"
+#include "pch.h"
 #include "GenEpsInfoDlg.h"
 
 IMPLEMENT_DYNAMIC(CGenEpsInfoDlg, CDialog)

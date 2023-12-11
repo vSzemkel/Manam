@@ -39,12 +39,15 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="Vcpkg">
-    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <VcpkgUseStatic>
+    </VcpkgUseStatic>
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
     <VcpkgManifestInstall>true</VcpkgManifestInstall>
     <VcpkgConfiguration>$(Configuration)</VcpkgConfiguration>
-    <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows-static</VcpkgTriplet>
+    <VcpkgTriplet Condition="'$(Platform)'=='x64'">
+    </VcpkgTriplet>
     <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows-static</VcpkgTriplet>
+    <VcpkgEnabled>true</VcpkgEnabled>
   </PropertyGroup>
   <PropertyGroup>
     <ManagedAssembly>true</ManagedAssembly>
@@ -72,6 +75,7 @@
       <CompileAs>Default</CompileAs>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ObjectFileName>$(IntermediateOutputPath)</ObjectFileName>
@@ -188,6 +192,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="AddListCtrl.cpp" />
     <ClCompile Include="AtexKrat.cpp" />
     <ClCompile Include="DrawAdd.cpp" />
@@ -216,9 +223,6 @@
     <ClCompile Include="QueView.cpp" />
     <ClCompile Include="Spacer.cpp" />
     <ClCompile Include="SplitFrm.cpp" />
-    <ClCompile Include="StdAfx.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Manam.rc" />
@@ -243,11 +247,11 @@
     <ClInclude Include="ManODPNET.h" />
     <ClInclude Include="ManPDF.h" />
     <ClInclude Include="ManSock.h" />
+    <ClInclude Include="pch.h" />
     <ClInclude Include="QueView.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Spacer.h" />
     <ClInclude Include="SplitFrm.h" />
-    <ClInclude Include="StdAfx.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\CAPTION.CUR" />

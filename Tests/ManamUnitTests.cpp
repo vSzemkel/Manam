@@ -1,9 +1,5 @@
 
-#include "../StdAfx.h"
-
-BOOL disableMenu = FALSE;
-BOOL cancelGenEPS = FALSE;
-BOOL drawErrorBoxes = TRUE;
+#include "pch.h"
 
 // prerequisite: check "Test Adapter For Google Test" in VS Installer
 // docs: https://github.com/google/googletest/blob/master/googletest/docs/Primer.md

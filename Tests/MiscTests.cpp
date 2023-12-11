@@ -1,5 +1,5 @@
 
-#include "../StdAfx.h"
+#include "pch.h"
 #include "../ManPDF.h"
 
 TEST(MiscTests, RomanNumerals) {

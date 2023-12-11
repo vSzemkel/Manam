@@ -1,5 +1,5 @@
 
-#include "StdAfx.h"
+#include "pch.h"
 #include "DrawAdd.h"
 #include "DrawDoc.h"
 #include "DrawPage.h"

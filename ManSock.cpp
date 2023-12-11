@@ -1,7 +1,7 @@
 // ManSock.cpp : implementation file
 //
 
-#include "StdAfx.h"
+#include "pch.h"
 #include "DrawAdd.h"
 #include "DrawDoc.h"
 #include "MainFrm.h"

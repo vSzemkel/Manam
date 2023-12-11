@@ -64,7 +64,7 @@
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnabled>true</VcpkgEnabled>
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
-    <VcpkgManifestInstall>false</VcpkgManifestInstall>
+    <VcpkgManifestInstall>true</VcpkgManifestInstall>
     <VcpkgUseStatic>false</VcpkgUseStatic>
     <VcpkgConfiguration>$(Configuration)</VcpkgConfiguration>
   </PropertyGroup>
@@ -75,13 +75,14 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <ObjectFileName>$(IntermediateOutputPath)</ObjectFileName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ProgramDataBaseFileName>$(IntermediateOutputPath)</ProgramDataBaseFileName>
       <AssemblerListingLocation>$(IntermediateOutputPath)</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>$(IntermediateOutputPath)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <AdditionalIncludeDirectories>.\;$(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,7 +134,7 @@
       <Culture>0x0415</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;version.lib;zlibd.lib;;gtest.lib</AdditionalDependencies>
+      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;version.lib;zlibd.lib;gtestd.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -194,6 +195,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="AddListCtrl.cpp" />
     <ClCompile Include="AtexKrat.cpp" />
     <ClCompile Include="DrawAdd.cpp" />
@@ -222,19 +226,10 @@
     <ClCompile Include="QueView.cpp" />
     <ClCompile Include="Spacer.cpp" />
     <ClCompile Include="SplitFrm.cpp" />
-    <ClCompile Include="Tests\FlagTests.cpp">
-      <PrecompiledHeaderFile>..\StdAfx.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="Tests\ManamUnitTests.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
-      <PrecompiledHeaderFile>..\StdAfx.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="Tests\MiscTests.cpp">
-      <PrecompiledHeaderFile>..\StdAfx.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="Tests\PrecelTests.cpp">
-      <PrecompiledHeaderFile>..\StdAfx.h</PrecompiledHeaderFile>
-    </ClCompile>
+    <ClCompile Include="Tests\FlagTests.cpp" />
+    <ClCompile Include="Tests\ManamUnitTests.cpp" />
+    <ClCompile Include="Tests\MiscTests.cpp" />
+    <ClCompile Include="Tests\PrecelTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Manam.rc" />
@@ -263,7 +258,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Spacer.h" />
     <ClInclude Include="SplitFrm.h" />
-    <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\CAPTION.CUR" />
