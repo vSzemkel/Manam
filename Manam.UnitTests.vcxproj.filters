@@ -75,6 +75,9 @@
     <ClCompile Include="ManSock.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
     <ClCompile Include="QueView.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
