@@ -118,7 +118,7 @@
       <Culture>0x0415</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;version.lib;zlibd.lib;gtest.lib</AdditionalDependencies>
+      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;version.lib;zlibd.lib;gtestd.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
