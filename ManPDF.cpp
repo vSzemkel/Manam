@@ -114,7 +114,7 @@ unsigned long CManPDF::GetMainXref(CFile& f)
     char* p = strstr(cStore, "startxref");
     if (!p)
         throw CManPDFExc(_T("GetMainXref: nie ma znacznika startxref w ostatnich 30 bajtach"));
-    strtok(p, septok);
+    std::ignore = strtok(p, septok);
     return xrefOffset = atol(strtok(nullptr, septok));
 } // GetMainXref
 
@@ -125,7 +125,7 @@ unsigned long CManPDF::GetPrevXref(CFile& f, const unsigned long currentxrefOffs
     f.Read(cStore, bigSize);
     char* a = strstr(cStore, "/Prev");
     if (!a) return 0L;
-    strtok(a, septok);
+    std::ignore = strtok(a, septok);
     return atol(strtok(nullptr, septok));
 } // GetPrevXref
 
@@ -292,7 +292,7 @@ unsigned long CManPDF::EmbedStream(CFile& src, const unsigned long offset, const
     if (!strcmp(end, "R")) {
         src.Seek(FindObjEntry(src, atoi(p)), CFile::begin);
         src.Read(cStore, bigSize);
-        strtok(cStore, sepline);
+        std::ignore = strtok(cStore, sepline);
         ret = len = atol(pdftok(nullptr));
     } else
         ret = len = atol(p);
@@ -335,7 +335,7 @@ unsigned long CManPDF::EmbedPakStream(CFile& src, const unsigned long offset, un
     if (!strcmp(end, "R")) {
         src.Seek(FindObjEntry(src, atoi(p)), CFile::begin);
         src.Read(cStore, bigSize);
-        strtok(cStore, sepline);
+        std::ignore = strtok(cStore, sepline);
         paklen = atol(pdftok(nullptr));
     } else
         paklen = atol(p);
@@ -800,7 +800,7 @@ unsigned long CManPDF::GetMediaBox(const TCHAR* const fpath, float* x1, float* y
         p = strstr(cStore, "/Root");
         if (!p)
             throw CManPDFExc(_T("GetMediaBox: nie odnaleziono /Root"));
-        strtok(p, septok);
+        std::ignore = strtok(p, septok);
         offset = FindObjEntry(src, atoi(strtok(nullptr, septok)));
 
         src.Seek(offset, CFile::begin);

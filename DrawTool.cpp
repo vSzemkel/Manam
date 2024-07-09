@@ -179,9 +179,6 @@ void CSelectTool::OnLButtonUp(CDrawView* pView, const UINT nFlags, const CPoint&
 
     if (CDrawView::GetCapture() == pView && point != c_down) // czy kliknelismy w to samo miejsce
         switch (selectMode) {
-            default:
-                pView->GetDocument()->UpdateAllViews(pView);
-
             case SelectMode::netSelect:
             {
                 CClientDC dc(pView);
@@ -320,6 +317,8 @@ void CSelectTool::OnLButtonUp(CDrawView* pView, const UINT nFlags, const CPoint&
             case SelectMode::dontmove:
             case SelectMode::none:
                 break;
+            default:
+                pView->GetDocument()->UpdateAllViews(pView);
         }
 
     if (selectMode == SelectMode::move || selectMode == SelectMode::size) {

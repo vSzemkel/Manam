@@ -1440,10 +1440,10 @@ bool CDrawAdd::GetProdInfo(GENEPSARG* pArg, TCHAR* cKolor, float* bx1, float* by
         eps.Seek(DPCpos, CFile::begin);
         eps.Read(buf, 512);
         buf[512] = '\0';
-        strtok(buf, CManPDF::sepline);
+        std::ignore = strtok(buf, CManPDF::sepline);
         bool jestBlack = false;
         int tokcount = 0;
-        strtok(buf, CManPDF::septok);
+        std::ignore = strtok(buf, CManPDF::septok);
         while (char* p = strtok(nullptr, CManPDF::septok)) {
             if (strtok(p, "Black") == nullptr) jestBlack = true;
             tokcount++;

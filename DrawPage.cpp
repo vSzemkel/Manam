@@ -120,8 +120,8 @@ inline CStringW CDrawPage::GenerateGUIDString()
     wchar_t buf[MAX_CHAR_IN_GUID];
     GUID Guid{0};
 
-    ::CoCreateGuid(&Guid);
-    ::StringFromGUID2(Guid, buf, MAX_CHAR_IN_GUID);
+    std::ignore = ::CoCreateGuid(&Guid);
+    std::ignore = ::StringFromGUID2(Guid, buf, MAX_CHAR_IN_GUID);
     return buf;
 }
 

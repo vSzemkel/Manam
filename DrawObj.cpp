@@ -240,9 +240,6 @@ void CDrawObj::MoveHandleTo(const int nHandle, const CPoint& point, CDrawView* p
 
     CRect position{m_position};
     switch (nHandle) {
-        default:
-            ASSERT(FALSE);
-
         case 1:
             position.left = point.x;
             position.top = point.y;
@@ -278,6 +275,9 @@ void CDrawObj::MoveHandleTo(const int nHandle, const CPoint& point, CDrawView* p
         case 8:
             position.left = point.x;
             break;
+
+        default:
+            ASSERT(FALSE);
     }
 
     MoveTo(position, pView);
