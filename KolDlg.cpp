@@ -70,15 +70,15 @@ void CConnDlg::OnOK()
     switch (m_dbtest) {
         case 0: // PD
             tns = theApp.GetString(_T("dbpd"));
-            if (tns.IsEmpty()) tns.LoadString(IDS_DB_PD);
+            if (tns.IsEmpty()) ASSERT(tns.LoadStringW(IDS_DB_PD));
             break;
         case 1: // TP
             tns = theApp.GetString(_T("dbtp"));
-            if (tns.IsEmpty()) tns.LoadString(IDS_DB_TP);
+            if (tns.IsEmpty()) ASSERT(tns.LoadString(IDS_DB_TP));
             break;
         default: // DV
             tns = theApp.GetString(_T("dbdv"));
-            if (tns.IsEmpty()) tns.LoadString(IDS_DB_DV);
+            if (tns.IsEmpty()) ASSERT(tns.LoadString(IDS_DB_DV));
     }
 
     theApp.BeginWaitCursor();
