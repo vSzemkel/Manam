@@ -56,6 +56,7 @@
     <ClCompile>
       <CompileAs>Default</CompileAs>
       <WarningLevel>Level3</WarningLevel>
+      <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -97,7 +98,7 @@
       <Culture>0x0415</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlibd.lib;gtest.lib</AdditionalDependencies>
+      <AdditionalDependencies>version.lib;xmllite.lib;iphlpapi.lib;zlibd.lib;gtest.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <TargetMachine>MachineX86</TargetMachine>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
@@ -142,7 +143,7 @@
       <Culture>0x0415</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xmllite.lib;iphlpapi.lib;zlib.lib;gtest.lib</AdditionalDependencies>
+      <AdditionalDependencies>version.lib;xmllite.lib;iphlpapi.lib;zlib.lib;gtest.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <TargetMachine>MachineX86</TargetMachine>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
